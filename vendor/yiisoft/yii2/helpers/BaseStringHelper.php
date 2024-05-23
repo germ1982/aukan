@@ -1,8 +1,8 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\helpers;
@@ -29,7 +29,7 @@ class BaseStringHelper
      */
     public static function byteLength($string)
     {
-        return mb_strlen((string)$string, '8bit');
+        return mb_strlen($string, '8bit');
     }
 
     /**
@@ -38,7 +38,7 @@ class BaseStringHelper
      *
      * @param string $string the input string. Must be one character or longer.
      * @param int $start the starting position
-     * @param int|null $length the desired portion length. If not specified or `null`, there will be
+     * @param int $length the desired portion length. If not specified or `null`, there will be
      * no limit on length i.e. the output will be until the end of the string.
      * @return string the extracted part of string, or FALSE on failure or an empty string.
      * @see https://www.php.net/manual/en/function.substr.php
@@ -49,7 +49,7 @@ class BaseStringHelper
             $length = static::byteLength($string);
         }
 
-        return mb_substr((string)$string, $start, $length, '8bit');
+        return mb_substr($string, $start, $length, '8bit');
     }
 
     /**
@@ -67,8 +67,6 @@ class BaseStringHelper
      */
     public static function basename($path, $suffix = '')
     {
-        $path = (string)$path;
-
         $len = mb_strlen($suffix);
         if ($len > 0 && mb_substr($path, -$len) === $suffix) {
             $path = mb_substr($path, 0, -$len);
@@ -95,7 +93,7 @@ class BaseStringHelper
     public static function dirname($path)
     {
         $normalizedPath = rtrim(
-            str_replace('\\', '/', (string)$path),
+            str_replace('\\', '/', $path),
             '/'
         );
         $separatorPosition = mb_strrpos($normalizedPath, '/');
@@ -110,22 +108,16 @@ class BaseStringHelper
     /**
      * Truncates a string to the number of characters specified.
      *
-     * In order to truncate for an exact length, the $suffix char length must be counted towards the $length. For example
-     * to have a string which is exactly 255 long with $suffix `...` of 3 chars, then `StringHelper::truncate($string, 252, '...')`
-     * must be used to ensure you have 255 long string afterwards.
-     *
      * @param string $string The string to truncate.
      * @param int $length How many characters from original string to include into truncated string.
      * @param string $suffix String to append to the end of truncated string.
-     * @param string|null $encoding The charset to use, defaults to charset currently used by application.
+     * @param string $encoding The charset to use, defaults to charset currently used by application.
      * @param bool $asHtml Whether to treat the string being truncated as HTML and preserve proper HTML tags.
      * This parameter is available since version 2.0.1.
      * @return string the truncated string.
      */
     public static function truncate($string, $length, $suffix = '...', $encoding = null, $asHtml = false)
     {
-        $string = (string)$string;
-
         if ($encoding === null) {
             $encoding = Yii::$app ? Yii::$app->charset : 'UTF-8';
         }
@@ -156,7 +148,7 @@ class BaseStringHelper
             return static::truncateHtml($string, $count, $suffix);
         }
 
-        $words = preg_split('/(\s+)/u', trim($string), 0, PREG_SPLIT_DELIM_CAPTURE);
+        $words = preg_split('/(\s+)/u', trim($string), null, PREG_SPLIT_DELIM_CAPTURE);
         if (count($words) / 2 > $count) {
             return implode('', array_slice($words, 0, ($count * 2) - 1)) . $suffix;
         }
@@ -237,9 +229,6 @@ class BaseStringHelper
      */
     public static function startsWith($string, $with, $caseSensitive = true)
     {
-        $string = (string)$string;
-        $with = (string)$with;
-
         if (!$bytes = static::byteLength($with)) {
             return true;
         }
@@ -264,9 +253,6 @@ class BaseStringHelper
      */
     public static function endsWith($string, $with, $caseSensitive = true)
     {
-        $string = (string)$string;
-        $with = (string)$with;
-
         if (!$bytes = static::byteLength($with)) {
             return true;
         }
@@ -330,7 +316,7 @@ class BaseStringHelper
      */
     public static function countWords($string)
     {
-        return count(preg_split('/\s+/u', $string, 0, PREG_SPLIT_NO_EMPTY));
+        return count(preg_split('/\s+/u', $string, null, PREG_SPLIT_NO_EMPTY));
     }
 
     /**
@@ -450,7 +436,7 @@ class BaseStringHelper
             $pattern .= 'i';
         }
 
-        return preg_match($pattern, (string)$string) === 1;
+        return preg_match($pattern, $string) === 1;
     }
 
     /**
@@ -464,8 +450,8 @@ class BaseStringHelper
      */
     public static function mb_ucfirst($string, $encoding = 'UTF-8')
     {
-        $firstChar = mb_substr((string)$string, 0, 1, $encoding);
-        $rest = mb_substr((string)$string, 1, null, $encoding);
+        $firstChar = mb_substr($string, 0, 1, $encoding);
+        $rest = mb_substr($string, 1, null, $encoding);
 
         return mb_strtoupper($firstChar, $encoding) . $rest;
     }
@@ -486,7 +472,7 @@ class BaseStringHelper
             return $string;
         }
 
-        $parts = preg_split('/(\s+\W+\s+|^\W+\s+|\s+)/u', $string, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+        $parts = preg_split('/(\s+[^\w]+\s+|^[^\w]+\s+|\s+)/u', $string, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
         $ucfirstEven = trim(mb_substr($parts[0], -1, 1, $encoding)) === '';
         foreach ($parts as $key => $value) {
             $isEven = (bool)($key % 2);

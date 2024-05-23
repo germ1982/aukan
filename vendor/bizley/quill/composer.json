@@ -1,0 +1,50 @@
+{
+  "name": "bizley/quill",
+  "description": "Quill editor implementation for Yii 2.",
+  "type": "yii2-extension",
+  "keywords": ["yii2","quill","wysiwyg","widget","editor","katex","highlight.js"],
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Paweł Bizley Brzozowski",
+      "email": "pawel@positive.codes"
+    }
+  ],
+  "support": {
+    "source": "https://github.com/bizley/yii2-quill"
+  },
+  "require": {
+    "php": ">=7.1",
+    "yiisoft/yii2": "^2.0.0"
+  },
+  "require-dev": {
+    "npm-asset/highlight.js": "^10.2",
+    "npm-asset/katex": "^0.12",
+    "npm-asset/quill": "^1.3",
+    "npm-asset/quill-smart-break": "^0.2",
+    "phpunit/phpunit": ">=7.5",
+    "roave/security-advisories": "dev-master"
+  },
+  "suggest": {
+    "npm-asset/highlight.js": "For local highlight.js assets",
+    "npm-asset/katex": "For local KaTeX assets",
+    "npm-asset/quill": "For local Quill assets",
+    "npm-asset/quill-smart-break": "For 'SHIFT + Enter' newline support"
+  },
+  "autoload": {
+    "psr-4": {
+      "bizley\\quill\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "bizley\\tests\\": "tests/"
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ]
+}

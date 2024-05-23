@@ -1,0 +1,39 @@
+/* Curso CSS estilos aprenderaprogramar.com*/
+
+table {
+
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    font-size: 11px;    
+    margin: 4px;     /*margen de altura y left*/
+    text-align: left;    
+
+    border-collapse: collapse; /*pone una sola linea entre las columnas*/
+}
+
+th {     
+	color: rgb(0, 162, 226);
+	font-size: 0.875em;     
+	font-weight: normal;     
+	padding: 4px;     
+	background: #f3f3f3;
+	border: 1px solid #505050; 
+    /*border-top: 2px solid #aabcfe;    
+    border-bottom: 1px solid #fff; 
+    color: #039; */}
+
+td {
+	border: 1px solid #afafaf;     
+	padding-left: 8px;     
+	padding-right: 8px; 
+	background: #f3f3f3;     
+	/*border-bottom: 1px solid #fff;
+    color: #669;    
+    /*border-top: 1px solid transparent; */
+}
+
+
+
+tr:hover td { 
+	background: #d3d3d3; 
+	color: rgb(128, 128, 128); 
+}

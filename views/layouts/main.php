@@ -20,7 +20,7 @@ AppAsset::register($this);
 
 $this->title = "Sistema Único de Registro | SUR";
 
-/* $usuario = Yii::$app->user->identity;
+$usuario = Yii::$app->user->identity;
 $id = $usuario != null ? $usuario->idusuario : null;
 if (!isset($id) || $id == null) {
     $model = new \app\models\LoginForm();
@@ -29,9 +29,24 @@ if (!isset($id) || $id == null) {
         'model' => $model,
     ]);
 }
- */
-$usuario = [];
 
+$permisos = Mds_seg_permiso::getPermisosByIdUsuario($id)->all();
+
+/* AHORA ESTOS PERMISOS SE MANEJAN EN LA PAGINA DEL MENU
+ SALVO EL PERMISO DEL RESPONSABLE DE ENTREGAS, QUE TENGO QUE DEJARLO ACA*/
+$permiso_responsable = false;
+$permiso_fichada = false;
+
+foreach ($permisos as $r) :
+    switch ($r->iditem) {
+        case Mds_seg_item::MODULO_ENT_CAMBIO_RESPONSABLE:
+            $permiso_responsable = true;
+            break;
+        case Mds_seg_item::MODULO_HOR_FICHADA_LEGAJO:
+            $permiso_fichada = true;
+            break;
+    }
+endforeach;
 
 ?>
 <?php $this->beginPage() ?>
@@ -86,10 +101,95 @@ $usuario = [];
                 <a href="index.php?r=site%2Findex" class="logo" style="margin-top:1px;margin-left:20px">
                     <img src="img/sur_trans.png" height="55px" alt="Sistema Único de Registro">
                 </a>
-
+                <div class="visible-xs toggle-sidebar-left" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened">
+                    <i class="fa fa-bars" aria-label="Toggle sidebar"></i>
+                </div>
             </div>
 
+            <!-- start: search & user box -->
+            <div class="header-right">
+                <!-- 
+                <form action="pages-search-results.html" class="search nav-form">
+                    <div class="input-group input-search">
+                        <input type="text" class="form-control" name="q" id="q" placeholder="Search...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                        </span>
+                    </div>
+                </form>
 
+                <span class="separator"></span> -->
+
+                <?php include 'notificaciones.php' ?>
+
+                <span class="separator"></span>
+
+                <div id="userbox" class="userbox">
+                    <a href="" data-toggle="dropdown">
+                        <figure class="profile-picture">
+                            <img src="<?= $usuario->imagen != null ? $usuario->imagen : 'img/user.png' ?>" alt="Imagen Usuario" class="img-circle" data-lock-picture="<?= $usuario->imagen != null ? $usuario->imagen : 'img/user.png' ?>">
+                        </figure>
+                        <div class="profile-info" data-lock-name="Usuario" data-lock-email="<?= $usuario->mail ?>">
+                            <span class="name"><?= $usuario->user ?></span>
+                            <span class="role"><?= $usuario->responsable != null ? Sds_com_configuracion::findOne($usuario->responsable)->descripcion : "" ?></span>
+                        </div>
+                        <i class="fa custom-caret"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <ul class="list-unstyled">
+                            <li class="divider"></li>
+                            <li>
+                                <?=
+                                !$permiso_responsable ? '' : Html::a(
+                                    '<i class="fas fa-user-friends"></i> Modificar Responsable',
+                                    ['/mds_seg_usuario/update_resp', 'id' => $usuario->idusuario],
+                                    ['role' => "modal-remote"]
+                                )
+                                ?>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <?=
+                                Html::a(
+                                    '<i class="fas fa-user-lock"></i> Cambiar Contraseña',
+                                    ['/mds_seg_usuario/update_pass'],
+                                    ['role' => "modal-remote"]
+                                )
+                                ?>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <?=
+                                !$permiso_fichada ? '' : Html::a(
+                                    '<i class="fas fa-user-clock"></i> Fichar Legajo',
+                                    ['/mds_hor_registro/fichada_legajo', 'id' => $usuario->idusuario],
+                                    ['role' => "modal-remote"]
+                                ) .
+                                    "<li class=\"divider\"></li>";
+                                ?>
+                            </li>
+                            <li>
+                                <?php
+                                $url =  Url::to(['/mds_org_contacto/reporte_credencial', 'idcontacto' => $usuario->idcontacto]);
+                                echo Html::a('<i class= "fas fa-print"> </i>&nbsp;&nbsp;Imprimir Credencial', $url, [
+                                    'role' => 'post', 'data-pjax' => 0, 'target' => '_blank',
+                                    'title' => 'Imprimir Credencial',
+                                    'data-toggle' => 'tooltip',
+                                ]);
+                                ?>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <?=
+                                Yii::$app->user->isGuest ?
+                                    Html::a('Ingresar', ['site/login'], ['class' => 'btn btn-success']) :
+                                    Html::a('<i class="fa fa-power-off"></i> Logout', ['/site/logout'], ['role' => "menuitem"])
+                                ?>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
             <!-- end: search & user box -->
         </header>
         <!-- end: header -->
@@ -104,8 +204,8 @@ $usuario = [];
                     <div class="nano-content" tabindex="0" style="right: -17px;">
                         <nav id="menu" class="nav-main" role="navigation">
                             <?= $this->render('menu', [
-                                    'permisos' => $permisos
-                                ]) ?>
+                                'permisos' => $permisos
+                            ]) ?>
                         </nav>
                         <hr class="separator">
                     </div>
@@ -127,7 +227,7 @@ $usuario = [];
                     </div>
                 </div>
                 <?= $content ?>
-                <?php /* Modal::begin([
+                <?php Modal::begin([
                     "id" => "ajaxCrudModal",
                     'options' => [
                         'tabindex' => false // important for Select2 to work properly
@@ -140,10 +240,10 @@ $usuario = [];
                         'backdrop' => 'static'
                     ],
                     "footer" => "",
-                ]); */
+                ]);
                 echo "<div id='content_abm'></div>";
                 ?>
-                <?php /* Modal::end(); */ ?>
+                <?php Modal::end(); ?>
                 <?php
                 $this->registerJs(
                     "$('#modal_main').on('hidden.bs.modal', function() {

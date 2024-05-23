@@ -1,8 +1,8 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 /**
@@ -36,7 +36,7 @@ return [
     'The requested view "{name}" was not found.' => 'A visualização solicitada "{name}" não foi encontrada.',
     'Unknown alias: -{name}' => 'Alias desconhecido: -{name}',
     'Unknown filter attribute "{attribute}"' => 'Atributo de filtro desconhecido "{attribute}"',
-    'View' => 'Ver',
+    'View' => 'Vêr',
     'Yii Framework' => 'Yii Framework',
     'You should upload at least {limit, number} {limit, plural, one{file} other{files}}.' => 'A transferência deve ser pelo menos {limit, number} {limit, plural, one{ficheiro} other{ficheiros}}. ',
     'in {delta, plural, =1{a day} other{# days}}' => 'em {delta, plural, =1{um dia} other{# dias}}',

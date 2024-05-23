@@ -1,8 +1,8 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\gii\console;
@@ -62,8 +62,7 @@ class GenerateAction extends \yii\base\Action
         foreach ($files as $file) {
             $path = $file->getRelativePath();
             if (is_file($file->path)) {
-                $existingFileContents = file_get_contents($file->path);
-                if ($existingFileContents === $file->content) {
+                if (file_get_contents($file->path) === $file->content) {
                     echo '  ' . $this->controller->ansiFormat('[unchanged]', Console::FG_GREY);
                     echo $this->controller->ansiFormat(" $path\n", Console::FG_CYAN);
                     $answers[$file->id] = false;
@@ -73,21 +72,12 @@ class GenerateAction extends \yii\base\Action
                     if ($skipAll !== null) {
                         $answers[$file->id] = !$skipAll;
                     } else {
-                        do {
-                            $answer = $this->controller->select("Do you want to overwrite this file?", [
-                                'y' => 'Overwrite this file.',
-                                'n' => 'Skip this file.',
-                                'ya' => 'Overwrite this and the rest of the changed files.',
-                                'na' => 'Skip this and the rest of the changed files.',
-                                'v' => 'View difference',
-                            ]);
-
-                            if ($answer === 'v') {
-                                $diff = new \Diff(explode("\n", $existingFileContents), explode("\n", $file->content));
-                                echo $diff->render(new \Diff_Renderer_Text_Unified());
-                            }
-                        } while ($answer === 'v');
-
+                        $answer = $this->controller->select("Do you want to overwrite this file?", [
+                            'y' => 'Overwrite this file.',
+                            'n' => 'Skip this file.',
+                            'ya' => 'Overwrite this and the rest of the changed files.',
+                            'na' => 'Skip this and the rest of the changed files.',
+                        ]);
                         $answers[$file->id] = $answer === 'y' || $answer === 'ya';
                         if ($answer === 'ya') {
                             $skipAll = false;

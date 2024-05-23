@@ -56,4 +56,25 @@ class Menu extends \yii\db\ActiveRecord
             'orden' => 'Orden',
         ];
     }
+
+
+    public static function getArbolMenu(){
+        $menu= Menu::find()->where("activo = 1")->all();
+        $menuHtml=  '<li>
+                        <a href="index.php?r=site%2Findex">
+                            <i class="fas fa-home" aria-hidden="true"></i>
+                            <span>Página Principal</span>
+                        </a>
+                    </li>';
+        foreach($menu as $rama){
+                $menuHtml=$menuHtml."<li class='nav-parent'>
+                                <a>
+                                    <i class='fas fa-hard-hat' aria-hidden='true'></i>
+                                    <span>$rama->title</span>
+                                </a>
+
+                            </li>";
+        }
+        return $menuHtml;
+    }
 }

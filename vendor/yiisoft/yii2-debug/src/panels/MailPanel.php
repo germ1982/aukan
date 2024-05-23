@@ -1,8 +1,8 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\debug\panels;
@@ -13,12 +13,11 @@ use yii\debug\models\search\Mail;
 use yii\debug\Panel;
 use yii\helpers\FileHelper;
 use yii\mail\BaseMailer;
-use yii\mail\MessageInterface;
 
 /**
  * Debugger panel that collects and displays the generated emails.
  *
- * @property-read array $messagesFileName
+ * @property-read array $messagesFileName This property is read-only.
  *
  * @author Mark Jebri <mark.github@yandex.ru>
  * @since 2.0
@@ -46,7 +45,7 @@ class MailPanel extends Panel
         Event::on('yii\mail\BaseMailer', BaseMailer::EVENT_AFTER_SEND, function ($event) {
             /* @var $event \yii\mail\MailEvent */
             $message = $event->message;
-            /* @var $message MessageInterface */
+            /* @var $message \yii\mail\MessageInterface */
             $messageData = [
                 'isSuccessful' => $event->isSuccessful,
                 'from' => $this->convertParams($message->getFrom()),
@@ -58,7 +57,30 @@ class MailPanel extends Panel
                 'charset' => $message->getCharset(),
             ];
 
-            $this->addMoreInformation($message, $messageData);
+            // add more information when message is a SwiftMailer message
+            if ($message instanceof \yii\swiftmailer\Message) {
+                /* @var $swiftMessage \Swift_Message */
+                $swiftMessage = $message->getSwiftMessage();
+
+                $body = $swiftMessage->getBody();
+                if (empty($body)) {
+                    $parts = $swiftMessage->getChildren();
+                    foreach ($parts as $part) {
+                        if (!($part instanceof \Swift_Mime_Attachment)) {
+                            /* @var $part \Swift_Mime_MimePart */
+                            if ($part->getContentType() === 'text/plain') {
+                                $messageData['charset'] = $part->getCharset();
+                                $body = $part->getBody();
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                $messageData['body'] = $body;
+                $messageData['time'] = $swiftMessage->getDate();
+                $messageData['headers'] = $swiftMessage->getHeaders();
+            }
 
             // store message as file
             $fileName = $event->sender->generateMessageFileName();
@@ -140,62 +162,5 @@ class MailPanel extends Panel
         }
 
         return $attr;
-    }
-
-    /**
-     * @param MessageInterface $message
-     * @param array $messageData
-     */
-    private function addMoreInformation(MessageInterface $message, array &$messageData)
-    {
-        // add more information when message is a SwiftMailer message
-        if ($message instanceof \yii\swiftmailer\Message) {
-            $this->addMoreInformationFromSwiftMailer($message, $messageData);
-        } elseif ($message instanceof \yii\symfonymailer\Message) {
-            $this->addMoreInformationFromSymfonyMailer($message, $messageData);
-        }
-    }
-
-    private function addMoreInformationFromSwiftMailer(MessageInterface $message, array &$messageData)
-    {
-        /* @var $swiftMessage \Swift_Message */
-        $swiftMessage = $message->getSwiftMessage();
-
-        $body = $swiftMessage->getBody();
-        if (empty($body)) {
-            $parts = $swiftMessage->getChildren();
-            foreach ($parts as $part) {
-                if (!($part instanceof \Swift_Mime_Attachment)) {
-                    /* @var $part \Swift_Mime_MimePart */
-                    if ($part->getContentType() === 'text/plain') {
-                        $messageData['charset'] = $part->getCharset();
-                        $body = $part->getBody();
-                        break;
-                    }
-                }
-            }
-        }
-
-        $messageData['body'] = $body;
-        $messageData['time'] = $swiftMessage->getDate();
-        $messageData['headers'] = $swiftMessage->getHeaders();
-    }
-
-    private function addMoreInformationFromSymfonyMailer(MessageInterface $message, array &$messageData)
-    {
-        /** @var \Symfony\Component\Mime\Email $symfonyMessage */
-        $symfonyMessage = $message->getSymfonyEmail();
-
-        /** @var \Symfony\Component\Mime\Part\AbstractPart $part */
-        $part = $symfonyMessage->getBody();
-        $body = null;
-        if ($part instanceof \Symfony\Component\Mime\Part\TextPart && 'plain' === $part->getMediaSubtype()) {
-            $messageData['charset'] = $part->asDebugString();
-            $body = $part->getBody();
-        }
-
-        $messageData['body'] = $body;
-        $messageData['headers'] = $part->getPreparedHeaders()->toString();
-        $messageData['time'] = $symfonyMessage->getDate();
     }
 }

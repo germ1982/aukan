@@ -1,0 +1,13 @@
+.tabla_risneu {
+    background-color:#f9feff;border-collapse:collapse;
+}
+.tabla_risneu th {
+    background-color:#19458D;color:#fafafa;
+}
+.tabla_risneu td, .tabla_risneu th {
+    padding:5px;border:1px solid #000;
+}
+.letra{
+    font-size: 22px;
+}
+

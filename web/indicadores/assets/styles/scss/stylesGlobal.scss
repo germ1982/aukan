@@ -1,0 +1,310 @@
+.my-dialog .mat-dialog-container {
+    padding: 0;
+}
+
+.problema {
+    color: #f44336 !important;
+    //background: #fafafa !important;
+    font-weight: bold;
+}
+
+.espera {
+    color: #00bcd4 !important;
+    //background: #fafafa !important;
+    font-weight: bold;
+}
+
+.resuelto {
+    color: #61bd4f !important;
+    //background: #fafafa !important;
+    font-weight: bold;
+}
+
+.centrarY {
+    display: flex;
+    align-items: center;
+}
+
+.centrarContenido {
+    display: block;
+    text-align: -webkit-center;
+}
+
+.botonAtras {
+    position: absolute !important;
+    top: 6px;
+    left: 6px;
+}
+
+.botonCancelar {
+    position: absolute !important;
+    top: 6px;
+    right: 6px;
+}
+
+.center-flex{
+    display: flex;
+    justify-content: center;
+}
+
+.center-flex-full{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/** Remove arrow of "type:number" */
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.height-80vhMax {
+    max-height: 80vh;
+}
+
+.height-80vh {
+    height: 80vh;
+}
+
+.height-65vh {
+    height: 65vh;
+}
+
+.stickyHeader {
+    top: 0px;
+    position: sticky;
+    z-index: 100;
+}
+
+.stickyBottom {
+    bottom: 0px;
+    position: sticky;
+    z-index: 10;
+}
+
+.handleBottom {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 101;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.mobile-label {
+    display: none;
+}
+
+.tabla {
+    tr.mat-header-row {
+        background-color: #0e4e76;
+    }
+    th {
+        font-size: 14px;
+        padding: 0px 8px 0px 12px !important;
+        font-weight: 500;
+        color: #ffffff !important;
+    }
+    tr:nth-child(even) {
+        background-color: rgb(247, 247, 247);
+    }
+    tr:nth-child(odd):not(tr.mat-header-row) {
+        background-color: white;
+    }
+    tr:nth-child(even):hover {
+        background-color: rgb(225, 225, 225);
+        transition: 0.2s ease-in-out;
+    }
+    tr:nth-child(odd):not(tr.mat-header-row):hover {
+        background-color: rgb(235, 235, 235);
+        transition: 0.2s ease-in-out;
+    }
+    td {
+        text-align: left;
+        padding: 0px 12px !important;
+        font-size: 12px;
+        padding: 0px 12px;
+    }
+    td.accion {
+        width: 100px;
+    }
+    tfoot {
+        font-weight: 500;
+    }
+}
+
+.tabla-clickeable {
+    td {
+        cursor: pointer;
+    }
+}
+
+.primaryColor {
+    background-color: #00bcd4;
+    color: white;
+}
+
+.conexion {
+    background-color: greenyellow;
+    color: white;
+}
+
+.cdk-overlay-pane{
+    .mat-select-panel{
+        .mat-option:nth-child(even){
+            background-color: #f1f1f1 !important;
+        }
+    }
+}
+
+// --------- Dialog Styles -------------//
+.dialog-new{
+    margin: 0 !important;
+    padding: 0 !important;
+
+    &-title{
+        text-align: center;
+        padding: 15px 0;
+        background-color: #0093E1;
+        color: white;
+    }
+    &-close{
+        position: absolute !important;
+        top: 7px;
+        right: 7px;
+        color: white !important;
+    }
+    &-content{
+        max-height: 75vh;
+        padding: 10px;
+    }
+}
+
+
+@media (max-width: 960px) {
+    .ocultarMobile {
+        display: none !important;
+    }
+    .mobile-label {
+        display: block;
+    }
+    .tabla {
+        border-radius: 4px;
+        .mobile-label {
+            width: 100px;
+            display: block;
+            font-weight: bold;
+            text-align: left !important;
+            float: left;
+            color: #00ba9e;
+        }
+        td {
+            width: 100%;
+            text-align: right !important;
+            padding: 2px !important;
+            display: inline-block;
+            border: none !important;
+            flex: 1;
+            align-items: center;
+            overflow: hidden;
+            min-height: inherit;
+        }
+        td.mat-column-accion {
+            text-align: center !important;
+        }
+        td.mat-footer-cell {
+            padding: 2px 12px !important;
+        }
+        td:before {
+            content: attr(data-label);
+            float: left;
+            text-transform: uppercase;
+            font-weight: 400;
+            font-size: 0.85em;
+        }
+        tr.mat-header-row {
+            display: none;
+        }
+        tr.mat-row {
+            display: flex;
+            border-width: 0;
+            border-bottom-width: 1px;
+            border-style: solid;
+            border-color: rgba(0, 0, 0, 0.12);
+            box-sizing: border-box;
+            flex-direction: column;
+            align-items: center;
+            height: auto;
+            padding: 9px 12px;
+        }
+        tr.mat-row:hover {
+            background: none;
+        }
+    }
+    .tablaWithExpandable {
+        border-radius: 4px;
+        .mobile-label {
+            width: 100px;
+            display: block;
+            font-weight: bold;
+            text-align: left !important;
+            float: left;
+            color: #00ba9e;
+        }
+        td {
+            width: 100%;
+            text-align: right !important;
+            padding: 1px !important;
+            display: inline-block;
+            border: none !important;
+            flex: 1;
+            align-items: center;
+            overflow: hidden;
+            min-height: inherit;
+        }
+        td.mat-column-accion {
+            text-align: center !important;
+        }
+        td:before {
+            content: attr(data-label);
+            float: left;
+            text-transform: uppercase;
+            font-weight: 400;
+            font-size: 0.85em;
+        }
+        tr.mat-header-row {
+            display: none;
+        }
+        tr.mat-row {
+            display: flex;
+            border-width: 0;
+            border-bottom-width: 1px;
+            border-style: solid;
+            border-color: rgba(0, 0, 0, 0.12);
+            box-sizing: border-box;
+            flex-direction: column;
+            align-items: center;
+            height: auto;
+            padding: 9px 12px;
+        }
+        tr.detail-row {
+            padding: 0px;
+        }
+        tr.mat-row:hover {
+            background: none;
+        }
+    }
+
+    .my-dialog{
+        width: 99% !important;
+        max-width: 99% !important;
+    }
+}

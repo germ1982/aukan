@@ -1,8 +1,8 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\debug\panels;
@@ -13,8 +13,8 @@ use yii\debug\Panel;
 /**
  * Debugger panel that collects and displays application configuration and environment.
  *
- * @property-read array $extensions
- * @property-read array $phpInfo
+ * @property-read array $extensions This property is read-only.
+ * @property-read array $phpInfo This property is read-only.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0

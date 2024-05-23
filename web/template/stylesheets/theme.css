@@ -908,7 +908,7 @@ html.scroll,
 html.fixed {
     /* UNDO original bootrap LG helper classes*/
     /* Helper classes for XL */
-    
+    ;
 }
 
 @media (min-width: 1600px) {
@@ -4757,7 +4757,7 @@ body {
     /* Button Basic */
     /* Buttons - Social */
     /* Buttons - States */
-    
+    ;
 }
 
 body .btn:focus,
@@ -12901,7 +12901,7 @@ html.dark {
     /* Simple User List */
     /* Simple Bullet List */
     /* Simple Compose Box */
-    
+    ;
 }
 
 html.dark .widget-summary .summary .title,
@@ -16782,8 +16782,8 @@ thead th.fc-last {
     position: relative;
     float: left;
     margin-top: -50%;
-    /* margin-top: 0;
-    top: -50%; */
+    *margin-top: 0;
+    *top: -50%;
 }
 
 .fc-state-default {
@@ -17028,7 +17028,7 @@ table.fc-border-separate {
 }
 
 .fc-agenda-slots tr.fc-minor th.ui-widget-header {
-    /* border-top-style: solid; */
+    *border-top-style: solid;
 }
 
 .fc-event-vert {

@@ -1,0 +1,26 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <link rel="stylesheet" href="../css/qr_style.css" />
+    <!-- 
+    <script type="text/javascript" src="../js/qr_packed.js"></script> -->
+</head>
+
+<body>
+    <div id="container">
+        <h1>QR Code Scanner</h1>
+        <a id="btn-scan-qr">
+            <img src="../img/qr_sample.svg">
+        </a>
+        <canvas hidden="" id="qr-canvas"></canvas>
+        <div id="qr-result" hidden="">
+            <b>Data:</b> <span id="outputData"></span>
+        </div>
+    </div>
+    <script src="../js/qr_packed.js">
+    </script>
+    <script src="../js/qrCodeScanner.js"></script>
+</body>
+
+</html>

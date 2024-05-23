@@ -1,0 +1,443 @@
+
+body {
+  background: url(./img/certificado.png);
+  -webkit-background-size: cover;           /* Safari 3.0 */
+     -moz-background-size: cover;           /* Gecko 1.9.2 (Firefox 3.6) */
+       -o-background-size: cover;           /* Opera 9.5 */
+          background-size: cover; 
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  text-align: center;
+  background-position:center;
+  
+}
+
+p.header1 
+{ color:#808080; 
+  font-family: "monserrat";
+  font-size:47,424pt; 
+  font-weight: bold; 
+  position: absolute;
+  top: 150px; 
+  /*left: 323px;*/  
+  left: 0;
+  right: 0;
+}
+p.parrafo1 
+{ 
+  color:#666666; 
+  font-family: "monserrat_light";
+  font-size:16,955pt; 
+  position: absolute;
+  top: 230px; 
+  /*left: 410px;*/
+  left: 0;
+  right: 0;
+}
+p.nombre
+{ 
+  font-family: "monserrat";
+  color:#00589F;
+  font-size:26,249pt; 
+  position: absolute;
+  top: 265px; 
+  /*left: 370px;*/
+  left: 0;
+  right: 0;
+  font-weight: bold;
+}
+p.dni
+{   
+  font-family: "monserrat_light";
+  color:#00589F;
+  font-size:12,724pt; 
+  position: absolute;
+  top: 323px; 
+  /*left: 490px;*/
+  left: 0;
+  right: 0;
+  font-weight: bold;
+}
+p.cad_aprob
+{ 
+  color:#666666; 
+  font-family: "monserrat_light";
+  font-size:16pt; 
+  position: absolute;
+  top: 348px; 
+  /*left: 490px;*/
+  left: 0;
+  right: 0;  
+}
+p.cad_aprob_br
+{ 
+  color:#666666; 
+  font-family: "monserrat_light";
+  font-size:16pt; 
+  position: absolute;
+  top: 343px; 
+  /*left: 490px;*/
+  left: 0;
+  right: 0;  
+}
+p.curso
+{ 
+  color:#666666; 
+  font-family: "monserrat";
+  font-size:17pt; 
+  position: absolute;
+  top: 383px; 
+  /*left: 400px;*/
+  left: 0;
+  right: 0;  
+  font-weight: bold;
+}
+p.curso_br
+{ 
+  color:#666666; 
+  font-family: "monserrat";
+  font-size:17pt; 
+  position: absolute;
+  top: 369px; 
+  /*left: 400px;*/
+  left: 0;
+  right: 0;  
+  font-weight: bold;
+}
+p.aval
+{ 
+  color:#666666; 
+  font-family: "monserrat";
+  font-size:11pt; 
+  position: absolute;
+  top: 415px; 
+  /*left: 250px;*/
+  left: 0;
+  right: 0;  
+}
+p.aval_br
+{ 
+  color:#666666; 
+  font-family: "monserrat";
+  font-size:11pt; 
+  position: absolute;
+  top: 432px; 
+  /*left: 250px;*/
+  left: 0;
+  right: 0;  
+}
+p.div_aval
+{ 
+ 
+   
+  /*left: 250px;*/
+  margin-left: 100px;
+}
+p.organizado_por_1
+{ 
+  color:#666666; 
+  font-family: "monserrat_light";
+  font-size:15pt; 
+  position: absolute;
+  top: 448px; 
+  /*left: 150px;*/
+  left: 0;
+  right: 0;  
+  margin-left: 100px;
+  margin-right: 100px;
+}
+p.organizado_por_1_aval
+{ 
+  color:#666666; 
+  font-family: "monserrat_light";
+  font-size:15pt; 
+  position: absolute;
+  top: 455; 
+  /*left: 150px;*/
+  left: 0;
+  right: 0;  
+  margin-left: 100px;
+  margin-right: 100px;
+}
+p.organizado_por_2
+{ 
+  color:#666666; 
+  font-family: "monserrat_light";
+  font-size:15pt; 
+  position: absolute;
+  top: 418px; 
+  /*left: 150px;*/
+  left: 0;
+  right: 0; 
+  margin-left: 100px;
+  margin-right: 100px; 
+}
+p.organizado_por_2_aval
+{ 
+  color:#666666; 
+  font-family: "monserrat_light";
+  font-size:15pt; 
+  position: absolute;
+  top: 430px; 
+  /*left: 150px;*/
+  left: 0;
+  right: 0; 
+  margin-left: 100px;
+  margin-right: 100px; 
+}
+div.div_logo_extra {
+  position: absolute;
+  top: 54px; 
+  left: 650px;
+  border: silver 27px solid;
+  
+}
+img.img_logoextra {
+ /* width:8px; */
+  height:57px;
+}
+div.div_banner1 {
+  position: absolute;
+  top: 57px; 
+  left: 96px;
+  border: silver 27px solid;
+}
+img.img_banner1 {
+  /*width:2px; */
+  height:57px;
+}
+img.img_banner1_max {
+  /*width:2px; */
+  /*height:57px;*/
+  height:105px;
+  width: auto; /* Asegúrate de que la anchura está configurada para ser automática */
+  margin-left: auto;
+  margin-right: auto;
+}
+img.img_banneraux {
+  /*width:2px; */  
+  height:85px;
+}
+div.div_banner2aux {
+  position: absolute;
+  top: 57px; 
+  left: 50px;
+  border: silver 27px solid;
+}
+div.div_banner2 {
+  position: absolute;
+  top: 57px; 
+  left: 210px;
+  border: silver 27px solid;
+  
+}
+div.div_banner2_max {
+  position: absolute;
+  top: 57px; 
+  left: 210px;
+  border: silver 27px solid;
+  
+}
+img.qr{
+  width: 90px; height: 90px;
+}
+div.tabla_firmasx1 {
+  position: absolute;
+  top:650x; 
+  left: 600px; 
+  
+}
+div.tabla_firmasx2 {
+  position: absolute;
+  top:670x; 
+  left: 480px; 
+  
+}
+div.tabla_firmasx3 {
+  position: absolute;
+  top:640px; 
+  left: 360px; 
+  
+}
+div.tabla_firmasx4 {
+  position: absolute;
+  top:593x; 
+  left: 345px; 
+  
+}
+div.tabla_firmasx4b {
+  position: absolute;
+  top:691x; 
+  left: 576px; 
+  
+}
+div.tabla_firmasx5 {
+  position: absolute;
+  top:593x; 
+  left: 345px; 
+  
+}
+div.tabla_firmasx5b {
+  position: absolute;
+  top:691x; 
+  left: 480px; 
+  
+}
+p.nombre_firm
+{ 
+  color:#000000; 
+  font-family: "monserrat_light";
+  font-size:11pt; 
+  line-height:50px;
+
+}
+p.cargo_firm
+{ 
+  color:#000000; 
+  font-family: "monserrat_light";
+  font-size:7pt; 
+  line-height:50px;
+}
+img.img_lineafirma{
+  width:203px; 
+  height:0.2pt;
+}
+img.img_lineafirma2{
+  width:203px; 
+  height:0.2pt;
+  padding-top: 17px;
+  /*left: 360px; */
+}
+
+div.img_firma51{
+  display:block;
+  margin:auto;
+  /*border: 1px solid;*/
+  position: absolute;
+  top: 550px; 
+  left: 366px;
+  /*width: 90px; */
+  height: 70px;
+  width: 203px;
+  }
+  div.img_firma52{
+    display:block;
+    margin:auto;
+   /* border: 1px solid;*/
+    position: absolute;
+    top: 550px;     
+    left: 594px; 
+    /*width: 90px; */
+    height: 70px;
+    width: 203px;
+    }
+    div.img_firma53{
+      display:block;
+      margin:auto;
+      /*border: 1px solid;*/
+      position: absolute;
+      top: 550px;     
+      left: 821px; 
+      /*width: 90px; */
+      height: 70px;
+      width: 203px;
+      }
+      div.img_firma54{
+        display:block;
+        margin:auto;
+        /*border: 1px solid;*/
+        position: absolute;
+        top: 650px;     
+        left: 501px; 
+        /*width: 90px; */
+        height: 70px;
+        width: 203px;
+        }
+div.img_firma55{
+          display:block;
+          margin:auto;
+          /*border: 1px solid;*/
+          position: absolute;
+          top: 650px;     
+          left: 753px; 
+          /*width: 90px; */
+          height: 70px;
+          width: 203px;
+ }
+ div.img_firma44{
+  display:block;
+  margin:auto;
+  /*border: 1px solid;*/
+  position: absolute;
+  top: 650px;     
+  left: 597px; 
+  /*width: 90px; */
+  height: 70px;
+  width: 203px;
+  }
+  div.img_firma31{
+    display:block;
+    margin:auto;
+    /*border: 1px solid;*/
+    position: absolute;
+    top: 596px; 
+    left: 381px;
+    /*width: 90px; */
+    height: 70px;
+    width: 203px;
+    }
+    div.img_firma32{
+      display:block;
+      margin:auto;
+     /*border: 1px solid;*/
+      position: absolute;
+      top: 596px;     
+      left: 609px; 
+      /*width: 90px; */
+      height: 70px;
+      width: 203px;
+      }
+      div.img_firma33{
+        display:block;
+        margin:auto;
+        /*border: 1px solid;*/
+        position: absolute;
+        top: 596px;     
+        left: 837px; 
+        /*width: 90px; */
+        height: 70px;
+        width: 203px;
+        }
+        div.img_firma21{
+          display:block;
+          margin:auto;
+          /*border: 1px solid;*/
+          position: absolute;
+          top: 625x; 
+          left:501px;
+          /*width: 90px; */
+          height: 70px;
+          width: 203px;
+          }
+          div.img_firma22{
+            display:block;
+            margin:auto;
+           /*border: 1px solid;*/
+            position: absolute;
+            top: 625px;     
+            left:729px; 
+            /*width: 90px; */
+            height: 70px;
+            width: 203px;
+            }        
+            div.img_firma11{
+              display:block;
+              margin:auto;
+              /*border: 1px solid;*/
+              position: absolute;
+              top: 605px; 
+              left:621px;
+              /*width: 90px; */
+              height: 70px;
+              width: 203px;
+              }

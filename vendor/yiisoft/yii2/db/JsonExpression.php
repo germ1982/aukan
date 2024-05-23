@@ -1,8 +1,8 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\db;
@@ -69,7 +69,7 @@ class JsonExpression implements ExpressionInterface, \JsonSerializable
     }
 
     /**
-     * @return string|null the type of JSON
+     * @return null|string the type of JSON
      * @see type
      */
     public function getType()
@@ -86,7 +86,6 @@ class JsonExpression implements ExpressionInterface, \JsonSerializable
      * @since 2.0.14.2
      * @throws InvalidConfigException when JsonExpression contains QueryInterface object
      */
-    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $value = $this->getValue();

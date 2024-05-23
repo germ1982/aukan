@@ -3,7 +3,6 @@
 use yii\data\ArrayDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
-use yii\helpers\Url;
 
 /* @var $this \yii\web\View */
 /* @var $manifest array */
@@ -48,6 +47,10 @@ $this->title = 'Yii Debugger';
                 'filterModel' => $searchModel,
                 'rowOptions' => function ($model) use ($searchModel, $hasDbPanel) {
                     if ($searchModel->isCodeCritical($model['statusCode'])) {
+                        return ['class' => 'table-danger'];
+                    }
+
+                    if ($hasDbPanel && $this->context->module->panels['db']->isQueryCountCritical($model['sqlCount'])) {
                         return ['class' => 'table-danger'];
                     }
 
@@ -108,26 +111,17 @@ $this->title = 'Yii Debugger';
                             /* @var $dbPanel \yii\debug\panels\DbPanel */
                             $dbPanel = $this->context->module->panels['db'];
 
-                            $title = "Executed {$data['sqlCount']} database queries.";
-                            $warning = '';
                             if ($dbPanel->isQueryCountCritical($data['sqlCount'])) {
-                                $warning .= 'Too many queries. Allowed count is ' . $dbPanel->criticalQueryThreshold;
-                            }
-                            if (!empty($data['excessiveCallersCount'])) {
-                                $warning .= ($warning ? ' &#10;' : '') . $data['excessiveCallersCount'] . ' '
-                                    . ($data['excessiveCallersCount'] == 1 ? 'caller is' : 'callers are')
-                                    . ' making too many calls.';
-                            }
+                                $content = Html::tag('b', $data['sqlCount']) . ' ' . Html::tag('span', '&#x26a0;');
 
-                            $content = $data['sqlCount'];
-                            if ($warning) {
-                                $content .= ' <span title="' . $warning . '">&#x26a0;</span>';
-                            }
+                                return Html::a($content, ['view', 'panel' => 'db', 'tag' => $data['tag']], [
+                                    'title' => 'Too many queries. Allowed count is ' . $dbPanel->criticalQueryThreshold,
+                                ]);
 
-                            return '<a href="' . Url::to(['view', 'panel' => 'db', 'tag' => $data['tag']]) .'"
-                                        title="' . $title . '">' . $content . '</a>';
+                            }
+                            return $data['sqlCount'];
                         },
-                        'format' => 'raw',
+                        'format' => 'html',
                     ] : null,
                     [
                         'attribute' => 'mailCount',
@@ -140,8 +134,7 @@ $this->title = 'Yii Debugger';
                             'post' => 'POST',
                             'delete' => 'DELETE',
                             'put' => 'PUT',
-                            'head' => 'HEAD',
-                            'command' => 'COMMAND'
+                            'head' => 'HEAD'
                         ]
                     ],
                     [
@@ -153,17 +146,16 @@ $this->title = 'Yii Debugger';
                     ],
                     [
                         'attribute' => 'url',
-                        'label' => 'URL/Command',
+                        'label' => 'URL',
                     ],
                     [
                         'attribute' => 'statusCode',
                         'value' => function ($data) {
                             $statusCode = $data['statusCode'];
-                            $method = $data['method'];
                             if ($statusCode === null) {
                                 $statusCode = 200;
                             }
-                            if (($statusCode >= 200 && $statusCode < 300) || ($method == 'COMMAND' && $statusCode == 0)) {
+                            if ($statusCode >= 200 && $statusCode < 300) {
                                 $class = 'badge-success';
                             } elseif ($statusCode >= 300 && $statusCode < 400) {
                                 $class = 'badge-info';

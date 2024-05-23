@@ -1,8 +1,8 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\gii;
@@ -15,8 +15,9 @@ use yii\helpers\Html;
 /**
  * CodeFile represents a code file to be generated.
  *
- * @property-read string $relativePath The code file path relative to the application base path.
- * @property-read string $type The code file extension (e.g. php, txt).
+ * @property string $relativePath The code file path relative to the application base path. This property is
+ * read-only.
+ * @property string $type The code file extension (e.g. php, txt). This property is read-only.
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0

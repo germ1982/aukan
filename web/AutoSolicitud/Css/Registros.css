@@ -1,0 +1,94 @@
+
+
+hr {
+
+  border-color: #6c6d6e;
+  box-shadow: 2px 0px 2px #888;
+  box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px lightblue, 0 0 30px lightblue, 0 0 40px lightblue, 0 0 55px lightblue, 0 0 75px lightblue;
+}
+
+h1{
+font-size: 25px;
+margin:10px 0px 0px;
+font-family: Arial, italic, sans-serif;
+color: #444644;
+background-color: #f3f3f3;
+text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px lightblue, 0 0 30px lightblue, 0 0 40px lightblue, 0 0 55px lightblue, 0 0 75px lightblue;
+}
+
+body{
+
+font-family: Arial, Helvetica, sans-serif;
+color:#534e4e;
+background-color:#f3f3f3;
+width: 98%;
+}
+
+#Contenedor{
+background-color:#f3f3f3;
+color:#534e4e;
+width: 260px;
+margin: auto;
+text-align: center;
+}
+
+
+
+#Caja
+{
+
+color: #534e4e;
+font-size: 16px;
+background: #f3f3f3;
+text-align: center;
+padding: 10px;
+border-radius: 10px 0px 35px 0px;
+-moz-border-radius: 35px 0px 35px 0px;
+-webkit-border-radius: 35px 0px 35px 0px;
+border: 2px solid #5878ca;
+-webkit-box-shadow: 1px 8px 128px 21px lightblue;
+-moz-box-shadow: 1px 8px 128px 21px lightblue;
+box-shadow: 1px 8px 128px 21px lightblue;
+}
+
+button 
+{
+  margin: 1px;
+  width:200px;
+  color: #534e4e;
+}
+button:hover 
+{
+  color: 534e4e;
+}
+
+input[type="text"]
+{
+
+  background: #f3f3f3 ;
+  color:#534e4e;
+}
+
+input[type="password"]
+{
+  background: #f3f3f3 ;
+  color: #534e4e;
+}
+
+textarea
+{
+  width:800px;
+  background: #f3f3f3 ;
+  color: #534e4e;
+}
+
+
+::-webkit-input-placeholder { color: darkolivegreen   ; } /* WebKit */
+:-moz-placeholder { color: darkolivegreen  ; } /* Firefox 18- */
+::-moz-placeholder { color: darkolivegreen  ; } /* Firefox 19+ */
+:-ms-input-placeholder { color: darkolivegreen  ; } /* IE 10+ */
+
+#TamImput
+{
+  width:600px;
+}

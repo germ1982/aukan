@@ -1,8 +1,8 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\data;
@@ -145,7 +145,7 @@ class Sort extends BaseObject
      */
     public $sortParam = 'sort';
     /**
-     * @var array|null the order that should be used when the current request does not specify any order.
+     * @var array the order that should be used when the current request does not specify any order.
      * The array keys are attribute names and the array values are the corresponding sort directions. For example,
      *
      * ```php
@@ -159,7 +159,7 @@ class Sort extends BaseObject
      */
     public $defaultOrder;
     /**
-     * @var string|null the route of the controller action for displaying the sorted contents.
+     * @var string the route of the controller action for displaying the sorted contents.
      * If not set, it means using the currently requested route.
      */
     public $route;
@@ -168,7 +168,7 @@ class Sort extends BaseObject
      */
     public $separator = ',';
     /**
-     * @var array|null parameters (name => value) that should be used to obtain the current sort directions
+     * @var array parameters (name => value) that should be used to obtain the current sort directions
      * and to create new sort URLs. If not set, `$_GET` will be used instead.
      *
      * In order to add hash to all links use `array_merge($_GET, ['#' => 'my-hash'])`.
@@ -181,7 +181,7 @@ class Sort extends BaseObject
      */
     public $params;
     /**
-     * @var \yii\web\UrlManager|null the URL manager used for creating sort URLs. If not set,
+     * @var \yii\web\UrlManager the URL manager used for creating sort URLs. If not set,
      * the `urlManager` application component will be used.
      */
     public $urlManager;
@@ -191,12 +191,6 @@ class Sort extends BaseObject
      * @since 2.0.33
      */
     public $sortFlags = SORT_REGULAR;
-    /**
-     * @var string|null the name of the [[\yii\base\Model]]-based class used by the [[link()]] method to retrieve
-     * attributes' labels. See [[link]] method for details.
-     * @since 2.0.49
-     */
-    public $modelClass;
 
 
     /**
@@ -283,8 +277,6 @@ class Sort extends BaseObject
                         }
                     }
                 }
-
-                return $this->_attributeOrders;
             }
             if (empty($this->_attributeOrders) && is_array($this->defaultOrder)) {
                 $this->_attributeOrders = $this->defaultOrder;
@@ -369,8 +361,7 @@ class Sort extends BaseObject
      * @param array $options additional HTML attributes for the hyperlink tag.
      * There is one special attribute `label` which will be used as the label of the hyperlink.
      * If this is not set, the label defined in [[attributes]] will be used.
-     * If no label is defined, it will be retrieved from the instance of [[modelClass]] (if [[modelClass]] is not null)
-     * or generated from attribute name using [[\yii\helpers\Inflector::camel2words()]].
+     * If no label is defined, [[\yii\helpers\Inflector::camel2words()]] will be called to get a label.
      * Note that it will not be HTML-encoded.
      * @return string the generated hyperlink
      * @throws InvalidConfigException if the attribute is unknown
@@ -395,11 +386,6 @@ class Sort extends BaseObject
         } else {
             if (isset($this->attributes[$attribute]['label'])) {
                 $label = $this->attributes[$attribute]['label'];
-            } elseif ($this->modelClass !== null) {
-                $modelClass = $this->modelClass;
-                /** @var \yii\base\Model $model */
-                $model = $modelClass::instance();
-                $label = $model->getAttributeLabel($attribute);
             } else {
                 $label = Inflector::camel2words($attribute);
             }

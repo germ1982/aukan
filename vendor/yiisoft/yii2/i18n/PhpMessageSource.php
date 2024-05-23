@@ -1,8 +1,8 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\i18n;
@@ -72,7 +72,7 @@ class PhpMessageSource extends MessageSource
         $messageFile = $this->getMessageFilePath($category, $language);
         $messages = $this->loadMessagesFromFile($messageFile);
 
-        $fallbackLanguage = substr((string)$language, 0, 2);
+        $fallbackLanguage = substr($language, 0, 2);
         $fallbackSourceLanguage = substr($this->sourceLanguage, 0, 2);
 
         if ($fallbackLanguage !== '' && $language !== $fallbackLanguage) {
@@ -134,7 +134,7 @@ class PhpMessageSource extends MessageSource
     protected function getMessageFilePath($category, $language)
     {
         $language = (string) $language;
-        if ($language !== '' && !preg_match('/^[a-z0-9_-]+$/i', $language)) {
+        if ($language !== '' && !preg_match('/^[a-z_-]+$/i', $language)) {
             throw new InvalidArgumentException(sprintf('Invalid language code: "%s".', $language));
         }
         $messageFile = Yii::getAlias($this->basePath) . "/$language/";

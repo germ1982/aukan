@@ -1,0 +1,77 @@
+.panel-featured-pinky {
+    border-color: #DB4FB6 !important;
+}
+
+.panel-featured-pinky .panel-title {
+    color: #DB4FB6 !important;
+}
+
+.bg-pinky {
+    background: #DB4FB6;
+    color: white;
+}
+
+.panel-featured-donna {
+    border-color: #897DF7 !important;
+}
+
+.panel-featured-donna .panel-title {
+    color: #897DF7 !important;
+}
+
+.bg-donna {
+    background: #897DF7;
+    color: white;
+}
+
+.panel-featured-brown {
+    border-color: #5B4216 !important;
+}
+
+.panel-featured-brown .panel-title {
+    color: #5B4216 !important;
+}
+
+.bg-brown {
+    background: #5B4216;
+    color: white;
+}
+
+.panel-featured-rainy {
+    border-color: #475F87 !important;
+}
+
+.panel-featured-rainy .panel-title {
+    color: #475F87 !important;
+}
+
+.bg-rainy {
+    background: #475F87;
+    color: white;
+}
+
+.panel-featured-grey {
+    border-color: #A9A9A9 !important;
+}
+
+.panel-featured-grey .panel-title {
+    color: #A9A9A9 !important;
+}
+
+.bg-yellow {
+    background: #CDD223;
+    color: white;
+}
+
+.panel-featured-yellow {
+    border-color: #CDD223 !important;
+}
+
+.panel-featured-yellow .panel-title {
+    color: #CDD223 !important;
+}
+
+.bg-yellow {
+    background: #CDD223;
+    color: white;
+}

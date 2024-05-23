@@ -1,0 +1,26 @@
+.table-internos{
+    width: 100%;
+    border: 1px solid #9a9a9a;
+    text-align:center;
+}
+
+.table-internos th{
+    background-color: #0088cc;
+    text-align: center;
+    color: #ffffff;
+    padding: 15px;
+}
+
+.table-internos .internos-head-items{
+    color: #000000;
+    background-color: #66bbdd !important;
+}
+
+.table-internos .internos-body-items{
+    border-bottom: 1px solid #444444;
+}
+
+.table-internos .internos-body-items-space{
+    border-bottom: 1px solid #444444;
+    background-color: #b4b4b4;
+}

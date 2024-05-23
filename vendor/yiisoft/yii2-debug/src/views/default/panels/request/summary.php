@@ -2,11 +2,10 @@
 
 use yii\helpers\Html;
 use yii\web\Response;
-use yii\debug\panels\RequestPanel;
 
-/** @var RequestPanel $panel */
+/* @var $panel yii\debug\panels\RequestPanel */
 
-$statusCode = isset($panel->data['statusCode']) ? $panel->data['statusCode'] : null;
+$statusCode = $panel->data['statusCode'];
 if ($statusCode === null) {
     $statusCode = 200;
 }

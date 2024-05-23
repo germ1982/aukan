@@ -1,19 +1,17 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\gii\generators\model;
 
 use Yii;
-use yii\base\InvalidConfigException;
 use yii\base\NotSupportedException;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\db\Connection;
-use yii\db\Exception;
 use yii\db\Schema;
 use yii\db\TableSchema;
 use yii\gii\CodeFile;
@@ -31,26 +29,13 @@ class Generator extends \yii\gii\Generator
     const RELATIONS_NONE = 'none';
     const RELATIONS_ALL = 'all';
     const RELATIONS_ALL_INVERSE = 'all-inverse';
-    const JUNCTION_RELATION_VIA_TABLE = 'table';
-    const JUNCTION_RELATION_VIA_MODEL = 'model';
 
     public $db = 'db';
     public $ns = 'app\models';
-    /**
-     * @var string
-     */
-    public $tableName = '';
-    /**
-     * @var string
-     */
-    public $modelClass = '';
-    /**
-     * @var string
-     */
+    public $tableName;
+    public $modelClass;
     public $baseClass = 'yii\db\ActiveRecord';
     public $generateRelations = self::RELATIONS_ALL;
-    public $generateJunctionRelationMode = self::JUNCTION_RELATION_VIA_TABLE;
-    public $useClassConstant;
     public $generateRelationsFromCurrentSchema = true;
     public $generateLabelsFromComments = false;
     public $useTablePrefix = false;
@@ -59,36 +44,12 @@ class Generator extends \yii\gii\Generator
     public $useSchemaName = true;
     public $generateQuery = false;
     public $queryNs = 'app\models';
-    /**
-     * @var string|null
-     */
     public $queryClass;
-    /**
-     * @var string
-     */
     public $queryBaseClass = 'yii\db\ActiveQuery';
 
-    /**
-     * @var string[]|null
-     */
-    protected $tableNames;
-    /**
-     * @var string[]
-     */
-    protected $classNames = [];
-
-
-    public function init()
-    {
-        parent::init();
-
-        if ($this->useClassConstant === null) {
-            $this->useClassConstant = PHP_VERSION_ID >= 50500;
-        }
-    }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -96,7 +57,7 @@ class Generator extends \yii\gii\Generator
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getDescription()
     {
@@ -104,19 +65,14 @@ class Generator extends \yii\gii\Generator
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['db', 'tableName', 'modelClass', 'baseClass', 'queryClass', 'queryBaseClass'], 'trim'],
-            [
-                ['ns', 'queryNs'],
-                'filter',
-                'filter' => static function ($value) {
-                    return $value === null ? null : trim($value, ' \\');
-                }
-            ],
+            [['db', 'ns', 'tableName', 'modelClass', 'baseClass', 'queryNs', 'queryClass', 'queryBaseClass'], 'filter', 'filter' => 'trim'],
+            [['ns', 'queryNs'], 'filter', 'filter' => function ($value) { return trim($value, '\\'); }],
+
             [['db', 'ns', 'tableName', 'baseClass', 'queryNs', 'queryBaseClass'], 'required'],
             [['db', 'modelClass', 'queryClass'], 'match', 'pattern' => '/^\w+$/', 'message' => 'Only word characters are allowed.'],
             [['ns', 'baseClass', 'queryNs', 'queryBaseClass'], 'match', 'pattern' => '/^[\w\\\\]+$/', 'message' => 'Only word characters and backslashes are allowed.'],
@@ -128,17 +84,14 @@ class Generator extends \yii\gii\Generator
             [['baseClass'], 'validateClass', 'params' => ['extends' => ActiveRecord::className()]],
             [['queryBaseClass'], 'validateClass', 'params' => ['extends' => ActiveQuery::className()]],
             [['generateRelations'], 'in', 'range' => [self::RELATIONS_NONE, self::RELATIONS_ALL, self::RELATIONS_ALL_INVERSE]],
-            [['generateJunctionRelationMode'], 'in', 'range' => [self::JUNCTION_RELATION_VIA_TABLE, self::JUNCTION_RELATION_VIA_MODEL]],
-            [
-                ['generateLabelsFromComments', 'useTablePrefix', 'useSchemaName', 'generateQuery', 'generateRelationsFromCurrentSchema', 'useClassConstant', 'enableI18N', 'standardizeCapitals', 'singularize'],
-                'boolean'
-            ],
+            [['generateLabelsFromComments', 'useTablePrefix', 'useSchemaName', 'generateQuery', 'generateRelationsFromCurrentSchema'], 'boolean'],
+            [['enableI18N', 'standardizeCapitals', 'singularize'], 'boolean'],
             [['messageCategory'], 'validateMessageCategory', 'skipOnEmpty' => false],
         ]);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
@@ -151,9 +104,7 @@ class Generator extends \yii\gii\Generator
             'modelClass' => 'Model Class Name',
             'baseClass' => 'Base Class',
             'generateRelations' => 'Generate Relations',
-            'generateJunctionRelationMode' => 'Generate Junction Relations As',
             'generateRelationsFromCurrentSchema' => 'Generate Relations from Current Schema',
-            'useClassConstant' => 'Use `::class`',
             'generateLabelsFromComments' => 'Generate Labels from DB Comments',
             'generateQuery' => 'Generate ActiveQuery',
             'queryNs' => 'ActiveQuery Namespace',
@@ -164,7 +115,7 @@ class Generator extends \yii\gii\Generator
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function hints()
     {
@@ -191,11 +142,7 @@ class Generator extends \yii\gii\Generator
             'generateRelations' => 'This indicates whether the generator should generate relations based on
                 foreign key constraints it detects in the database. Note that if your database contains too many tables,
                 you may want to uncheck this option to accelerate the code generation process.',
-            'generateJunctionRelationMode' => 'This indicates whether junction relations are generated with `viaTable()` or `via()` (Via Model) relations.
-                Make sure you also generate the junction models when using the "Via Model" option.
-            ',
             'generateRelationsFromCurrentSchema' => 'This indicates whether the generator should generate relations from current schema or from all available schemas.',
-            'useClassConstant' => 'Use the `::class` constant instead of the `::className()` method.',
             'generateLabelsFromComments' => 'This indicates whether the generator should generate attribute labels
                 by using the comments of the corresponding DB columns.',
             'useTablePrefix' => 'This indicates whether the table name returned by the generated ActiveRecord class
@@ -214,7 +161,7 @@ class Generator extends \yii\gii\Generator
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function autoCompleteData()
     {
@@ -231,39 +178,20 @@ class Generator extends \yii\gii\Generator
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function requiredTemplates()
     {
-        $templates = ['model.php'];
-        if ($this->queryClass !== null) {
-            $templates[] = 'query.php';
-        }
-
-        return $templates;
+        // @todo make 'query.php' to be required before 2.1 release
+        return ['model.php'/*, 'query.php'*/];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function stickyAttributes()
     {
-        return array_merge(
-            parent::stickyAttributes(),
-            [
-                'ns',
-                'db',
-                'baseClass',
-                'generateRelations',
-                'generateJunctionRelationMode',
-                'generateLabelsFromComments',
-                'queryNs',
-                'queryBaseClass',
-                'useTablePrefix',
-                'generateQuery',
-                'useClassConstant',
-            ]
-        );
+        return array_merge(parent::stickyAttributes(), ['ns', 'db', 'baseClass', 'generateRelations', 'generateLabelsFromComments', 'queryNs', 'queryBaseClass', 'useTablePrefix', 'generateQuery']);
     }
 
     /**
@@ -276,12 +204,15 @@ class Generator extends \yii\gii\Generator
     public function getTablePrefix()
     {
         $db = $this->getDbConnection();
+        if ($db !== null) {
+            return $db->tablePrefix;
+        }
 
-        return $db === null ? '' : $db->tablePrefix;
+        return '';
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function generate()
     {
@@ -289,9 +220,9 @@ class Generator extends \yii\gii\Generator
         $relations = $this->generateRelations();
         $db = $this->getDbConnection();
         foreach ($this->getTableNames() as $tableName) {
-            // model:
+            // model :
             $modelClassName = $this->generateClassName($tableName);
-            $queryClassName = $this->generateQuery ? $this->generateQueryClassName($modelClassName) : false;
+            $queryClassName = ($this->generateQuery) ? $this->generateQueryClassName($modelClassName) : false;
             $tableRelations = isset($relations[$tableName]) ? $relations[$tableName] : [];
             $tableSchema = $db->getTableSchema($tableName);
             $params = [
@@ -310,7 +241,7 @@ class Generator extends \yii\gii\Generator
                 $this->render('model.php', $params)
             );
 
-            // query:
+            // query :
             if ($queryClassName) {
                 $params['className'] = $queryClassName;
                 $params['modelClassName'] = $modelClassName;
@@ -520,7 +451,6 @@ class Generator extends \yii\gii\Generator
                 continue;
             }
             $refClassName = $this->generateClassName($refTable);
-            $refClassNameResolution = $this->generateClassNameResolution($refClassName);
             unset($refs[0]);
             $attributes = implode("', '", array_keys($refs));
             $targetAttributes = [];
@@ -528,14 +458,14 @@ class Generator extends \yii\gii\Generator
                 $targetAttributes[] = "'$key' => '$value'";
             }
             $targetAttributes = implode(', ', $targetAttributes);
-            $rules[] = "[['$attributes'], 'exist', 'skipOnError' => true, 'targetClass' => $refClassNameResolution, 'targetAttribute' => [$targetAttributes]]";
+            $rules[] = "[['$attributes'], 'exist', 'skipOnError' => true, 'targetClass' => $refClassName::className(), 'targetAttribute' => [$targetAttributes]]";
         }
 
         return $rules;
     }
 
     /**
-     * Generates relations using a junction table by adding an extra via() or viaTable() depending on $generateViaRelationMode.
+     * Generates relations using a junction table by adding an extra viaTable().
      * @param \yii\db\TableSchema the table being checked
      * @param array $fks obtained from the checkJunctionTable() method
      * @param array $relations
@@ -545,16 +475,13 @@ class Generator extends \yii\gii\Generator
     {
         $db = $this->getDbConnection();
 
-
         foreach ($fks as $pair) {
             list($firstKey, $secondKey) = $pair;
-            $table0 = $firstKey[0][0];
-            $table1 = $secondKey[0][0];
-            unset($firstKey[0][0], $secondKey[0][0]);
+            $table0 = $firstKey[0];
+            $table1 = $secondKey[0];
+            unset($firstKey[0], $secondKey[0]);
             $className0 = $this->generateClassName($table0);
             $className1 = $this->generateClassName($table1);
-            $className0Resolution = $this->generateClassNameResolution($className0);
-            $className1Resolution = $this->generateClassNameResolution($className1);
             $table0Schema = $db->getTableSchema($table0);
             $table1Schema = $db->getTableSchema($table1);
 
@@ -563,63 +490,25 @@ class Generator extends \yii\gii\Generator
                 continue;
             }
 
-            $link = $this->generateRelationLink(array_flip($secondKey[0]));
-            $relationName = $this->generateRelationName($relations, $table0Schema, key($secondKey[0]), true);
-            if ($this->generateJunctionRelationMode === self::JUNCTION_RELATION_VIA_TABLE) {
-                $relations[$table0Schema->fullName][$relationName] = [
-                    "return \$this->hasMany($className1Resolution, $link)->viaTable('"
-                    . $this->generateTableName($table->name) . "', " . $this->generateRelationLink($firstKey[0]) . ');',
-                    $className1,
-                    true,
-                ];
-            } elseif ($this->generateJunctionRelationMode === self::JUNCTION_RELATION_VIA_MODEL) {
-                $foreignRelationName = null;
-                foreach ($relations[$table0Schema->fullName] as $key => $foreignRelationConfig) {
-                    if ($foreignRelationConfig[3] == $firstKey[1]) {
-                        $foreignRelationName = $key;
-                        break;
-                    }
-                }
-                if (empty($foreignRelationName)) {
-                    throw new Exception('Foreign key for junction table not found.');
-                }
-                $relations[$table0Schema->fullName][$relationName] = [
-                    "return \$this->hasMany($className1Resolution, $link)->via('"
-                    . lcfirst($foreignRelationName) . "');",
-                    $className1,
-                    true,
-                ];
-            }
+            $link = $this->generateRelationLink(array_flip($secondKey));
+            $viaLink = $this->generateRelationLink($firstKey);
+            $relationName = $this->generateRelationName($relations, $table0Schema, key($secondKey), true);
+            $relations[$table0Schema->fullName][$relationName] = [
+                "return \$this->hasMany($className1::className(), $link)->viaTable('"
+                . $this->generateTableName($table->name) . "', $viaLink);",
+                $className1,
+                true,
+            ];
 
-            $link = $this->generateRelationLink(array_flip($firstKey[0]));
-            $relationName = $this->generateRelationName($relations, $table1Schema, key($firstKey[0]), true);
-            if ($this->generateJunctionRelationMode === self::JUNCTION_RELATION_VIA_TABLE) {
-                $relations[$table1Schema->fullName][$relationName] = [
-                    "return \$this->hasMany($className0Resolution, $link)->viaTable('"
-                    . $this->generateTableName($table->name) . "', " . $this->generateRelationLink($secondKey[0]) . ');',
-                    $className0,
-                    true,
-                ];
-            } elseif ($this->generateJunctionRelationMode === self::JUNCTION_RELATION_VIA_MODEL) {
-                $foreignRelationName = null;
-                foreach ($relations[$table1Schema->fullName] as $key => $foreignRelationConfig) {
-                    if ($foreignRelationConfig[3] == $secondKey[1]) {
-                        $foreignRelationName = $key;
-                        break;
-                    }
-                }
-                if (empty($foreignRelationName)) {
-                    throw new Exception('Foreign key for junction table not found.');
-                }
-                $relations[$table1Schema->fullName][$relationName] = [
-                    "return \$this->hasMany($className0Resolution, $link)->via('"
-                    . lcfirst($foreignRelationName) . "');",
-                    $className0,
-                    true,
-                ];
-            } else {
-                throw new InvalidConfigException('Unknown generateViaRelationMode ' . $this->generateJunctionRelationMode);
-            }
+            $link = $this->generateRelationLink(array_flip($firstKey));
+            $viaLink = $this->generateRelationLink($secondKey);
+            $relationName = $this->generateRelationName($relations, $table1Schema, key($firstKey), true);
+            $relations[$table1Schema->fullName][$relationName] = [
+                "return \$this->hasMany($className0::className(), $link)->viaTable('"
+                . $this->generateTableName($table->name) . "', $viaLink);",
+                $className0,
+                true,
+            ];
         }
 
         return $relations;
@@ -674,8 +563,7 @@ class Generator extends \yii\gii\Generator
         foreach ($schemaNames as $schemaName) {
             foreach ($db->getSchema()->getTableSchemas($schemaName) as $table) {
                 $className = $this->generateClassName($table->fullName);
-                $classNameResolution = $this->generateClassNameResolution($className);
-                foreach ($table->foreignKeys as $foreignKey => $refs) {
+                foreach ($table->foreignKeys as $refs) {
                     $refTable = $refs[0];
                     $refTableSchema = $db->getTableSchema($refTable);
                     if ($refTableSchema === null) {
@@ -685,16 +573,14 @@ class Generator extends \yii\gii\Generator
                     unset($refs[0]);
                     $fks = array_keys($refs);
                     $refClassName = $this->generateClassName($refTable);
-                    $refClassNameResolution = $this->generateClassNameResolution($refClassName);
 
                     // Add relation for this table
                     $link = $this->generateRelationLink(array_flip($refs));
                     $relationName = $this->generateRelationName($relations, $table, $fks[0], false);
                     $relations[$table->fullName][$relationName] = [
-                        "return \$this->hasOne($refClassNameResolution, $link);",
+                        "return \$this->hasOne($refClassName::className(), $link);",
                         $refClassName,
                         false,
-                        $table->fullName . '.' . $foreignKey
                     ];
 
                     // Add relation for the referenced table
@@ -702,15 +588,12 @@ class Generator extends \yii\gii\Generator
                     $link = $this->generateRelationLink($refs);
                     $relationName = $this->generateRelationName($relations, $refTableSchema, $className, $hasMany);
                     $relations[$refTableSchema->fullName][$relationName] = [
-                        "return \$this->" . ($hasMany ? 'hasMany' : 'hasOne') . "($classNameResolution, $link);",
+                        "return \$this->" . ($hasMany ? 'hasMany' : 'hasOne') . "($className::className(), $link);",
                         $className,
                         $hasMany,
-                        $table->fullName . '.' . $foreignKey
                     ];
                 }
-            }
 
-            foreach ($db->getSchema()->getTableSchemas($schemaName) as $table) {
                 if (($junctionFks = $this->checkJunctionTable($table)) === false) {
                     continue;
                 }
@@ -720,11 +603,7 @@ class Generator extends \yii\gii\Generator
         }
 
         if ($this->generateRelations === self::RELATIONS_ALL_INVERSE) {
-            $relations =  $this->addInverseRelations($relations);
-        }
-
-        foreach ($relations as &$relation) {
-            ksort($relation);
+            return $this->addInverseRelations($relations);
         }
 
         return $relations;
@@ -796,7 +675,7 @@ class Generator extends \yii\gii\Generator
             // ignore
         }
         foreach ($uniqueKeys as $uniqueKey) {
-            if (array_diff(array_merge($uniqueKey, $fks), array_intersect($uniqueKey, $fks)) === []) {
+            if (count(array_diff(array_merge($uniqueKey, $fks), array_intersect($uniqueKey, $fks))) === 0) {
                 return false;
             }
         }
@@ -837,7 +716,6 @@ class Generator extends \yii\gii\Generator
         }
         $result = [];
         // find all foreign key pairs that have all columns in an unique constraint
-        $foreignKeyNames = array_keys($table->foreignKeys);
         $foreignKeys = array_values($table->foreignKeys);
         $foreignKeysCount = count($foreignKeys);
 
@@ -853,16 +731,7 @@ class Generator extends \yii\gii\Generator
                 foreach ($uniqueKeys as $uniqueKey) {
                     if (count(array_diff(array_merge($uniqueKey, $fks), array_intersect($uniqueKey, $fks))) === 0) {
                         // save the foreign key pair
-                        $result[] = [
-                            [
-                                $foreignKeys[$i],
-                                $table->fullName . '.' . $foreignKeyNames[$i]
-                            ],
-                            [
-                                $foreignKeys[$j],
-                                $table->fullName . '.' . $foreignKeyNames[$j]
-                            ]
-                        ];
+                        $result[] = [$foreignKeys[$i], $foreignKeys[$j]];
                         break;
                     }
                 }
@@ -991,6 +860,9 @@ class Generator extends \yii\gii\Generator
         }
     }
 
+    protected $tableNames;
+    protected $classNames;
+
     /**
      * @return array the table names that match the pattern specified by [[tableName]].
      */
@@ -1055,7 +927,7 @@ class Generator extends \yii\gii\Generator
      */
     protected function generateClassName($tableName, $useSchemaName = null)
     {
-        if (!empty($this->classNames[$tableName])) {
+        if (isset($this->classNames[$tableName])) {
             return $this->classNames[$tableName];
         }
 
@@ -1103,16 +975,6 @@ class Generator extends \yii\gii\Generator
     }
 
     /**
-     * Action to generate class name.
-     * @return string
-     * @since 2.2.2
-     */
-    public function actionGenerateClassName()
-    {
-        return $this->generateClassName($this->tableName);
-    }
-
-    /**
      * Generates a query class name from the specified model class name.
      * @param string $modelClassName model class name
      * @return string generated class name
@@ -1127,9 +989,7 @@ class Generator extends \yii\gii\Generator
     }
 
     /**
-     * Returns the database connection as specified by [[db]].
-     *
-     * @return Connection|null database connection instance
+     * @return Connection the DB connection as specified by [[db]].
      */
     protected function getDbConnection()
     {
@@ -1137,22 +997,21 @@ class Generator extends \yii\gii\Generator
     }
 
     /**
-     * Returns the driver name of [[db]] connection.
-     *
      * @return string|null driver name of db connection.
+     * In case db is not instance of \yii\db\Connection null will be returned.
      * @since 2.0.6
      */
     protected function getDbDriverName()
     {
+        /** @var Connection $db */
         $db = $this->getDbConnection();
-
-        return $db instanceof Connection ? $db->driverName : null;
+        return $db instanceof \yii\db\Connection ? $db->driverName : null;
     }
 
     /**
      * Checks if any of the specified columns is auto incremental.
      * @param \yii\db\TableSchema $table the table schema
-     * @param string[] $columns columns to check for autoIncrement property
+     * @param array $columns columns to check for autoIncrement property
      * @return bool whether any of the specified columns is auto incremental.
      */
     protected function isColumnAutoIncremental($table, $columns)
@@ -1164,17 +1023,5 @@ class Generator extends \yii\gii\Generator
         }
 
         return false;
-    }
-
-    /**
-     * Returns the class name resolution
-     * @param string $class
-     * @return string
-     * @see $useClassConstant
-     * @since 2.2.5
-     */
-    protected function generateClassNameResolution($class)
-    {
-        return $class . '::class' . ($this->useClassConstant ? '' : 'Name()');
     }
 }

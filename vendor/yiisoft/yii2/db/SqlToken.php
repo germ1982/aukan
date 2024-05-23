@@ -1,8 +1,8 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\db;
@@ -83,7 +83,6 @@ class SqlToken extends BaseObject implements \ArrayAccess
      * @param int $offset child token offset.
      * @return bool whether the token exists.
      */
-    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->_children[$this->calculateOffset($offset)]);
@@ -96,7 +95,6 @@ class SqlToken extends BaseObject implements \ArrayAccess
      * @param int $offset child token offset.
      * @return SqlToken|null the child token at the specified offset, `null` if there's no token.
      */
-    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         $offset = $this->calculateOffset($offset);
@@ -110,7 +108,6 @@ class SqlToken extends BaseObject implements \ArrayAccess
      * @param int|null $offset child token offset.
      * @param SqlToken $token token to be added.
      */
-    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $token)
     {
         $token->parent = $this;
@@ -128,7 +125,6 @@ class SqlToken extends BaseObject implements \ArrayAccess
      * It is implicitly called when you use something like `unset($token[$offset])`.
      * @param int $offset child token offset.
      */
-    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         $offset = $this->calculateOffset($offset);

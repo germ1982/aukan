@@ -1,13 +1,12 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\db\conditions;
 
-use yii\db\Expression;
 use yii\db\ExpressionBuilderInterface;
 use yii\db\ExpressionBuilderTrait;
 use yii\db\ExpressionInterface;
@@ -65,10 +64,6 @@ class InConditionBuilder implements ExpressionBuilderInterface
             }
             $column->rewind();
             $column = $column->current();
-        }
-
-        if ($column instanceof Expression) {
-            $column = $column->expression;
         }
 
         if (is_array($values)) {
@@ -129,10 +124,6 @@ class InConditionBuilder implements ExpressionBuilderInterface
             $column = $column->current();
         }
 
-        if ($column instanceof Expression) {
-            $column = $column->expression;
-        }
-
         foreach ($values as $i => $value) {
             if (is_array($value) || $value instanceof \ArrayAccess) {
                 $value = isset($value[$column]) ? $value[$column] : null;
@@ -164,9 +155,6 @@ class InConditionBuilder implements ExpressionBuilderInterface
 
         if (is_array($columns)) {
             foreach ($columns as $i => $col) {
-                if ($col instanceof Expression) {
-                    $col = $col->expression;
-                }
                 if (strpos($col, '(') === false) {
                     $columns[$i] = $this->queryBuilder->db->quoteColumnName($col);
                 }
@@ -175,9 +163,6 @@ class InConditionBuilder implements ExpressionBuilderInterface
             return '(' . implode(', ', $columns) . ") $operator $sql";
         }
 
-        if ($columns instanceof Expression) {
-            $columns = $columns->expression;
-        }
         if (strpos($columns, '(') === false) {
             $columns = $this->queryBuilder->db->quoteColumnName($columns);
         }
@@ -200,9 +185,6 @@ class InConditionBuilder implements ExpressionBuilderInterface
         foreach ($values as $value) {
             $vs = [];
             foreach ($columns as $column) {
-                if ($column instanceof Expression) {
-                    $column = $column->expression;
-                }
                 if (isset($value[$column])) {
                     $vs[] = $this->queryBuilder->bindParam($value[$column], $params);
                 } else {
@@ -218,9 +200,6 @@ class InConditionBuilder implements ExpressionBuilderInterface
 
         $sqlColumns = [];
         foreach ($columns as $i => $column) {
-            if ($column instanceof Expression) {
-                $column = $column->expression;
-            }
             $sqlColumns[] = strpos($column, '(') === false ? $this->queryBuilder->db->quoteColumnName($column) : $column;
         }
 

@@ -1,8 +1,8 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\data;
@@ -183,11 +183,15 @@ class ActiveDataProvider extends BaseDataProvider
                     $sort->attributes[$attribute] = [
                         'asc' => [$attribute => SORT_ASC],
                         'desc' => [$attribute => SORT_DESC],
+                        'label' => $model->getAttributeLabel($attribute),
                     ];
                 }
-            }
-            if ($sort->modelClass === null) {
-                $sort->modelClass = $modelClass;
+            } else {
+                foreach ($sort->attributes as $attribute => $config) {
+                    if (!isset($config['label'])) {
+                        $sort->attributes[$attribute]['label'] = $model->getAttributeLabel($attribute);
+                    }
+                }
             }
         }
     }

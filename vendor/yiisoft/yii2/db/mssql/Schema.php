@@ -1,13 +1,12 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\db\mssql;
 
-use Yii;
 use yii\db\CheckConstraint;
 use yii\db\Constraint;
 use yii\db\ConstraintFinderInterface;
@@ -332,7 +331,7 @@ SQL;
      */
     public function createQueryBuilder()
     {
-        return Yii::createObject(QueryBuilder::className(), [$this->db]);
+        return new QueryBuilder($this->db);
     }
 
     /**
@@ -811,6 +810,6 @@ SQL;
      */
     public function createColumnSchemaBuilder($type, $length = null)
     {
-        return Yii::createObject(ColumnSchemaBuilder::className(), [$type, $length, $this->db]);
+        return new ColumnSchemaBuilder($type, $length, $this->db);
     }
 }

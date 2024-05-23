@@ -1,8 +1,8 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\rest;
@@ -62,7 +62,7 @@ use yii\web\UrlRuleInterface;
 class UrlRule extends CompositeUrlRule
 {
     /**
-     * @var string|null the common prefix string shared by all patterns.
+     * @var string the common prefix string shared by all patterns.
      */
     public $prefix;
     /**
@@ -158,7 +158,7 @@ class UrlRule extends CompositeUrlRule
         }
         $this->controller = $controllers;
 
-        $this->prefix = trim((string)$this->prefix, '/');
+        $this->prefix = trim($this->prefix, '/');
 
         parent::init();
     }

@@ -1,8 +1,8 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\web;
@@ -140,7 +140,7 @@ class DbSession extends MultiFieldSession
                ->queryOne();
         });
 
-        if ($row !== false && $this->getIsActive()) {
+        if ($row !== false) {
             if ($deleteOldSession) {
                 $this->db->createCommand()
                     ->update($this->sessionTable, ['id' => $newID], ['id' => $oldID])
@@ -151,6 +151,11 @@ class DbSession extends MultiFieldSession
                     ->insert($this->sessionTable, $row)
                     ->execute();
             }
+        } else {
+            // shouldn't reach here normally
+            $this->db->createCommand()
+                ->insert($this->sessionTable, $this->composeFields($newID, ''))
+                ->execute();
         }
     }
 

@@ -1,8 +1,8 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\db\mssql;
@@ -21,7 +21,6 @@ class PDO extends \PDO
      * @param string|null $sequence the sequence name. Defaults to null.
      * @return int last inserted ID value.
      */
-    #[\ReturnTypeWillChange]
     public function lastInsertId($sequence = null)
     {
         return $this->query('SELECT CAST(COALESCE(SCOPE_IDENTITY(), @@IDENTITY) AS bigint)')->fetchColumn();
@@ -32,7 +31,6 @@ class PDO extends \PDO
      * natively support transactions.
      * @return bool the result of a transaction start.
      */
-    #[\ReturnTypeWillChange]
     public function beginTransaction()
     {
         $this->exec('BEGIN TRANSACTION');
@@ -45,7 +43,6 @@ class PDO extends \PDO
      * natively support transactions.
      * @return bool the result of a transaction commit.
      */
-    #[\ReturnTypeWillChange]
     public function commit()
     {
         $this->exec('COMMIT TRANSACTION');
@@ -58,7 +55,6 @@ class PDO extends \PDO
      * natively support transactions.
      * @return bool the result of a transaction roll back.
      */
-    #[\ReturnTypeWillChange]
     public function rollBack()
     {
         $this->exec('ROLLBACK TRANSACTION');
@@ -75,7 +71,6 @@ class PDO extends \PDO
      * @return mixed A successful call returns the value of the requested PDO attribute.
      * An unsuccessful call returns null.
      */
-    #[\ReturnTypeWillChange]
     public function getAttribute($attribute)
     {
         try {

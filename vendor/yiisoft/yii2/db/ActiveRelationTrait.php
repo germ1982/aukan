@@ -1,8 +1,8 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\db;
@@ -17,7 +17,7 @@ use yii\base\InvalidConfigException;
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
  *
- * @method ActiveRecordInterface|array|null one($db = null) See [[ActiveQueryInterface::one()]] for more info.
+ * @method ActiveRecordInterface one($db = null) See [[ActiveQueryInterface::one()]] for more info.
  * @method ActiveRecordInterface[] all($db = null) See [[ActiveQueryInterface::all()]] for more info.
  * @property ActiveRecord $modelClass
  */
@@ -98,7 +98,7 @@ trait ActiveRelationTrait
      * ```
      *
      * @param string $relationName the relation name. This refers to a relation declared in [[primaryModel]].
-     * @param callable|null $callable a PHP callback for customizing the relation associated with the junction table.
+     * @param callable $callable a PHP callback for customizing the relation associated with the junction table.
      * Its signature should be `function($query)`, where `$query` is the query to be customized.
      * @return $this the relation object itself.
      */
@@ -289,12 +289,7 @@ trait ActiveRelationTrait
             $link = array_values($deepViaQuery->link);
         }
         foreach ($primaryModels as $i => $primaryModel) {
-            $keys = null;
-            if ($this->multiple && count($link) === 1) {
-                $primaryModelKey = reset($link);
-                $keys = isset($primaryModel[$primaryModelKey]) ? $primaryModel[$primaryModelKey] : null;
-            }
-            if (is_array($keys)) {
+            if ($this->multiple && count($link) === 1 && is_array($keys = $primaryModel[reset($link)])) {
                 $value = [];
                 foreach ($keys as $key) {
                     $key = $this->normalizeModelKey($key);
@@ -391,8 +386,8 @@ trait ActiveRelationTrait
     /**
      * @param array $models
      * @param array $link
-     * @param array|null $viaModels
-     * @param self|null $viaQuery
+     * @param array $viaModels
+     * @param null|self $viaQuery
      * @param bool $checkMultiple
      * @return array
      */
@@ -456,9 +451,8 @@ trait ActiveRelationTrait
     private function mapVia($map, $viaMap) {
         $resultMap = [];
         foreach ($map as $key => $linkKeys) {
-            $resultMap[$key] = [];
             foreach (array_keys($linkKeys) as $linkKey) {
-                $resultMap[$key] += $viaMap[$linkKey];
+                $resultMap[$key] = $viaMap[$linkKey];
             }
         }
         return $resultMap;
@@ -529,8 +523,7 @@ trait ActiveRelationTrait
             // single key
             $attribute = reset($this->link);
             foreach ($models as $model) {
-                $value = isset($model[$attribute]) || (is_object($model) && property_exists($model, $attribute)) ? $model[$attribute] : null;
-                if ($value !== null) {
+                if (($value = $model[$attribute]) !== null) {
                     if (is_array($value)) {
                         $values = array_merge($values, $value);
                     } elseif ($value instanceof ArrayExpression && $value->getDimension() === 1) {
@@ -581,15 +574,13 @@ trait ActiveRelationTrait
     /**
      * @param ActiveRecordInterface|array $model
      * @param array $attributes
-     * @return string|false
+     * @return string
      */
     private function getModelKey($model, $attributes)
     {
         $key = [];
         foreach ($attributes as $attribute) {
-            if (isset($model[$attribute]) || (is_object($model) && property_exists($model, $attribute))) {
-                $key[] = $this->normalizeModelKey($model[$attribute]);
-            }
+            $key[] = $this->normalizeModelKey($model[$attribute]);
         }
         if (count($key) > 1) {
             return serialize($key);

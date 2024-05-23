@@ -1,0 +1,14 @@
+<?php
+
+use yii\helpers\Html;
+
+
+/* @var $this yii\web\View */
+/* @var $model app\models\Mds_pad_padron */
+
+?>
+<div class="mds-pad-padron-create">
+    <?= $this->render('_form', [
+        'model' => $model,
+    ]) ?>
+</div>

@@ -8,7 +8,7 @@ use yii\base\Model;
 /**
  * LoginForm is the model behind the login form.
  *
- * @property-read User|null $user
+ * @property User|null $user This property is read-only.
  *
  */
 class LoginForm extends Model
@@ -18,6 +18,7 @@ class LoginForm extends Model
     public $rememberMe = true;
 
     private $_user = false;
+    public $recaptchaToken;
 
 
     /**
@@ -46,9 +47,50 @@ class LoginForm extends Model
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
+            $mensajeError = "Usuario o contraseña incorrecta.";
+            $mensajeErrorBlocked = "Usuario bloqueado. Contactarse con su área informática.";
 
-            if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+            if ($user) {
+                $userModel = Mds_seg_usuario::find()->where(['idusuario' => $user->idusuario])->one();
+                $modelSegUsuarioStatus = new Mds_seg_usuario_status();
+                $modelSegUsuarioStatus->idusuario = $user->idusuario;
+                $modelSegUsuarioStatus->created_at = date('Y-m-d H:i:s');
+                $modelSegUsuarioStatus->idusuario_carga = $user->idusuario;
+
+                if ($user->validatePassword($this->password)) {
+                    // Clave correcta pero esta bloqueada
+                    if ($userModel->attemps >= 3) {
+                        $modelSegUsuarioStatus->idestado = Mds_seg_usuario_status::ESTADO_BLOQUEADO;
+                        $this->addError($attribute, $mensajeErrorBlocked);
+                        $userModel->activo = 0;
+                        $userModel->save();
+                    } else {
+                        // Funciono todo bien
+                        $userModel->attemps = 0;
+                        $userModel->save();
+                    }
+                } else {
+                    if ($userModel->attemps >= 3) {
+                        $this->addError($attribute, $mensajeErrorBlocked);
+                        $modelSegUsuarioStatus->idestado = Mds_seg_usuario_status::ESTADO_BLOQUEADO;
+                        $userModel->activo = 0;
+                    } else {
+                        $modelSegUsuarioStatus->idestado = Mds_seg_usuario_status::ESTADO_ERROR_PASSWORD;
+                        $this->addError($attribute, $mensajeError);
+                    }
+                    $userModel->attemps = $userModel->attemps + 1;
+                    $userModel->save();
+                    $modelSegUsuarioStatus->save();
+                }
+            } else {
+                $userInactived = Mds_seg_usuario::find()
+                    ->where("user=:username", [":username" => str_replace(' ', '', $this->username)])
+                    ->andWhere("activo=:activo", [":activo" => 0])
+                    ->all();
+                if ($userInactived) {
+                    $mensajeError = $mensajeErrorBlocked;
+                }
+                $this->addError($attribute, $mensajeError);
             }
         }
     }
@@ -60,7 +102,15 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
+            // Guarda log cuando el usuario accedio correctamente
+            $user = $this->getUser();
+            $modelSegUsuarioStatus = new Mds_seg_usuario_status();
+            $modelSegUsuarioStatus->idusuario = $user->idusuario;
+            $modelSegUsuarioStatus->created_at = date('Y-m-d H:i:s');
+            $modelSegUsuarioStatus->idusuario_carga = $user->idusuario;
+            $modelSegUsuarioStatus->idestado = Mds_seg_usuario_status::ESTADO_LOGIN_CORRECTO;
+            $modelSegUsuarioStatus->save();
+            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         }
         return false;
     }
@@ -73,7 +123,7 @@ class LoginForm extends Model
     public function getUser()
     {
         if ($this->_user === false) {
-            $this->_user = User::findByUsername($this->username);
+            $this->_user = Mds_seg_usuario::findByUsername(str_replace(' ', '', $this->username));
         }
 
         return $this->_user;

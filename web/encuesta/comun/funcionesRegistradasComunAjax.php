@@ -1,0 +1,23 @@
+<?
+     /////////////////////////funciones para ajax///////////////////////////////////////
+	$xajax->registerFunction("desplegarLista");
+	$xajax->registerFunction("desplegarListaConFuncion");
+	$xajax->registerFunction("moverse");
+	$xajax->registerFunction("desplegarPacienteConDNI");
+	$xajax->registerFunction("buscarObraSocial");
+	$xajax->registerFunction("desplegarListaConFuncionYmouseOver");
+	$xajax->registerFunction("calcularDiasEntreFecha");	
+	$xajax->registerFunction("buscarMedicacionCatalogo");
+	$xajax->registerFunction("buscarMedicacionCatalogoPrecioKairos");
+	$xajax->registerFunction("buscarPrecioCatalogoKairos");
+	$xajax->registerFunction("borrarTextoTesauro");
+	$xajax->registerFunction("guardarProblema");
+	$xajax->registerFunction("grillaProblemas");
+	$xajax->registerFunction("borrarProblema");
+	$xajax->registerFunction("filtrarConsultaPorProblemas");
+	$xajax->registerFunction("desplegarListaItaliano");
+	$xajax->registerFunction("imprimirPulseraAdmision");
+	$xajax->registerFunction("calibrarImpresora");
+    $xajax->registerFunction("devolverNombrePaciente");
+	///////////////////////////////////////////////////////////////////////////////////
+?>

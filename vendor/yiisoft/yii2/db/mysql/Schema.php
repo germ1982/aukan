@@ -1,13 +1,12 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\db\mysql;
 
-use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\NotSupportedException;
 use yii\db\Constraint;
@@ -45,8 +44,6 @@ class Schema extends \yii\db\Schema implements ConstraintFinderInterface
      */
     public $typeMap = [
         'tinyint' => self::TYPE_TINYINT,
-        'bool' => self::TYPE_TINYINT,
-        'boolean' => self::TYPE_TINYINT,
         'bit' => self::TYPE_INTEGER,
         'smallint' => self::TYPE_SMALLINT,
         'mediumint' => self::TYPE_INTEGER,
@@ -55,12 +52,9 @@ class Schema extends \yii\db\Schema implements ConstraintFinderInterface
         'bigint' => self::TYPE_BIGINT,
         'float' => self::TYPE_FLOAT,
         'double' => self::TYPE_DOUBLE,
-        'double precision' => self::TYPE_DOUBLE,
         'real' => self::TYPE_FLOAT,
         'decimal' => self::TYPE_DECIMAL,
         'numeric' => self::TYPE_DECIMAL,
-        'dec' => self::TYPE_DECIMAL,
-        'fixed' => self::TYPE_DECIMAL,
         'tinytext' => self::TYPE_TEXT,
         'mediumtext' => self::TYPE_TEXT,
         'longtext' => self::TYPE_TEXT,
@@ -76,8 +70,6 @@ class Schema extends \yii\db\Schema implements ConstraintFinderInterface
         'time' => self::TYPE_TIME,
         'timestamp' => self::TYPE_TIMESTAMP,
         'enum' => self::TYPE_STRING,
-        'set' => self::TYPE_STRING,
-        'binary' => self::TYPE_BINARY,
         'varbinary' => self::TYPE_BINARY,
         'json' => self::TYPE_JSON,
     ];
@@ -222,7 +214,7 @@ SQL;
      */
     public function createQueryBuilder()
     {
-        return Yii::createObject(QueryBuilder::className(), [$this->db]);
+        return new QueryBuilder($this->db);
     }
 
     /**
@@ -301,12 +293,11 @@ SQL;
              *
              * See details here: https://mariadb.com/kb/en/library/now/#description
              */
-            if (in_array($column->type, ['timestamp', 'datetime', 'date', 'time'])
-                && isset($info['default'])
+            if (($column->type === 'timestamp' || $column->type === 'datetime')
                 && preg_match('/^current_timestamp(?:\(([0-9]*)\))?$/i', $info['default'], $matches)) {
                 $column->defaultValue = new Expression('CURRENT_TIMESTAMP' . (!empty($matches[1]) ? '(' . $matches[1] . ')' : ''));
             } elseif (isset($type) && $type === 'bit') {
-                $column->defaultValue = bindec(trim(isset($info['default']) ? $info['default'] : '', 'b\''));
+                $column->defaultValue = bindec(trim($info['default'], 'b\''));
             } else {
                 $column->defaultValue = $column->phpTypecast($info['default']);
             }
@@ -472,7 +463,7 @@ SQL;
      */
     public function createColumnSchemaBuilder($type, $length = null)
     {
-        return Yii::createObject(ColumnSchemaBuilder::className(), [$type, $length, $this->db]);
+        return new ColumnSchemaBuilder($type, $length, $this->db);
     }
 
     /**
@@ -484,7 +475,7 @@ SQL;
     protected function isOldMysql()
     {
         if ($this->_oldMysql === null) {
-            $version = $this->db->getSlavePdo(true)->getAttribute(\PDO::ATTR_SERVER_VERSION);
+            $version = $this->db->getSlavePdo()->getAttribute(\PDO::ATTR_SERVER_VERSION);
             $this->_oldMysql = version_compare($version, '5.1', '<=');
         }
 

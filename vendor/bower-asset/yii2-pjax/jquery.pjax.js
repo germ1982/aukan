@@ -260,11 +260,6 @@ function pjax(options) {
     var url = parseURL(settings.url)
     if (hash) url.hash = hash
     options.requestUrl = stripInternalParams(url)
-
-    if (typeof (options.async) !== 'undefined' && !options.async) {
-      fire('pjax:start', [xhr, options])
-      fire('pjax:send', [xhr, options])
-    }
   }
 
   options.complete = function(xhr, textStatus) {
@@ -432,10 +427,8 @@ function pjax(options) {
       window.history.pushState(null, "", options.requestUrl)
     }
 
-    if (typeof (options.async) === 'undefined' || options.async) {
-      fire('pjax:start', [xhr, options])
-      fire('pjax:send', [xhr, options])
-    }
+    fire('pjax:start', [xhr, options])
+    fire('pjax:send', [xhr, options])
   }
 
   return pjax.xhr

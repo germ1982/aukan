@@ -1,8 +1,8 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\db\mssql;
@@ -21,7 +21,6 @@ class DBLibPDO extends \PDO
      * @param string|null $name the sequence name. Defaults to null.
      * @return int last inserted ID value.
      */
-    #[\ReturnTypeWillChange]
     public function lastInsertId($name = null)
     {
         return $this->query('SELECT CAST(COALESCE(SCOPE_IDENTITY(), @@IDENTITY) AS bigint)')->fetchColumn();
@@ -36,7 +35,6 @@ class DBLibPDO extends \PDO
      * @return mixed A successful call returns the value of the requested PDO attribute.
      * An unsuccessful call returns null.
      */
-    #[\ReturnTypeWillChange]
     public function getAttribute($attribute)
     {
         try {

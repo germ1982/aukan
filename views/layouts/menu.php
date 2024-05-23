@@ -2,13 +2,13 @@
 
 //print_r($permisos);
 
-use app\models\Menu;
+use app\models\Sds_com_menu;
 
 ?>
 <ul class="nav nav-main">
     <?php
     //Arranco a armar el arbol de menu
-    echo Menu::getArbolMenu();
+    echo Sds_com_menu::getArbolMenu(null, $permisos);
     /*if ($modulo_ans_negativa || $modulo_ans_jubilacion || $modulo_ans_alimentar || $modulo_tar_tarjeta || $modulo_atp_solicitud) {
         '<li class="nav-parent">                                    
                                         <a>

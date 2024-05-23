@@ -1,8 +1,8 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\web;
@@ -57,6 +57,7 @@ use yii\base\InvalidConfigException;
  * @property bool $hasSessionId Whether the current request has sent the session ID.
  * @property string $id The current session ID.
  * @property-read bool $isActive Whether the session has started.
+ * @property-read SessionIterator $iterator An iterator for traversing the session variables.
  * @property string $name The current session name.
  * @property string $savePath The current session save path, defaults to '/tmp'.
  * @property int $timeout The number of seconds after which data will be seen as 'garbage' and cleaned up. The
@@ -405,7 +406,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
      *     'sameSite' => PHP_VERSION_ID >= 70300 ? yii\web\Cookie::SAME_SITE_LAX : null,
      * ]
      * ```
-     * See https://owasp.org/www-community/SameSite for more information about `sameSite`.
+     * See https://www.owasp.org/index.php/SameSite for more information about `sameSite`.
      *
      * @throws InvalidArgumentException if the parameters are incomplete.
      * @see https://www.php.net/manual/en/function.session-set-cookie-params.php
@@ -659,7 +660,6 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
      * This method is required by the interface [[\IteratorAggregate]].
      * @return SessionIterator an iterator for traversing the session variables.
      */
-    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         $this->open();
@@ -681,7 +681,6 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
      * This method is required by [[\Countable]] interface.
      * @return int number of items in the session.
      */
-    #[\ReturnTypeWillChange]
     public function count()
     {
         return $this->getCount();
@@ -822,7 +821,7 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
      *
      * Note that if you use [[addFlash()]], `$message` will be an array, and you will have to adjust the above code.
      *
-     * [bootstrap alert]: https://getbootstrap.com/docs/3.4/components/#alerts
+     * [bootstrap alert]: http://getbootstrap.com/components/#alerts
      *
      * @param bool $delete whether to delete the flash messages right after this method is called.
      * If false, the flash messages will be automatically deleted in the next request.
@@ -963,7 +962,6 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
      * @param int|string $offset the offset to check on
      * @return bool
      */
-    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         $this->open();
@@ -976,7 +974,6 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
      * @param int|string $offset the offset to retrieve element.
      * @return mixed the element at the offset, null if no element is found at the offset
      */
-    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         $this->open();
@@ -989,7 +986,6 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
      * @param int|string $offset the offset to set element
      * @param mixed $item the element value
      */
-    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $item)
     {
         $this->open();
@@ -1000,7 +996,6 @@ class Session extends Component implements \IteratorAggregate, \ArrayAccess, \Co
      * This method is required by the interface [[\ArrayAccess]].
      * @param int|string $offset the offset to unset element
      */
-    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         $this->open();

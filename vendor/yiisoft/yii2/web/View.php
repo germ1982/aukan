@@ -1,8 +1,8 @@
 <?php
 /**
- * @link https://www.yiiframework.com/
+ * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
+ * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\web;
@@ -132,14 +132,12 @@ class View extends \yii\base\View
     public $jsFiles = [];
 
     private $_assetManager;
-
-
     /**
      * Whether [[endPage()]] has been called and all files have been registered
      * @var bool
-     * @since 2.0.44
      */
-    protected $isPageEnded = false;
+    private $_isPageEnded = false;
+
 
     /**
      * Marks the position of an HTML head section.
@@ -181,7 +179,7 @@ class View extends \yii\base\View
     {
         $this->trigger(self::EVENT_END_PAGE);
 
-        $this->isPageEnded = true;
+        $this->_isPageEnded = true;
 
         $content = ob_get_clean();
 
@@ -204,7 +202,7 @@ class View extends \yii\base\View
      *
      * @param string $view the view name. Please refer to [[render()]] on how to specify this parameter.
      * @param array $params the parameters (name-value pairs) that will be extracted and made available in the view file.
-     * @param object|null $context the context that the view should use for rendering the view. If null,
+     * @param object $context the context that the view should use for rendering the view. If null,
      * existing [[context]] will be used.
      * @return string the rendering result
      * @see render()
@@ -338,7 +336,7 @@ class View extends \yii\base\View
      * will result in the meta tag `<meta name="description" content="This website is about funny raccoons.">`.
      *
      * @param array $options the HTML attributes for the meta tag.
-     * @param string|null $key the key that identifies the meta tag. If two meta tags are registered
+     * @param string $key the key that identifies the meta tag. If two meta tags are registered
      * with the same key, the latter will overwrite the former. If this is null, the new meta tag
      * will be appended to the existing ones.
      */
@@ -375,7 +373,7 @@ class View extends \yii\base\View
     /**
      * Registers a link tag.
      *
-     * For example, a link tag for a custom [favicon](https://www.w3.org/2005/10/howto-favicon)
+     * For example, a link tag for a custom [favicon](http://www.w3.org/2005/10/howto-favicon)
      * can be added like the following:
      *
      * ```php
@@ -388,7 +386,7 @@ class View extends \yii\base\View
      * has more options for this kind of link tag.
      *
      * @param array $options the HTML attributes for the link tag.
-     * @param string|null $key the key that identifies the link tag. If two link tags are registered
+     * @param string $key the key that identifies the link tag. If two link tags are registered
      * with the same key, the latter will overwrite the former. If this is null, the new link tag
      * will be appended to the existing ones.
      */
@@ -405,7 +403,7 @@ class View extends \yii\base\View
      * Registers a CSS code block.
      * @param string $css the content of the CSS code block to be registered
      * @param array $options the HTML attributes for the `<style>`-tag.
-     * @param string|null $key the key that identifies the CSS code block. If null, it will use
+     * @param string $key the key that identifies the CSS code block. If null, it will use
      * $css as the key. If two CSS code blocks are registered with the same key, the latter
      * will overwrite the former.
      */
@@ -429,7 +427,7 @@ class View extends \yii\base\View
      * - `depends`: array, specifies the names of the asset bundles that this CSS file depends on.
      * - `appendTimestamp`: bool whether to append a timestamp to the URL.
      *
-     * @param string|null $key the key that identifies the CSS script file. If null, it will use
+     * @param string $key the key that identifies the CSS script file. If null, it will use
      * $url as the key. If two CSS files are registered with the same key, the latter
      * will overwrite the former.
      * @throws InvalidConfigException
@@ -453,7 +451,7 @@ class View extends \yii\base\View
      * - [[POS_READY]]: enclosed within jQuery(document).ready(). This is the default value.
      *   Note that by using this position, the method will automatically register the jQuery js file.
      *
-     * @param string|null $key the key that identifies the JS code block. If null, it will use
+     * @param string $key the key that identifies the JS code block. If null, it will use
      * $js as the key. If two JS code blocks are registered with the same key, the latter
      * will overwrite the former.
      */
@@ -477,7 +475,7 @@ class View extends \yii\base\View
      * - `depends`: array, specifies the names of the asset bundles that this CSS file depends on.
      * - `appendTimestamp`: bool whether to append a timestamp to the URL.
      *
-     * @param string|null $key the key that identifies the JS script file. If null, it will use
+     * @param string $key the key that identifies the JS script file. If null, it will use
      * $url as the key. If two JS files are registered with the same key at the same position, the latter
      * will overwrite the former. Note that position option takes precedence, thus files registered with the same key,
      * but different position option will not override each other.
@@ -499,8 +497,8 @@ class View extends \yii\base\View
         }
         $appendTimestamp = ArrayHelper::remove($options, 'appendTimestamp', $assetManagerAppendTimestamp);
 
-        if ($this->isPageEnded) {
-            Yii::warning('You\'re trying to register a file after View::endPage() has been called.');
+        if ($this->_isPageEnded) {
+            Yii::warning('You\'re trying to register a file after View::endPage() has been called');
         }
 
         if (empty($depends)) {
@@ -552,7 +550,7 @@ class View extends \yii\base\View
      *
      * Please refer to [[Html::jsFile()]] for other supported options.
      *
-     * @param string|null $key the key that identifies the JS script file. If null, it will use
+     * @param string $key the key that identifies the JS script file. If null, it will use
      * $url as the key. If two JS files are registered with the same key at the same position, the latter
      * will overwrite the former. Note that position option takes precedence, thus files registered with the same key,
      * but different position option will not override each other.
