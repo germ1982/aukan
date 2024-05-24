@@ -43,7 +43,7 @@ class LoginForm extends Model
      * @param string $attribute the attribute currently being validated
      * @param array $params the additional name-value pairs given in the rule
      */
-    public function validatePassword($attribute, $params)
+    /* public function validatePassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
@@ -51,8 +51,8 @@ class LoginForm extends Model
             $mensajeErrorBlocked = "Usuario bloqueado. Contactarse con su área informática.";
 
             if ($user) {
-                $userModel = Mds_seg_usuario::find()->where(['idusuario' => $user->idusuario])->one();
-                $modelSegUsuarioStatus = new Mds_seg_usuario_status();
+                $userModel = Usuarios::find()->where(['idusuario' => $user->idusuario])->one();
+                $modelSegUsuarioStatus = new Usuarios_status();
                 $modelSegUsuarioStatus->idusuario = $user->idusuario;
                 $modelSegUsuarioStatus->created_at = date('Y-m-d H:i:s');
                 $modelSegUsuarioStatus->idusuario_carga = $user->idusuario;
@@ -60,7 +60,7 @@ class LoginForm extends Model
                 if ($user->validatePassword($this->password)) {
                     // Clave correcta pero esta bloqueada
                     if ($userModel->attemps >= 3) {
-                        $modelSegUsuarioStatus->idestado = Mds_seg_usuario_status::ESTADO_BLOQUEADO;
+                        $modelSegUsuarioStatus->idestado = Usuarios_status::ESTADO_BLOQUEADO;
                         $this->addError($attribute, $mensajeErrorBlocked);
                         $userModel->activo = 0;
                         $userModel->save();
@@ -72,10 +72,10 @@ class LoginForm extends Model
                 } else {
                     if ($userModel->attemps >= 3) {
                         $this->addError($attribute, $mensajeErrorBlocked);
-                        $modelSegUsuarioStatus->idestado = Mds_seg_usuario_status::ESTADO_BLOQUEADO;
+                        $modelSegUsuarioStatus->idestado = Usuarios_status::ESTADO_BLOQUEADO;
                         $userModel->activo = 0;
                     } else {
-                        $modelSegUsuarioStatus->idestado = Mds_seg_usuario_status::ESTADO_ERROR_PASSWORD;
+                        $modelSegUsuarioStatus->idestado = Usuarios_status::ESTADO_ERROR_PASSWORD;
                         $this->addError($attribute, $mensajeError);
                     }
                     $userModel->attemps = $userModel->attemps + 1;
@@ -83,7 +83,7 @@ class LoginForm extends Model
                     $modelSegUsuarioStatus->save();
                 }
             } else {
-                $userInactived = Mds_seg_usuario::find()
+                $userInactived = Usuarios::find()
                     ->where("user=:username", [":username" => str_replace(' ', '', $this->username)])
                     ->andWhere("activo=:activo", [":activo" => 0])
                     ->all();
@@ -93,27 +93,27 @@ class LoginForm extends Model
                 $this->addError($attribute, $mensajeError);
             }
         }
-    }
+    } */
 
     /**
      * Logs in a user using the provided username and password.
      * @return bool whether the user is logged in successfully
      */
-    public function login()
+    /* public function login()
     {
         if ($this->validate()) {
             // Guarda log cuando el usuario accedio correctamente
             $user = $this->getUser();
-            $modelSegUsuarioStatus = new Mds_seg_usuario_status();
+            $modelSegUsuarioStatus = new Usuarios_status();
             $modelSegUsuarioStatus->idusuario = $user->idusuario;
             $modelSegUsuarioStatus->created_at = date('Y-m-d H:i:s');
             $modelSegUsuarioStatus->idusuario_carga = $user->idusuario;
-            $modelSegUsuarioStatus->idestado = Mds_seg_usuario_status::ESTADO_LOGIN_CORRECTO;
+            $modelSegUsuarioStatus->idestado = Usuarios_status::ESTADO_LOGIN_CORRECTO;
             $modelSegUsuarioStatus->save();
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         }
         return false;
-    }
+    } */
 
     /**
      * Finds user by [[username]]
@@ -123,7 +123,8 @@ class LoginForm extends Model
     public function getUser()
     {
         if ($this->_user === false) {
-            $this->_user = Mds_seg_usuario::findByUsername(str_replace(' ', '', $this->username));
+            $this->_user = Usuarios::find()->where(['email' => $this->username])->one();
+
         }
 
         return $this->_user;

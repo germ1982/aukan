@@ -52,4 +52,6 @@ class Usuarios extends \yii\db\ActiveRecord
             'idpersona' => 'Idpersona',
         ];
     }
+
+
 }

@@ -1,9 +1,9 @@
 <?php
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=mdsyt',
+    'dsn' => 'mysql:host=10.1.73.249;dbname=familia',
     'username' => 'root',
-    'password' => 'Dsyt**2402',//local
+    'password' => '0303456',//local
     'charset' => 'utf8',
 
 
