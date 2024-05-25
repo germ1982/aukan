@@ -16,9 +16,8 @@ class LoginForm extends Model
     public $username;
     public $password;
     public $rememberMe = true;
-
     private $_user = false;
-    public $recaptchaToken;
+
 
 
     /**
@@ -43,88 +42,51 @@ class LoginForm extends Model
      * @param string $attribute the attribute currently being validated
      * @param array $params the additional name-value pairs given in the rule
      */
-    /* public function validatePassword($attribute, $params)
+    public function validatePassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
-            $mensajeError = "Usuario o contraseña incorrecta.";
-            $mensajeErrorBlocked = "Usuario bloqueado. Contactarse con su área informática.";
-
+    
             if ($user) {
-                $userModel = Usuarios::find()->where(['idusuario' => $user->idusuario])->one();
-                $modelSegUsuarioStatus = new Usuarios_status();
-                $modelSegUsuarioStatus->idusuario = $user->idusuario;
-                $modelSegUsuarioStatus->created_at = date('Y-m-d H:i:s');
-                $modelSegUsuarioStatus->idusuario_carga = $user->idusuario;
-
-                if ($user->validatePassword($this->password)) {
-                    // Clave correcta pero esta bloqueada
-                    if ($userModel->attemps >= 3) {
-                        $modelSegUsuarioStatus->idestado = Usuarios_status::ESTADO_BLOQUEADO;
-                        $this->addError($attribute, $mensajeErrorBlocked);
-                        $userModel->activo = 0;
-                        $userModel->save();
-                    } else {
-                        // Funciono todo bien
-                        $userModel->attemps = 0;
-                        $userModel->save();
-                    }
+                // Utiliza el componente de seguridad de Yii para validar la contraseña
+                if (Yii::$app->security->validatePassword($this->password, $user->password)) {
+                    // Si la contraseña es correcta, restablece los intentos fallidos a 0
+                    $user->save();
                 } else {
-                    if ($userModel->attemps >= 3) {
-                        $this->addError($attribute, $mensajeErrorBlocked);
-                        $modelSegUsuarioStatus->idestado = Usuarios_status::ESTADO_BLOQUEADO;
-                        $userModel->activo = 0;
-                    } else {
-                        $modelSegUsuarioStatus->idestado = Usuarios_status::ESTADO_ERROR_PASSWORD;
-                        $this->addError($attribute, $mensajeError);
-                    }
-                    $userModel->attemps = $userModel->attemps + 1;
-                    $userModel->save();
-                    $modelSegUsuarioStatus->save();
+                    // Si la contraseña es incorrecta, añade un error
+                    $this->addError($attribute, "Contraseña Incorrecta");
                 }
             } else {
-                $userInactived = Usuarios::find()
-                    ->where("user=:username", [":username" => str_replace(' ', '', $this->username)])
-                    ->andWhere("activo=:activo", [":activo" => 0])
-                    ->all();
-                if ($userInactived) {
-                    $mensajeError = $mensajeErrorBlocked;
-                }
-                $this->addError($attribute, $mensajeError);
+                // Si el usuario no existe, añade un error
+                $this->addError($attribute, "Email Incorrecto");
             }
         }
-    } */
-
+    }
+    
     /**
      * Logs in a user using the provided username and password.
      * @return bool whether the user is logged in successfully
      */
-    /* public function login()
+    public function login()
     {
         if ($this->validate()) {
-            // Guarda log cuando el usuario accedio correctamente
-            $user = $this->getUser();
-            $modelSegUsuarioStatus = new Usuarios_status();
-            $modelSegUsuarioStatus->idusuario = $user->idusuario;
-            $modelSegUsuarioStatus->created_at = date('Y-m-d H:i:s');
-            $modelSegUsuarioStatus->idusuario_carga = $user->idusuario;
-            $modelSegUsuarioStatus->idestado = Usuarios_status::ESTADO_LOGIN_CORRECTO;
-            $modelSegUsuarioStatus->save();
+            echo "<script>console.log('Validación exitosa');</script>";
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         }
+        echo "<script>console.log('Validación fallida');</script>";
         return false;
-    } */
+    }
 
     /**
      * Finds user by [[username]]
      *
      * @return User|null
      */
-    public function getUser()
+    protected function getUser()
     {
         if ($this->_user === false) {
             $this->_user = Usuarios::find()->where(['email' => $this->username])->one();
-
+            echo "<script>console.log('Búsqueda de usuario: " . json_encode($this->_user) . "');</script>";
         }
 
         return $this->_user;

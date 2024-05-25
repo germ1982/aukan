@@ -2,6 +2,7 @@
 // -----------------------------------------------------------------------------
 /* Header */
 .header {
+      background-color: black;
 	@include linear-gradient(#F6F6F6 0%, #FFFFFF 45%);
 	border: {
 		bottom: 1px solid #E9E9E6;

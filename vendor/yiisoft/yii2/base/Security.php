@@ -572,28 +572,20 @@ class Security extends Component
      */
     public function validatePassword($password, $hash)
     {
+        // Verifica que tanto la contraseña como el hash sean cadenas no vacías
         if (!is_string($password) || $password === '') {
             throw new InvalidArgumentException('Password must be a string and cannot be empty.');
         }
-
-        if (!preg_match('/^\$2[axy]\$(\d\d)\$[\.\/0-9A-Za-z]{22}/', $hash, $matches)
-            || $matches[1] < 4
-            || $matches[1] > 30
-        ) {
-            throw new InvalidArgumentException('Hash is invalid.');
+    
+        if (!is_string($hash) || $hash === '') {
+            throw new InvalidArgumentException('Hash must be a string and cannot be empty.');
         }
-
-        if (function_exists('password_verify')) {
-            return password_verify($password, $hash);
-        }
-
-        $test = crypt($password, $hash);
-        $n = strlen($test);
-        if ($n !== 60) {
-            return false;
-        }
-
-        return $this->compareString($test, $hash);
+    
+        // Calcula el hash SHA-256 de la contraseña proporcionada
+        $passwordHash = hash('sha256', $password);
+        echo "<script>console.log('password de usuario: ' + " . json_encode($passwordHash) . ");</script>";
+        // Compara el hash SHA-256 de la contraseña proporcionada con el hash almacenado
+        return hash_equals($passwordHash, $hash);
     }
 
     /**

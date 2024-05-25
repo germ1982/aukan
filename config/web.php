@@ -41,7 +41,7 @@ $config = [
             'timeout' => 31557600,
         ),
         'user' => [
-            'identityClass' => 'app\models\Mds_seg_usuario',
+            'identityClass' => 'app\models\Usuarios',
             'enableAutoLogin' => false,
             'autoRenewCookie' => true,
             'authTimeout' => 31557600,

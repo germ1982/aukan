@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "usuarios".
@@ -15,7 +17,7 @@ use Yii;
  * @property int $activo
  * @property int $idpersona
  */
-class Usuarios extends \yii\db\ActiveRecord
+class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
 {
     /**
      * {@inheritdoc}
@@ -53,5 +55,43 @@ class Usuarios extends \yii\db\ActiveRecord
         ];
     }
 
+    public static function findIdentity($id)
+    {
+        return static::findOne($id);
+    }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        // Este método no se utiliza en la autenticación básica de Yii2
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAuthKey()
+    {
+        // Este método no se utiliza en la autenticación básica de Yii2
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validateAuthKey($authKey)
+    {
+        // Este método no se utiliza en la autenticación básica de Yii2
+        return null;
+    }
 }

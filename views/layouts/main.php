@@ -9,19 +9,17 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
-use app\models\Mds_seg_item;
-use app\models\Mds_seg_permiso;
-use app\models\Sds_com_configuracion;
-use app\models\Sds_reg_tipo;
+use app\models\Empleado;
 use yii\bootstrap\Modal;
 use \yii\helpers\Url;
 
 AppAsset::register($this);
 
-$this->title = "Sistema Único de Registro | SUR";
+$this->title = "DATAFAM | INFORMACION";
 
 $usuario = Yii::$app->user->identity;
-$id = $usuario != null ? $usuario->idusuario : null;
+$empleado = Empleado::find()->where(['idpersona'=>$usuario->idpersona])->one();
+$id = $usuario != null ? $usuario->id : null;
 if (!isset($id) || $id == null) {
     $model = new \app\models\LoginForm();
     return Yii::$app->getResponse()->redirect([
@@ -30,23 +28,10 @@ if (!isset($id) || $id == null) {
     ]);
 }
 
-$permisos = Mds_seg_permiso::getPermisosByIdUsuario($id)->all();
 
-/* AHORA ESTOS PERMISOS SE MANEJAN EN LA PAGINA DEL MENU
- SALVO EL PERMISO DEL RESPONSABLE DE ENTREGAS, QUE TENGO QUE DEJARLO ACA*/
-$permiso_responsable = false;
-$permiso_fichada = false;
 
-foreach ($permisos as $r) :
-    switch ($r->iditem) {
-        case Mds_seg_item::MODULO_ENT_CAMBIO_RESPONSABLE:
-            $permiso_responsable = true;
-            break;
-        case Mds_seg_item::MODULO_HOR_FICHADA_LEGAJO:
-            $permiso_fichada = true;
-            break;
-    }
-endforeach;
+
+
 
 ?>
 <?php $this->beginPage() ?>
@@ -90,16 +75,31 @@ endforeach;
             width: 100%;
             z-index: 9999998;
             background-color: rgba(0, 0, 0, 0.24);
+
+
         }
+
+        .logo {
+        display: block;
+
+        width: 150px;
+        /* Ajusta el ancho según sea necesario */
+        height: auto;
+        /* Esto mantiene la proporción de la imagen */
+    }
+
+    .header_per{
+      background-color: #000;
+    }
     </style>
     <?php $this->beginBody() ?>
     <section class="body">
 
         <!-- start: header -->
-        <header class="header">
+        <header class="header_per">
             <div class="logo-container">
                 <a href="index.php?r=site%2Findex" class="logo" style="margin-top:1px;margin-left:20px">
-                    <img src="img/sur_trans.png" height="55px" alt="Sistema Único de Registro">
+                  <img src="img/logo datafam.png" alt="Logo" class="logo">
                 </a>
                 <div class="visible-xs toggle-sidebar-left" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened">
                     <i class="fa fa-bars" aria-label="Toggle sidebar"></i>
@@ -120,18 +120,18 @@ endforeach;
 
                 <span class="separator"></span> -->
 
-                <?php include 'notificaciones.php' ?>
+                
 
                 <span class="separator"></span>
 
                 <div id="userbox" class="userbox">
                     <a href="" data-toggle="dropdown">
                         <figure class="profile-picture">
-                            <img src="<?= $usuario->imagen != null ? $usuario->imagen : 'img/user.png' ?>" alt="Imagen Usuario" class="img-circle" data-lock-picture="<?= $usuario->imagen != null ? $usuario->imagen : 'img/user.png' ?>">
+                            <img src="<?= $usuario->avatar != null ? 'img/usuarios-avatares/'.$usuario->avatar.'.jpg' : 'img/usuarios-avatares/avatar-0.jpg' ?>" alt="Imagen Usuario" class="img-circle" data-lock-picture="<?= $usuario->avatar != null ? 'img/usuarios-avatares/'.$usuario->avatar.'.jpg' : 'img/usuarios-avatares/avatar-0.jpg' ?>">
                         </figure>
-                        <div class="profile-info" data-lock-name="Usuario" data-lock-email="<?= $usuario->mail ?>">
-                            <span class="name"><?= $usuario->user ?></span>
-                            <span class="role"><?= $usuario->responsable != null ? Sds_com_configuracion::findOne($usuario->responsable)->descripcion : "" ?></span>
+                        <div class="profile-info" data-lock-name="Usuario" data-lock-email="<?= $usuario->email ?>">
+                            <span class="name"><?= $usuario->email ?></span>
+                            
                         </div>
                         <i class="fa custom-caret"></i>
                     </a>
@@ -139,44 +139,18 @@ endforeach;
                         <ul class="list-unstyled">
                             <li class="divider"></li>
                             <li>
-                                <?=
-                                !$permiso_responsable ? '' : Html::a(
-                                    '<i class="fas fa-user-friends"></i> Modificar Responsable',
-                                    ['/mds_seg_usuario/update_resp', 'id' => $usuario->idusuario],
-                                    ['role' => "modal-remote"]
-                                )
-                                ?>
+
                             </li>
                             <li class="divider"></li>
                             <li>
-                                <?=
-                                Html::a(
-                                    '<i class="fas fa-user-lock"></i> Cambiar Contraseña',
-                                    ['/mds_seg_usuario/update_pass'],
-                                    ['role' => "modal-remote"]
-                                )
-                                ?>
+
                             </li>
                             <li class="divider"></li>
                             <li>
-                                <?=
-                                !$permiso_fichada ? '' : Html::a(
-                                    '<i class="fas fa-user-clock"></i> Fichar Legajo',
-                                    ['/mds_hor_registro/fichada_legajo', 'id' => $usuario->idusuario],
-                                    ['role' => "modal-remote"]
-                                ) .
-                                    "<li class=\"divider\"></li>";
-                                ?>
+
                             </li>
                             <li>
-                                <?php
-                                $url =  Url::to(['/mds_org_contacto/reporte_credencial', 'idcontacto' => $usuario->idcontacto]);
-                                echo Html::a('<i class= "fas fa-print"> </i>&nbsp;&nbsp;Imprimir Credencial', $url, [
-                                    'role' => 'post', 'data-pjax' => 0, 'target' => '_blank',
-                                    'title' => 'Imprimir Credencial',
-                                    'data-toggle' => 'tooltip',
-                                ]);
-                                ?>
+
                             </li>
                             <li class="divider"></li>
                             <li>
@@ -203,9 +177,7 @@ endforeach;
                 <div class="nano has-scrollbar">
                     <div class="nano-content" tabindex="0" style="right: -17px;">
                         <nav id="menu" class="nav-main" role="navigation">
-                            <?= $this->render('menu', [
-                                'permisos' => $permisos
-                            ]) ?>
+
                         </nav>
                         <hr class="separator">
                     </div>
