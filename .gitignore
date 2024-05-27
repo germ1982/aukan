@@ -32,3 +32,4 @@ web/assets
 /.history/
 .env
 .gitignore
+config/db.php
