@@ -39,17 +39,18 @@ if (Yii::$app->session->hasFlash('error_modulo')) : ?>
     </div>
 <?php endif; ?>
 <style>
-    .content-body{
+    .content-body {
         padding: 5px 10px 20px 17px;
     }
+
 </style>
 <header class="page-header">
     <h2><?= $this->title ?></h2>
     <div class="right-wrapper pull-right">
-        <ol class="breadcrumbs">
+        <ol class=" breadcrumbs">
             <li>
                 <a href="index.php?r=site%2Findex">
-                    <i class="fa fa-home"></i>
+                    <i class=" neon fa fa-home"></i>
                 </a>
             </li>
             <li><span><?= $this->title ?></span></li>
@@ -90,8 +91,8 @@ if (Yii::$app->session->hasFlash('error_modulo')) : ?>
                 </div>
             </div>
             <div class="row">-->
-                <!-- Historico -->
-                <!--
+            <!-- Historico -->
+            <!--
                 <div class="col-md-12" style="padding:0; padding-top:5px;">
                     <div class="col-md-3 text-primary text-center" style="padding:0;">
                         <h5>Histórico</h5>
@@ -130,7 +131,7 @@ if (Yii::$app->session->hasFlash('error_modulo')) : ?>
                     </div>
                 </div>
             </div>
-            <!-- Fin Reporte Internos -->          
+            <!-- Fin Reporte Internos -->
         </div>
         <?php include 'accesos_directos.php' ?>
     </div>

@@ -19,7 +19,7 @@ class MenuSearch extends Menu
     {
         return [
             [['id', 'padre', 'activo', 'orden'], 'integer'],
-            [['title', 'type', 'icon', 'link'], 'safe'],
+            [['title', 'type', 'icon', 'link','icon_yii', 'link_yii'], 'safe'],
         ];
     }
 
@@ -65,7 +65,9 @@ class MenuSearch extends Menu
         $query->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'type', $this->type])
             ->andFilterWhere(['like', 'icon', $this->icon])
-            ->andFilterWhere(['like', 'link', $this->link]);
+            ->andFilterWhere(['like', 'link', $this->link])
+            ->andFilterWhere(['like', 'icon_yii', $this->icon_yii])
+            ->andFilterWhere(['like', 'link_yii', $this->link_yii]);
 
         return $dataProvider;
     }

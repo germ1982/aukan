@@ -36,7 +36,7 @@ if (!isset($id) || $id == null) {
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>" class="dark fixed js flexbox flexboxlegacy no-touch csstransforms csstransforms3d no-overflowscrolling no-mobile-device custom-scroll sidebar-left-collapsed">
+<html lang="<?= Yii::$app->language ?>" class="fixed js flexbox flexboxlegacy no-touch csstransforms csstransforms3d no-overflowscrolling no-mobile-device custom-scroll sidebar-left-collapsed">
 <!-- Acordarse que el estilo de bootstrap esta en web/template/stylesheets/theme.css -->
 
 <head>
@@ -80,24 +80,67 @@ if (!isset($id) || $id == null) {
             }
 
             .logo {
-                  margin: 0px !important;
+                  margin: 3px !important;
                   width: 150px;
                   /* Ajusta el ancho según sea necesario */
                   height: auto;
                   /* Esto mantiene la proporción de la imagen */
             }
 
+            .neon {
+
+                  text-shadow:
+                        0 0 2px #08c,
+                        0 0 4px #08c,
+                        0 0 8px #08c,
+                        0 0 10px #0ff,
+                        0 0 10px #0ff,
+                        0 0 0px #0ff,
+                        0 0 0px #0ff,
+                        0 0 0px #0ff;
+            }
+
+            .neon-border {
+                  position: relative;
+
+
+                  /* Ajusta el padding según tus necesidades */
+             
+                  color: #fff;
+            }
+
+            .neon-border::before {
+                  content: '';
+                  position: absolute;
+                  top: -5px;
+                  right: -5px;
+                  bottom: -5px;
+                  left: -5px;
+                  z-index: -1;
+   
+                  /* Ajusta si necesitas bordes redondeados */
+                  background: transparent;
+                  box-shadow:
+                        0 0 2px #fff,
+                        0 0 4px #fff,
+                        0 0 8px #fff,
+                        0 0 10px #0ff,
+                        0 0 20px #0ff,
+                        0 0 30px #0ff,
+                        0 0 40px #0ff,
+                        0 0 50px #0ff;
+            }
+
             /* Contenedor del banner en movimiento */
-          
       </style>
       <?php $this->beginBody() ?>
       <section class="body">
 
             <!-- start: header -->
             <header class="header">
-                  <div class="logo">
+                  <div class=" logo">
                         <a href="index.php?r=site%2Findex" class="logo" style="margin-top:1px;margin-left:20px">
-                              <img src="img/logo datafam.png" alt="Logo" class="logo">
+                              <img src="img/datafam-blanco.png" alt="Logo" class=" logo">
                         </a>
                         <div class="visible-xs toggle-sidebar-left" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened">
                               <i class="fa fa-bars" aria-label="Toggle sidebar"></i>
@@ -170,10 +213,11 @@ if (!isset($id) || $id == null) {
 
             <div class="inner-wrapper">
                   <!-- start: sidebar -->
-                  <aside id="sidebar-left" class="sidebar-left">
+                  <aside id="sidebar-left" class="sidebar-left" style="padding-bottom: 0%!important;">
 
-                        <div class="nano has-scrollbar">
+                        <div class="nano has-scrollbar ">
                               <div class="nano-content" tabindex="0" style="right: -17px;">
+
                                     <nav id="menu" class="nav-main" role="navigation">
                                           <?= $this->render('menu') ?>
                                     </nav>

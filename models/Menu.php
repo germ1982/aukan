@@ -34,7 +34,9 @@ class Menu extends \yii\db\ActiveRecord
             return [
                   [['title', 'type', 'icon', 'link', 'orden'], 'required'],
                   [['padre', 'activo', 'orden'], 'integer'],
-                  [['title', 'link'], 'string', 'max' => 30],
+                  [['title', 'link','link_yii'], 'string', 'max' => 30],
+                  [['link_yii'], 'string', 'max' => 100],
+                  [['icon_yii'], 'string', 'max' => 20],
                   [['type'], 'string', 'max' => 10],
                   [['icon'], 'string', 'max' => 60],
             ];
@@ -47,24 +49,26 @@ class Menu extends \yii\db\ActiveRecord
       {
             return [
                   'id' => 'ID',
-                  'title' => 'Title',
-                  'type' => 'Type',
-                  'icon' => 'Icon',
+                  'title' => 'Titulo',
+                  'type' => 'Tipo',
+                  'icon' => 'Icono',
                   'link' => 'Link',
                   'padre' => 'Padre',
                   'activo' => 'Activo',
                   'orden' => 'Orden',
+                  'link_yii' => 'Link Para Yii2',
+                  'icon_yii' => 'Icono para Yii2',
             ];
       }
 
       public static function getArbolMenu()
       {
             $menu = Menu::find()->where(['activo' => 1, 'padre' => 0])->orderBy('orden')->all();
-            $menu_txt = "";
+            $menu_txt = '';
             foreach ($menu as $m) {
                   $menu_txt = $menu_txt .  '<li class='.Menu::va_despliegue($m->id).'>
                         <a'.Menu::es_home($m->id).'>
-                            <i class="' . $m->icon . '" aria-hidden="true"></i>
+                            <i class="neon ' . $m->icon_yii . '" aria-hidden="true"></i>
                             <span>' . $m->title . '</span>
                         </a>'. Menu::getHijos($m->id).'<li>';
             }
@@ -89,7 +93,7 @@ class Menu extends \yii\db\ActiveRecord
                   $menu_txt = $menu_txt . '<ul class="nav nav-children">';
                   foreach ($menu as $m) {
                         $menu_txt = $menu_txt .  '<li '.Menu::va_despliegue($m->id).'>
-                              <a href="index.php?r=' . $m->link . '">
+                              <a href="index.php?r=' . $m->link_yii . '">
                                   <i class="' . $m->icon . '" aria-hidden="true"></i>
                                   <span>' . $m->title . '</span>
                                   </a>'. Menu::getHijos($m->id).'<li>';
