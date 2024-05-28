@@ -4,17 +4,30 @@ namespace app\models;
 
 use Yii;
 
-/**
- * This is the model class for table "menu".
- *
- * @property int $id
- * @property string $title
- * @property string $type
- * @property string $icon
- * @property string $link
- * @property int $padre
- * @property int $activo
- * @property int $orden
+/*meter a la base
+update menu set link_yii = 'site%2Findex', icon_yii = 'fas fa-home' where id = 1;
+update menu set link_yii = '', icon_yii = 'fas fa-laptop' where id = 2;
+update menu set link_yii = '', icon_yii = 'fas fa-users' where id = 3;
+update menu set link_yii = '', icon_yii = 'fa fa-cog' where id = 4;
+update menu set link_yii = 'registro_tecnico', icon_yii = 'fas fa-tools' where id = 5;
+update menu set link_yii = 'registro_ips', icon_yii = 'fas fa-network-wired' where id = 6;
+update menu set link_yii = 'inventario', icon_yii = 'fas fa-list' where id = 7;
+update menu set link_yii = 'persona', icon_yii = 'fas fa-users' where id = 8;
+update menu set link_yii = 'fichaje', icon_yii = 'far fa-address-card' where id = 9;
+update menu set link_yii = 'empleado', icon_yii = 'fas fa-user-tie' where id = 10;
+update menu set link_yii = 'organismo', icon_yii = 'fa fa-institution' where id = 11;
+update menu set link_yii = 'usuarios', icon_yii = 'fas fa-user-cog' where id = 12;
+update menu set link_yii = 'datos', icon_yii = 'fa fa-database' where id = 13;
+update menu set link_yii = 'menu', icon_yii = 'fas fa-list' where id = 14;
+update menu set link_yii = 'dispositivo', icon_yii = 'fa fa-institution' where id = 15;
+
+listado fa fa-tasks
+mapa fas fa-map-marked-alt'
+tarjeta personal far fa-address-card
+configuraciones fas fa-cogs
+stock fas fa-cubes
+contraseñas fas fa-save
+
  */
 class Menu extends \yii\db\ActiveRecord
 {
@@ -94,7 +107,7 @@ class Menu extends \yii\db\ActiveRecord
                   foreach ($menu as $m) {
                         $menu_txt = $menu_txt .  '<li '.Menu::va_despliegue($m->id).'>
                               <a href="index.php?r=' . $m->link_yii . '">
-                                  <i class="' . $m->icon . '" aria-hidden="true"></i>
+                                  <i class="neon ' . $m->icon_yii . '" aria-hidden="true"></i>
                                   <span>' . $m->title . '</span>
                                   </a>'. Menu::getHijos($m->id).'<li>';
                   }

@@ -78,7 +78,7 @@ CrudAsset::register($this);
                                 Html::a(
                                         '<i class="glyphicon glyphicon-plus"></i>',
                                         ['create'],
-                                        ['role' => 'modal-remote', 'title' => '', 'class' => 'btn btn-default']
+                                        ['role' => 'modal-remote', 'title' => 'Nuevo', 'class' => 'btn btn-default']
                                     ) .
 
 
