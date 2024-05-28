@@ -10,18 +10,19 @@ use app\models\Menu;
 
 
     .titulo-menu {
-        font-size: 32px;
+        font-size: 30px;
         color:#fff;
 
   text-align: center;
   text-transform: uppercase;
+  margin-left: -15px;
     }
 </style>
 <ul class="nav nav-main">
     <li>
         <a>
             <i aria-hidden="true"></i>
-            <span class="neon titulo-menu" styl>Mas Menu</span>
+            <span class="neon titulo-menu" style>Mas Menu WEB</span>
         </a>
     </li>
     <?php

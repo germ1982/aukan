@@ -77,7 +77,7 @@ class MenuController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
                 return [
-                    'title' => 'Nuevo Articulo',
+                    'title' => 'Nuevo Nodo de Menu',
                     'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),

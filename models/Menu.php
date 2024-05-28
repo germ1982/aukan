@@ -69,8 +69,8 @@ class Menu extends \yii\db\ActiveRecord
                   'padre' => 'Padre',
                   'activo' => 'Activo',
                   'orden' => 'Orden',
-                  'link_yii' => 'Link Para Yii2',
-                  'icon_yii' => 'Icono para Yii2',
+                  'link_yii' => 'Link',
+                  'icon_yii' => 'Icono',
             ];
       }
 

@@ -38,6 +38,40 @@ CrudAsset::register($this);
         background: darkgrey !important;
         border-color: darkgrey !important;
     }
+
+    .modal-header {
+    background: linear-gradient(135deg, #6b8cff 0%, #89f7fe 100%);
+    color: white;
+    padding: 12px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Roboto', sans-serif;
+    align-items: center;
+    height: 45px!important;
+}
+
+.modal-header .close {
+    margin-top: -4px;
+    color: white;
+    opacity: 1;
+    font-size: 3.5rem;
+    position: relative;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 60%, rgba(0,0,0,0) 70%);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
+    transition: background 0.3s, box-shadow 0.3s;
+}
+
+.modal-header .close:hover {
+    background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.4) 60%, rgba(0,0,0,0) 70%);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 1.0), 0 0 60px rgba(255, 255, 255, 0.8);
+}
 </style>
 
 <header class="page-header">

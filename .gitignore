@@ -33,3 +33,4 @@ web/assets
 .env
 .gitignore
 config/db.php
+config/db.php

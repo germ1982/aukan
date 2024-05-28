@@ -2,34 +2,50 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
-/** @var yii\web\View $this */
-/** @var app\models\Menu $model */
-/** @var yii\widgets\ActiveForm $form */
+use app\controllers\SiteController;
+use app\models\Menu;
+$array_padres = Menu::find()->where(['activo'=>1])->orderBy(['title' => SORT_ASC])->all();
 ?>
 
 <div id="form_principal" class="menu-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <div class="row">
+        <div class="col-md-6">
+        <?=SiteController::actionGet_input_select2($form,$model,'padre','cmb_padre',$array_padres,'id','title','Padre','seleccione padre...')?>
+            <?= $form->field($model, 'padre')->textInput() ?>
 
-    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'type')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'icon')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'link')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'padre')->textInput() ?>
-
-    <?= $form->field($model, 'activo')->textInput() ?>
-
-    <?= $form->field($model, 'orden')->textInput() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        </div>
+        <div class="col-md-6">
+            <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+        </div>
     </div>
+    <div class="row">
+        <div class="col-md-3">
+            <?= $form->field($model, 'icon_yii')->textInput(['maxlength' => true]) ?>
+        </div>
+        <div class="col-md-5">
+            <?= $form->field($model, 'link_yii')->textInput(['maxlength' => true]) ?>
+
+        </div>
+        <div class="col-md-2">
+            <?= $form->field($model, 'orden')->textInput() ?>
+        </div>
+        <div class="col-md-2">
+            <?= $form->field($model, 'activo')->textInput() ?>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
 
     <?php ActiveForm::end(); ?>
 
