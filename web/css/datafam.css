@@ -1,0 +1,160 @@
+.table>thead>tr>td.info,
+.table>tbody>tr>td.info,
+.table>tfoot>tr>td.info,
+.table>thead>tr>th.info,
+.table>tbody>tr>th.info,
+.table>tfoot>tr>th.info,
+.table>thead>tr.info>td,
+.table>tbody>tr.info>td,
+.table>tfoot>tr.info>td,
+.table>thead>tr.info>th,
+.table>tbody>tr.info>th,
+.table>tfoot>tr.info>th {
+    color: #777;
+    background-color: #fafafa !important;
+}
+
+.panel-primary .panel-heading {
+    background: darkgrey !important;
+    border-color: darkgrey !important;
+}
+
+.modal-header {
+background: linear-gradient(135deg, #6b8cff 0%, #89f7fe 100%);
+color: white;
+padding: 12px;
+border-top-left-radius: 6px;
+border-top-right-radius: 6px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+font-family: 'Roboto', sans-serif;
+align-items: center;
+height: 45px!important;
+}
+
+.modal-header .close {
+margin-top: -4px;
+color: white;
+opacity: 1;
+font-size: 3.5rem;
+position: relative;
+width: 30px;
+height: 30px;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 50%;
+background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 60%, rgba(0,0,0,0) 70%);
+box-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
+transition: background 0.3s, box-shadow 0.3s;
+}
+
+.modal-header .close:hover {
+background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.4) 60%, rgba(0,0,0,0) 70%);
+box-shadow: 0 0 30px rgba(255, 255, 255, 1.0), 0 0 60px rgba(255, 255, 255, 0.8);
+}
+
+
+.content-body {
+    padding: 0px !important;
+}
+
+#loading-gif {
+    background: url('img/sur.gif') no-repeat center center;
+    position: fixed;
+    background-size: 100%;
+    z-index: 9999999;
+    height: 100px;
+    width: 100px;
+    top: 40%;
+    left: 47%;
+}
+
+#loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 9999998;
+    background-color: rgba(0, 0, 0, 0.24);
+
+
+}
+
+.logo {
+    margin: 3px !important;
+    width: 150px;
+    /* Ajusta el ancho según sea necesario */
+    height: auto;
+    /* Esto mantiene la proporción de la imagen */
+}
+
+.neon {
+
+    text-shadow:
+          0 0 2px #08c,
+          0 0 4px #08c,
+          0 0 8px #08c,
+          0 0 10px #0ff,
+          0 0 10px #0ff,
+          0 0 0px #0ff,
+          0 0 0px #0ff,
+          0 0 0px #0ff;
+}
+
+.neon-border {
+    position: relative;
+
+
+    /* Ajusta el padding según tus necesidades */
+
+    color: #fff;
+}
+
+.neon-border::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    bottom: -5px;
+    left: -5px;
+    z-index: -1;
+
+    /* Ajusta si necesitas bordes redondeados */
+    background: transparent;
+    box-shadow:
+          0 0 2px #fff,
+          0 0 4px #fff,
+          0 0 8px #fff,
+          0 0 10px #0ff,
+          0 0 20px #0ff,
+          0 0 30px #0ff,
+          0 0 40px #0ff,
+          0 0 50px #0ff;
+}
+
+.imagen-avatar-grilla {
+
+    border-radius: 50%; /* Redondea las esquinas para que la imagen sea circular */
+
+    margin-right: 10px;
+    box-shadow:
+          0 0 2px #08c,
+          0 0 4px #08c,
+          0 0 8px #08c,
+          0 0 10px #0ff,
+          0 0 0px #0ff,
+          0 0 0px #0ff,
+          0 0 0px #0ff,
+          0 0 0px #0ff;
+
+    transition: transform 0.3s ease; /* Agrega una transición suave */
+
+    z-index: 1; /* Asegura que la imagen esté por encima de otros elementos */
+
+  }
+  
+  .imagen-avatar-grilla:hover {
+    transform: scale(3); /* Agranda la imagen al doble */
+
+  }

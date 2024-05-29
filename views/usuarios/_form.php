@@ -2,31 +2,42 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
-/** @var yii\web\View $this */
-/** @var app\models\Usuarios $model */
-/** @var yii\widgets\ActiveForm $form */
+use app\controllers\SiteController;
 ?>
 
 <div class="usuarios-form">
 
     <?php $form = ActiveForm::begin(); ?>
+    <div class="row">
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-3">
 
-    <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+                </div>
+                <div class="col-md-9">
 
-    <?= $form->field($model, 'avatar')->textInput(['maxlength' => true]) ?>
+                </div>
+            </div>
 
-    <?= $form->field($model, 'status')->textInput() ?>
-
-    <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'activo')->textInput() ?>
-
-    <?= $form->field($model, 'idpersona')->textInput() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+            <div class="row">
+                <div class="col-md-8">
+                    <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+                </div>
+                <div class="col-md-4">
+                    <?= $form->field($model, 'activo')->textInput() ?>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <?= $form->field($model, 'avatar')->textInput(['maxlength' => true]) ?>
+        </div>
     </div>
+
+
+
+
+    
+
 
     <?php ActiveForm::end(); ?>
 

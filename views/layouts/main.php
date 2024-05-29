@@ -1,19 +1,11 @@
 <?php
-
-/* @var $this \yii\web\View */
-/* @var $content string */
-
-use app\widgets\Alert;
 use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\models\Empleado;
 use yii\bootstrap\Modal;
-use \yii\helpers\Url;
 
 AppAsset::register($this);
+$this->registerCssFile("@web/css/datafam.css", ['depends' => [\yii\web\YiiAsset::className(), \yii\bootstrap\BootstrapAsset::className()]]);
 
 $this->title = "DATAFAM | INFORMACION";
 
@@ -27,11 +19,6 @@ if (!isset($id) || $id == null) {
             'model' => $model,
       ]);
 }
-
-
-
-
-
 
 ?>
 <?php $this->beginPage() ?>
@@ -51,88 +38,7 @@ if (!isset($id) || $id == null) {
 </head>
 
 <body onload="$('#loading').hide();">
-      <style>
-            .content-body {
-                  padding: 0px !important;
-            }
-
-            #loading-gif {
-                  background: url('img/sur.gif') no-repeat center center;
-                  position: fixed;
-                  background-size: 100%;
-                  z-index: 9999999;
-                  height: 100px;
-                  width: 100px;
-                  top: 40%;
-                  left: 47%;
-            }
-
-            #loading {
-                  position: fixed;
-                  top: 0;
-                  left: 0;
-                  height: 100%;
-                  width: 100%;
-                  z-index: 9999998;
-                  background-color: rgba(0, 0, 0, 0.24);
-
-
-            }
-
-            .logo {
-                  margin: 3px !important;
-                  width: 150px;
-                  /* Ajusta el ancho según sea necesario */
-                  height: auto;
-                  /* Esto mantiene la proporción de la imagen */
-            }
-
-            .neon {
-
-                  text-shadow:
-                        0 0 2px #08c,
-                        0 0 4px #08c,
-                        0 0 8px #08c,
-                        0 0 10px #0ff,
-                        0 0 10px #0ff,
-                        0 0 0px #0ff,
-                        0 0 0px #0ff,
-                        0 0 0px #0ff;
-            }
-
-            .neon-border {
-                  position: relative;
-
-
-                  /* Ajusta el padding según tus necesidades */
-             
-                  color: #fff;
-            }
-
-            .neon-border::before {
-                  content: '';
-                  position: absolute;
-                  top: -5px;
-                  right: -5px;
-                  bottom: -5px;
-                  left: -5px;
-                  z-index: -1;
-   
-                  /* Ajusta si necesitas bordes redondeados */
-                  background: transparent;
-                  box-shadow:
-                        0 0 2px #fff,
-                        0 0 4px #fff,
-                        0 0 8px #fff,
-                        0 0 10px #0ff,
-                        0 0 20px #0ff,
-                        0 0 30px #0ff,
-                        0 0 40px #0ff,
-                        0 0 50px #0ff;
-            }
-
-            /* Contenedor del banner en movimiento */
-      </style>
+      
       <?php $this->beginBody() ?>
       <section class="body">
 
@@ -169,7 +75,7 @@ if (!isset($id) || $id == null) {
 
                         <div id="userbox" class="userbox">
                               <a href="" data-toggle="dropdown">
-                                    <figure class="profile-picture">
+                                    <figure class="profile-picture neon">
                                           <img src="<?= $usuario->avatar != null ? 'img/usuarios-avatares/' . $usuario->avatar . '.jpg' : 'img/usuarios-avatares/avatar-0.jpg' ?>" alt="Imagen Usuario" class="img-circle" data-lock-picture="<?= $usuario->avatar != null ? 'img/usuarios-avatares/' . $usuario->avatar . '.jpg' : 'img/usuarios-avatares/avatar-0.jpg' ?>">
                                     </figure>
                                     <div class="profile-info" data-lock-name="Usuario" data-lock-email="<?= $usuario->email ?>">
