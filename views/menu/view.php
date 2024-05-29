@@ -1,43 +1,46 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\DetailView;
 
-/** @var yii\web\View $this */
-/** @var app\models\Menu $model */
+use yii\widgets\DetailView;
+use app\models\Menu;
+
 
 $this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'Menus', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
+
 ?>
+
+
+
 <div class="menu-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'id',
             'title',
-            'type',
-            'icon',
-            'link',
-            'padre',
-            'activo',
+            'icon_yii',
+            'link_yii',
+            [
+                  'attribute' => 'padre',
+                  'label' => 'Nodo Padre',
+                  'value' => function ($model) 
+                                  {
+                                          if($model->padre==0) return 'Raiz';
+
+                                          $padre = Menu::findOne($model->padre);
+                                          return $padre->title;
+                                  },
+              ],
+              [
+                  'attribute' => 'activo',
+                  'value' => function ($model) {
+                      return $model->activo == 1 ? 'Si' : 'No';
+                  },
+              ],
             'orden',
         ],
+
     ]) ?>
 
 </div>

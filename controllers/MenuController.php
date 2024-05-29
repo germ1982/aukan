@@ -58,9 +58,26 @@ class MenuController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+      $request = Yii::$app->request;
+
+      if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return [
+                'title' => "Nodo de Menu Id " . $id,
+                'content' => $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+                ]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::a('Editar', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+            ];
+        } else {
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+        }
+
+
+
     }
 
     /**
@@ -94,18 +111,36 @@ class MenuController extends Controller
                         ]),
                 ];
             }
-        }
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
+            else if ($model->load($request->post())) {
+                  $transaction = Yii::$app->db->beginTransaction();
+                  $guardado = true;
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+                  /* [['title', 'type', 'icon', 'link', 'orden'], 'required'], */
+                  $model->padre= $model->padre == ''? 0 : $model->padre;
+                  $model->type = 'basic';
+                  $model->icon = $model->icon_yii;
+                  $model->link = $model->link_yii.'-grilla';
+                  
+                  if ($guardado && $model->save()) {
+                      $transaction->commit();
+
+                      return [
+                          'title' => "Nuevo Nodo de Menu",
+                          'content' => '<span class="text-success">Nodo Creado Correctamente</span>',
+                          'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                      ];
+                  }
+              }
+              return [
+                  'title' => "Nuevo Nodo de Menu Faltan datos!!! Complete Los datos Faltantes!!!",
+                  'content' => $this->renderAjax('create', [
+                      'model' => $model,
+                  ]),
+                  'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                      Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+  
+              ];
+          }
     }
 
     /**
@@ -117,15 +152,60 @@ class MenuController extends Controller
 */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+      $request = Yii::$app->request;
+      $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+      if ($request->isAjax) {
+          Yii::$app->response->format = Response::FORMAT_JSON;
+          if ($request->isGet) {
+              return [
+                  'title' => 'Editar Nodo de Menu',
+                  'content' => $this->renderAjax('update', [
+                      'model' => $model,
+                  ]),
+                  'footer' =>
+                  Html::button('Cerrar', [
+                      'id' => 'btnCerrar',
+                      'class' => 'btn btn-default pull-left',
+                      'data-dismiss' => 'modal',
+                  ]) .
+                      Html::button('Guardar', [
+                          'id' => 'btnGuardar',
+                          'class' => 'btn btn-primary',
+                          'type' => 'submit',
+                      ]),
+              ];
+          }
+          else if ($model->load($request->post())) {
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
+
+                /* [['title', 'type', 'icon', 'link', 'orden'], 'required'], */
+                $model->padre= $model->padre == ''? 0 : $model->padre;
+                $model->type = 'basic';
+                $model->icon = $model->icon_yii;
+                $model->link = $model->link_yii.'-grilla';
+                
+                if ($guardado && $model->save()) {
+                    $transaction->commit();
+
+                    return [
+                        'title' => "Editar Nodo de Menu",
+                        'content' => '<span class="text-success">Nodo Editado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                    ];
+                }
+            }
+            return [
+                'title' => "Editar Nodo de Menu Faltan datos!!! Complete Los datos Faltantes!!!",
+                'content' => $this->renderAjax('create', [
+                    'model' => $model,
+                ]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+
+            ];
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -137,9 +217,18 @@ class MenuController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        if($this->findModel($id)->delete())
+        {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return [
+                  'title' => "Eliminado",
+                  'content' => '<span class="text-success">Nodo Eliminado Correctamente</span>',
+                  'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+              ];
+        }
+
+
     }
 
     /**

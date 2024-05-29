@@ -13,9 +13,7 @@ $array_padres = Menu::find()->where(['activo'=>1])->orderBy(['title' => SORT_ASC
 
     <div class="row">
         <div class="col-md-6">
-        <?=SiteController::actionGet_input_select2($form,$model,'padre','cmb_padre',$array_padres,'id','title','Padre','seleccione padre...')?>
-            <?= $form->field($model, 'padre')->textInput() ?>
-
+            <?=SiteController::actionGet_input_select2($form,$model,'padre','cmb_padre',$array_padres,'id','title','Padre','seleccione padre...')?>
         </div>
         <div class="col-md-6">
             <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
