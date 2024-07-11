@@ -43,6 +43,34 @@ if (Yii::$app->session->hasFlash('error_modulo')) : ?>
         padding: 5px 10px 20px 17px;
     }
 
+    .banner {
+        position: relative;
+        height: 150px;
+        background-color: black;
+        text-align: center;
+
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        border: 2px solid #87b867;
+        border-radius: 15px;
+        margin: 5px;
+        margin-top: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .banner video {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: auto;
+        /* Ajusta el ancho del video */
+        height: 100%;
+        /* Ajusta la altura del video */
+        transform: translate(-50%, -50%);
+        object-fit: cover;
+        /* Ajusta el video para cubrir todo el área del contenedor */
+    }
 </style>
 <header class="page-header">
     <h2><?= $this->title ?></h2>
@@ -60,83 +88,42 @@ if (Yii::$app->session->hasFlash('error_modulo')) : ?>
     </div>
 </header>
 <div class="site-index">
-    <!-- Novedades -->
-    <div class="row">
-        <?php echo "include 'novedades.php'" ?>
+    <div class="banner">
+        <video autoplay loop muted>
+            <source src="img\datafam_home_banner.mp4" type="video/mp4">
+            Tu navegador no soporta la etiqueta de video.
+        </video>
     </div>
 
     <!-- Accesos -->
-    <div class="row" style="padding: 10px 10px 5px 10px; background: linear-gradient(to bottom, #a9a9a929, #ecedf3);">
-        <div class="col-md-4 panel panel-featured-left panel-featured-primary" style="padding-left:20px; padding-top:2px; padding-bottom:2px; background: #fdfdfd;">
-            <!-- <div class="row">
-                <div class="col-md-12" style="padding:0;">
-                    <div class="col-md-3 text-primary text-center" style="padding:0">
-                        <h5>Cruce</h5>
-                    </div>
-                    <div class="col-md-9" style="padding:2px 5px 0 0; ">
-                        <div class="input-group">
-                            <span class="input-group-btn">
-                                <?php /* echo Html::a('<i class="glyphicon glyphicon-search"></i>', null, [
-                                    'name' => 'btn_dni',
-                                    'data-request-method' => 'post',
-                                    'data-toggle' => 'tooltip',
-                                    'class' => 'btn btn-primary',
-                                    'title' => Yii::t('app', 'Consultar DNI en Cruce'),
-                                    'onclick' => 'location.href ="index.php?r=site/cruce&dni=' . '"+$("#txtDni").val()'
-                                ]); */ ?>
-                            </span>
-                            <input type="text" class="form-control" id="txtDni" placeholder="DNIs..." onchange='location.href ="index.php?r=site/cruce&dni="+$("#txtDni").val()'>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">-->
-            <!-- Historico -->
-            <!--
-                <div class="col-md-12" style="padding:0; padding-top:5px;">
-                    <div class="col-md-3 text-primary text-center" style="padding:0;">
-                        <h5>Histórico</h5>
-                    </div>
-                    <div class="col-md-9" style="padding:2px 5px 0 0; ">
-                        <div class="input-group">
-                            <span class="input-group-btn">
-                                <?php /* echo Html::a('<i class="glyphicon glyphicon-search"></i>', null, [
-                                    'name' => 'btn_dni',
-                                    'data-request-method' => 'post',
-                                    'data-toggle' => 'tooltip',
-                                    'class' => 'btn btn-primary',
-                                    'title' => Yii::t('app', 'Consultar DNI en Cruce'),
-                                    'onclick' => 'location.href ="index.php?r=site/cruce_historico&dni=' . '"+$("#txtDniHistorico").val()'
-                                ]); */ ?>
-                            </span>
-                            <input type="text" class="form-control" id="txtDniHistorico" placeholder="DNI..." onchange='location.href ="index.php?r=site/cruce_historico&dni="+$("#txtDniHistorico").val()'>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            <!-- Fin Cruce -->
-            <!-- Reporte internos -->
-            <!-- <div class="row" style="border-top:1px solid #bbb; padding-top: 4px; margin-top:11px;"> -->
-            <div class="row">
-                <div class="text-primary col-md-3 text-center" style="padding: 10px 0 10px 5px;">
-                    <h5>Internos</h5>
-                </div>
-                <div class="col-md-9" style="padding-left:14px; padding-top:10px;">
-
-                    <div class="row">
-                        <select class="form-control col-md-10" id="select-edificio" style="width:82%;">
-
-                        </select>
-
-                    </div>
-                </div>
-            </div>
-            <!-- Fin Reporte Internos -->
+    <div class="row" style="padding: 5px 0px 0px 10px; background: linear-gradient(to bottom, #a9a9a929, #ecedf3);">
+        <div class="col-md-4">
+            <?php
+                $titulo = "Registro Tecnico";
+                $archivo_contenido_tarjeta = "indicadores_tecnicos.php";
+                include 'tarjetas/tarjeta_base.php'
+            ?>
+            <?php
+                $titulo = "Web Informatica";
+                $archivo_contenido_tarjeta = "web_informatica.php";
+                include 'tarjetas/tarjeta_base.php'
+            ?>
         </div>
-        <?php include 'accesos_directos.php' ?>
+        <div class="col-md-4">
+            <?php
+                $titulo = "Web Informatica";
+                $archivo_contenido_tarjeta = "web_informatica.php";
+                include 'tarjetas/tarjeta_base.php'
+            ?>
+        </div>
+        <div class="col-md-4">
+
+        </div>
+
     </div>
 
     <br>
+
     <!-- Informes Pendientes -->
 
     <!--     <div class="row" id="abm_contacto" style="display:none;padding-top: 10px;">

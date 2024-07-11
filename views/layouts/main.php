@@ -1,12 +1,13 @@
 <?php
+
 use yii\helpers\Html;
 use app\assets\AppAsset;
 use app\models\Empleado;
 use yii\bootstrap\Modal;
 
 AppAsset::register($this);
-$this->registerCssFile("@web/css/datafam.css", ['depends' => [\yii\web\YiiAsset::className(), \yii\bootstrap\BootstrapAsset::className()]]);
-
+//$this->registerCssFile("@web/css/datafam.css", ['depends' => [\yii\web\YiiAsset::className(), \yii\bootstrap\BootstrapAsset::className()]]);
+$this->registerCssFile("@web/css/rolo.css", ['depends' => [\yii\web\YiiAsset::className(), \yii\bootstrap\BootstrapAsset::className()]]);
 $this->title = "DATAFAM | INFORMACION";
 
 $usuario = Yii::$app->user->identity;
@@ -21,6 +22,55 @@ if (!isset($id) || $id == null) {
 }
 
 ?>
+
+<style>
+      .mensaje_motivador {
+            background-color: black;
+      }
+
+      .centrado {
+            width: 60%;
+            height: 30px;
+            background-color: coral;
+            position: absolute;
+            top: 50%;
+            left: 45%;
+            transform: translate(-50%, -50%);
+            background-color: black;
+            color: #87b867;
+            /* Color del texto */
+            border: 2px solid #87b867;
+            /* Borde */
+            border-radius: 5px;
+            /* Bordes redondeados */
+            padding-left: 10px;
+            padding-right: 10px;
+            box-shadow: 0 0 5px #87b867, 0 0 10px #87b867, 0 0 20px #87b867, 0 0 30px #87b867;
+            /* Efecto neón */
+
+            overflow: hidden;
+            /* Oculta el desbordamiento del texto */
+      }
+
+      .centrado span {
+            position: absolute;
+            white-space: nowrap;
+            /* Evita que el texto se divida en varias líneas */
+            animation: desplazar 20s linear infinite;
+            /* Animación de desplazamiento */
+      }
+
+      @keyframes desplazar {
+            0% {
+                  left: 100%;
+            }
+
+            100% {
+                  left: -100%;
+            }
+      }
+</style>
+
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>" class="fixed js flexbox flexboxlegacy no-touch csstransforms csstransforms3d no-overflowscrolling no-mobile-device custom-scroll sidebar-left-collapsed">
@@ -38,40 +88,43 @@ if (!isset($id) || $id == null) {
 </head>
 
 <body onload="$('#loading').hide();">
-      
+
       <?php $this->beginBody() ?>
-      <section class="body">
+      <section class="body fondo">
 
             <!-- start: header -->
-            <header class="header">
-                  <div class=" logo">
-                        <a href="index.php?r=site%2Findex" class="logo" style="margin-top:1px;margin-left:20px">
-                              <img src="img/datafam-blanco.png" alt="Logo" class=" logo">
+            <header class="fondo header ">
+                  <div class="logo fondo">
+                        <a href="index.php?r=site%2Findex" class="logo fondo" style="margin-top:1px;margin-left:20px">
+                              <img src="img/datafam-rolo-style.png" alt="Logo" class=" logo">
                         </a>
-                        <div class="visible-xs toggle-sidebar-left" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened">
+                        <div class="visible-xs toggle-sidebar-left fondo" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened">
                               <i class="fa fa-bars" aria-label="Toggle sidebar"></i>
                         </div>
                   </div>
 
+                  <div class="centrado ">
+                        <span>..."Si quieres alcanzar el exito, no esperes a que las condiciones sean perfectas, comienza donde estás y con lo que tienes"...</span>
+                  </div>
 
 
                   <!-- start: search & user box -->
-                  <div class="header-right">
-                        <!-- 
-                <form action="pages-search-results.html" class="search nav-form">
-                    <div class="input-group input-search">
-                        <input type="text" class="form-control" name="q" id="q" placeholder="Search...">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
-                        </span>
-                    </div>
-                </form>
-
-                <span class="separator"></span> -->
-
-
+                  <div class="header-right ">
 
                         <span class="separator"></span>
+
+                        <!-- <form action="pages-search-results.html" class="search nav-form">
+                              <div class="input-group input-search">
+                                    <input type="text" class="form-control" name="q" id="q" placeholder="Search...">
+                                    <span class="input-group-btn">
+                                          <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                                    </span>
+                              </div>
+                        </form> -->
+
+
+
+                        <span class="separator fondo"></span>
 
                         <div id="userbox" class="userbox">
                               <a href="" data-toggle="dropdown">
@@ -117,11 +170,11 @@ if (!isset($id) || $id == null) {
             </header>
             <!-- end: header -->
 
-            <div class="inner-wrapper">
+            <div class="inner-wrapper ">
                   <!-- start: sidebar -->
-                  <aside id="sidebar-left" class="sidebar-left" style="padding-bottom: 0%!important;">
+                  <aside id="sidebar-left" class="sidebar-left fondo" style="padding-bottom: 0%!important;">
 
-                        <div class="nano has-scrollbar ">
+                        <div class="nano has-scrollbar fondo">
                               <div class="nano-content" tabindex="0" style="right: -17px;">
 
                                     <nav id="menu" class="nav-main" role="navigation">

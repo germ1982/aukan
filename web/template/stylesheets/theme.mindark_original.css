@@ -1381,8 +1381,9 @@ html.scroll .visible-xl-inline-block {
 }
 
 .header {
-      background-color: #2b3e4c;
-
+      background-color: #f6f6f6;
+      background-image: -webkit-linear-gradient(#f6f6f6 0, #fff 45%);
+      background-image: linear-gradient(#f6f6f6 0, #fff 45%);
       border-bottom: 1px solid #e9e9e6;
       border-top: 3px solid #ededed;
       z-index: 1000
@@ -1398,7 +1399,7 @@ html.scroll .visible-xl-inline-block {
 }
 
 .header .separator {
-      background-color: #ff0909;
+      background-color: #f6f6f6;
       background-image: -webkit-linear-gradient(#f6f6f6 60%, #ededed);
       background-image: linear-gradient(#f6f6f6 60%, #ededed);
       display: inline-block;

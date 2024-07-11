@@ -7,15 +7,13 @@ use app\models\Menu;
 ?>
 
 <style>
-
-
     .titulo-menu {
         font-size: 30px;
-        color:#fff;
+        color: #fff;
 
-  text-align: center;
-  text-transform: uppercase;
-  margin-left: -15px;
+        text-align: center;
+        text-transform: uppercase;
+        margin-left: -15px;
     }
 </style>
 <ul class="nav nav-main">

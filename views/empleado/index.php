@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="empleado-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
     <p>
         <?= Html::a('Create Empleado', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
