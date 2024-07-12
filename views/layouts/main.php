@@ -104,7 +104,10 @@ if (!isset($id) || $id == null) {
                   </div>
 
                   <div class="centrado ">
-                        <span>..."Si quieres alcanzar el exito, no esperes a que las condiciones sean perfectas, comienza donde estás y con lo que tienes"...</span>
+                        <span>..."Si quieres alcanzar el exito, no esperes a que las condiciones sean perfectas, comienza donde estás y con lo que tienes"... -Anonimo-</span>
+                        <!-- <span>..."Debes ser el cambio que deseas ver en el mundo"... -Gandhi-</span>
+                        <span>..."LA VIDA NO SE MIDE POR LA CANTIDAD DE RESPIROS QUE TOMAS, SE MIDE POR LOS MOMENTOS QUE TE QUITAN EL ALIENTO"... -Hitch-</span>
+                        <span>..."EN TIEMPOS DE CRISIS, LOS SABIOS CONSTRUYEN PUENTES, MIENTRAS QUE LOS NECIOS CONSTRUYEN BARRERAS."... -Black Panter-</span> -->
                   </div>
 
 
