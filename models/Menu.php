@@ -47,7 +47,7 @@ class Menu extends \yii\db\ActiveRecord
             return [
                   [['title', 'type', 'icon', 'link', 'orden'], 'required'],
                   [['padre', 'activo', 'orden'], 'integer'],
-                  [['title', 'link','link_yii'], 'string', 'max' => 30],
+                  [['title', 'link','link_yii'], 'string', 'max' => 40],
                   [['link_yii'], 'string', 'max' => 100],
                   [['icon_yii'], 'string', 'max' => 20],
                   [['type'], 'string', 'max' => 10],

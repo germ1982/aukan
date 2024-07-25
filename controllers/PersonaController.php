@@ -8,6 +8,8 @@ use app\models\PersonaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
+use yii\helpers\Html;
 
 /**
  * PersonaController implements the CRUD actions for Persona model.
@@ -63,6 +65,59 @@ class PersonaController extends Controller
      * @return mixed
      */
     public function actionCreate()
+    {
+        $request = Yii::$app->request;
+        $model = new Persona();
+
+        if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            if ($request->isGet) {
+                return [
+                    'title' => 'Nueva Persona',
+                    'content' => $this->renderAjax('create', [
+                        'model' => $model,
+                    ]),
+                    'footer' =>
+                    Html::button('Cerrar', [
+                        'id' => 'btnCerrar',
+                        'class' => 'btn btn-default pull-left',
+                        'data-dismiss' => 'modal',
+                    ]) .
+                        Html::button('Guardar', [
+                            'id' => 'btnGuardar',
+                            'class' => 'btn btn-primary',
+                            'type' => 'submit',
+                        ]),
+                ];
+            }
+            else if ($model->load($request->post())) {
+                  $transaction = Yii::$app->db->beginTransaction();
+                  $guardado = true;
+
+
+                  
+                  if ($guardado && $model->save()) {
+                      $transaction->commit();
+
+                      return [
+                          'title' => "Nueva Persona",
+                          'content' => '<span class="text-success">Nodo Creada Correctamente</span>',
+                          'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                      ];
+                  }
+              }
+              return [
+                  'title' => "Nueva Persona Faltan datos!!! Complete Los datos Faltantes!!!",
+                  'content' => $this->renderAjax('create', [
+                      'model' => $model,
+                  ]),
+                  'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                      Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+  
+              ];
+          }
+    }
+    public function actionCreate_old()
     {
         $model = new Persona();
 
