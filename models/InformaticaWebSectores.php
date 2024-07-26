@@ -32,7 +32,7 @@ class InformaticaWebSectores extends \yii\db\ActiveRecord
         return [
             [['activo', 'orden'], 'integer'],
             [['nombre'], 'string', 'max' => 50],
-            [['descripcion'], 'string', 'max' => 500],
+            [['descripcion'], 'string', 'max' => 5000],
             [['fotos'], 'string', 'max' => 100],
         ];
     }

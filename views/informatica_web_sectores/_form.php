@@ -1,4 +1,5 @@
 <?php
+
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -9,25 +10,42 @@ use yii\widgets\ActiveForm;
 
 <div class="informatica-web-sectores-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+      <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
+      <div class="row">
+            <div class="col-md-7">
+                  <div class="row">
+                        <div class="col-md-12">
+                              <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
+                        </div>
+                  </div>
+                  <div class="row">
+                        <div class="col-md-6">
+                              <?= $form->field($model, 'orden')->textInput() ?>
+                        </div>
+                        <div class="col-md-6" style="padding-top:30px;">
+                              <?= $form->field($model, 'activo')->checkbox(['checked' => true]) ?>
+                        </div>
 
-    <?= $form->field($model, 'fotos')->textInput(['maxlength' => true]) ?>
+                  </div>
+            </div>
+            <div class="col-md-5">
+                  <?= $form->field($model, 'fotos')->textInput(['maxlength' => true]) ?>
+            </div>
+      </div>
 
-    <?= $form->field($model, 'activo')->textInput() ?>
+      <div class="row">
+            <div class="col-md-12">
+                  <?= $form->field($model, 'descripcion')->textarea(['rows' => 8]) ?>
+            </div>
+      </div>
 
-    <?= $form->field($model, 'orden')->textInput() ?>
 
-  
-	<?php if (!Yii::$app->request->isAjax){ ?>
-	  	<div class="form-group">
-	        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-	    </div>
-	<?php } ?>
 
-    <?php ActiveForm::end(); ?>
-    
+
+
+
+      <?php ActiveForm::end(); ?>
+
 </div>
