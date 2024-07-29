@@ -13,6 +13,7 @@ use Yii;
  * @property string|null $fotos
  * @property int|null $activo
  * @property int|null $orden
+ * @property int|null $alto_foto
  */
 class InformaticaWebSectores extends \yii\db\ActiveRecord
 {
@@ -30,9 +31,9 @@ class InformaticaWebSectores extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['activo', 'orden'], 'integer'],
+            [['descripcion'], 'string'],
+            [['activo', 'orden', 'alto_foto'], 'integer'],
             [['nombre'], 'string', 'max' => 50],
-            [['descripcion'], 'string', 'max' => 5000],
             [['fotos'], 'string', 'max' => 100],
         ];
     }
@@ -49,6 +50,8 @@ class InformaticaWebSectores extends \yii\db\ActiveRecord
             'fotos' => 'Fotos',
             'activo' => 'Activo',
             'orden' => 'Orden',
+            'alto_foto' => 'Alto Foto',
         ];
     }
+
 }

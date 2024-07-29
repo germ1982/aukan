@@ -1,5 +1,17 @@
 <?php
-    $grafico = "office_background.jpg";
+
+require __DIR__ . '/../../vendor/autoload.php';
+
+use app\models\InformaticaWebSectores;
+
+$sector = new InformaticaWebSectores();
+
+
+
+
+$sectores = InformaticaWebSectores::findBySql("select * from informatica_web_sectores")->all();
+
+    /* $grafico = "office_background.jpg";
     $alto_grafico="auto";
     $titulo = "Organizacion";
     $descripcion = "La Dirección de Servicios Informáticos se estructura en varios departamentos, cada uno de ellos especializado en áreas estratégicas para asegurar un funcionamiento óptimo y una gestión eficiente. Esta división departamental es esencial para el desarrollo y mantenimiento de nuestras operaciones, y cada departamento desempeña un papel fundamental en el logro de nuestros objetivos corporativos.
@@ -35,5 +47,5 @@
     $alto_grafico='200';
     $titulo = "Carga de Datos (Data Entry)";
     $descripcion = "El equipo de Data Entry se encarga de la entrada, actualización y gestión precisa de los datos en nuestros sistemas informáticos. <br>Este departamento es vital para mantener la integridad y la exactitud de la información, asegurando que los datos estén siempre actualizados y disponibles para su uso en todas las áreas de nuestra organización. Su trabajo garantiza que la toma de decisiones se base en información fiable y actualizada.";
-    include 'tarjeta_sector.php';
+    include 'tarjeta_sector.php'; */
 ?>

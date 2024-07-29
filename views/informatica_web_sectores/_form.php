@@ -21,10 +21,13 @@ use yii\widgets\ActiveForm;
                         </div>
                   </div>
                   <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                               <?= $form->field($model, 'orden')->textInput() ?>
                         </div>
-                        <div class="col-md-6" style="padding-top:30px;">
+                        <div class="col-md-4">
+                              <?= $form->field($model, 'alto_foto')->textInput() ?>
+                        </div>
+                        <div class="col-md-4" style="padding-top:30px;">
                               <?= $form->field($model, 'activo')->checkbox(['checked' => true]) ?>
                         </div>
 
