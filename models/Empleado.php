@@ -56,9 +56,9 @@ class Empleado extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'idempleado' => 'Idempleado',
-            'idpersona' => 'Idpersona',
-            'iddispositivo' => 'Iddispositivo',
+            'idempleado' => 'Id',
+            'idpersona' => 'Empleado',
+            'iddispositivo' => 'Sector',
             'legajo' => 'Legajo',
             'email' => 'Email',
             'telefono' => 'Telefono',

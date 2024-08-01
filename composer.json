@@ -89,4 +89,10 @@
             "url": "https://asset-packagist.org"
         }
     ]
+
+    "autoload": {
+        "psr-4": {
+            "app\\": "app/"
+        }
+    }
 }

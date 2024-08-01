@@ -9,11 +9,11 @@ class BaseDatos
 	var $CantTupla;
 
 	function Iniciar()
-	{
-		$dirBaseDatos = env('DB_SUR_HOST');
-		$BaseDatos = env('DB_SUR_NAME');
-		$Usuario = env('DB_SUR_USERNAME');
-		$CLAVE = env('DB_SUR_PASSWORD');
+	{ 
+		$dirBaseDatos = '10.1.73.249';
+		$BaseDatos = 'familia';
+		$Usuario = 'root';
+		$CLAVE = '0303456';
 
 		$conexion = mysqli_connect($dirBaseDatos, $Usuario, $CLAVE, $BaseDatos);
 		if ($conexion) {

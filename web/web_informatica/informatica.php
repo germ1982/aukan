@@ -60,6 +60,7 @@
 </style>
 
 
+
 <div class="row linea"></div>
 
 <div class="row header_web">
@@ -75,13 +76,8 @@
 
 <div class="row linea" style="margin-top: 5px;"></div>
 
-<div class="row titulo_seccion" style="width: 90%; margin: 0 auto;" ;>
-<u>Institucional</u>
-</div>
-<br>
+
 <?php include 'sectores.php'?>
 
-<div class="row titulo_seccion" style="width: 90%; margin: 0 auto;" ;>
-<u>Staff</u>
-</div>
+<?php include 'staff.php'?>
 <br>
