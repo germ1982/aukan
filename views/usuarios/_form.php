@@ -12,10 +12,32 @@ use kartik\widgets\FileInput;
     <?php $form = ActiveForm::begin(); ?>
     <div class="row">
         <div class="col-md-8">
-            <div class="row">
-                <div class="col-md-12">
-
+        <div class="row" style='padding-left:10px; '>
+                <!-- Linea de busqueda -->
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <?= $form
+                            ->field($model, 'documento')
+                            ->textInput([
+                                'id' => 'input_dni_persona',
+                                //'onkeyup' => 'ValidarIngresoDni(0);',
+                                //'disabled' => $generada
+                            ])
+                            ->label(
+                                $model->isNewRecord
+                                    ? 'Buscar Destinatario por Dni'
+                                    : 'DNI Destinatario'
+                            ) ?>
+                        <span class="input-group-btn" style="padding-top:27px;">
+                            <?= SiteController::actionGet_boton_buscar_x_documento(
+                                'btn_dni',
+                                'Buscar Dni',
+                                'datos_persona(0);'
+                            ) ?>
+                        </span>
+                    </div>
                 </div>
+                <div class="col-md-8" style="padding-top:30px;" id="txt_mensaje"></div>
             </div>
             <div class="row">
                 <div class="col-md-12">
@@ -29,7 +51,7 @@ use kartik\widgets\FileInput;
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <?= $form->field($model, 'activo')->textInput() ?>
+                    <?= $form->field($model, 'activo')->checkbox(['checked' => true]) ?>
                 </div>
             </div>
         </div>
