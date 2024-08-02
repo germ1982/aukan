@@ -103,6 +103,7 @@ if (Yii::$app->session->hasFlash('error_modulo')) : ?>
             $archivo_contenido_tarjeta = "indicadores_tecnicos.php";
             include 'tarjetas/tarjeta_base.php'
             ?>
+
             <?php
             $titulo = "Informacion Personal";
             $archivo_contenido_tarjeta = "sitio_en_construccion.php";
@@ -110,21 +111,14 @@ if (Yii::$app->session->hasFlash('error_modulo')) : ?>
             ?>
         </div>
         <div class="col-md-3">
-            <?php
-            $titulo = "Web Informatica";
-            $archivo_contenido_tarjeta = "web_informatica.php";
-            include 'tarjetas/tarjeta_base.php'
-            ?>
-        </div>
-        <div class="col-md-3">
-            <?php
+        <?php
             $titulo = "Cumpleaños";
             $archivo_contenido_tarjeta = "cumpleaños.php";
             include 'tarjetas/tarjeta_base.php'
             ?>
         </div>
         <div class="col-md-3">
-            <?php
+        <?php
             $titulo = "El Clima en Neuquen";
             $archivo_contenido_tarjeta = "eventos_del_dia.php";
             include 'tarjetas/tarjeta_base.php'
@@ -134,6 +128,15 @@ if (Yii::$app->session->hasFlash('error_modulo')) : ?>
             $archivo_contenido_tarjeta = "sitio_en_construccion.php";
             include 'tarjetas/tarjeta_base.php'
             ?>
+        </div>
+        <div class="col-md-3">
+
+        <?php
+            $titulo = "Web Informatica";
+            $archivo_contenido_tarjeta = "web_informatica.php";
+            include 'tarjetas/tarjeta_base.php'
+            ?>
+
         </div>
 
     </div>
