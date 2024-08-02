@@ -2,28 +2,29 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Empleado;
 
 /**
- * EmpleadoSearch represents the model behind the search form of `app\models\Empleado`.
+ * EmpleadoSearch represents the model behind the search form about `app\models\Empleado`.
  */
 class EmpleadoSearch extends Empleado
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['idempleado', 'idpersona', 'iddispositivo', 'legajo', 'activo', 'categoria', 'antiguedad_legal', 'antiguedad_total', 'contratacion', 'cuil', 'funcion', 'fichado', 'afiliacion'], 'integer'],
-            [['email', 'telefono', 'foto', 'ingreso_real', 'ingreso_administrativo'], 'safe'],
+            [['idempleado', 'idpersona', 'iddispositivo', 'legajo', 'categoria', 'antiguedad_legal', 'antiguedad_total', 'contratacion', 'cuil', 'funcion', 'afiliacion'], 'integer'],
+            [['email', 'telefono', 'foto', 'activo', 'ingreso_real', 'ingreso_administrativo', 'fichado'], 'safe'],
         ];
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function scenarios()
     {
@@ -42,8 +43,6 @@ class EmpleadoSearch extends Empleado
     {
         $query = Empleado::find();
 
-        // add conditions that should always apply here
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -56,13 +55,11 @@ class EmpleadoSearch extends Empleado
             return $dataProvider;
         }
 
-        // grid filtering conditions
         $query->andFilterWhere([
             'idempleado' => $this->idempleado,
             'idpersona' => $this->idpersona,
             'iddispositivo' => $this->iddispositivo,
             'legajo' => $this->legajo,
-            'activo' => $this->activo,
             'categoria' => $this->categoria,
             'antiguedad_legal' => $this->antiguedad_legal,
             'antiguedad_total' => $this->antiguedad_total,
@@ -71,13 +68,14 @@ class EmpleadoSearch extends Empleado
             'contratacion' => $this->contratacion,
             'cuil' => $this->cuil,
             'funcion' => $this->funcion,
-            'fichado' => $this->fichado,
             'afiliacion' => $this->afiliacion,
         ]);
 
         $query->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['like', 'telefono', $this->telefono])
-            ->andFilterWhere(['like', 'foto', $this->foto]);
+            ->andFilterWhere(['like', 'foto', $this->foto])
+            ->andFilterWhere(['like', 'activo', $this->activo])
+            ->andFilterWhere(['like', 'fichado', $this->fichado]);
 
         return $dataProvider;
     }

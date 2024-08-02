@@ -5,10 +5,11 @@ use app\models\Organismo;
 use app\models\OrganismoDispositivo;
 use app\models\Persona;
 use kartik\grid\GridView;
-use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Html as HelpersHtml;
+use yii\helpers\Html;
 use yii\helpers\Url;
+
+
 
 $mysql_personas = "SELECT p.idpersona, concat(p.apellido,' ', p.nombre) as nombre from personas p 
                     where p.idpersona in (select idpersona from usuarios) order by p.apellido, p.nombre";
@@ -96,80 +97,101 @@ return [
         'format' => 'raw',
         'width' => '20%',
     ],
-
-    /* [
-        'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'email',
-    ], */
+    [
+        'class' => 'kartik\grid\CheckboxColumn',
+        'width' => '20px',
+    ],
+    [
+        'class' => 'kartik\grid\SerialColumn',
+        'width' => '30px',
+    ],
+        [
+        'class'=>'\kartik\grid\DataColumn',
+        'attribute'=>'idempleado',
+    ],
+    [
+        'class'=>'\kartik\grid\DataColumn',
+        'attribute'=>'idpersona',
+    ],
+    [
+        'class'=>'\kartik\grid\DataColumn',
+        'attribute'=>'iddispositivo',
+    ],
+    [
+        'class'=>'\kartik\grid\DataColumn',
+        'attribute'=>'legajo',
+    ],
+    [
+        'class'=>'\kartik\grid\DataColumn',
+        'attribute'=>'email',
+    ],
     // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'telefono',
+        // 'class'=>'\kartik\grid\DataColumn',
+        // 'attribute'=>'telefono',
     // ],
     // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'foto',
+        // 'class'=>'\kartik\grid\DataColumn',
+        // 'attribute'=>'foto',
     // ],
     // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'activo',
+        // 'class'=>'\kartik\grid\DataColumn',
+        // 'attribute'=>'activo',
     // ],
     // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'categoria',
+        // 'class'=>'\kartik\grid\DataColumn',
+        // 'attribute'=>'categoria',
     // ],
     // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'antiguedad_legal',
+        // 'class'=>'\kartik\grid\DataColumn',
+        // 'attribute'=>'antiguedad_legal',
     // ],
     // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'antiguedad_total',
+        // 'class'=>'\kartik\grid\DataColumn',
+        // 'attribute'=>'antiguedad_total',
     // ],
     // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'ingreso_real',
+        // 'class'=>'\kartik\grid\DataColumn',
+        // 'attribute'=>'ingreso_real',
     // ],
     // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'ingreso_administrativo',
+        // 'class'=>'\kartik\grid\DataColumn',
+        // 'attribute'=>'ingreso_administrativo',
     // ],
     // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'contratacion',
+        // 'class'=>'\kartik\grid\DataColumn',
+        // 'attribute'=>'contratacion',
     // ],
     // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'cuil',
+        // 'class'=>'\kartik\grid\DataColumn',
+        // 'attribute'=>'cuil',
     // ],
     // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'funcion',
+        // 'class'=>'\kartik\grid\DataColumn',
+        // 'attribute'=>'funcion',
     // ],
     // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'fichado',
+        // 'class'=>'\kartik\grid\DataColumn',
+        // 'attribute'=>'fichado',
     // ],
     // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'afiliacion',
+        // 'class'=>'\kartik\grid\DataColumn',
+        // 'attribute'=>'afiliacion',
     // ],
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
-        'vAlign' => 'middle',
-        'urlCreator' => function ($action, $model, $key, $index) {
-            return Url::to([$action, 'id' => $key]);
+        'vAlign'=>'middle',
+        'urlCreator' => function($action, $model, $key, $index) { 
+                return Url::to([$action,'id'=>$key]);
         },
-        'viewOptions' => ['role' => 'modal-remote', 'title' => 'View', 'data-toggle' => 'tooltip'],
-        'updateOptions' => ['role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip'],
-        'deleteOptions' => [
-            'role' => 'modal-remote', 'title' => 'Delete',
-            'data-confirm' => false, 'data-method' => false, // for overide yii data api
-            'data-request-method' => 'post',
-            'data-toggle' => 'tooltip',
-            'data-confirm-title' => 'Are you sure?',
-            'data-confirm-message' => 'Are you sure want to delete this item'
-        ],
+        'viewOptions'=>['role'=>'modal-remote','title'=>'View','data-toggle'=>'tooltip'],
+        'updateOptions'=>['role'=>'modal-remote','title'=>'Update', 'data-toggle'=>'tooltip'],
+        'deleteOptions'=>['role'=>'modal-remote','title'=>'Delete', 
+                          'data-confirm'=>false, 'data-method'=>false,// for overide yii data api
+                          'data-request-method'=>'post',
+                          'data-toggle'=>'tooltip',
+                          'data-confirm-title'=>'Are you sure?',
+                          'data-confirm-message'=>'Are you sure want to delete this item'], 
     ],
 
-];
+];   
