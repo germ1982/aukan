@@ -13,7 +13,12 @@ use yii\widgets\DetailView;
             'id_configuracion',
             'id_configuracion_tipo',
             'descripcion',
-            'activo',
+            [
+                'attribute' => 'activo',
+                'value' => function ($model) {
+                    return $model->activo == 1 ? 'Si' : 'No';
+                },
+            ],
         ],
     ]) ?>
 

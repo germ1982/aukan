@@ -1,35 +1,54 @@
 <?php
+
+use app\models\ConfiguracionTipo;
+use kartik\grid\GridView;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
 return [
     [
-        'class' => 'kartik\grid\CheckboxColumn',
-        'width' => '20px',
-    ],
-    [
-        'class' => 'kartik\grid\SerialColumn',
-        'width' => '30px',
-    ],
-        [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'id_configuracion',
+        'width' => '10%',
     ],
+
     [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'id_configuracion_tipo',
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'id_configuracion_tipo',
+        'value' => function ($model) {
+            $id = $model->id_configuracion_tipo;
+            if ($id != null) {
+                $tipo = ConfiguracionTipo::findOne($id);
+                return "$tipo->descripcion";
+            }
+            return "";
+        },
+        'filterType' => GridView::FILTER_SELECT2,
+        'filter' => ArrayHelper::map(ConfiguracionTipo::find()->where(['activo'=>1])->orderBy('descripcion')->all(), 'id_configuracion_tipo', 'descripcion'),
+        'filterWidgetOptions' => [
+            'pluginOptions' => ['allowClear' => true],
+        ],
+        'filterInputOptions' => ['placeholder' => 'Tipo de Dato...'],
+        'format' => 'raw',
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'descripcion',
     ],
     [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'activo',
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'activo',
+        'value' => function ($model) {
+            return $model->activo == 1 ? 'Si' : 'No';
+        },
+        'width' => '10%',
+        'filter' => ['0' => 'No', '1' => ' Si'],
     ],
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
         'vAlign'=>'middle',
+        'template' => '{view} {update} ',
         'urlCreator' => function($action, $model, $key, $index) { 
                 return Url::to([$action,'id'=>$key]);
         },

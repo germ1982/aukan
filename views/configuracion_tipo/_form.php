@@ -1,4 +1,5 @@
 <?php
+
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -9,19 +10,29 @@ use yii\widgets\ActiveForm;
 
 <div class="configuracion-tipo-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+	<?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
+	<div class="row">
+		<div class="col-md-10">
+			<?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
+		</div>
+		<div class="col-md-2" style="padding-top:30px;">
+			<?= $form->field($model, 'activo')->checkbox(['checked' => true]) ?>
+		</div>
 
-    <?= $form->field($model, 'activo')->textInput() ?>
+	</div>
 
-  
-	<?php if (!Yii::$app->request->isAjax){ ?>
-	  	<div class="form-group">
-	        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-	    </div>
+
+
+
+
+
+	<?php if (!Yii::$app->request->isAjax) { ?>
+		<div class="form-group">
+			<?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+		</div>
 	<?php } ?>
 
-    <?php ActiveForm::end(); ?>
-    
+	<?php ActiveForm::end(); ?>
+
 </div>
