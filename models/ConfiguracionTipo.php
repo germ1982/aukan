@@ -39,7 +39,7 @@ class ConfiguracionTipo extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_configuracion_tipo' => 'Id Configuracion Tipo',
+            'id_configuracion_tipo' => 'Id',
             'descripcion' => 'Descripcion',
             'activo' => 'Activo',
         ];

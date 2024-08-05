@@ -40,7 +40,7 @@ class Organismo_dispositivoController extends Controller
     {    
         $searchModel = new OrganismoDispositivoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $dataProvider->pagination->pageSize=50;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

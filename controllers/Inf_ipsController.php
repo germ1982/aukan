@@ -41,6 +41,7 @@ class Inf_ipsController extends Controller
         $searchModel = new InfIpsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $dataProvider->pagination->pageSize=255;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
