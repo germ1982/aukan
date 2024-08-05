@@ -8,9 +8,9 @@ use yii\bootstrap\Modal;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset;
 
-$this->title = 'Stock Articulos';
+$this->title = 'Datos';
 $this->params['breadcrumbs'][] = $this->title;
-$clase = 'menu-index';
+$clase = 'configuracion-index';
 
 CrudAsset::register($this);
 ?>

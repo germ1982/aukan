@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "stock_articulo".
+ * This is the model class for table "articulo".
  *
  * @property int $idarticulo
  * @property string|null $descripcion
@@ -17,14 +17,14 @@ use Yii;
  * @property int $activo
  * @property string|null $imagen
  */
-class StockArticulo extends \yii\db\ActiveRecord
+class Articulo extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'stock_articulo';
+        return 'articulo';
     }
 
     /**
