@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\StockArticulo;
+use app\models\Inventario;
 
 /**
- * StockArticuloSearch represents the model behind the search form about `app\models\StockArticulo`.
+ * InventarioSearch represents the model behind the search form about `app\models\Inventario`.
  */
-class StockArticuloSearch extends StockArticulo
+class InventarioSearch extends Inventario
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class StockArticuloSearch extends StockArticulo
     public function rules()
     {
         return [
-            [['idarticulo', 'idtipo', 'idmarca', 'idrubro', 'id_unidad_medida'], 'integer'],
-            [['descripcion', 'modelo', 'activo', 'imagen'], 'safe'],
+            [['idInventario', 'idarticulo', 'cantidad', 'iddispositivo', 'idempleado', 'idestado', 'activo'], 'integer'],
+            [['observacion'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class StockArticuloSearch extends StockArticulo
      */
     public function search($params)
     {
-        $query = StockArticulo::find();
+        $query = Inventario::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -56,17 +56,16 @@ class StockArticuloSearch extends StockArticulo
         }
 
         $query->andFilterWhere([
+            'idInventario' => $this->idInventario,
             'idarticulo' => $this->idarticulo,
-            'idtipo' => $this->idtipo,
-            'idmarca' => $this->idmarca,
-            'idrubro' => $this->idrubro,
-            'id_unidad_medida' => $this->id_unidad_medida,
+            'cantidad' => $this->cantidad,
+            'iddispositivo' => $this->iddispositivo,
+            'idempleado' => $this->idempleado,
+            'idestado' => $this->idestado,
+            'activo' => $this->activo,
         ]);
 
-        $query->andFilterWhere(['like', 'descripcion', $this->descripcion])
-            ->andFilterWhere(['like', 'modelo', $this->modelo])
-            ->andFilterWhere(['like', 'activo', $this->activo])
-            ->andFilterWhere(['like', 'imagen', $this->imagen]);
+        $query->andFilterWhere(['like', 'observacion', $this->observacion]);
 
         return $dataProvider;
     }
