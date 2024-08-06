@@ -179,4 +179,16 @@ class PersonaController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    public function actionValidar_dni($dni)
+    {
+        $result = [];
+        $model_persona = Persona::find()
+            ->where(['documento' => $dni])
+            ->one();
+        if ($model_persona != null) {
+            array_push($result, $model_persona->getAttributes());
+        }
+        return json_encode($result);
+    }
 }

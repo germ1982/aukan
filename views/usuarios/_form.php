@@ -10,6 +10,7 @@ use kartik\widgets\FileInput;
 
 <div class="usuarios-form">
     <?php $form = ActiveForm::begin(); ?>
+    <?= $form->field($model, 'idpersona')->hiddenInput(['id' => 'input_idpersona'])->label(false) ?>
     <div class="row">
         <div class="col-md-8">
             <div class="row" >
@@ -50,6 +51,7 @@ use kartik\widgets\FileInput;
             </div>
         </div>
         <div class="col-md-4">
+
             <?php
             if ($model->avatar == null) {
                 echo $form->field($model, 'avatar', [
@@ -146,69 +148,37 @@ use kartik\widgets\FileInput;
 <?php
 $script = <<<JS
 
-function datos_persona(tipo_persona) {
-        console.log('funcion datos_persona');
-        tipo_persona_string = tipo_persona==0 ? 'destinatario' : 'retira';
-
-        $('#input_idpersona_' + tipo_persona_string).val('0');
+function datos_persona() {
+        $('#input_idpersona').val('0');
         
-        let dni_persona = $("#input_dni_persona_" + tipo_persona_string).val();
+        let dni_persona = $("#input_dni_persona").val();
 
         if (dni_persona == "") {
             alert("escriba un dni");
             return;
         }
 
-        $('#input_numero_documento_' + tipo_persona_string).val(dni_persona);
-        $('#input_numero_documento_' + tipo_persona_string).prop("readonly", true);
-
-        $('#txt_mensaje_' + tipo_persona_string).html("Buscando datos de Persona con dni " + dni_persona);
-        $.post("index.php?r=sds_com_persona/validar_dni&dni=" + dni_persona, function(data) {
+        $('#txt_mensaje').html("Buscando datos de Persona con dni " + dni_persona);
+        $.post("index.php?r=persona/validar_dni&dni=" + dni_persona, function(data) {
             data = $.parseJSON(data);
-            console.log("console.log('funcion datos_persona'); // POST a index.php?r=sds_com_persona/validar_dni&dni=" + dni_persona);
+            console.log("console.log('funcion datos_persona'); // POST a index.php?r=persona/validar_dni&dni=" + dni_persona);
             if (data.length === 0) {
-                console.log('funcion datos_persona // no encontro');
-
-                BloquearControlesPersona(false,tipo_persona);
-                LimpiarCamposAltaPersona(dni_persona,tipo_persona);
-                $("#div_datos_persona_" + tipo_persona_string).show();
-                buscar_en_renaper(dni_persona,tipo_persona);
+                $('#txt_mensaje').html("No se encontraron datos de Persona con dni " + dni_persona);
+                //buscar_en_renaper(dni_persona,tipo_persona);
             } else {
                 console.log('funcion datos_persona // encontro');
                 console.log(data);
-                $('#input_idpersona_' + tipo_persona_string).val(data[0]['idpersona']);
-                $('#input_combo_nacionalidad_' + tipo_persona_string).val(data[0]['nacionalidad']);
-                $('#input_combo_genero_' + tipo_persona_string).val(data[0]['genero']);
-                $('#input_apellido_' + tipo_persona_string).val(data[0]['apellido']);
-                $('#input_nombre_' + tipo_persona_string).val(data[0]['nombre']);
-                $('#input_combo_tipo_documento_' + tipo_persona_string).val(data[0]['documento_tipo']);
-                $('#input_fecha_nacimiento_' + tipo_persona_string).val(formatearFecha(data[0]['fecha_nacimiento']));
-                $('#input_numero_calle_' + tipo_persona_string).val(data[0]['domicilio_numero']);
-                $('#input_calle_' + tipo_persona_string).val(data[0]['domicilio_calle']);
-                $('#combo_localidad_' + tipo_persona_string).val(data[0]['idlocalidad']).trigger("change");
-                
-                BloquearControlesPersona(true,tipo_persona);
-                //buscar_foto_en_renaper(dni_persona,tipo_persona);
-                aux = tipo_persona_string.toUpperCase() + ": " + data[0]['apellido'] + ', ' + data[0]['nombre'];
-                $('#txt_mensaje_' + tipo_persona_string).html(aux);
+                $('#input_idpersona').val(data[0]['idpersona']);
 
-                
-
-                if(tipo_persona==0)
-                    {
-                        let aux_dni_retira = $('#input_dni_persona_retira').val();
-                        if(aux_dni_retira=='')
-                        {clonar_datos_destinatario(dni_persona);}
-                        else
-                        {refrescar_retira();}
-                        BloquearControlesPersona(true,1);
-                    }
+                aux = data[0]['apellido'] + ', ' + data[0]['nombre'];
+                $('#txt_mensaje').html(aux);
             }
 
         });
 
 
     }
+
 
 function formatearFecha(fecha) {
         var day = fecha.substring(8, 10);
