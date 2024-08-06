@@ -16,10 +16,10 @@ if ($db->Iniciar()) {
 
 function mostrar_sectores($sectores)
 {
-    echo '<div class="row titulo_seccion" style="width: 90%; margin: 0 auto;" ;>
+    /* echo '<div class="row titulo_seccion" style="width: 90%; margin: 0 auto;" ;>
     <u>Institucional</u>
     </div>
-    <br>';
+    <br>'; */
     foreach ($sectores as $sector) {
         //echo $sector['nombre'] . '<br>';
         $grafico = $sector['fotos'];
@@ -31,3 +31,4 @@ function mostrar_sectores($sectores)
 }
 ?>
 
+<br><br>

@@ -25,10 +25,10 @@ if ($db->Iniciar()) {
 
 function mostrar_empleados($empleados)
 {
-    echo '<div class="row titulo_seccion" style="width: 90%; margin: 0 auto;" ;>
+    /* echo '<div class="row titulo_seccion" style="width: 90%; margin: 0 auto;" ;>
     <u>Staff</u>
     </div>
-    <br>';
+    <br>'; */
     foreach ($empleados as $empleado) {
         $foto = $empleado['foto'];
         $nombre = $empleado['nombre'];
