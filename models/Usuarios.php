@@ -19,9 +19,7 @@ use yii\web\IdentityInterface;
  */
 class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
 {
-    /**
-     * {@inheritdoc}
-     */
+    public $documento;
     public static function tableName()
     {
         return 'usuarios';

@@ -281,6 +281,7 @@ class SiteController extends Controller
                   'class' => 'btn btn-primary',
                   'title' => Yii::t('app', $titulo),
                   'onclick' => $funcion_onclick,
+                  'style' => 'padding: 9px 12px;'
             ]);
       }
 

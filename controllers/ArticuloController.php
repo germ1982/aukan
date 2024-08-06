@@ -3,8 +3,8 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\StockArticulo;
-use app\models\StockArticuloSearch;
+use app\models\Articulo;
+use app\models\ArticuloSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -12,9 +12,9 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * Stock_articuloController implements the CRUD actions for StockArticulo model.
+ * ArticuloController implements the CRUD actions for Articulo model.
  */
-class Stock_articuloController extends Controller
+class ArticuloController extends Controller
 {
     /**
      * @inheritdoc
@@ -33,12 +33,12 @@ class Stock_articuloController extends Controller
     }
 
     /**
-     * Lists all StockArticulo models.
+     * Lists all Articulo models.
      * @return mixed
      */
     public function actionIndex()
     {    
-        $searchModel = new StockArticuloSearch();
+        $searchModel = new ArticuloSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -49,7 +49,7 @@ class Stock_articuloController extends Controller
 
 
     /**
-     * Displays a single StockArticulo model.
+     * Displays a single Articulo model.
      * @param integer $id
      * @return mixed
      */
@@ -59,7 +59,7 @@ class Stock_articuloController extends Controller
         if($request->isAjax){
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                    'title'=> "StockArticulo #".$id,
+                    'title'=> "Articulo #".$id,
                     'content'=>$this->renderAjax('view', [
                         'model' => $this->findModel($id),
                     ]),
@@ -74,7 +74,7 @@ class Stock_articuloController extends Controller
     }
 
     /**
-     * Creates a new StockArticulo model.
+     * Creates a new Articulo model.
      * For ajax request will return json object
      * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -82,7 +82,7 @@ class Stock_articuloController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->request;
-        $model = new StockArticulo();  
+        $model = new Articulo();  
 
         if($request->isAjax){
             /*
@@ -91,26 +91,26 @@ class Stock_articuloController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> " Nuevo Articulo",
+                    'title'=> "Create new Articulo",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
         
                 ];         
             }else if($model->load($request->post()) && $model->save()){
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Create new StockArticulo",
-                    'content'=>'<span class="text-success">Create StockArticulo success</span>',
+                    'title'=> "Create new Articulo",
+                    'content'=>'<span class="text-success">Create Articulo success</span>',
                     'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
                             Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
         
                 ];         
             }else{           
                 return [
-                    'title'=> "Create new StockArticulo",
+                    'title'=> "Create new Articulo",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
@@ -135,7 +135,7 @@ class Stock_articuloController extends Controller
     }
 
     /**
-     * Updates an existing StockArticulo model.
+     * Updates an existing Articulo model.
      * For ajax request will return json object
      * and for non-ajax request if update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
@@ -153,7 +153,7 @@ class Stock_articuloController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Update StockArticulo #".$id,
+                    'title'=> "Update Articulo #".$id,
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
@@ -163,7 +163,7 @@ class Stock_articuloController extends Controller
             }else if($model->load($request->post()) && $model->save()){
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "StockArticulo #".$id,
+                    'title'=> "Articulo #".$id,
                     'content'=>$this->renderAjax('view', [
                         'model' => $model,
                     ]),
@@ -172,7 +172,7 @@ class Stock_articuloController extends Controller
                 ];    
             }else{
                  return [
-                    'title'=> "Update StockArticulo #".$id,
+                    'title'=> "Update Articulo #".$id,
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
@@ -195,7 +195,7 @@ class Stock_articuloController extends Controller
     }
 
     /**
-     * Delete an existing StockArticulo model.
+     * Delete an existing Articulo model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -223,7 +223,7 @@ class Stock_articuloController extends Controller
     }
 
      /**
-     * Delete multiple existing StockArticulo model.
+     * Delete multiple existing Articulo model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -254,15 +254,15 @@ class Stock_articuloController extends Controller
     }
 
     /**
-     * Finds the StockArticulo model based on its primary key value.
+     * Finds the Articulo model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return StockArticulo the loaded model
+     * @return Articulo the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = StockArticulo::findOne($id)) !== null) {
+        if (($model = Articulo::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

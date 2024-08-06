@@ -5,21 +5,20 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "configuracion".
+ * This is the model class for table "configuracion_tipo".
  *
- * @property int $id_configuracion
  * @property int $id_configuracion_tipo
  * @property string $descripcion
  * @property int $activo
  */
-class Configuracion extends \yii\db\ActiveRecord
+class ConfiguracionTipo extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'configuracion';
+        return 'configuracion_tipo';
     }
 
     /**
@@ -28,8 +27,8 @@ class Configuracion extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_configuracion_tipo', 'descripcion'], 'required'],
-            [['id_configuracion_tipo', 'activo'], 'integer'],
+            [['descripcion', 'activo'], 'required'],
+            [['activo'], 'integer'],
             [['descripcion'], 'string', 'max' => 50],
         ];
     }
@@ -40,8 +39,7 @@ class Configuracion extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_configuracion' => 'Id',
-            'id_configuracion_tipo' => 'Tipo De Dato',
+            'id_configuracion_tipo' => 'Id',
             'descripcion' => 'Descripcion',
             'activo' => 'Activo',
         ];

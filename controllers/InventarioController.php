@@ -3,8 +3,8 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\InfIps;
-use app\models\InfIpsSearch;
+use app\models\Inventario;
+use app\models\InventarioSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -12,9 +12,9 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * Inf_ipsController implements the CRUD actions for InfIps model.
+ * InventarioController implements the CRUD actions for Inventario model.
  */
-class Inf_ipsController extends Controller
+class InventarioController extends Controller
 {
     /**
      * @inheritdoc
@@ -33,15 +33,14 @@ class Inf_ipsController extends Controller
     }
 
     /**
-     * Lists all InfIps models.
+     * Lists all Inventario models.
      * @return mixed
      */
     public function actionIndex()
     {    
-        $searchModel = new InfIpsSearch();
+        $searchModel = new InventarioSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        $dataProvider->pagination->pageSize=255;
+        $dataProvider->pagination->pageSize=50;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -50,7 +49,7 @@ class Inf_ipsController extends Controller
 
 
     /**
-     * Displays a single InfIps model.
+     * Displays a single Inventario model.
      * @param integer $id
      * @return mixed
      */
@@ -60,12 +59,12 @@ class Inf_ipsController extends Controller
         if($request->isAjax){
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                    'title'=> "Informacion Ip ".$id,
+                    'title'=> "Inventario #".$id,
                     'content'=>$this->renderAjax('view', [
                         'model' => $this->findModel($id),
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
                 ];    
         }else{
             return $this->render('view', [
@@ -75,7 +74,7 @@ class Inf_ipsController extends Controller
     }
 
     /**
-     * Creates a new InfIps model.
+     * Creates a new Inventario model.
      * For ajax request will return json object
      * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -83,7 +82,7 @@ class Inf_ipsController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->request;
-        $model = new InfIps();  
+        $model = new Inventario();  
 
         if($request->isAjax){
             /*
@@ -92,7 +91,7 @@ class Inf_ipsController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Crear Nuevo Ip",
+                    'title'=> "Nuevo Inventario",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
@@ -103,20 +102,20 @@ class Inf_ipsController extends Controller
             }else if($model->load($request->post()) && $model->save()){
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Crear Nuevo Ip",
-                    'content'=>'<span class="text-success">Create InfIps success</span>',
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                    'title'=> "Nuevo Inventario",
+                    'content'=>'<span class="text-success">Create Inventario success</span>',
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
                             Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
         
                 ];         
             }else{           
                 return [
-                    'title'=> "Crear Nuevo Ip",
+                    'title'=> "Create new Inventario",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
         
                 ];         
             }
@@ -125,7 +124,7 @@ class Inf_ipsController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->idip]);
+                return $this->redirect(['view', 'id' => $model->idInventario]);
             } else {
                 return $this->render('create', [
                     'model' => $model,
@@ -136,7 +135,7 @@ class Inf_ipsController extends Controller
     }
 
     /**
-     * Updates an existing InfIps model.
+     * Updates an existing Inventario model.
      * For ajax request will return json object
      * and for non-ajax request if update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
@@ -154,31 +153,31 @@ class Inf_ipsController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Actualizar Ips ".$id,
+                    'title'=> "Update Inventario #".$id,
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
                 ];         
             }else if($model->load($request->post()) && $model->save()){
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "InfIps #".$id,
+                    'title'=> "Inventario #".$id,
                     'content'=>$this->renderAjax('view', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['Editar','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
                 ];    
             }else{
                  return [
-                    'title'=> "Actualizar Ips ".$id,
+                    'title'=> "Update Inventario #".$id,
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
                 ];        
             }
         }else{
@@ -186,7 +185,7 @@ class Inf_ipsController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->idip]);
+                return $this->redirect(['view', 'id' => $model->idInventario]);
             } else {
                 return $this->render('update', [
                     'model' => $model,
@@ -196,7 +195,7 @@ class Inf_ipsController extends Controller
     }
 
     /**
-     * Delete an existing InfIps model.
+     * Delete an existing Inventario model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -224,7 +223,7 @@ class Inf_ipsController extends Controller
     }
 
      /**
-     * Delete multiple existing InfIps model.
+     * Delete multiple existing Inventario model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -255,15 +254,15 @@ class Inf_ipsController extends Controller
     }
 
     /**
-     * Finds the InfIps model based on its primary key value.
+     * Finds the Inventario model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return InfIps the loaded model
+     * @return Inventario the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = InfIps::findOne($id)) !== null) {
+        if (($model = Inventario::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

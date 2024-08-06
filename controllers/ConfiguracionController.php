@@ -3,8 +3,8 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\InfIps;
-use app\models\InfIpsSearch;
+use app\models\Configuracion;
+use app\models\ConfiguracionSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -12,9 +12,9 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * Inf_ipsController implements the CRUD actions for InfIps model.
+ * ConfiguracionController implements the CRUD actions for Configuracion model.
  */
-class Inf_ipsController extends Controller
+class ConfiguracionController extends Controller
 {
     /**
      * @inheritdoc
@@ -33,15 +33,16 @@ class Inf_ipsController extends Controller
     }
 
     /**
-     * Lists all InfIps models.
+     * Lists all Configuracion models.
      * @return mixed
      */
     public function actionIndex()
     {    
-        $searchModel = new InfIpsSearch();
+        $searchModel = new ConfiguracionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        $dataProvider->pagination->pageSize=255;
+        $dataProvider->pagination->pageSize=50;
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -50,7 +51,7 @@ class Inf_ipsController extends Controller
 
 
     /**
-     * Displays a single InfIps model.
+     * Displays a single Configuracion model.
      * @param integer $id
      * @return mixed
      */
@@ -60,12 +61,12 @@ class Inf_ipsController extends Controller
         if($request->isAjax){
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                    'title'=> "Informacion Ip ".$id,
+                    'title'=> "Configuracion #".$id,
                     'content'=>$this->renderAjax('view', [
                         'model' => $this->findModel($id),
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
                 ];    
         }else{
             return $this->render('view', [
@@ -75,7 +76,7 @@ class Inf_ipsController extends Controller
     }
 
     /**
-     * Creates a new InfIps model.
+     * Creates a new Configuracion model.
      * For ajax request will return json object
      * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -83,7 +84,7 @@ class Inf_ipsController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->request;
-        $model = new InfIps();  
+        $model = new Configuracion();  
 
         if($request->isAjax){
             /*
@@ -92,31 +93,31 @@ class Inf_ipsController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Crear Nuevo Ip",
+                    'title'=> "Create new Configuracion",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
         
                 ];         
             }else if($model->load($request->post()) && $model->save()){
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Crear Nuevo Ip",
-                    'content'=>'<span class="text-success">Create InfIps success</span>',
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                    'title'=> "Create new Configuracion",
+                    'content'=>'<span class="text-success">Create Configuracion success</span>',
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
                             Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
         
                 ];         
             }else{           
                 return [
-                    'title'=> "Crear Nuevo Ip",
+                    'title'=> "Create new Configuracion",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
         
                 ];         
             }
@@ -125,7 +126,7 @@ class Inf_ipsController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->idip]);
+                return $this->redirect(['view', 'id' => $model->id_configuracion]);
             } else {
                 return $this->render('create', [
                     'model' => $model,
@@ -136,7 +137,7 @@ class Inf_ipsController extends Controller
     }
 
     /**
-     * Updates an existing InfIps model.
+     * Updates an existing Configuracion model.
      * For ajax request will return json object
      * and for non-ajax request if update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
@@ -154,31 +155,31 @@ class Inf_ipsController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Actualizar Ips ".$id,
+                    'title'=> "Update Configuracion #".$id,
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
                 ];         
             }else if($model->load($request->post()) && $model->save()){
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "InfIps #".$id,
+                    'title'=> "Configuracion #".$id,
                     'content'=>$this->renderAjax('view', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['Editar','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
                 ];    
             }else{
                  return [
-                    'title'=> "Actualizar Ips ".$id,
+                    'title'=> "Update Configuracion #".$id,
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
                 ];        
             }
         }else{
@@ -186,7 +187,7 @@ class Inf_ipsController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->idip]);
+                return $this->redirect(['view', 'id' => $model->id_configuracion]);
             } else {
                 return $this->render('update', [
                     'model' => $model,
@@ -196,7 +197,7 @@ class Inf_ipsController extends Controller
     }
 
     /**
-     * Delete an existing InfIps model.
+     * Delete an existing Configuracion model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -224,7 +225,7 @@ class Inf_ipsController extends Controller
     }
 
      /**
-     * Delete multiple existing InfIps model.
+     * Delete multiple existing Configuracion model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -255,15 +256,15 @@ class Inf_ipsController extends Controller
     }
 
     /**
-     * Finds the InfIps model based on its primary key value.
+     * Finds the Configuracion model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return InfIps the loaded model
+     * @return Configuracion the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = InfIps::findOne($id)) !== null) {
+        if (($model = Configuracion::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

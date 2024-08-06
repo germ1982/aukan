@@ -3,9 +3,9 @@
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\StockArticulo */
+/* @var $model app\models\Articulo */
 ?>
-<div class="stock-articulo-view">
+<div class="articulo-view">
  
     <?= DetailView::widget([
         'model' => $model,
