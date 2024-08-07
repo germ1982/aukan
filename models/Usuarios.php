@@ -20,6 +20,7 @@ use yii\web\IdentityInterface;
 class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
 {
     public $documento;
+    public $imageFile;
     public static function tableName()
     {
         return 'usuarios';
@@ -34,6 +35,7 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
             [['email', 'avatar', 'status', 'password', 'activo', 'idpersona'], 'required'],
             [['status', 'activo', 'idpersona'], 'integer'],
             [['email', 'avatar', 'password'], 'string', 'max' => 100],
+            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'jpg'],
         ];
     }
 
@@ -91,5 +93,20 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
     {
         // Este método no se utiliza en la autenticación básica de Yii2
         return null;
+    }
+
+    public function upload()
+    {
+        if ($this->validate()) {
+            $path = Yii::getAlias('@webroot') . '/img/usuarios-avatares';
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
+        }
+            $this->avatar = 'img/usuarios-avatares/' . $this->imageFile->baseName . '.' . $this->imageFile->extension;
+            $this->imageFile->saveAs(Yii::getAlias('@webroot') . '/' . $this->avatar);
+            return $this->save(false);
+        } else {
+            return false;
+        }
     }
 }

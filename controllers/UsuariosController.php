@@ -10,6 +10,7 @@ use yii\filters\VerbFilter;
 use Yii;
 use yii\web\Response;
 use yii\helpers\Html;
+use yii\web\UploadedFile;
 
 /**
  * UsuariosController implements the CRUD actions for Usuarios model.
@@ -114,7 +115,8 @@ class UsuariosController extends Controller
             else if ($model->load($request->post())) {
                   $transaction = Yii::$app->db->beginTransaction();
                   $guardado = true;
-
+                  $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+                  $model->upload;
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
