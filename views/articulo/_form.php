@@ -10,40 +10,39 @@ use yii\widgets\ActiveForm;
 <div class="articulo-form">
 
     <?php $form = ActiveForm::begin(); ?>
-    <div class="row">
-        <div class=" col-md-4">
-            <?= $form->field($model, 'idarticulo')->textInput() ?>   
-        </div>   
+    <div class="row">      
         <div class=" col-md-4">
             <?= $form->field($model, 'descripcion')->textInput() ?>   
         </div>
         <div class=" col-md-4">
             <?= $form->field($model, 'idtipo')->textInput() ?>  
         </div>
+        <div class=" col-md-4">
+            <?= $form->field($model, 'idmarca')->textInput() ?>   
+        </div> 
     </div>
 
     
 
     <div class="row">    
-        <div class=" col-md-4">
-            <?= $form->field($model, 'idmarca')->textInput() ?>   
-        </div>        
+               
         <div class=" col-md-4">
             <?= $form->field($model, 'modelo')->textInput() ?>   
         </div>           
         <div class=" col-md-4">
             <?= $form->field($model, 'idrubro')->textInput() ?>    
-        </div>    
+        </div>  
+        <div class=" col-md-4">
+            <?= $form->field($model, 'id_unidad_medida')->textInput() ?>     
+        </div>  
     </div>
     
    
 
     <div class="row">
+        
         <div class=" col-md-4">
-            <?= $form->field($model, 'id_unidad_medida')->textInput() ?>     
-        </div>
-        <div class=" col-md-4">
-            <?= $form->field($model, 'activo')->textInput() ?>   
+            <?= $form->field($model,'activo')->checkbox(['checked' => true]) ?>   
         </div>    
         <div class=" col-md-4">
             <?= $form->field($model, 'imagen')->textInput() ?>

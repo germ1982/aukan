@@ -1,5 +1,6 @@
 <?php
 
+use app\models\ConfiguracionTipo;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
@@ -11,7 +12,13 @@ use yii\widgets\DetailView;
         'model' => $model,
         'attributes' => [
             'id_configuracion',
-            'id_configuracion_tipo',
+            [
+                'attribute' => 'id_configuracion_tipo',
+                'value' => function ($model) {
+                    $tipo = ConfiguracionTipo::findOne($model->id_configuracion_tipo);
+                    return $tipo->descripcion;
+                },
+            ],
             'descripcion',
             [
                 'attribute' => 'activo',
