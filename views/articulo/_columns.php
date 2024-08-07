@@ -1,5 +1,16 @@
 <?php
+
+use app\models\Configuracion;
+use app\models\ConfiguracionTipo;
+use kartik\grid\GridView;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
+
+$mysql_tipo = "SELECT * from configuracion where activo=1 and id_configuracion_tipo = 12
+order by descripcion";
+
+$mysql_marca = "SELECT * from configuracion where activo=1 and id_configuracion_tipo = 14
+order by descripcion";
 
 return [
     [
@@ -18,13 +29,45 @@ return [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'descripcion',
     ],
+   
     [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'idtipo',
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'idtipo',
+        'value' => function ($model) {
+            $id = $model->idtipo;
+            if ($id != null) {
+                $tipo = Configuracion::findOne($id);
+                return "$tipo->descripcion";
+            }
+            return "";
+        },
+        'filterType' => GridView::FILTER_SELECT2,
+        'filter' => ArrayHelper::map(Configuracion::findBySql($mysql_tipo)->all(), 'id_configuracion_tipo', 'descripcion'),
+        'filterWidgetOptions' => [
+            'pluginOptions' => ['allowClear' => true],
+        ],
+        'filterInputOptions' => ['placeholder' => 'Tipo de Dato...'],
+        'format' => 'raw',
     ],
+   
     [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'idmarca',
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'idmarca',
+        'value' => function ($model) {
+            $id = $model->idmarca;
+            if ($id != null) {
+                $tipo = Configuracion::findOne($id);
+                return "$tipo->descripcion";
+            }
+            return "";
+        },
+        'filterType' => GridView::FILTER_SELECT2,
+        'filter' => ArrayHelper::map(Configuracion::findBySql($mysql_marca)->all(), 'id_configuracion_tipo', 'descripcion'),
+        'filterWidgetOptions' => [
+            'pluginOptions' => ['allowClear' => true],
+        ],
+        'filterInputOptions' => ['placeholder' => 'Tipo de Dato...'],
+        'format' => 'raw',
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
