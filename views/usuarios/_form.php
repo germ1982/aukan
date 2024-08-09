@@ -8,83 +8,110 @@ use yii\helpers\Url;
 use kartik\widgets\FileInput;
 
 ?>
+<style>
+    .file-drop-zone{
+        min-height: 100px!important;
+    }
+    .file-preview-image {
+        min-height: 100px!important;
+        max-width: 100%!important;   /* Ajusta la imagen al 100% del contenedor */
+        max-height: 100%!important; /* Define la altura máxima de la vista previa */
+        object-fit: cover!important; /* Cubre el contenedor sin distorsión */
+
+    }
+    .krajee-default{
+        min-height: 100px!important;
+        float: none!important;
+    }
+    .kv-file-content{
+        min-height: 100px!important;
+        width: 100%!important;
+    }
+</style>
 
 <div class="usuarios-form">
-      <?php $form = ActiveForm::begin([
-            'options' => ['enctype' => 'multipart/form-data']
-      ]);
-      if (!isset($model)) {
-            $model = new Usuarios();
-      }
-      ?>
-      <?= $form->field($model, 'idpersona')->hiddenInput(['id' => 'input_idpersona'])->label(false) ?>
-      <div class="row">
-            <div class="col-md-8">
-                  <div class="row">
-                        <!-- Linea de busqueda -->
-                        <div class="col-md-4">
-                              <div class="input-group">
-                                    <?= $form->field($model, 'documento')->textInput([
-                                          'id' => 'input_dni_persona',
-                                          'onkeyup' => 'ValidarIngresoDni();',
-                                          //'disabled' => $generada
-                                    ])
-                                          ->label($model->isNewRecord ? 'Buscar Persona' : 'DNI Persona') ?>
-                                    <span class="input-group-btn" style="padding-top:27px;">
-                                          <?= SiteController::actionGet_boton_buscar_x_documento(
-                                                'btn_dni',
-                                                'Buscar Dni',
-                                                'datos_persona(0);'
-                                          ) ?>
-                                    </span>
-                              </div>
-                        </div>
-                        <div class="col-md-8" style="padding-top:30px;" id="txt_mensaje"></div>
-                  </div>
-                  <div class="row">
-                        <div class="col-md-12">
-
-                        </div>
-                  </div>
-                  <div class="row">
-                        <div class="col-md-12">
-                              <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
-                        </div>
-                  </div>
-                  <div class="row">
-                        <div class="col-md-12">
-                              <?= $form->field($model, 'activo')->checkbox(['checked' => true]) ?>
-                        </div>
-                  </div>
+    <?php $form = ActiveForm::begin([
+        'options' => ['enctype' => 'multipart/form-data']
+    ]);
+    if (!isset($model)) {
+        $model = new Usuarios();
+    }
+    ?>
+    <?= $form->field($model, 'idpersona')->hiddenInput(['id' => 'input_idpersona'])->label(false) ?>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <!-- Linea de busqueda -->
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <?= $form->field($model, 'documento')->textInput([
+                            'id' => 'input_dni_persona',
+                            'onkeyup' => 'ValidarIngresoDni();',
+                            //'disabled' => $generada
+                        ])
+                            ->label($model->isNewRecord ? 'Buscar Persona' : 'DNI Persona') ?>
+                        <span class="input-group-btn" style="padding-top:27px;">
+                            <?= SiteController::actionGet_boton_buscar_x_documento(
+                                'btn_dni',
+                                'Buscar Dni',
+                                'datos_persona(0);'
+                            ) ?>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-8" style="padding-top:30px;" id="txt_mensaje"></div>
             </div>
-            <div class="col-md-4">
-                  <?= $form->field($model, 'imageFile')->widget(FileInput::classname(), [
-                        'options' => ['accept' => 'image/*'],
-                        'pluginOptions' => [
-                              'allowedFileExtensions' => ['jpg', 'jpeg', 'gif', 'png', 'bmp'],
-                              'showPreview' => true,
-                              'showCaption' => false,
-                              'showRemove' => true,
-                              'showUpload' => false,
-                              'showClose' => false,
-                              'showCancel' => false,
-                              'mainClass' => 'input-group-sm',
-                              //'uploadUrl' => Url::to(['/mds_atp_solicitud/update']),
-                              'maxFileSize' => 5000,
-                              'fileActionSettings' => [
-                                    'showRemove' => false,
-                                    'showUpload' => false,
-                                    'showZoom' => false,
-                                    'showCaption' => false,
-                                    'showCancel' => false
-                                ]
-                        ]
-                  ]);
+            <div class="row">
+                <div class="col-md-12">
 
-                  ?>
-
+                </div>
             </div>
-      </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <?= $form->field($model, 'activo')->checkbox(['checked' => true]) ?>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <?= $form->field($model, 'imageFile')->widget(FileInput::classname(), [
+                'options' => ['accept' => 'image/*'],
+                'pluginOptions' => [
+                    'allowedFileExtensions' => ['jpg', 'jpeg', 'gif', 'png', 'bmp'],
+                    'showPreview' => true,
+                    'showCaption' => false,
+                    'showRemove' => true,
+                    'showUpload' => false,
+                    'showClose' => false,
+                    'showCancel' => false,
+                    'mainClass' => 'input-group-sm',
+                    //'uploadUrl' => Url::to(['/mds_atp_solicitud/update']),
+                    'maxFileSize' => 5000,
+                    'fileActionSettings' => [
+                        'showRemove' => false,
+                        'showUpload' => false,
+                        'showZoom' => false,
+                        'showCaption' => false,
+                        'showCancel' => false
+                    ],
+                    'previewFileType' => 'file',
+                    'layoutTemplates' => [
+                        'footer' => '',  // Remueve el footer en la vista previa si es necesario
+                    ],
+                    'initialPreviewConfig' => [
+                        ['width' => '50px'] // Define el ancho de la vista previa
+                    ]
+                ]
+            ]);
+
+            ?>
+
+        </div>
+    </div>
 </div>
 
 

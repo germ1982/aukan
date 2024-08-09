@@ -44,7 +44,7 @@ class UsuariosController extends Controller
     {
         $searchModel = new UsuariosSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
-        $dataProvider->pagination->pageSize=50;
+        $dataProvider->pagination->pageSize = 50;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -59,9 +59,9 @@ class UsuariosController extends Controller
      */
     public function actionView($id)
     {
-      $request = Yii::$app->request;
+        $request = Yii::$app->request;
 
-      if ($request->isAjax) {
+        if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
                 'title' => "Usuario Id " . $id,
@@ -76,9 +76,6 @@ class UsuariosController extends Controller
                 'model' => $this->findModel($id),
             ]);
         }
-
-
-
     }
 
     /**
@@ -111,65 +108,77 @@ class UsuariosController extends Controller
                             'type' => 'submit',
                         ]),
                 ];
-            }
-            else if ($model->load($request->post())) {
-                  $transaction = Yii::$app->db->beginTransaction();
-                  $guardado = true;
-                  $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-                  $model->upload;
-                  
-                  if ($guardado && $model->save()) {
-                      $transaction->commit();
-
-                      return [
-                          'title' => "Nuevo Usuario",
-                          'content' => '<span class="text-success">Usuario Creado Correctamente</span>',
-                          'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
-                      ];
-                  }
-              }
-              return [
-                  'title' => "Nuevo Usuario, Faltan datos!!! Complete Los datos Faltantes!!!",
-                  'content' => $this->renderAjax('create', [
-                      'model' => $model,
-                  ]),
-                  'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                      Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
-  
-              ];
-          }
-    }
-
-public function actionUpdate($id)
-    {
-      $request = Yii::$app->request;
-      $model = $this->findModel($id);
-
-      if ($request->isAjax) {
-          Yii::$app->response->format = Response::FORMAT_JSON;
-          if ($request->isGet) {
-              return [
-                  'title' => 'Editar Usuario',
-                  'content' => $this->renderAjax('update', [
-                      'model' => $model,
-                  ]),
-                  'footer' =>
-                  Html::button('Cerrar', [
-                      'id' => 'btnCerrar',
-                      'class' => 'btn btn-default pull-left',
-                      'data-dismiss' => 'modal',
-                  ]) .
-                      Html::button('Guardar', [
-                          'id' => 'btnGuardar',
-                          'class' => 'btn btn-primary',
-                          'type' => 'submit',
-                      ]),
-              ];
-          }
-          else if ($model->load($request->post())) {
+            } else if ($model->load($request->post())) {
                 $transaction = Yii::$app->db->beginTransaction();
                 $guardado = true;
-                
+
+                $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+                if ($model->validate()) {
+                    if ($model->imageFile) {
+                        $path = Yii::getAlias('@webroot') . '/img/usuarios-avatares/';
+                        if (!is_dir($path)) {
+                            mkdir($path, 0777, true);
+                        }
+                        $fileName = 'avatar-'. $model->documento . '.' . $model->imageFile->extension;
+                        $model->avatar = $fileName; // Asigna el nombre del archivo al atributo 'avatar'
+
+                        // Guarda la imagen en el servidor
+                        $model->imageFile->saveAs($path . $fileName);
+                    }
+                }
+
+
+                if ($guardado && $model->save()) {
+                    $transaction->commit();
+
+                    return [
+                        'title' => "Nuevo Usuario",
+                        'content' => '<span class="text-success">Usuario Creado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                    ];
+                }
+            }
+            return [
+                'title' => "Nuevo Usuario, Faltan datos!!! Complete Los datos Faltantes!!!",
+                'content' => $this->renderAjax('create', [
+                    'model' => $model,
+                ]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+
+            ];
+        }
+    }
+
+    public function actionUpdate($id)
+    {
+        $request = Yii::$app->request;
+        $model = $this->findModel($id);
+
+        if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            if ($request->isGet) {
+                return [
+                    'title' => 'Editar Usuario',
+                    'content' => $this->renderAjax('update', [
+                        'model' => $model,
+                    ]),
+                    'footer' =>
+                    Html::button('Cerrar', [
+                        'id' => 'btnCerrar',
+                        'class' => 'btn btn-default pull-left',
+                        'data-dismiss' => 'modal',
+                    ]) .
+                        Html::button('Guardar', [
+                            'id' => 'btnGuardar',
+                            'class' => 'btn btn-primary',
+                            'type' => 'submit',
+                        ]),
+                ];
+            } else if ($model->load($request->post())) {
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
+
                 if ($guardado && $model->save()) {
                     $transaction->commit();
 
@@ -196,17 +205,14 @@ public function actionUpdate($id)
     public function actionDelete($id)
     {
 
-        if($this->findModel($id)->delete())
-        {
+        if ($this->findModel($id)->delete()) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                  'title' => "Eliminado",
-                  'content' => '<span class="text-success">Usuario Eliminado Correctamente</span>',
-                  'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'center btn btn-default pull-left', 'data-dismiss' => "modal"])
-              ];
+                'title' => "Eliminado",
+                'content' => '<span class="text-success">Usuario Eliminado Correctamente</span>',
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'center btn btn-default pull-left', 'data-dismiss' => "modal"])
+            ];
         }
-
-
     }
 
     /**
