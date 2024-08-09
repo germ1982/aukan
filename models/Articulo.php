@@ -47,13 +47,13 @@ class Articulo extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'idarticulo' => 'Idarticulo',
+            'idarticulo' => 'Id',
             'descripcion' => 'Descripcion',
-            'idtipo' => 'Idtipo',
-            'idmarca' => 'Idmarca',
+            'idtipo' => 'Tipo Articulo',
+            'idmarca' => 'Marca',
             'modelo' => 'Modelo',
-            'idrubro' => 'Idrubro',
-            'id_unidad_medida' => 'Id Unidad Medida',
+            'idrubro' => 'Rubro',
+            'id_unidad_medida' => 'Unidad Medida',
             'activo' => 'Activo',
             'imagen' => 'Imagen',
         ];

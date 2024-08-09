@@ -82,60 +82,57 @@ class ArticuloController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->request;
-        $model = new Articulo();  
+        $model = new Articulo();
 
-        if($request->isAjax){
-            /*
-            *   Process for ajax request
-            */
+        if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
-            if($request->isGet){
+            if ($request->isGet) {
                 return [
-                    'title'=> "Nuevo Articulo",
-                    'content'=>$this->renderAjax('create', [
+                    'title' => 'Nuevo Articulo',
+                    'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
-        
-                ];         
-            }else if($model->load($request->post()) && $model->save()){
-                return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Create new Articulo",
-                    'content'=>'<span class="text-success">Create Articulo success</span>',
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
-        
-                ];         
-            }else{           
-                return [
-                    'title'=> "Nuevo Articulo",
-                    'content'=>$this->renderAjax('create', [
-                        'model' => $model,
-                    ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
-        
-                ];         
+                    'footer' =>
+                    Html::button('Cerrar', [
+                        'id' => 'btnCerrar',
+                        'class' => 'btn btn-default pull-left',
+                        'data-dismiss' => 'modal',
+                    ]) .
+                        Html::button('Guardar', [
+                            'id' => 'btnGuardar',
+                            'class' => 'btn btn-primary',
+                            'type' => 'submit',
+                        ]),
+                ];
             }
-        }else{
-            /*
-            *   Process for non-ajax request
-            */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->idarticulo]);
-            } else {
-                return $this->render('create', [
-                    'model' => $model,
-                ]);
-            }
-        }
-       
+            else if ($model->load($request->post())) {
+                  $transaction = Yii::$app->db->beginTransaction();
+                  $guardado = true;
+                  $model->imagen='articulo_0.jpg';
+                  if ($guardado && $model->save()) {
+                      $transaction->commit();
+
+                      return [
+                          'title' => 'Nuevo Articulo',
+                          'content' => '<span class="text-success">Dato Creado Correctamente</span>',
+                          'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                      ];
+                  }
+              }
+              return [
+                  'title' => "Nuevo Articulo, Faltan datos!!! Complete Los datos Faltantes!!!",
+                  'content' => $this->renderAjax('create', [
+                      'model' => $model,
+                  ]),
+                  'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                      Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+  
+              ];
+          }
     }
 
     /**
-     * Updates an existing Articulo model.
+     * Updates an existing Configuracion model.
      * For ajax request will return json object
      * and for non-ajax request if update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
@@ -146,54 +143,53 @@ class ArticuloController extends Controller
         $request = Yii::$app->request;
         $model = $this->findModel($id);       
 
-        if($request->isAjax){
-            /*
-            *   Process for ajax request
-            */
+        if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
-            if($request->isGet){
+            if ($request->isGet) {
                 return [
-                    'title'=> "Actualizar Articulo #".$id,
-                    'content'=>$this->renderAjax('update', [
+                    'title' => 'Editar Articulo Id: '.$id,
+                    'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
-                ];         
-            }else if($model->load($request->post()) && $model->save()){
-                return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Articulo #".$id,
-                    'content'=>$this->renderAjax('view', [
-                        'model' => $model,
-                    ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
-            }else{
-                 return [
-                    'title'=> "Actualizar Articulo #".$id,
-                    'content'=>$this->renderAjax('update', [
-                        'model' => $model,
-                    ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
-                ];        
+                    'footer' =>
+                    Html::button('Cerrar', [
+                        'id' => 'btnCerrar',
+                        'class' => 'btn btn-default pull-left',
+                        'data-dismiss' => 'modal',
+                    ]) .
+                        Html::button('Guardar', [
+                            'id' => 'btnGuardar',
+                            'class' => 'btn btn-primary',
+                            'type' => 'submit',
+                        ]),
+                ];
             }
-        }else{
-            /*
-            *   Process for non-ajax request
-            */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->idarticulo]);
-            } else {
-                return $this->render('update', [
-                    'model' => $model,
-                ]);
-            }
-        }
-    }
+            else if ($model->load($request->post())) {
+                  $transaction = Yii::$app->db->beginTransaction();
+                  $guardado = true;
+                  $model->imagen='articulo_0.jpg';
+                  
+                  if ($guardado && $model->save()) {
+                      $transaction->commit();
 
+                      return [
+                          'title' => 'Editar Articulo Id: '.$id,
+                          'content' => '<span class="text-success">Articulo Editado Correctamente</span>',
+                          'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                      ];
+                  }
+              }
+              return [
+                  'title' => "Editar Articulo Id $id, Faltan datos!!! Complete Los datos Faltantes!!!",
+                  'content' => $this->renderAjax('create', [
+                      'model' => $model,
+                  ]),
+                  'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                      Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+  
+              ];
+          }
+    }
     /**
      * Delete an existing Articulo model.
      * For ajax request will return json object
