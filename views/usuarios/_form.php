@@ -3,72 +3,88 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use app\controllers\SiteController;
+use app\models\Usuarios;
 use yii\helpers\Url;
 use kartik\widgets\FileInput;
 
 ?>
 
 <div class="usuarios-form">
-    <?php $form = ActiveForm::begin([
-        'options' => ['enctype' => 'multipart/form-data']
-    ]);
+      <?php $form = ActiveForm::begin([
+            'options' => ['enctype' => 'multipart/form-data']
+      ]);
+      if (!isset($model)) {
+            $model = new Usuarios();
+      }
+      ?>
+      <?= $form->field($model, 'idpersona')->hiddenInput(['id' => 'input_idpersona'])->label(false) ?>
+      <div class="row">
+            <div class="col-md-8">
+                  <div class="row">
+                        <!-- Linea de busqueda -->
+                        <div class="col-md-4">
+                              <div class="input-group">
+                                    <?= $form->field($model, 'documento')->textInput([
+                                          'id' => 'input_dni_persona',
+                                          'onkeyup' => 'ValidarIngresoDni();',
+                                          //'disabled' => $generada
+                                    ])
+                                          ->label($model->isNewRecord ? 'Buscar Persona' : 'DNI Persona') ?>
+                                    <span class="input-group-btn" style="padding-top:27px;">
+                                          <?= SiteController::actionGet_boton_buscar_x_documento(
+                                                'btn_dni',
+                                                'Buscar Dni',
+                                                'datos_persona(0);'
+                                          ) ?>
+                                    </span>
+                              </div>
+                        </div>
+                        <div class="col-md-8" style="padding-top:30px;" id="txt_mensaje"></div>
+                  </div>
+                  <div class="row">
+                        <div class="col-md-12">
 
-    ?>
-    <?= $form->field($model, 'idpersona')->hiddenInput(['id' => 'input_idpersona'])->label(false) ?>
-    <div class="row">
-        <div class="col-md-8">
-            <div class="row">
-                <!-- Linea de busqueda -->
-                <div class="col-md-4">
-                    <div class="input-group">
-                        <?= $form->field($model, 'documento')->textInput([
-                            'id' => 'input_dni_persona',
-                            'onkeyup' => 'ValidarIngresoDni();',
-                            //'disabled' => $generada
-                        ])
-                            ->label($model->isNewRecord ? 'Buscar Persona' : 'DNI Persona') ?>
-                        <span class="input-group-btn" style="padding-top:27px;">
-                            <?= SiteController::actionGet_boton_buscar_x_documento(
-                                'btn_dni',
-                                'Buscar Dni',
-                                'datos_persona(0);'
-                            ) ?>
-                        </span>
-                    </div>
-                </div>
-                <div class="col-md-8" style="padding-top:30px;" id="txt_mensaje"></div>
+                        </div>
+                  </div>
+                  <div class="row">
+                        <div class="col-md-12">
+                              <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+                        </div>
+                  </div>
+                  <div class="row">
+                        <div class="col-md-12">
+                              <?= $form->field($model, 'activo')->checkbox(['checked' => true]) ?>
+                        </div>
+                  </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
+            <div class="col-md-4">
+                  <?= $form->field($model, 'imageFile')->widget(FileInput::classname(), [
+                        'options' => ['accept' => 'image/*'],
+                        'pluginOptions' => [
+                              'allowedFileExtensions' => ['jpg', 'jpeg', 'gif', 'png', 'bmp'],
+                              'showPreview' => true,
+                              'showCaption' => false,
+                              'showRemove' => true,
+                              'showUpload' => false,
+                              'showClose' => false,
+                              'showCancel' => false,
+                              'mainClass' => 'input-group-sm',
+                              //'uploadUrl' => Url::to(['/mds_atp_solicitud/update']),
+                              'maxFileSize' => 5000,
+                              'fileActionSettings' => [
+                                    'showRemove' => false,
+                                    'showUpload' => false,
+                                    'showZoom' => false,
+                                    'showCaption' => false,
+                                    'showCancel' => false
+                                ]
+                        ]
+                  ]);
 
-                </div>
+                  ?>
+
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <?= $form->field($model, 'activo')->checkbox(['checked' => true]) ?>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <?= $form->field($model, 'imageFile')->widget(FileInput::classname(), [
-                'options' => ['accept' => 'image/*'],
-                'pluginOptions' => [
-                    'showPreview' => true,
-                    'showCaption' => true,
-                    'showRemove' => true,
-                    'showUpload' => false
-                ]
-            ]); 
-            
-            ?>
-<?= \yii\helpers\Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
-</div>
-    </div>
+      </div>
 </div>
 
 

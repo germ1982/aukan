@@ -34,5 +34,9 @@ web/assets
 .gitignore
 config/db.php
 config/db.php
+<<<<<<< HEAD
 config/db.php
 .gitignore
+=======
+web/config/db.php
+>>>>>>> 42a485ac047369c68e519d61ec2c1f8dbcc593a3
