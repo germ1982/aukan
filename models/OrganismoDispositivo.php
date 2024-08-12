@@ -71,4 +71,28 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Organismo::className(), ['idorganismo' => 'idorganismo']);
     }
+
+
+    public static function get_dispositivos($modulo='')
+    {
+        $filtro = $modulo ? " and d.iddispositivo in (SELECT iddispositivo from $modulo)" :'';
+        $sql = "SELECT d.iddispositivo, concat(o.abreviatura,' - ', d.descripcion) as descripcion 
+        FROM organismo o 
+        join organismo_dispositivo d on o.idorganismo = d.idorganismo
+        where o.activo = 1 and d.activo = 1 $filtro
+        order by o.abreviatura, d.descripcion";
+        $array = OrganismoDispositivo::findBySql($sql)->all();
+        return $array;
+    }
+
+    public static function get_dispositivo($id)
+    {
+        $sql = "SELECT d.iddispositivo, concat(o.abreviatura,' - ', d.descripcion) as descripcion 
+        FROM organismo o 
+        join organismo_dispositivo d on o.idorganismo = d.idorganismo
+        where o.activo = 1 and d.activo = 1 and d.iddispositivo = $id
+        order by o.abreviatura, d.descripcion";
+        $dato = OrganismoDispositivo::findBySql($sql)->one();
+        return $dato;
+    }
 }
