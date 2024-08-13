@@ -90,7 +90,7 @@ use kartik\widgets\FileInput;
                     'showCancel' => false,
                     'mainClass' => 'input-group-sm',
                     //'uploadUrl' => Url::to(['/mds_atp_solicitud/update']),
-                    'maxFileSize' => 5000,
+                    //'maxFileSize' => 5000,
                     'fileActionSettings' => [
                         'showRemove' => false,
                         'showUpload' => false,
