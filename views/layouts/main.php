@@ -132,7 +132,7 @@ if (!isset($id) || $id == null) {
                         <div id="userbox" class="userbox">
                               <a href="" data-toggle="dropdown">
                                     <figure class="profile-picture neon">
-                                          <img src="<?= $usuario->avatar != null ? 'img/usuarios-avatares/' . $usuario->avatar . '.jpg' : 'img/usuarios-avatares/avatar-0.jpg' ?>" alt="Imagen Usuario" class="img-circle" data-lock-picture="<?= $usuario->avatar != null ? 'img/usuarios-avatares/' . $usuario->avatar . '.jpg' : 'img/usuarios-avatares/avatar-0.jpg' ?>">
+                                          <img src="<?= $usuario->avatar != null ? 'img/usuarios-avatares/' . $usuario->avatar : 'img/usuarios-avatares/avatar-0.jpg' ?>" alt="Imagen Usuario" class="img-circle" data-lock-picture="<?= $usuario->avatar != null ? 'img/usuarios-avatares/' . $usuario->avatar  : 'img/usuarios-avatares/avatar-0.jpg' ?>">
                                     </figure>
                                     <div class="profile-info" data-lock-name="Usuario" data-lock-email="<?= $usuario->email ?>">
                                           <span class="name"><?= $usuario->email ?></span>

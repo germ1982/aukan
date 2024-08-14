@@ -32,10 +32,10 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['email', 'avatar', 'status', 'password', 'activo', 'idpersona'], 'required'],
+            [['email', 'avatar', 'status', 'password', 'activo', 'idpersona','documento'], 'required'],
             [['status', 'activo', 'idpersona'], 'integer'],
             [['email', 'avatar', 'password'], 'string', 'max' => 100],
-            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'jpg, jpeg, png, gif'],
+            [['imageFile'], 'file', 'extensions' => 'jpg, jpeg, gif, png', 'maxSize' => 1000000],
 
         ];
     }
@@ -96,7 +96,12 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
         return null;
     }
 
-    public function upload()
+    public function getPersona()
+    {
+        return $this->hasOne(Persona::className(), ['idpersona' => 'idpersona']);
+    }
+
+    /* public function upload()
     {
         if ($this->validate()) {
             //$path = Yii::getAlias('@webroot') . '/img/usuarios-avatares';
@@ -112,5 +117,5 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
         } else {
             return false;
         }
-    }
+    } */
 }

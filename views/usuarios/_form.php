@@ -3,9 +3,32 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use app\controllers\SiteController;
+use app\models\Persona;
 use app\models\Usuarios;
 use yii\helpers\Url;
 use kartik\widgets\FileInput;
+
+$persona_nombre = '';
+// Suponiendo que el modelo tiene un atributo 'avatar' que guarda el nombre del archivo de la imagen
+$initialPreview = [];
+$initialPreviewConfig = [];
+
+if(isset($model->idpersona)){
+    $persona = Persona::findOne($model->idpersona);
+    $model->documento = $persona->documento;
+    $persona_nombre = "$persona->apellido, $persona->nombre";
+}
+
+if(isset($model->avatar)){
+    $imagePath = Url::to('img/usuarios-avatares/' . $model->avatar);
+    
+    // Agrega la imagen a la vista previa inicial
+    $initialPreview = [
+        Html::img($imagePath, ['class' => 'file-preview-image', 'alt' => 'Avatar', 'title' => $model->avatar, 'width' => '100%', 'height' => 'auto']),
+    ];
+
+
+}
 
 ?>
 <style>
@@ -30,9 +53,7 @@ use kartik\widgets\FileInput;
 </style>
 
 <div class="usuarios-form">
-    <?php $form = ActiveForm::begin([
-        'options' => ['enctype' => 'multipart/form-data']
-    ]);
+    <?php $form = ActiveForm::begin();
     if (!isset($model)) {
         $model = new Usuarios();
     }
@@ -59,7 +80,7 @@ use kartik\widgets\FileInput;
                         </span>
                     </div>
                 </div>
-                <div class="col-md-8" style="padding-top:30px;" id="txt_mensaje"></div>
+                <div class="col-md-8" style="padding-top:30px;" id="txt_mensaje"><?=$persona_nombre?></div>
             </div>
             <div class="row">
                 <div class="col-md-12">
@@ -81,6 +102,7 @@ use kartik\widgets\FileInput;
             <?= $form->field($model, 'imageFile')->widget(FileInput::classname(), [
                 'options' => ['accept' => 'image/*'],
                 'pluginOptions' => [
+                    'initialPreview' => $initialPreview,
                     'allowedFileExtensions' => ['jpg', 'jpeg', 'gif', 'png', 'bmp'],
                     'showPreview' => true,
                     'showCaption' => false,
@@ -90,7 +112,7 @@ use kartik\widgets\FileInput;
                     'showCancel' => false,
                     'mainClass' => 'input-group-sm',
                     //'uploadUrl' => Url::to(['/mds_atp_solicitud/update']),
-                    //'maxFileSize' => 5000,
+                    'maxFileSize' => 100000,
                     'fileActionSettings' => [
                         'showRemove' => false,
                         'showUpload' => false,
@@ -98,7 +120,7 @@ use kartik\widgets\FileInput;
                         'showCaption' => false,
                         'showCancel' => false
                     ],
-                    'previewFileType' => 'file',
+                    'previewFileType' => 'image',
                     'layoutTemplates' => [
                         'footer' => '',  // Remueve el footer en la vista previa si es necesario
                     ],

@@ -21,7 +21,7 @@ return [
               $id = $model->idpersona;
               if ($id != null) {
                     $persona = Persona::findOne($id);
-                    $avatar = 'img/usuarios-avatares/' . $model->avatar . '.jpg';
+                    $avatar = 'img/usuarios-avatares/' . $model->avatar;
                     $avatar = Html::img($avatar, ['alt' => 'Avatar', 'class' => 'imagen-avatar-grilla', 'width' => '25', 'height' => '25']);
                     return "$avatar   $persona->apellido $persona->nombre";
               }
@@ -61,6 +61,7 @@ return [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
         'vAlign'=>'middle',
+        'template' => '{view} {update} ',
         'urlCreator' => function($action, $model, $key, $index) { 
                 return Url::to([$action,'id'=>$key]);
         },

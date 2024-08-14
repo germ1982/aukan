@@ -41,11 +41,26 @@ class UsuariosSearch extends Usuarios
     public function search($params)
     {
         $query = Usuarios::find();
+        // Ajustamos el join para que coincida con el alias correcto de la tabla
+        $query->joinWith(['persona' => function ($query) {
+            $query->from(['personas' => 'personas']); // Alias correcto según la tabla
+        }]);
 
-        // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 50,
+            ],
+            'sort' => [
+                'attributes' => [
+                    'idpersona' => [
+                        'asc' => ['personas.apellido' => SORT_ASC, 'personas.nombre' => SORT_ASC],
+                        'desc' => ['personas.apellido' => SORT_DESC, 'personas.nombre' => SORT_DESC],
+                    ],
+                    // Otras columnas para ordenar
+                ],
+            ],
         ]);
 
         $this->load($params);

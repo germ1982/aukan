@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Persona;
 use app\models\Usuarios;
 use app\models\UsuariosSearch;
 use yii\web\Controller;
@@ -84,90 +85,72 @@ class UsuariosController extends Controller
      * @return string|\yii\web\Response
      */
     public function actionCreate()
-{
-    $request = Yii::$app->request;
-    $model = new Usuarios();
+    {
+        $request = Yii::$app->request;
+        $model = new Usuarios();
 
-    if ($request->isAjax) {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-        if ($request->isGet) {
+        if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            if ($request->isGet) {
+                return [
+                    'title' => 'Nuevo Usuario',
+                    'content' => $this->renderAjax('create', [
+                        'model' => $model,
+                    ]),
+                    'footer' =>
+                    Html::button('Cerrar', [
+                        'id' => 'btnCerrar',
+                        'class' => 'btn btn-default pull-left',
+                        'data-dismiss' => 'modal',
+                    ]) .
+                        Html::button('Guardar', [
+                            'id' => 'btnGuardar',
+                            'class' => 'btn btn-primary',
+                            'type' => 'submit',
+                        ]),
+                ];
+            } else if ($model->load($request->post())) {
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
+
+                if ($model->idpersona == null) $guardado = false;
+
+                //var_dump($_FILES);
+                $tmpfile = UploadedFile::getInstance($model, 'imageFile');
+
+                if (isset($tmpfile)) {
+                    $extension = $tmpfile->extension;
+
+                    $nuevo_nombre = "avatar-$model->idpersona.$extension";
+                    $model->avatar = $nuevo_nombre;
+                    $tmpfile->saveAs('img/usuarios-avatares/' . $nuevo_nombre);
+                } else {
+                    $model->avatar = "avatar-0.jpg";
+                }
+                $model->password = Yii::$app->getSecurity()->generatePasswordHash($model->documento);
+                $model->status = "1";
+
+
+                if ($guardado && $model->save()) {
+                    $transaction->commit();
+
+                    return [
+                        'title' => "Nuevo Usuario",
+                        'content' => '<span class="text-success">Usuario Creado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
+                    ];
+                } 
+            }
             return [
-                'title' => 'Nuevo Usuario',
+                'title' => "Nuevo Usuario, Faltan datos!!! Complete Los datos Faltantes!!!",
                 'content' => $this->renderAjax('create', [
                     'model' => $model,
                 ]),
-                'footer' =>
-                Html::button('Cerrar', [
-                    'id' => 'btnCerrar',
-                    'class' => 'btn btn-default pull-left',
-                    'data-dismiss' => 'modal',
-                ]) .
-                Html::button('Guardar', [
-                    'id' => 'btnGuardar',
-                    'class' => 'btn btn-primary',
-                    'type' => 'submit',
-                ]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
             ];
-        } else if ($model->load($request->post())) {
-            $transaction = Yii::$app->db->beginTransaction();
-            $guardado = true;
-            //
-            
-            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-
-            // Depuración: Verificar el archivo cargado
-            Yii::debug('Uploaded File: ' . print_r($model->imageFile, true), __METHOD__);
-            if ($model->validate()) {
-                Yii::debug('Model validation passed', __METHOD__);
-                if ($model->imageFile) {
-                    $path = Yii::getAlias('@webroot') . '/img/usuarios-avatares/';
-                    if (!is_dir($path)) {
-                        mkdir($path, 0777, true);
-                        Yii::debug('Directory created: ' . $path, __METHOD__);
-                    }
-
-                    $fileName = 'avatarr-' . $model->documento . '.' . $model->imageFile->extension;
-                    $filePath = $path . $fileName;
-
-                    // Depuración: Verificar la ruta del archivo
-                    Yii::debug('Saving file to: ' . $filePath, __METHOD__);
-                    if ($model->imageFile->saveAs($filePath)) {
-                        Yii::debug('File saved successfully', __METHOD__);
-                    } else {
-                        Yii::debug('File saving failed', __METHOD__);
-                    }
-                }
-            } else {
-                Yii::debug('Model validation failed: ' . print_r($model->errors, true), __METHOD__);
-            }
-
-            $model->avatar = $fileName;
-            $model->password = Yii::$app->getSecurity()->generatePasswordHash($model->documento);
-            $model->status = "1";
-
-            // Depuración: Verificar los atributos antes de guardar
-            Yii::debug('Model attributes before save: ' . print_r($model->attributes, true), __METHOD__);
-
-            if ($guardado && $model->save()) {
-                $transaction->commit();
-
-                return [
-                    'title' => "Nuevo Usuario",
-                    'content' => '<span class="text-success">Usuario Creado Correctamente</span>' . json_encode($model->attributes),
-                    'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
-                ];
-            }
         }
-        return [
-            'title' => "Nuevo Usuario, Faltan datos!!! Complete Los datos Faltantes!!!",
-            'content' => $this->renderAjax('create', [
-                'model' => $model,
-            ]),
-            'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
-        ];
     }
-}
 
 
     public function actionUpdate($id)
@@ -199,15 +182,33 @@ class UsuariosController extends Controller
                 $transaction = Yii::$app->db->beginTransaction();
                 $guardado = true;
 
+                if ($model->idpersona == null) $guardado = false;
+
+                //var_dump($_FILES);
+                $tmpfile = UploadedFile::getInstance($model, 'imageFile');
+
+                if (isset($tmpfile)) {
+                    $extension = $tmpfile->extension;
+
+                    $nuevo_nombre = "avatar-$model->idpersona.$extension";
+                    $model->avatar = $nuevo_nombre;
+                    $tmpfile->saveAs('img/usuarios-avatares/' . $nuevo_nombre);
+                } else {
+                    $model->avatar = "avatar-0.jpg";
+                }
+                $model->password = Yii::$app->getSecurity()->generatePasswordHash($model->documento);
+                $model->status = "1";
+
+
                 if ($guardado && $model->save()) {
                     $transaction->commit();
 
                     return [
                         'title' => "Editar Usuario",
                         'content' => '<span class="text-success">Usuario Editado Correctamente</span>',
-                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
                     ];
-                }
+                } 
             }
             return [
                 'title' => "Editar Usuario, Faltan datos!!! Complete Los datos Faltantes!!!",
