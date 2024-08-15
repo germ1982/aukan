@@ -139,7 +139,7 @@ class UsuariosController extends Controller
                         'content' => '<span class="text-success">Usuario Creado Correctamente</span>',
                         'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
                     ];
-                } 
+                }
             }
             return [
                 'title' => "Nuevo Usuario, Faltan datos!!! Complete Los datos Faltantes!!!",
@@ -208,7 +208,7 @@ class UsuariosController extends Controller
                         'content' => '<span class="text-success">Usuario Editado Correctamente</span>',
                         'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
                     ];
-                } 
+                }
             }
             return [
                 'title' => "Editar Usuario, Faltan datos!!! Complete Los datos Faltantes!!!",
@@ -222,17 +222,25 @@ class UsuariosController extends Controller
         }
     }
 
-    public function reset_pasword($id){
-      $model = $this->findModel($id);
+    public function actionReset_password($id)
+    {
+        /* $model = $this->findModel($id);
       $model_persona = Persona::findOne($model->idpersona);
       $model->password = Yii::$app->getSecurity()->generatePasswordHash($model_persona->documento);
-      $model->save();
+      $model->save(); */
       Yii::$app->response->format = Response::FORMAT_JSON;
       return [
-          'title' => "Contraseña Reseteada",
-          'content' => '<span class="text-success">Se ah reseteado la contraseña del usuario</span>',
-          'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'center btn btn-default pull-left', 'data-dismiss' => "modal"])
-      ];
+        'title' => 'Resetear Contraseña',
+        'content' => 'Se ah reseteado la contraseña',
+        'footer' =>
+        Html::button('Cerrar', [
+            'id' => 'btnCerrar',
+            'class' => 'btn btn-default pull-left',
+            'data-dismiss' => 'modal',
+        ]) 
+    ];
+
+  
     }
 
     public function actionDelete($id)
