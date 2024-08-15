@@ -222,6 +222,18 @@ class UsuariosController extends Controller
         }
     }
 
+    public function reset_pasword($id){
+      $model = $this->findModel($id);
+      $model_persona = Persona::findOne($model->idpersona);
+      $model->password = Yii::$app->getSecurity()->generatePasswordHash($model_persona->documento);
+      $model->save();
+      Yii::$app->response->format = Response::FORMAT_JSON;
+      return [
+          'title' => "Contraseña Reseteada",
+          'content' => '<span class="text-success">Se ah reseteado la contraseña del usuario</span>',
+          'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'center btn btn-default pull-left', 'data-dismiss' => "modal"])
+      ];
+    }
 
     public function actionDelete($id)
     {
