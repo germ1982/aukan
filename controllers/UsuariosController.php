@@ -246,16 +246,16 @@ class UsuariosController extends Controller
     {
         $model = $this->findModel($id);
         $model_persona = Persona::findOne($model->idpersona);
+        $model->documento = $model_persona->documento;
         $model->password = Yii::$app->getSecurity()->generatePasswordHash($model_persona->documento);
 
-        $contenido = "Hubo un error al resetear la contraseña";
-        if ($model->save()) {
-            $contenido = "Se ah reseteado la contraseña";
-        }
+        $contenido = $model->save() ? "Se ah reseteado la contraseña" : "Hubo un error al resetear la contraseña";
+
+
         Yii::$app->response->format = Response::FORMAT_JSON;
         return [
             'title' => 'Resetear Contraseña',
-            'content' => $contenido,
+            'content' => $contenido,// . json_encode($model->getErrors()),
             'footer' =>
             Html::button('Cerrar', [
                 'id' => 'btnCerrar',
