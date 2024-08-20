@@ -20,9 +20,7 @@ use kartik\select2\Select2;
 
 class SiteController extends Controller
 {
-      /**
-       * {@inheritdoc}
-       */
+
       public function behaviors()
       {
             return [
@@ -217,7 +215,35 @@ class SiteController extends Controller
                   ->label($label);
       }
 
+      public static function actionGet_input_select2_multiple($form, $model, $atributo, $id_input, $datos, $iddatos, $descripciondatos, $label = null, $placeholder = null, $where = null, $readonly = null, $disabled = null)
+      {
+            $label = $label ? $label : '';
+            $placeholder = $placeholder ? $placeholder : '';
+            $where = $where ? $where : '';
+            $readonly = $readonly ? $readonly : false;
+            $disabled = $disabled ? $disabled : false;
+            return $form->field($model, $atributo)->widget(Select2::classname(), [
+                  'data' => ArrayHelper::map(
+                        $datos,
+                        $iddatos,
+                        $descripciondatos
+                  ),
+                  'options' => [
+                        'id' => $id_input,
+                        'placeholder' => $placeholder,
+                        //'onchange' => $onchange,
+                        'multiple' => true
 
+                  ],
+                  'size' => Select2::MEDIUM,
+                  'pluginOptions' => [
+                        'tags' => true,
+                        'allowClear' => true,
+                        'disabled' => $disabled
+                  ],
+            ])
+                  ->label($label);
+      }
 
       public static function actionGet_input_fecha($form, $model, $atributo, $id_input, $label = null, $readonly = null, $fecha_hasta = null, $disabled = false, $onchange = null)
       {

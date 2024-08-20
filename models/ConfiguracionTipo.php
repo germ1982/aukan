@@ -13,9 +13,23 @@ use Yii;
  */
 class ConfiguracionTipo extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
+    const SIN_ASIGNAR = 1;
+    const TIPO_DOCUMENTO = 2;
+    const GENERO = 3;
+    const NACIONALIDAD = 4;
+    const CATEGORIA_LABORAL = 5;
+    const TIPO_DE_CONTRATACION = 6;
+    const FUNCION_LABORAL = 7;
+    const AFILIACION_GREMIAL = 8;
+    const CAPACITACION = 9;
+    const TIPO_OBSERVACION_EMPLEADO = 10;
+    const TITULO_CAPACITACION = 11;
+    const TIPO_ARTICULO = 12;
+    const UNIDAD_DE_MEDIDA = 13;
+    const MARCA = 14;
+    const TIPO_RUBRO = 15;
+    const PERFIL_DE_USUARIO = 16;
+    
     public static function tableName()
     {
         return 'configuracion_tipo';

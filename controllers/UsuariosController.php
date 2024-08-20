@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Persona;
+use app\models\UsuarioAsignacionPerfil;
 use app\models\Usuarios;
 use app\models\UsuariosSearch;
 use yii\web\Controller;
@@ -134,6 +135,15 @@ class UsuariosController extends Controller
                 if ($guardado && $model->save()) {
                     $transaction->commit();
 
+                    if ($model->perfil) {
+                        foreach ($model->perfil as $p) {
+                            $model_perfil = new UsuarioAsignacionPerfil();
+                            $model_perfil->idusuario = $model->id;
+                            $model_perfil->idperfil = $p;
+                            $model_perfil->save();
+                        }
+                    }
+
                     return [
                         'title' => "Nuevo Usuario",
                         'content' => '<span class="text-success">Usuario Creado Correctamente</span>',
@@ -202,6 +212,16 @@ class UsuariosController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
+
+                    UsuarioAsignacionPerfil::deleteAll(['idusuario' => $model->id]);
+                    if ($model->perfil) {
+                        foreach ($model->perfil as $p) {
+                            $model_perfil = new UsuarioAsignacionPerfil();
+                            $model_perfil->idusuario = $model->id;
+                            $model_perfil->idperfil = $p;
+                            $model_perfil->save();
+                        }
+                    }
 
                     return [
                         'title' => "Editar Usuario",
