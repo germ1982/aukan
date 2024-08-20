@@ -97,15 +97,15 @@ return [
         'format' => 'raw',
         'width' => '20%',
     ],
-    [
+   /*  [
         'class' => 'kartik\grid\CheckboxColumn',
         'width' => '20px',
     ],
     [
         'class' => 'kartik\grid\SerialColumn',
         'width' => '30px',
-    ],
-        [
+    ], */
+    /* [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'idempleado',
     ],
@@ -124,7 +124,7 @@ return [
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'email',
-    ],
+    ], */
     // [
         // 'class'=>'\kartik\grid\DataColumn',
         // 'attribute'=>'telefono',

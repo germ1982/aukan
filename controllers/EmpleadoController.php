@@ -5,11 +5,13 @@ namespace app\controllers;
 use Yii;
 use app\models\Empleado;
 use app\models\EmpleadoSearch;
+use yii\web\UploadedFile;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
+
 
 /**
  * EmpleadoController implements the CRUD actions for Empleado model.
@@ -59,12 +61,12 @@ class EmpleadoController extends Controller
         if($request->isAjax){
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                    'title'=> "Empleado #".$id,
+                    'title'=> "Empleado ".$id,
                     'content'=>$this->renderAjax('view', [
                         'model' => $this->findModel($id),
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                            Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
                 ];    
         }else{
             return $this->render('view', [
@@ -91,18 +93,18 @@ class EmpleadoController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Create new Empleado",
+                    'title'=> "Nuevo Empleado",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
         
                 ];         
             }else if($model->load($request->post()) && $model->save()){
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Create new Empleado",
+                    'title'=> "Nuevo Empleado",
                     'content'=>'<span class="text-success">Create Empleado success</span>',
                     'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
                             Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
@@ -110,12 +112,12 @@ class EmpleadoController extends Controller
                 ];         
             }else{           
                 return [
-                    'title'=> "Create new Empleado",
+                    'title'=> "Nuevo Empleado",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
         
                 ];         
             }
@@ -145,7 +147,21 @@ class EmpleadoController extends Controller
     {
         $request = Yii::$app->request;
         $model = $this->findModel($id);       
-
+        if ($model->load(Yii::$app->request->post())) {
+            $imageFile = UploadedFile::getInstance($model, 'foto');
+            
+            if ($imageFile) {
+                $imagePath = 'uploads/' . $imageFile->baseName . '.' . $imageFile->extension;
+                $imageFile->saveAs($imagePath);
+                $model->foto = $imagePath;
+            }
+        
+            if ($model->save()) {
+                // Redirige o muestra un mensaje de éxito
+            }
+        }
+        
+        
         if($request->isAjax){
             /*
             *   Process for ajax request
@@ -153,12 +169,12 @@ class EmpleadoController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Update Empleado #".$id,
+                    'title'=> "Actualizar Empleado #".$id,
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
                 ];         
             }else if($model->load($request->post()) && $model->save()){
                 return [
@@ -172,12 +188,12 @@ class EmpleadoController extends Controller
                 ];    
             }else{
                  return [
-                    'title'=> "Update Empleado #".$id,
+                    'title'=> "Actualizar Empleado #".$id,
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
                 ];        
             }
         }else{
