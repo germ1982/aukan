@@ -31,6 +31,9 @@ class Empleado extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    public $documento;
+    public $descripcion;
+    public $imageFile;
     public static function tableName()
     {
         return 'empleado';
@@ -45,8 +48,9 @@ class Empleado extends \yii\db\ActiveRecord
             [['idpersona', 'iddispositivo', 'legajo', 'activo'], 'required'],
             [['idpersona', 'iddispositivo', 'legajo', 'activo', 'categoria', 'antiguedad_legal', 'antiguedad_total', 'contratacion', 'cuil', 'funcion', 'fichado', 'afiliacion'], 'integer'],
             [['ingreso_real', 'ingreso_administrativo'], 'safe'],
-            [['email', 'foto'], 'string', 'max' => 100],
+            [['email', 'foto','descripcion'], 'string', 'max' => 100],
             [['telefono'], 'string', 'max' => 50],
+            [['imageFile'], 'file', 'extensions' => 'jpg, jpeg, gif, png', 'maxSize' => 1000000],
         ];
     }
 
@@ -62,7 +66,7 @@ class Empleado extends \yii\db\ActiveRecord
             'legajo' => 'Legajo',
             'email' => 'Email',
             'telefono' => 'Telefono',
-            'foto' => 'Foto',
+            'foto' => 'Imagen',
             'activo' => 'Activo',
             'categoria' => 'Categoria',
             'antiguedad_legal' => 'Antiguedad Legal',
@@ -86,6 +90,7 @@ class Empleado extends \yii\db\ActiveRecord
                 where e.activo=1 $filtro
                 order by p.apellido ,p.nombre";
         $empleados = Empleado::findBySql($sql)->all();
+        
         return $empleados;
     }
 
