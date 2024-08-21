@@ -6,6 +6,7 @@ use app\controllers\SiteController;
 use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
 use app\models\Persona;
+use app\models\UsuarioAsignacionPerfil;
 use app\models\Usuarios;
 use yii\helpers\Url;
 use kartik\widgets\FileInput;
@@ -33,6 +34,11 @@ if(isset($model->avatar)){
 }
 
 $perfiles = Configuracion::find()->where(['activo'=>1, 'id_configuracion_tipo' => ConfiguracionTipo::PERFIL_DE_USUARIO])->all();
+
+$perfiles_seleccionados = UsuarioAsignacionPerfil::find()->select('idperfil')->where(['idusuario' => $model->id])->column(); 
+$model->perfil = $perfiles_seleccionados;
+
+//column(): Devuelve un array plano con los valores de una única columna (en este caso, idperfil)
 
 ?>
 <style>

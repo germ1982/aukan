@@ -140,6 +140,7 @@ class UsuariosController extends Controller
                             $model_perfil = new UsuarioAsignacionPerfil();
                             $model_perfil->idusuario = $model->id;
                             $model_perfil->idperfil = $p;
+                            $model_perfil->activo = 1;
                             $model_perfil->save();
                         }
                     }
@@ -203,10 +204,10 @@ class UsuariosController extends Controller
                     $nuevo_nombre = "avatar-$model->idpersona.$extension";
                     $model->avatar = $nuevo_nombre;
                     $tmpfile->saveAs('img/usuarios-avatares/' . $nuevo_nombre);
-                } else {
+                } /* else {
                     $model->avatar = "avatar-0.jpg";
-                }
-                $model->password = Yii::$app->getSecurity()->generatePasswordHash($model->documento);
+                } */
+                //$model->password = Yii::$app->getSecurity()->generatePasswordHash($model->documento);
                 $model->status = "1";
 
 
@@ -219,6 +220,7 @@ class UsuariosController extends Controller
                             $model_perfil = new UsuarioAsignacionPerfil();
                             $model_perfil->idusuario = $model->id;
                             $model_perfil->idperfil = $p;
+                            $model_perfil->activo = 1;
                             $model_perfil->save();
                         }
                     }
