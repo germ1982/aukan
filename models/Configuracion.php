@@ -46,4 +46,15 @@ class Configuracion extends \yii\db\ActiveRecord
             'activo' => 'Activo',
         ];
     }
+
+
+    public static function get_configuraciones($tipo)
+    {
+        $sql = "SELECT c.id_configuracion, c.descripcion
+        FROM configuracion c 
+        where c.activo = 1 and c.id_configuracion_tipo = $tipo
+        order by c.descripcion";
+        $array = Configuracion::findBySql($sql)->all();
+        return $array;
+    }
 }

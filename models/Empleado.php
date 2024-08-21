@@ -31,7 +31,9 @@ class Empleado extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    public $documento;
     public $descripcion;
+    public $imageFile;
     public static function tableName()
     {
         return 'empleado';
@@ -48,6 +50,7 @@ class Empleado extends \yii\db\ActiveRecord
             [['ingreso_real', 'ingreso_administrativo'], 'safe'],
             [['email', 'foto','descripcion'], 'string', 'max' => 100],
             [['telefono'], 'string', 'max' => 50],
+            [['imageFile'], 'file', 'extensions' => 'jpg, jpeg, gif, png', 'maxSize' => 1000000],
         ];
     }
 
