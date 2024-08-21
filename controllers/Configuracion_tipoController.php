@@ -16,9 +16,9 @@ use yii\helpers\Html;
  */
 class Configuracion_tipoController extends Controller
 {
-    /**
-     * @inheritdoc
-     */
+    
+ 
+
     public function behaviors()
     {
         return [

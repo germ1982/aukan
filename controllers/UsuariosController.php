@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Persona;
+use app\models\UsuarioAsignacionPerfil;
 use app\models\Usuarios;
 use app\models\UsuariosSearch;
 use yii\web\Controller;
@@ -134,12 +135,22 @@ class UsuariosController extends Controller
                 if ($guardado && $model->save()) {
                     $transaction->commit();
 
+                    if ($model->perfil) {
+                        foreach ($model->perfil as $p) {
+                            $model_perfil = new UsuarioAsignacionPerfil();
+                            $model_perfil->idusuario = $model->id;
+                            $model_perfil->idperfil = $p;
+                            $model_perfil->activo = 1;
+                            $model_perfil->save();
+                        }
+                    }
+
                     return [
                         'title' => "Nuevo Usuario",
                         'content' => '<span class="text-success">Usuario Creado Correctamente</span>',
                         'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
                     ];
-                } 
+                }
             }
             return [
                 'title' => "Nuevo Usuario, Faltan datos!!! Complete Los datos Faltantes!!!",
@@ -193,22 +204,33 @@ class UsuariosController extends Controller
                     $nuevo_nombre = "avatar-$model->idpersona.$extension";
                     $model->avatar = $nuevo_nombre;
                     $tmpfile->saveAs('img/usuarios-avatares/' . $nuevo_nombre);
-                } else {
+                } /* else {
                     $model->avatar = "avatar-0.jpg";
-                }
-                $model->password = Yii::$app->getSecurity()->generatePasswordHash($model->documento);
+                } */
+                //$model->password = Yii::$app->getSecurity()->generatePasswordHash($model->documento);
                 $model->status = "1";
 
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
 
+                    UsuarioAsignacionPerfil::deleteAll(['idusuario' => $model->id]);
+                    if ($model->perfil) {
+                        foreach ($model->perfil as $p) {
+                            $model_perfil = new UsuarioAsignacionPerfil();
+                            $model_perfil->idusuario = $model->id;
+                            $model_perfil->idperfil = $p;
+                            $model_perfil->activo = 1;
+                            $model_perfil->save();
+                        }
+                    }
+
                     return [
                         'title' => "Editar Usuario",
                         'content' => '<span class="text-success">Usuario Editado Correctamente</span>',
                         'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
                     ];
-                } 
+                }
             }
             return [
                 'title' => "Editar Usuario, Faltan datos!!! Complete Los datos Faltantes!!!",
@@ -222,17 +244,27 @@ class UsuariosController extends Controller
         }
     }
 
-    public function reset_pasword($id){
-      $model = $this->findModel($id);
-      $model_persona = Persona::findOne($model->idpersona);
-      $model->password = Yii::$app->getSecurity()->generatePasswordHash($model_persona->documento);
-      $model->save();
-      Yii::$app->response->format = Response::FORMAT_JSON;
-      return [
-          'title' => "Contraseña Reseteada",
-          'content' => '<span class="text-success">Se ah reseteado la contraseña del usuario</span>',
-          'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'center btn btn-default pull-left', 'data-dismiss' => "modal"])
-      ];
+    public function actionReset_password($id)
+    {
+        $model = $this->findModel($id);
+        $model_persona = Persona::findOne($model->idpersona);
+        $model->documento = $model_persona->documento;
+        $model->password = Yii::$app->getSecurity()->generatePasswordHash($model_persona->documento);
+
+        $contenido = $model->save() ? "Se ah reseteado la contraseña" : "Hubo un error al resetear la contraseña";
+
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return [
+            'title' => 'Resetear Contraseña',
+            'content' => $contenido,// . json_encode($model->getErrors()),
+            'footer' =>
+            Html::button('Cerrar', [
+                'id' => 'btnCerrar',
+                'class' => 'btn btn-default pull-left',
+                'data-dismiss' => 'modal',
+            ])
+        ];
     }
 
     public function actionDelete($id)

@@ -61,7 +61,7 @@ return [
             'class' => 'kartik\grid\ActionColumn',
             'dropdown' => false,
             'vAlign' => 'middle',
-            'template' => '{view} {update} {reset_pasword}',
+            'template' => '{view} {update} {reset_password}',
             'urlCreator' => function ($action, $model, $key, $index) {
                   return Url::to([$action, 'id' => $key]);
             },
@@ -79,13 +79,13 @@ return [
             ],
 
             'buttons' => [
-                  'reset_pasword' => function ($url, $model) {
-                        $url =  Url::to(['/usuarios/reset_pasword', 'id' => $model->id]);
+                  'reset_password' => function ($url, $model) {
+                        $url =  Url::to(['/usuarios/reset_password', 'id' => $model->id]);
                         return Html::a('<span class= "fa fa-lock"></span>', $url, [
-                              'role' => 'post',
-                              'data-pjax' => 0,
+                              'role' => 'modal-remote', 'title' => 'Resetear Contraseña',
+                              'data-confirm' => false, 'data-method' => false,
+                              'data-request-method' => 'post',
                               'data-toggle' => 'tooltip',
-                              'title' => 'Resetear Contraseña',
                         ]);
                   },
             ],

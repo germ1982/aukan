@@ -21,6 +21,7 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
 {
     public $documento;
     public $imageFile;
+    public $perfil;
     public static function tableName()
     {
         return 'usuarios';
@@ -33,6 +34,7 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return [
             [['email', 'avatar', 'status', 'password', 'activo', 'idpersona','documento'], 'required'],
+            [['perfil'], 'safe'],
             [['status', 'activo', 'idpersona'], 'integer'],
             [['email', 'avatar', 'password'], 'string', 'max' => 100],
             [['imageFile'], 'file', 'extensions' => 'jpg, jpeg, gif, png', 'maxSize' => 1000000],
