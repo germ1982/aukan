@@ -1,6 +1,7 @@
 <?php
 
 use app\models\Persona;
+use app\models\UsuarioAsignacionPerfil;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -13,6 +14,15 @@ function campo($titulo, $contenido)
 }
 
 $model_persona = Persona::findOne($model->idpersona);
+$mysql = "  SELECT GROUP_CONCAT(c.descripcion SEPARATOR ', ') AS descripcion
+            FROM usuario_asignacion_perfil p
+            JOIN configuracion c ON p.idperfil = c.id_configuracion
+            WHERE p.idusuario = :idusuario";
+
+// Ejecutar la consulta y obtener el resultado
+$perfiles = Yii::$app->db->createCommand($mysql)
+    ->bindValue(':idusuario', $model->id)
+    ->queryScalar(); // Obtener un valor escalar
 ?>
 
 <style>
@@ -55,6 +65,11 @@ $model_persona = Persona::findOne($model->idpersona);
                         </div>
                         <div class="col-md-4">
                               <?= campo('Activo', $model->activo ? 'Si' : 'No') ?>
+                        </div>
+                  </div>
+                  <div class="row">
+                        <div class="col-md-12">
+                              <?= campo('Perfiles', "$perfiles") ?>
                         </div>
                   </div>
             </div>
