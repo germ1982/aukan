@@ -3,6 +3,7 @@
 use yii\helpers\Url;
 use app\models\Menu;
 use kartik\grid\GridView;
+use kartik\helpers\Html;
 use yii\helpers\ArrayHelper;
 
 return [
@@ -12,7 +13,23 @@ return [
             'attribute' => 'title',
             'width' => '20%',
       ],
-
+      [
+            'class' => '\kartik\grid\DataColumn',
+            'attribute' => 'orden',
+            'value' => function ($model) {
+                  return $model->orden == 1 ? $model->orden : $model->orden .' '. Html::a('<span class= "fa fa-arrow-circle-up"></span>', ['menu/subir', 'id' => $model->id], [
+                        'role' => 'modal-remote',
+                        //'class' => 'btn neon btn-xs',
+                        'data-confirm' => false,
+                        'data-method' => false,
+                        'data-request-method' => 'post',
+                        'data-toggle' => 'tooltip',
+                        'title' => 'Subir'
+                  ]);
+            },
+            'format' => 'raw',
+            'width' => '7%',
+      ],
       [
             'class' => '\kartik\grid\DataColumn',
             'attribute' => 'icon_yii',
@@ -21,6 +38,7 @@ return [
             'class' => '\kartik\grid\DataColumn',
             'attribute' => 'link_yii',
       ],
+
       [
             'class' => '\kartik\grid\DataColumn',
             'attribute' => 'padre',
@@ -47,12 +65,13 @@ return [
             'class' => '\kartik\grid\DataColumn',
             'attribute' => 'activo',
             'value' => function ($model) {
-                return $model->activo == 1 ? 'Si' : 'No';
+                  return $model->activo == 1 ? 'Si' : 'No';
             },
             'width' => '7%',
             'filter' => ['0' => 'No', '1' => ' Si'],
             'width' => '7%',
-        ],
+      ],
+
       [
             'class' => 'kartik\grid\ActionColumn',
             'dropdown' => false,
@@ -64,8 +83,10 @@ return [
             'viewOptions' => ['role' => 'modal-remote', 'title' => 'View', 'data-toggle' => 'tooltip'],
             'updateOptions' => ['role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip'],
             'deleteOptions' => [
-                  'role' => 'modal-remote', 'title' => 'Eliminar',
-                  'data-confirm' => false, 'data-method' => false, // for overide yii data api
+                  'role' => 'modal-remote',
+                  'title' => 'Eliminar',
+                  'data-confirm' => false,
+                  'data-method' => false, // for overide yii data api
                   'data-request-method' => 'post',
                   'data-toggle' => 'tooltip',
                   'data-confirm-title' => 'Esta Seguro?',
