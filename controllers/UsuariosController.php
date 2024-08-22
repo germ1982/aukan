@@ -257,7 +257,7 @@ class UsuariosController extends Controller
         Yii::$app->response->format = Response::FORMAT_JSON;
         return [
             'title' => 'Resetear Contraseña',
-            'content' => "$contenido $model->documento $model->password",// . json_encode($model->getErrors()),
+            'content' => "$contenido",// . json_encode($model->getErrors()),
             'footer' =>
             Html::button('Cerrar', [
                 'id' => 'btnCerrar',

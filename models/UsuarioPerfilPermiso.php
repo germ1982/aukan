@@ -41,10 +41,10 @@ class UsuarioPerfilPermiso extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'idpermiso' => 'Idpermiso',
-            'idperfil' => 'Idperfil',
-            'idtipopermiso' => 'Idtipopermiso',
-            'idacceso' => 'Idacceso',
+            'idpermiso' => 'ID',
+            'idperfil' => 'Perfil',
+            'idtipopermiso' => 'Tipo de Permiso',
+            'idacceso' => 'Id Elemento',
             'descripcion' => 'Descripcion',
         ];
     }

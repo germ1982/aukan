@@ -29,7 +29,10 @@ class ConfiguracionTipo extends \yii\db\ActiveRecord
     const MARCA = 14;
     const TIPO_RUBRO = 15;
     const PERFIL_DE_USUARIO = 16;
-    
+    const PERFIL_DE_USUARIO_TIPO_DE_PERMISO = 17;
+    const PERFIL_DE_USUARIO_PERMISO_BOTON = 18;
+    const PERFIL_DE_USUARIO_PERMISO_TARJETA = 19;
+
     public static function tableName()
     {
         return 'configuracion_tipo';
