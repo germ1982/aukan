@@ -116,9 +116,11 @@ class UsuariosController extends Controller
 
                 if ($model->idpersona == null) $guardado = false;
 
-                //var_dump($_FILES);
+                //Aca comienza el proceso de guardado de la imagen:
+                //primero rescata los datos de la imagen cargados en el widget fileInput
                 $tmpfile = UploadedFile::getInstance($model, 'imageFile');
 
+                //
                 if (isset($tmpfile)) {
                     $extension = $tmpfile->extension;
 
@@ -195,7 +197,7 @@ class UsuariosController extends Controller
 
                 if ($model->idpersona == null) $guardado = false;
 
-                //var_dump($_FILES);
+                //Aca comienza el proceso de guardado de la imagen
                 $tmpfile = UploadedFile::getInstance($model, 'imageFile');
 
                 if (isset($tmpfile)) {

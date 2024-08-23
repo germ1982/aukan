@@ -13,7 +13,8 @@ use yii\widgets\DetailView;
             'idpermiso',
             'idperfil',
             'idtipopermiso',
-            'idacceso',
+            'modulo',
+            'item',
             'descripcion:ntext',
         ],
     ]) ?>

@@ -76,14 +76,20 @@ class Menu extends \yii\db\ActiveRecord
 
       public static function getArbolMenu()
       {
+            $usuarioPermiso = new UsuarioPerfilPermiso();
+
+
+
             $menu = Menu::find()->where(['activo' => 1, 'padre' => 0])->orderBy('orden')->all();
             $menu_txt = '';
             foreach ($menu as $m) {
-                  $menu_txt = $menu_txt .  '<li class='.Menu::va_despliegue($m->id).'>
-                        <a'.Menu::es_home($m->id).'>
-                            <i class="neon ' . $m->icon_yii . '" aria-hidden="true"></i>
-                            <span>' . $m->title . '</span>
-                        </a>'. Menu::getHijos($m->id).'<li>';
+                  if($usuarioPermiso->permiso('menu',$m->id,'menu')==true){
+                        $menu_txt = $menu_txt .  '<li class='.Menu::va_despliegue($m->id).'>
+                              <a'.Menu::es_home($m->id).'>
+                              <i class="neon ' . $m->icon_yii . '" aria-hidden="true"></i>
+                              <span>' . $m->title . '</span>
+                              </a>'. Menu::getHijos($m->id).'<li>';
+                  }
             }
             return $menu_txt;
       }

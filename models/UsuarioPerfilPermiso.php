@@ -10,7 +10,8 @@ use Yii;
  * @property int $idpermiso
  * @property int $idperfil
  * @property int $idtipopermiso
- * @property int|null $idacceso
+ * @property string|null $modulo
+ * @property string|null $item
  * @property string $descripcion
  */
 class UsuarioPerfilPermiso extends \yii\db\ActiveRecord
@@ -30,8 +31,9 @@ class UsuarioPerfilPermiso extends \yii\db\ActiveRecord
     {
         return [
             [['idperfil', 'idtipopermiso', 'descripcion'], 'required'],
-            [['idperfil', 'idtipopermiso', 'idacceso'], 'integer'],
+            [['idperfil', 'idtipopermiso'], 'integer'],
             [['descripcion'], 'string'],
+            [['modulo', 'item'], 'string', 'max' => 45],
         ];
     }
 
@@ -44,8 +46,48 @@ class UsuarioPerfilPermiso extends \yii\db\ActiveRecord
             'idpermiso' => 'ID',
             'idperfil' => 'Perfil',
             'idtipopermiso' => 'Tipo de Permiso',
-            'idacceso' => 'Id Elemento',
+            'modulo' => 'Modulo',
+            'item' => 'Item',
             'descripcion' => 'Descripcion',
         ];
     }
+    public function permiso($tipo,$item,$modulo){
+        $userId = Yii::$app->user->id;
+        $perfiles = UsuarioAsignacionPerfil::find()->where(['idusuario' => $userId])->all();
+
+        //el siguiente if solo ocurre si el usuario no tiene perfiles
+        if (empty($perfiles)) {
+            if($tipo=='menu' && $item == 1) {
+                return true;
+            }
+            return false;
+        }
+
+        //el siguinte if devuelve true siempre que el usuario sea administrador
+        $es_administrador = UsuarioAsignacionPerfil::find()->where(['idperfil'=>167, 'idusuario' => $userId])->one();        
+        if ($es_administrador !== null) {
+            // Se encontró un registro, retorna true
+            return true;
+        }
+
+        if($tipo=='menu') {
+            return $this->permiso_menu($item,$perfiles);
+        }
+
+    }
+
+    public function permiso_menu($item,$perfiles){
+
+        if($item == 1) {
+            return true;
+        }
+
+        foreach ($perfiles as $perfil) {
+            $permiso = UsuarioPerfilPermiso::find()->where(['idperfil'=>$perfil->idperfil,'modulo'=>'menu','item'=>$item])->one();
+            if($permiso){return true;}
+        }
+        return false;
+
+    }
+
 }

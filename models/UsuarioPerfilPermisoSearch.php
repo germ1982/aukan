@@ -18,8 +18,8 @@ class UsuarioPerfilPermisoSearch extends UsuarioPerfilPermiso
     public function rules()
     {
         return [
-            [['idpermiso', 'idperfil', 'idtipopermiso', 'idacceso'], 'integer'],
-            [['descripcion'], 'safe'],
+            [['idpermiso', 'idperfil', 'idtipopermiso'], 'integer'],
+            [['modulo', 'item', 'descripcion'], 'safe'],
         ];
     }
 
@@ -59,10 +59,11 @@ class UsuarioPerfilPermisoSearch extends UsuarioPerfilPermiso
             'idpermiso' => $this->idpermiso,
             'idperfil' => $this->idperfil,
             'idtipopermiso' => $this->idtipopermiso,
-            'idacceso' => $this->idacceso,
         ]);
 
-        $query->andFilterWhere(['like', 'descripcion', $this->descripcion]);
+        $query->andFilterWhere(['like', 'modulo', $this->modulo])
+            ->andFilterWhere(['like', 'item', $this->item])
+            ->andFilterWhere(['like', 'descripcion', $this->descripcion]);
 
         return $dataProvider;
     }
