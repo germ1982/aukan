@@ -31,9 +31,8 @@ contraseñas fas fa-save
  */
 class Menu extends \yii\db\ActiveRecord
 {
-      /**
-       * {@inheritdoc}
-       */
+ 
+      public $icono;
       public static function tableName()
       {
             return 'menu';
@@ -46,7 +45,8 @@ class Menu extends \yii\db\ActiveRecord
       {
             return [
                   [['title', 'type', 'icon', 'link', 'orden'], 'required'],
-                  [['padre', 'activo', 'orden'], 'integer'],
+                  [['padre', 'activo', 'orden','icono'], 'integer'],
+                  [['icono'], 'safe'],
                   [['title', 'link','link_yii'], 'string', 'max' => 40],
                   [['link_yii'], 'string', 'max' => 100],
                   [['icon_yii'], 'string', 'max' => 20],

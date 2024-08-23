@@ -187,7 +187,7 @@ class SiteController extends Controller
             return $this->render('about');
       }
 
-      public static function actionGet_input_select2($form, $model, $atributo, $id_input, $datos, $iddatos, $descripciondatos, $label = null, $placeholder = null, $where = null, $onchange = null, $readonly = null, $disabled = null)
+      public static function actionGet_input_select2($form, $model, $atributo, $id_input, $datos, $iddatos, $descripciondatos, $label = null, $placeholder = null, $where = null, $onchange = null, $readonly = null, $disabled = null, $html = false)
       {
             $label = $label ? $label : '';
             $placeholder = $placeholder ? $placeholder : '';
@@ -209,7 +209,8 @@ class SiteController extends Controller
                   ],
                   'pluginOptions' => [
                         'allowClear' => true,
-                        'disabled' => $disabled
+                        'disabled' => $disabled,
+                        'escapeMarkup' => ( new \yii\web\JsExpression('function(m) { return m; }')),  // No escapar el HTML
                   ],
             ])
                   ->label($label);

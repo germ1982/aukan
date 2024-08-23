@@ -33,6 +33,10 @@ return [
       [
             'class' => '\kartik\grid\DataColumn',
             'attribute' => 'icon_yii',
+            'value' => function ($model) {
+                  return '<span class= "'.$model->icon_yii.'"> </span> - '.$model->icon_yii;
+            },
+            'format' => 'raw',
       ],
       [
             'class' => '\kartik\grid\DataColumn',
