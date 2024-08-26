@@ -106,16 +106,19 @@ class Menu extends \yii\db\ActiveRecord
 
       public static function getHijos($padre)
       {
+            $usuarioPermiso = new UsuarioPerfilPermiso();
+            
             $menu = Menu::find()->where(['activo' => 1, 'padre' => $padre])->orderBy('orden')->all();
             $menu_txt = "";
             if($menu){
                   $menu_txt = $menu_txt . '<ul class="nav nav-children">';
                   foreach ($menu as $m) {
+                        if($usuarioPermiso->permiso('menu',$m->id,'menu')==true){
                         $menu_txt = $menu_txt .  '<li '.Menu::va_despliegue($m->id).'>
                               <a href="index.php?r=' . $m->link_yii . '">
                                   <i class="neon ' . $m->icon_yii . '" aria-hidden="true"></i>
                                   <span>' . $m->title . '</span>
-                                  </a>'. Menu::getHijos($m->id).'<li>';
+                                  </a>'. Menu::getHijos($m->id).'<li>';}
                   }
                   $menu_txt = $menu_txt . '</ul>';
             }

@@ -1,19 +1,12 @@
 <?php
-
 namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Usuarios;
 
-/**
- * UsuariosSearch represents the model behind the search form of `app\models\Usuarios`.
- */
 class UsuariosSearch extends Usuarios
 {
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -22,30 +15,19 @@ class UsuariosSearch extends Usuarios
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function scenarios()
     {
-        // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
 
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
-     */
     public function search($params)
     {
         $query = Usuarios::find();
-        // Ajustamos el join para que coincida con el alias correcto de la tabla
+        
+        // Asegúrate de que 'persona' sea el nombre de la relación correcta en el modelo Usuarios
         $query->joinWith(['persona' => function ($query) {
-            $query->from(['personas' => 'personas']); // Alias correcto según la tabla
+            $query->from(['personas' => 'personas']); // Alias 'personas'
         }]);
-
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -53,12 +35,16 @@ class UsuariosSearch extends Usuarios
                 'pageSize' => 50,
             ],
             'sort' => [
+                'defaultOrder' => [
+                    'idpersona' => SORT_ASC,  // Orden predeterminado por apellido y nombre
+                ],
                 'attributes' => [
                     'idpersona' => [
                         'asc' => ['personas.apellido' => SORT_ASC, 'personas.nombre' => SORT_ASC],
                         'desc' => ['personas.apellido' => SORT_DESC, 'personas.nombre' => SORT_DESC],
                     ],
-                    // Otras columnas para ordenar
+                    'email',
+                    'activo', // Otras columnas para ordenar
                 ],
             ],
         ]);
@@ -66,12 +52,9 @@ class UsuariosSearch extends Usuarios
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 
-        // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
             'status' => $this->status,

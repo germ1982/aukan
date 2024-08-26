@@ -81,6 +81,11 @@ class Empleado extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getPersona()
+    {
+        return $this->hasOne(Persona::className(), ['idpersona' => 'idpersona']);
+    }
+
     public static function get_empleados($modulo='')
     {
         $filtro = $modulo ? " and idempleado in (SELECT idempleado from $modulo)" :'';
@@ -102,5 +107,18 @@ class Empleado extends \yii\db\ActiveRecord
                 where e.activo=1 and e.idempleado = $id";
         $empleado = Empleado::findBySql($sql)->one();
         return $empleado;
+    }
+
+    public static function get_empleados_organismo($idorganismo)
+    {
+        $sql = "SELECT  e.idempleado,concat( p.apellido ,' ', p.nombre) as descripcion
+                from empleado e 
+                join personas p on p.idpersona = e.idpersona
+                join organismo_dispositivo d on e.iddispositivo =d.iddispositivo
+                where e.activo=1 and d.idorganismo = $idorganismo
+                order by p.apellido ,p.nombre";
+        $empleados = Empleado::findBySql($sql)->all();
+        
+        return $empleados;
     }
 }

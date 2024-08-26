@@ -26,7 +26,7 @@ return [
         ],
         'filterInputOptions' => ['placeholder' => 'Perfil...'],
         'format' => 'raw',
-        'width' => '20%',
+        'width' => '25%',
     ],
     [
         'class' => '\kartik\grid\DataColumn',
@@ -46,17 +46,17 @@ return [
         ],
         'filterInputOptions' => ['placeholder' => 'Tipo...'],
         'format' => 'raw',
-        'width' => '20%',
+        'width' => '15%',
     ],
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'modulo',
-        'width' => '20%',
+        'width' => '10%',
     ],
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'item',
-        'width' => '20%',
+        'width' => '10%',
     ],
     [
         'class' => '\kartik\grid\DataColumn',

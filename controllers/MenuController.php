@@ -275,9 +275,14 @@ class MenuController extends Controller
                   ->orderBy(['orden' => SORT_ASC])
                   ->all();
 
-            $max_orden =  max(array_map(function ($item) {
-                  return $item->orden;
-            }, $submenu));
+                  $max_orden = 1;
+
+                  if(!empty($submenu)){
+                        $max_orden =  max(array_map(function ($item) {
+                              return $item->orden;
+                        }, $submenu));
+                  }
+           
 
             if ($model_editado->orden == $max_orden && $edicion == true) {
                   $model_editado->orden++;

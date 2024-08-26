@@ -7,6 +7,11 @@ use kartik\helpers\Html;
 use yii\helpers\ArrayHelper;
 
 return [
+      [
+            'class' => '\kartik\grid\DataColumn',
+            'attribute' => 'id',
+            'width' => '5%',
+      ],
 
       [
             'class' => '\kartik\grid\DataColumn',
@@ -56,7 +61,10 @@ return [
                   return "";
             },
             'filterType' => GridView::FILTER_SELECT2,
-            'filter' => ArrayHelper::map(Menu::find()->orderBy(['title' => SORT_ASC])->all(), 'id', 'title'),
+            'filter' => ArrayHelper::merge(
+                  ['0' => 'Raiz'], // Agrega manualmente la opción "Raiz" con id 0
+                  ArrayHelper::map(Menu::find()->orderBy(['title' => SORT_ASC])->all(), 'id', 'title')
+              ),
             'filterWidgetOptions' => [
                   'pluginOptions' => ['allowClear' => true],
             ],

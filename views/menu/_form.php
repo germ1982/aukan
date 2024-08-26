@@ -73,6 +73,17 @@ foreach ($array_iconos as $icon) {
 <?php
 $script = <<<JS
 
+$(document).ready(function() {
+    // Obtén el valor inicial del select2
+    var padreId = $('#cmb_padre').val(); // Reemplaza 'your-select2-id' con el ID real de tu select2
+
+    // Ejecuta la función mostrar_listado al cargar la página
+    if (padreId) { // Verifica que padreId no sea null o undefined
+        mostrar_listado(padreId);
+    }else
+    {mostrar_listado(0);}
+});
+
 function setear_icono(descripcion) {
 
       var parts = descripcion.split('</span> - ');
