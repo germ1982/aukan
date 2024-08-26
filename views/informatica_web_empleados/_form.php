@@ -30,7 +30,7 @@ use yii\widgets\ActiveForm;
                         </div>
                   </div>
             </div>
-            <div class="col-md-3" id="children_list">
+            <div class="col-md-3" id="empleados_list">
 
             </div>
       </div>

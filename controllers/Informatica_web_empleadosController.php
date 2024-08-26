@@ -274,6 +274,8 @@ class Informatica_web_empleadosController extends Controller
     public function actionGet_empleados()
     {
           $empleados = Empleado::get_empleados_organismo(6);
+          var_dump($empleados);
+//seguir aca
 
           // Renderizar un archivo parcial con la lista de hijos
           return $this->renderPartial('_empleados_list', ['empleados' => $empleados]);
