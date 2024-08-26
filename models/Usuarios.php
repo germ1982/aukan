@@ -103,21 +103,4 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
         return $this->hasOne(Persona::className(), ['idpersona' => 'idpersona']);
     }
 
-    /* public function upload()
-    {
-        if ($this->validate()) {
-            //$path = Yii::getAlias('@webroot') . '/img/usuarios-avatares';
-            $path = '/img/usuarios-avatares';
-        if (!is_dir($path)) {
-            mkdir($path, 0777, true);
-        }
-            //$this->avatar = 'img/usuarios-avatares/' . $this->imageFile->baseName . '.' . $this->imageFile->extension;
-            $this->avatar = $this->imageFile->baseName . '.' . $this->imageFile->extension;
-            //$this->imageFile->saveAs(Yii::getAlias('@webroot') . '/img/usuarios-avatares/' .  $this->avatar);
-            $this->imageFile->saveAs('/img/usuarios-avatares/' .  $this->avatar);
-            return $this->save(false);
-        } else {
-            return false;
-        }
-    } */
 }

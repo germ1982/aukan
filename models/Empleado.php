@@ -34,6 +34,7 @@ class Empleado extends \yii\db\ActiveRecord
     public $documento;
     public $descripcion;
     public $imageFile;
+    public $orden;
     public static function tableName()
     {
         return 'empleado';
@@ -45,7 +46,7 @@ class Empleado extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['idpersona', 'iddispositivo', 'legajo', 'activo'], 'required'],
+            [['idpersona', 'iddispositivo', 'legajo', 'activo','foto'], 'required'],
             [['idpersona', 'iddispositivo', 'legajo', 'activo', 'categoria', 'antiguedad_legal', 'antiguedad_total', 'contratacion', 'cuil', 'funcion', 'fichado', 'afiliacion'], 'integer'],
             [['ingreso_real', 'ingreso_administrativo'], 'safe'],
             [['email', 'foto','descripcion'], 'string', 'max' => 100],

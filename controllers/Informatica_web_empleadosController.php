@@ -270,14 +270,20 @@ class Informatica_web_empleadosController extends Controller
         }
     }
 
-
     public function actionGet_empleados()
     {
-          $empleados = Empleado::get_empleados_organismo(6);
-          var_dump($empleados);
-//seguir aca
-
-          // Renderizar un archivo parcial con la lista de hijos
-          return $this->renderPartial('_empleados_list', ['empleados' => $empleados]);
+        $sql = "SELECT e.idempleado, 
+                       concat(p.apellido, ' ', p.nombre) as descripcion, 
+                       we.orden 
+                FROM empleado e
+                JOIN personas p ON p.idpersona = e.idpersona
+                JOIN organismo_dispositivo d ON e.iddispositivo = d.iddispositivo
+                JOIN informatica_web_empleados we ON we.idempleado = e.idempleado
+                WHERE e.activo = 1 AND d.idorganismo = 6
+                ORDER BY we.orden ASC, p.apellido ASC, p.nombre ASC";
+    
+        $empleados = Empleado::findBySql($sql)->all();
+    //return "hola mundo";
+        return $this->renderPartial('_empleados_list', ['empleados' => $empleados]);
     }
 }
