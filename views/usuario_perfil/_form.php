@@ -6,7 +6,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 $array_tipos = ConfiguracionTipo::find()->where(['activo' => 1])->orderBy('descripcion')->all();
-//$model->id_configuracion_tipo = ConfiguracionTipo::PERFIL_DE_USUARIO;
+$model->id_configuracion_tipo = ConfiguracionTipo::PERFIL_DE_USUARIO;
 ?>
 
 

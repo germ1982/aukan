@@ -53,4 +53,40 @@ class InformaticaWebEmpleados extends \yii\db\ActiveRecord
         {
             return $this->hasOne(Empleado::className(), ['idempleado' => 'idempleado']);
         }
+
+
+        public function permiso_edicion_personal($idempleado){
+
+            $empleado = Empleado::findOne($idempleado);
+            $usuario = Usuarios::find()->where(['idpersona' => $empleado->idpersona])->one();
+
+            if (empty($usuario)){return false;}
+            $userId = Yii::$app->user->id;
+
+            $perfiles = UsuarioAsignacionPerfil::find()->where(['idusuario' => $userId])->all();
+
+            //el siguiente if solo ocurre si el usuario no tiene perfiles
+            if (empty($perfiles)) {
+                return false;
+            }
+    
+            //el siguinte if devuelve true siempre que el usuario sea administrador
+            $es_administrador = UsuarioAsignacionPerfil::find()->where(['idperfil'=>167, 'idusuario' => $userId])->one();        
+            if ($es_administrador !== null) {
+                // Se encontró un registro, retorna true
+                return true;
+            }
+
+            if($userId == $usuario->id){
+                foreach ($perfiles as $perfil) {
+                    $permiso = UsuarioPerfilPermiso::find()->where(['idperfil'=>$perfil->idperfil,'modulo'=>'InformaticaWebEmpleados','item'=>'edicion'])->one();
+                    if($permiso){return true;}
+                }
+            }
+            else{return false;}
+
+    
+        }
+    
+
 }
