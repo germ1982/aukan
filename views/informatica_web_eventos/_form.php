@@ -11,11 +11,15 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field($model, 'fecha')->textInput() ?>
+
+    <?= $form->field($model, 'titulo')->textInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'descripcion')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'fotos')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'titulo')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'iddispositivo')->textInput() ?>
 
     <?= $form->field($model, 'activo')->textInput() ?>
 
