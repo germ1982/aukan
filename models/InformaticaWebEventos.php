@@ -8,16 +8,18 @@ use Yii;
  * This is the model class for table "informatica_web_eventos".
  *
  * @property int $idevento
+ * @property string|null $fecha
+ * @property string|null $titulo
  * @property string|null $descripcion
  * @property string|null $fotos
- * @property string|null $titulo
+ * @property int|null $iddispositivo
  * @property int|null $activo
  */
 class InformaticaWebEventos extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
+    public $fdesde;
+    public $fhasta;
+
     public static function tableName()
     {
         return 'informatica_web_eventos';
@@ -29,9 +31,10 @@ class InformaticaWebEventos extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['fecha', 'fdesde', 'fhasta'], 'safe'],
             [['descripcion'], 'string'],
-            [['activo'], 'integer'],
-            [['fotos', 'titulo'], 'string', 'max' => 100],
+            [['iddispositivo', 'activo'], 'integer'],
+            [['titulo', 'fotos'], 'string', 'max' => 100],
         ];
     }
 
@@ -42,9 +45,11 @@ class InformaticaWebEventos extends \yii\db\ActiveRecord
     {
         return [
             'idevento' => 'Idevento',
+            'fecha' => 'Fecha',
+            'titulo' => 'Titulo',
             'descripcion' => 'Descripcion',
             'fotos' => 'Fotos',
-            'titulo' => 'Titulo',
+            'iddispositivo' => 'Iddispositivo',
             'activo' => 'Activo',
         ];
     }

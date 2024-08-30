@@ -24,10 +24,10 @@ $mysql_funciones = "SELECT * from configuracion c
                     order by c.descripcion";
 return [
 
-    [
+    /* [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'idempleado',
-    ],
+    ], */
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'idpersona',
@@ -184,6 +184,7 @@ return [
         'urlCreator' => function($action, $model, $key, $index) { 
                 return Url::to([$action,'id'=>$key]);
         },
+        'template' => '{view} {update} ',
         'viewOptions'=>['role'=>'modal-remote','title'=>'View','data-toggle'=>'tooltip'],
         'updateOptions'=>['role'=>'modal-remote','title'=>'Update', 'data-toggle'=>'tooltip'],
         'deleteOptions'=>['role'=>'modal-remote','title'=>'Delete', 

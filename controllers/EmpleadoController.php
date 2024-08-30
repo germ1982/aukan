@@ -86,141 +86,133 @@ class EmpleadoController extends Controller
         $request = Yii::$app->request;
         $model = new Empleado();
 
-        if ($model->load(Yii::$app->request->post())) {
-            $imageFile = UploadedFile::getInstance($model, 'foto');
-
-            if ($imageFile) {
-                $imagePath = 'uploads/' . $imageFile->baseName . '.' . $imageFile->extension;
-                $imageFile->saveAs($imagePath);
-                $model->foto = $imagePath;
-            }
-
-            if ($model->save()) {
-                // Redirige o muestra un mensaje de éxito
-            }
-        }
-
-
         if ($request->isAjax) {
-            /*
-        *   Process for ajax request
-        */
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
                 return [
-                    'title' => "Nuevo Empleado #" ,
-                    'content' => $this->renderAjax('update', [
+                    'title' => 'Nuevo Empleado',
+                    'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                    'footer' =>
+                    Html::button('Cerrar', [
+                        'id' => 'btnCerrar',
+                        'class' => 'btn btn-default pull-left',
+                        'data-dismiss' => 'modal',
+                    ]) .
+                        Html::button('Guardar', [
+                            'id' => 'btnGuardar',
+                            'class' => 'btn btn-primary',
+                            'type' => 'submit',
+                        ]),
                 ];
-            } else if ($model->load($request->post()) && $model->save()) {
-                return [
-                    'forceReload' => '#crud-datatable-pjax',
-                    'title' => "Empleado",
-                    'content' => $this->renderAjax('view', [
-                        'model' => $model,
-                    ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) 
-                        
-                ];
-            } else {
-                return [
-                    'title' => "Actualizar Empleado #" . $id,
-                    'content' => $this->renderAjax('update', [
-                        'model' => $model,
-                    ]),
-                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
-                ];
+            } else if ($model->load($request->post())) {
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
+
+                if ($model->idpersona == null) $guardado = false;
+
+                //Aca comienza el proceso de guardado de la imagen:
+                //primero rescata los datos de la imagen cargados en el widget fileInput
+                $tmpfile = UploadedFile::getInstance($model, 'imageFile');
+
+                //
+                if (isset($tmpfile)) {
+                    $extension = $tmpfile->extension;
+
+                    $nuevo_nombre = "empleado-$model->legajo.$extension";
+                    $model->foto = $nuevo_nombre;
+                    $tmpfile->saveAs('img/empleados-fotos/' . $nuevo_nombre);
+                } else {
+                    $model->foto = "empleado_0.png";
+                }
+
+                if ($guardado && $model->save()) {
+                    $transaction->commit();
+
+                    return [
+                        'title' => "Nuevo Empleado",
+                        'content' => '<span class="text-success">Empleado Creado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
+                    ];
+                }
             }
-        } else {
-            /*
-        *   Process for non-ajax request
-        */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->idempleado]);
-            } else {
-                return $this->render('update', [
+            return [
+                'title' => "Nuevo Empleado, Faltan datos!!! Complete Los datos Faltantes!!!",
+                'content' => $this->renderAjax('create', [
                     'model' => $model,
-                ]);
-            }
+                ]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+            ];
         }
     }
 
 
-    /**
-     * Updates an existing Empleado model.
-     * For ajax request will return json object
-     * and for non-ajax request if update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
         $model = $this->findModel($id);
-        if ($model->load(Yii::$app->request->post())) {
-            $imageFile = UploadedFile::getInstance($model, 'foto');
-
-            if ($imageFile) {
-                $imagePath = 'uploads/' . $imageFile->baseName . '.' . $imageFile->extension;
-                $imageFile->saveAs($imagePath);
-                $model->foto = $imagePath;
-            }
-
-            if ($model->save()) {
-                // Redirige o muestra un mensaje de éxito
-            }
-        }
-
-
+        
         if ($request->isAjax) {
-            /*
-            *   Process for ajax request
-            */
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
                 return [
-                    'title' => "Actualizar Empleado #" . $id,
-                    'content' => $this->renderAjax('update', [
+                    'title' => 'Editar Empleado',
+                    'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                    'footer' =>
+                    Html::button('Cerrar', [
+                        'id' => 'btnCerrar',
+                        'class' => 'btn btn-default pull-left',
+                        'data-dismiss' => 'modal',
+                    ]) .
+                        Html::button('Guardar', [
+                            'id' => 'btnGuardar',
+                            'class' => 'btn btn-primary',
+                            'type' => 'submit',
+                        ]),
                 ];
-            } else if ($model->load($request->post()) && $model->save()) {
-                return [
-                    'forceReload' => '#crud-datatable-pjax',
-                    'title' => "Empleado #" . $id,
-                    'content' => $this->renderAjax('view', [
-                        'model' => $model,
-                    ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
-                ];
-            } else {
-                return [
-                    'title' => "Actualizar Empleado #" . $id,
-                    'content' => $this->renderAjax('update', [
-                        'model' => $model,
-                    ]),
-                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
-                ];
+            } else if ($model->load($request->post())) {
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
+
+                if ($model->idpersona == null) $guardado = false;
+
+                //Aca comienza el proceso de guardado de la imagen:
+                //primero rescata los datos de la imagen cargados en el widget fileInput
+                $tmpfile = UploadedFile::getInstance($model, 'imageFile');
+
+                //
+                if (isset($tmpfile)) {
+                    $extension = $tmpfile->extension;
+
+                    $nuevo_nombre = "empleado-$model->legajo.$extension";
+                    $model->foto = $nuevo_nombre;
+                    $tmpfile->saveAs('img/empleados-fotos/' . $nuevo_nombre);
+                } /* else {
+                    $model->foto = "empleado_0.png";
+                } */
+
+                if ($guardado && $model->save()) {
+                    $transaction->commit();
+
+                    return [
+                        'title' => "Editar Empleado",
+                        'content' => '<span class="text-success">Empleado Editado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
+                    ];
+                }
             }
-        } else {
-            /*
-            *   Process for non-ajax request
-            */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->idempleado]);
-            } else {
-                return $this->render('update', [
+            return [
+                'title' => "Editar Empleado, Faltan datos!!! Complete Los datos Faltantes!!!",
+                'content' => $this->renderAjax('create', [
                     'model' => $model,
-                ]);
-            }
+                ]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+            ];
         }
     }
 

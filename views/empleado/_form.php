@@ -12,7 +12,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 $persona_nombre = '';
-// Suponiendo que el modelo tiene un atributo 'avatar' que guarda el nombre del archivo de la imagen
+// Suponiendo que el modelo tiene un atributo 'foto' que guarda el nombre del archivo de la imagen
 $initialPreview = [];
 $initialPreviewConfig = [];
 
@@ -22,20 +22,17 @@ if (isset($model->idpersona)) {
     $persona_nombre = "$persona->apellido, $persona->nombre";
 }
 
-if (isset($model->avatar)) {
-    $imagePath = Url::to('img/empleado-foto/' . $model->foto);
+
+
+if (isset($model->foto)) {
+    $imagePath = Url::to('img/empleados-fotos/' . $model->foto);
 
     // Agrega la imagen a la vista previa inicial
     $initialPreview = [
-        Html::img($imagePath, ['class' => 'file-preview-image', 'alt' => 'Avatar', 'title' => $model->foto, 'width' => '100%', 'height' => 'auto']),
+        Html::img($imagePath, ['class' => 'file-preview-image', 'alt' => 'Foto', 'title' => $model->foto, 'width' => '100%', 'height' => 'auto']),
     ];
 }
 
-
-
-/* @var $this yii\web\View */
-/* @var $model app\models\Empleado */
-/* @var $form yii\widgets\ActiveForm */
 ?>
 <style>
     .file-drop-zone {
@@ -66,7 +63,7 @@ if (isset($model->avatar)) {
 <div class="empleado-form">
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
-
+    <?= $form->field($model, 'idpersona')->hiddenInput(['id' => 'input_idpersona'])->label(false) ?>
     <div class="row">
         <div class="col-md-8">
 
@@ -149,7 +146,6 @@ if (isset($model->avatar)) {
                     'showClose' => false,
                     'showCancel' => false,
                     'mainClass' => 'input-group-sm',
-                    //'uploadUrl' => Url::to(['/mds_atp_solicitud/update']),
                     'maxFileSize' => 100000,
                     'fileActionSettings' => [
                         'showRemove' => false,
@@ -209,12 +205,60 @@ if (isset($model->avatar)) {
 
 </div>
 
-<?php if (!Yii::$app->request->isAjax) { ?>
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
-<?php } ?>
 
 <?php ActiveForm::end(); ?>
 
 </div>
+
+<?php
+$script = <<<JS
+
+function datos_persona() {
+        $('#input_idpersona').val('0');
+        
+        let dni_persona = $("#input_dni_persona").val();
+
+        if (dni_persona == "") {
+            alert("escriba un dni");
+            return;
+        }
+
+        $('#txt_mensaje').html("Buscando datos de Persona con dni " + dni_persona);
+        $.post("index.php?r=persona/validar_dni&dni=" + dni_persona, function(data) {
+            data = $.parseJSON(data);
+            console.log("console.log('funcion datos_persona'); // POST a index.php?r=persona/validar_dni&dni=" + dni_persona);
+            if (data.length === 0) {
+                $('#txt_mensaje').html("No se encontraron datos de Persona con dni " + dni_persona);
+                //buscar_en_renaper(dni_persona,tipo_persona);
+            } else {
+                console.log('funcion datos_persona // encontro');
+                console.log(data);
+                $('#input_idpersona').val(data[0]['idpersona']);
+
+                aux = data[0]['apellido'] + ', ' + data[0]['nombre'];
+                $('#txt_mensaje').html(aux);
+            }
+
+        });
+
+
+    }
+
+    function ValidarIngresoDni() {
+        var aux = event.which;
+
+        if (aux == 13) //pregunto si fue el enter
+        {
+            datos_persona();
+        }
+    }
+function formatearFecha(fecha) {
+        var day = fecha.substring(8, 10);
+        var month = fecha.substring(5, 7);
+        var year = fecha.substring(0, 4);
+        var today = day + "/" + month + "/" + year;
+        return today;
+    }
+JS;
+$this->registerJs($script);
+?>

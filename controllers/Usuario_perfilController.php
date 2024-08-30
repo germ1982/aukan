@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ConfiguracionTipo;
 use Yii;
 use app\models\UsuarioPerfil;
 use app\models\UsuarioPerfilSearch;
@@ -100,6 +101,7 @@ class Usuario_perfilController extends Controller
                                   ]),
                       ];
                 } else if ($model->load($request->post())) {
+                  $model->id_configuracion_tipo = ConfiguracionTipo::PERFIL_DE_USUARIO;
 
                       if ($model->save()) {
                             return [

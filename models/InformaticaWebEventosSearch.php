@@ -18,8 +18,8 @@ class InformaticaWebEventosSearch extends InformaticaWebEventos
     public function rules()
     {
         return [
-            [['idevento', 'activo'], 'integer'],
-            [['descripcion', 'fotos', 'titulo'], 'safe'],
+            [['idevento', 'iddispositivo', 'activo'], 'integer'],
+            [['fecha', 'titulo', 'descripcion', 'fotos', 'fdesde', 'fhasta'], 'safe'],
         ];
     }
 
@@ -55,14 +55,29 @@ class InformaticaWebEventosSearch extends InformaticaWebEventos
             return $dataProvider;
         }
 
+        $sql_desde = '';
+        $sql_hasta = '';
+        if ($this->fdesde != null) {
+            $fecha_desde_aux = date_format(date_create(str_replace('/', '-', $this->fdesde)), 'Y-m-d');
+            $sql_desde = "DATEDIFF(fecha,'$fecha_desde_aux')>=0 ";
+        }
+        if ($this->fhasta != null) {
+            $fecha_hasta_aux = date_format(date_create(str_replace('/', '-', $this->fhasta)), 'Y-m-d');
+            $sql_hasta = "DATEDIFF(fecha,'$fecha_hasta_aux')<=0 ";
+        }
+
         $query->andFilterWhere([
             'idevento' => $this->idevento,
+            'fecha' => $this->fecha,
+            'iddispositivo' => $this->iddispositivo,
             'activo' => $this->activo,
         ]);
 
-        $query->andFilterWhere(['like', 'descripcion', $this->descripcion])
+        $query->andFilterWhere(['like', 'titulo', $this->titulo])
+            ->andFilterWhere(['like', 'descripcion', $this->descripcion])
             ->andFilterWhere(['like', 'fotos', $this->fotos])
-            ->andFilterWhere(['like', 'titulo', $this->titulo]);
+            ->andWhere($sql_desde)
+            ->andWhere($sql_hasta);;
 
         return $dataProvider;
     }

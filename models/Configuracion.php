@@ -48,6 +48,7 @@ class Configuracion extends \yii\db\ActiveRecord
     }
 
 
+
     public static function get_configuraciones($tipo)
     {
         $sql = "SELECT c.id_configuracion, c.descripcion

@@ -1,6 +1,6 @@
 <strong>Orden</strong>
 <?php foreach ($empleados as $e): ?>
-    <div>
-        <?= $e->orden ?>:  <?= $e->title ?>
+    <div style="font-size: 10px;">
+        <?= $e->orden ?>:  <?= $e->descripcion ?>
     </div>
 <?php endforeach; ?>

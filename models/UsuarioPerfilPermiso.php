@@ -51,7 +51,7 @@ class UsuarioPerfilPermiso extends \yii\db\ActiveRecord
             'descripcion' => 'Descripcion',
         ];
     }
-    public function permiso($tipo,$item,$modulo){
+    public function permiso($tipo,$item,$modulo = null){
         $userId = Yii::$app->user->id;
         $perfiles = UsuarioAsignacionPerfil::find()->where(['idusuario' => $userId])->all();
 
@@ -74,6 +74,10 @@ class UsuarioPerfilPermiso extends \yii\db\ActiveRecord
             return $this->permiso_menu($item,$perfiles);
         }
 
+        if($tipo=='boton') {
+            return $this->permiso_boton($item,$modulo,$perfiles);
+        }
+
     }
 
     public function permiso_menu($item,$perfiles){
@@ -86,6 +90,17 @@ class UsuarioPerfilPermiso extends \yii\db\ActiveRecord
             $permiso = UsuarioPerfilPermiso::find()->where(['idperfil'=>$perfil->idperfil,'modulo'=>'menu','item'=>$item])->one();
             if($permiso){return true;}
         }
+        return false;
+
+    }
+
+    public function permiso_boton($item,$modulo,$perfiles){
+
+        foreach ($perfiles as $perfil) {
+            $permiso = UsuarioPerfilPermiso::find()->where(['idperfil'=>$perfil->idperfil,'modulo'=> $modulo,'item'=>$item])->one();
+            if($permiso){return true;}
+        }
+        
         return false;
 
     }

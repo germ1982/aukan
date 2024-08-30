@@ -1,7 +1,9 @@
 <?php
 
 use app\models\Empleado;
+use app\models\InformaticaWebEmpleados;
 use app\models\Persona;
+use app\models\UsuarioPerfilPermiso;
 use kartik\grid\GridView;
 use kartik\helpers\Html;
 use yii\helpers\ArrayHelper;
@@ -9,6 +11,7 @@ use yii\helpers\Url;
 
 $mysql_personas = "SELECT p.idpersona, concat(p.apellido,' ', p.nombre) as nombre from personas p 
                     where p.idpersona in (select idpersona from usuarios) order by p.apellido, p.nombre";
+
 
 return [
 
@@ -64,8 +67,9 @@ return [
             'urlCreator' => function ($action, $model, $key, $index) {
                   return Url::to([$action, 'id' => $key]);
             },
+            'template' => '{view} {update} ',
             'viewOptions' => ['role' => 'modal-remote', 'title' => 'View', 'data-toggle' => 'tooltip'],
-            'updateOptions' => ['role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip'],
+            //'updateOptions' => ['role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip'],
             'deleteOptions' => [
                   'role' => 'modal-remote',
                   'title' => 'Delete',
@@ -77,6 +81,33 @@ return [
                   'data-confirm-message' => 'Are you sure want to delete this item'
             ],
             'width' => '10%',
+            'buttons' => [
+                  'update' => function ($url, $model) {
+                        $ban = 0;
+                        
+                        $usuarioPermiso = new InformaticaWebEmpleados();
+
+                        if ($usuarioPermiso->permiso_edicion_personal($model->idempleado) == true) {
+                              $ban = 1;
+                        } 
+                        if($ban == 1)
+                        {
+                              return Html::a(
+                                    '<span class="glyphicon glyphicon-pencil"></span>',
+                                    $url,
+                                    [
+                                          'role' => 'modal-remote',
+                                          'title' => 'Editar',
+                                          'data-confirm' => false,
+                                          'data-method' => false,
+                                          'data-request-method' => 'post',
+                                          'data-toggle' => 'tooltip',
+                                    ]
+                              );
+                        }
+                        else {return '';}
+                  },
+            ],
       ],
 
 ];
