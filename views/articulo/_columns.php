@@ -17,14 +17,14 @@ order by descripcion";
 
 $mysql_unidad_medida = "SELECT * from configuracion where activo=1 and id_configuracion_tipo = 13
 order by descripcion";
-$columna_1 = '15%' ;
+$columna_1 = '15%';
 $columna_2 = '15%';
 $columna_3 = '15%';
 $columna_4 = '15%';
 $columna_5 = '15%';
 $columna_6 = '10%';
 return [
-   /*  [
+    /*  [
         'class' => 'kartik\grid\CheckboxColumn',
         'width' => '20px',
     ],
@@ -36,8 +36,8 @@ return [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'idarticulo',
     ], */
-    
-   
+
+
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'idtipo',
@@ -58,7 +58,7 @@ return [
         'filterInputOptions' => ['placeholder' => 'Tipo de Dato...'],
         'format' => 'raw',
     ],
-   
+
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'idmarca',
@@ -80,12 +80,12 @@ return [
         'format' => 'raw',
     ],
     [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'modelo',
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'modelo',
         'width' => $columna_3,
-        
+
     ],
-   /*  [
+    /*  [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'descripcion',
     ], */
@@ -130,30 +130,34 @@ return [
         'format' => 'raw',
     ],
     // [
-        // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'activo',
+    // 'class'=>'\kartik\grid\DataColumn',
+    // 'attribute'=>'activo',
     // ],
     // [
-        // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'imagen',
+    // 'class'=>'\kartik\grid\DataColumn',
+    // 'attribute'=>'imagen',
     // ],
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
-        'vAlign'=>'middle',
+        'vAlign' => 'middle',
         'width' => $columna_6,
-        'urlCreator' => function($action, $model, $key, $index) { 
-                return Url::to([$action,'id'=>$key]);
+        'urlCreator' => function ($action, $model, $key, $index) {
+            return Url::to([$action, 'id' => $key]);
         },
         'template' => '{view} {update} ',
-        'viewOptions'=>['role'=>'modal-remote','title'=>'View','data-toggle'=>'tooltip'],
-        'updateOptions'=>['role'=>'modal-remote','title'=>'Update', 'data-toggle'=>'tooltip'],
-        'deleteOptions'=>['role'=>'modal-remote','title'=>'Delete', 
-                          'data-confirm'=>false, 'data-method'=>false,// for overide yii data api
-                          'data-request-method'=>'post',
-                          'data-toggle'=>'tooltip',
-                          'data-confirm-title'=>'Are you sure?',
-                          'data-confirm-message'=>'Are you sure want to delete this item'], 
+        'viewOptions' => ['role' => 'modal-remote', 'title' => 'View', 'data-toggle' => 'tooltip'],
+        'updateOptions' => ['role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip'],
+        'deleteOptions' => [
+            'role' => 'modal-remote',
+            'title' => 'Delete',
+            'data-confirm' => false,
+            'data-method' => false, // for overide yii data api
+            'data-request-method' => 'post',
+            'data-toggle' => 'tooltip',
+            'data-confirm-title' => 'Are you sure?',
+            'data-confirm-message' => 'Are you sure want to delete this item'
+        ],
     ],
 
-];   
+];

@@ -19,9 +19,7 @@ use Yii;
  */
 class Articulo extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
+    public $imageFile;
     public static function tableName()
     {
         return 'articulo';

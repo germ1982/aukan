@@ -12,12 +12,7 @@ $this->title = 'Edicion de Inventario';
 $this->params['breadcrumbs'][] = $this->title;
 $clase = 'inventario-index';
 
-CrudAsset::register($this);
-?>
-
-
-
-
+CrudAsset::register($this);?>
 
 <header class="page-header">
     <h2><?= $this->title ?></h2>

@@ -10,7 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
-
+use yii\web\UploadedFile;
 /**
  * ArticuloController implements the CRUD actions for Articulo model.
  */
@@ -104,50 +104,64 @@ class ArticuloController extends Controller
                             'type' => 'submit',
                         ]),
                 ];
-            }
-            else if ($model->load($request->post())) {
-                  $transaction = Yii::$app->db->beginTransaction();
-                  $guardado = true;
-                  $model->imagen='articulo_0.jpg';
-                  if ($guardado && $model->save()) {
-                      $transaction->commit();
+            } else if ($model->load($request->post())) {
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
 
-                      return [
-                          'title' => 'Nuevo Articulo',
-                          'content' => '<span class="text-success">Dato Creado Correctamente</span>',
-                          'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
-                      ];
-                  }
-              }
-              return [
-                  'title' => "Nuevo Articulo, Faltan datos!!! Complete Los datos Faltantes!!!",
-                  'content' => $this->renderAjax('create', [
-                      'model' => $model,
-                  ]),
-                  'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                      Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
-  
-              ];
-          }
+                $model->imagen = "articulo_0.jpg";
+
+                
+               
+
+
+                if ($guardado && $model->save()) {
+                    
+                    $transaction->commit();
+                $tmpfile = UploadedFile::getInstance($model, 'imageFile');
+
+                if (isset($tmpfile)) {
+                    $extension = $tmpfile->extension;
+
+                    $nuevo_nombre = "articulo-$model->idarticulo.$extension";
+                    $model->imagen = $nuevo_nombre;
+                    $tmpfile->saveAs('img/articulos/' . $nuevo_nombre);
+                    $model->save();
+                }
+                    
+                
+                    
+
+                    
+
+                    return [
+                        'title' => "Nuevo Articulo",
+                        'content' => '<span class="text-success">Articulo Creado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
+                    ];
+                }
+            }
+            return [
+                'title' => "Nuevo Articulo, Faltan datos!!! Complete Los datos Faltantes!!!",
+                'content' => $this->renderAjax('create', [
+                    'model' => $model,
+                ]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+            ];
+        }
     }
 
-    /**
-     * Updates an existing Configuracion model.
-     * For ajax request will return json object
-     * and for non-ajax request if update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
+
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
-        $model = $this->findModel($id);       
+        $model = $this->findModel($id);
 
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
                 return [
-                    'title' => 'Editar Articulo Id: '.$id,
+                    'title' => 'Editar Articulo',
                     'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
@@ -163,105 +177,81 @@ class ArticuloController extends Controller
                             'type' => 'submit',
                         ]),
                 ];
-            }
-            else if ($model->load($request->post())) {
-                  $transaction = Yii::$app->db->beginTransaction();
-                  $guardado = true;
-                  $model->imagen='articulo_0.jpg';
-                  
-                  if ($guardado && $model->save()) {
-                      $transaction->commit();
+            } else if ($model->load($request->post())) {
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
 
-                      return [
-                          'title' => 'Editar Articulo Id: '.$id,
-                          'content' => '<span class="text-success">Articulo Editado Correctamente</span>',
-                          'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
-                      ];
-                  }
-              }
-              return [
-                  'title' => "Editar Articulo Id $id, Faltan datos!!! Complete Los datos Faltantes!!!",
-                  'content' => $this->renderAjax('create', [
-                      'model' => $model,
-                  ]),
-                  'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                      Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
-  
-              ];
-          }
+                
+
+                $tmpfile = UploadedFile::getInstance($model, 'imageFile');
+
+                if (isset($tmpfile)) {
+                    $extension = $tmpfile->extension;
+
+                    $nuevo_nombre = "articulo-$model->idarticulo.$extension";
+                    $model->imagen = $nuevo_nombre;
+                    $tmpfile->saveAs('img/articulos/' . $nuevo_nombre);
+                    
+                }
+               
+
+
+                if ($guardado && $model->save()) {
+                    
+                    $transaction->commit();
+                
+                    
+                
+                    
+
+                    
+
+                    return [
+                        'title' => "Editar Articulo",
+                        'content' => '<span class="text-success">Articulo Creado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
+                    ];
+                }
+            }
+            return [
+                'title' => "Editar Articulo, Faltan datos!!! Complete Los datos Faltantes!!!",
+                'content' => $this->renderAjax('create', [
+                    'model' => $model,
+                ]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+            ];
+        }
     }
-    /**
-     * Delete an existing Articulo model.
-     * For ajax request will return json object
-     * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
+
+    
+
     public function actionDelete($id)
     {
-        $request = Yii::$app->request;
-        $this->findModel($id)->delete();
 
-        if($request->isAjax){
-            /*
-            *   Process for ajax request
-            */
+        if ($this->findModel($id)->delete()) {
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
-            /*
-            *   Process for non-ajax request
-            */
-            return $this->redirect(['index']);
+            return [
+                'title' => "Eliminado",
+                'content' => '<span class="text-success">Usuario Eliminado Correctamente</span>',
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'center btn btn-default pull-left', 'data-dismiss' => "modal"])
+            ];
         }
-
-
-    }
-
-     /**
-     * Delete multiple existing Articulo model.
-     * For ajax request will return json object
-     * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionBulkDelete()
-    {        
-        $request = Yii::$app->request;
-        $pks = explode(',', $request->post( 'pks' )); // Array or selected records primary keys
-        foreach ( $pks as $pk ) {
-            $model = $this->findModel($pk);
-            $model->delete();
-        }
-
-        if($request->isAjax){
-            /*
-            *   Process for ajax request
-            */
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
-            /*
-            *   Process for non-ajax request
-            */
-            return $this->redirect(['index']);
-        }
-       
     }
 
     /**
-     * Finds the Articulo model based on its primary key value.
+     * Finds the Usuarios model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Articulo the loaded model
+     * @param int $id ID
+     * @return Usuarios the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Articulo::findOne($id)) !== null) {
+        if (($model = Articulo::findOne(['idarticulo' => $id])) !== null) {
             return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
         }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
