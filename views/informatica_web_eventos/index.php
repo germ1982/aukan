@@ -106,3 +106,18 @@ $this->registerJs(
     "footer" => "", // always need it for jquery plugin
 ]) ?>
 <?php Modal::end(); ?>
+
+
+<style>
+#ajaxCrudModal .modal-dialog {
+    width: 90vw; /* 90% del ancho de la ventana */
+    max-width: 90vw; /* Asegura que no exceda el 90% */
+    margin: auto; /* Centra el modal horizontalmente */
+    padding: 0;
+}
+
+#ajaxCrudModal .modal-content {
+    height: auto; /* Ajusta la altura según el contenido */
+    max-height: auto; /* Opcional: limita la altura al 90% de la pantalla */
+}
+</style>
