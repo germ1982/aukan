@@ -36,7 +36,8 @@ class InformaticaWebEventos extends \yii\db\ActiveRecord
             [['descripcion'], 'string'],
             [['iddispositivo', 'activo'], 'integer'],
             [['titulo', 'fotos'], 'string', 'max' => 100],
-            [['imageFile'], 'file', 'extensions' => 'jpg, jpeg, gif, png', 'maxSize' => 1000000],
+            [['imageFile'], 'file', 'extensions' => 'jpg, jpeg, gif, png', 'maxSize' => 1000000, 'maxFiles' => 10],
+
         ];
     }
 
