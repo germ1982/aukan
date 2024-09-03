@@ -109,6 +109,12 @@ class Informatica_web_eventosController extends Controller
                         $transaction = Yii::$app->db->beginTransaction();
                         $guardado = true;
 
+
+                        $fecha = ArmarDateParaMySql($model->fecha);
+                        $fecha = date_create($fecha);
+                        $fecha = date_format($fecha, 'Y-m-d');
+                        $model->fechaa = $fecha;
+
                         if ($guardado && $model->save()) {
                               $transaction->commit();
 
@@ -121,15 +127,16 @@ class Informatica_web_eventosController extends Controller
                                     foreach ($imageFiles as $file) {
                                           $nuevo_nombre = "evento-$model->idevento-foto-$numero.$file->extension";
                                           $file->saveAs('img/evento-fotos/' . $nuevo_nombre);
+                                          //echo "<script>console.log('$nuevo_nombre')</script>";
                                           $imageNames[] = $nuevo_nombre; // Guardamos el nombre en el array
                                           $numero++;
                                     }
-
+                                    //echo "<script>console.log(".json_encode($imageNames).")</script>";
                                     $model->fotos = implode(',', $imageNames);
                               } else {
                                     $model->fotos = "evento_0_foto_0.jpg";
                               }
-
+                              //echo "<script>console.log('$model->fotos')</script>";
                               $model->save();
 
                               return [
@@ -180,8 +187,14 @@ class Informatica_web_eventosController extends Controller
                         $transaction = Yii::$app->db->beginTransaction();
                         $guardado = true;
 
-                        $imageFiles = UploadedFile::getInstances($model, 'imageFile');
 
+                        $fecha = ArmarDateParaMySql($model->fecha);
+                        $fecha = date_create($fecha);
+                        $fecha = date_format($fecha, 'Y-m-d');
+                        $model->fecha = $fecha;
+
+                        $imageFiles = UploadedFile::getInstances($model, 'imageFile');
+                        $imageNames = explode(',', $model->fotos);
 
                         if (isset($imageFiles)) {
                               $numero = 1;
@@ -194,7 +207,7 @@ class Informatica_web_eventosController extends Controller
                               }
 
                               $model->fotos = implode(',', $imageNames);
-                        } 
+                        }
 
                         $model->save();
                         if ($guardado && $model->save()) {
@@ -283,4 +296,13 @@ class Informatica_web_eventosController extends Controller
                   throw new NotFoundHttpException('The requested page does not exist.');
             }
       }
+}
+
+function ArmarDateParaMySql($Fecha)
+{
+    $anio = substr($Fecha, 6, 4);
+    $mes  = substr($Fecha, 3, 2);
+    $dia = substr($Fecha, 0, 2);
+    $DT = "$anio-$mes-$dia";
+    return $DT;
 }

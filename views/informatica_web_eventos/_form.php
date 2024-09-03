@@ -7,6 +7,8 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
+$model->fecha = date('d/m/Y', strtotime($model->fecha));
+
 $initialPreview = [];
 $initialPreviewConfig = [];
 
@@ -74,6 +76,7 @@ if (isset($model->fotos) && !empty($model->fotos)) {
             height: 100px;
       }
 </style>
+
 <div class="informatica-web-eventos-form">
 
       <?php $form = ActiveForm::begin(); ?>
