@@ -197,6 +197,7 @@ class Informatica_web_eventosController extends Controller
                         $imageNames = explode(',', $model->fotos);
 
                         if (isset($imageFiles)) {
+                              $imageNames = [];
                               $numero = 1;
 
                               foreach ($imageFiles as $file) {
