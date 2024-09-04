@@ -147,7 +147,7 @@
 </div>
 
 <div id="Trabajos" class="tabcontent" style="padding-left: 75px;">
-      <h3>trabajando</h3>
+      <?php include 'eventos.php' ?>
 </div>
 
 <script>

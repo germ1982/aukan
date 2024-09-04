@@ -60,12 +60,12 @@ class Informatica_web_eventosController extends Controller
             if ($request->isAjax) {
                   Yii::$app->response->format = Response::FORMAT_JSON;
                   return [
-                        'title' => "InformaticaWebEventos #" . $id,
+                        'title' => "Evento Numero " . $id,
                         'content' => $this->renderAjax('view', [
                               'model' => $this->findModel($id),
                         ]),
                         'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                              Html::a('Edit', ['Editar', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                              Html::a('Editar', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
                   ];
             } else {
                   return $this->render('view', [
@@ -113,7 +113,7 @@ class Informatica_web_eventosController extends Controller
                         $fecha = ArmarDateParaMySql($model->fecha);
                         $fecha = date_create($fecha);
                         $fecha = date_format($fecha, 'Y-m-d');
-                        $model->fechaa = $fecha;
+                        $model->fecha = $fecha;
 
                         if ($guardado && $model->save()) {
                               $transaction->commit();
