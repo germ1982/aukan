@@ -110,10 +110,14 @@
                     <?= $item['content'] ?>
                 </div>
             <?php endforeach; ?>
-            <a class="prev" onclick="plusSlides(-1, <?php echo $index; ?>)">❮</a>
-            <a class="next" onclick="plusSlides(1, <?php echo $index; ?>)">❯</a>
+            <a class="prev" onclick="plusSlides(-1)">❮</a>
+            <a class="next" onclick="plusSlides(1)">❯</a>
         </div>
     <?php endforeach; ?>
+
+
+   
+
 
 
     <script>
