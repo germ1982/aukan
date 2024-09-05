@@ -8,6 +8,7 @@ use yii\bootstrap\Modal;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset;
 
+
 $this->title = 'Edicion de Eventos de la Web de Informatica';
 $this->params['breadcrumbs'][] = $this->title;
 $clase = 'informatica_web_eventos-index';
@@ -106,3 +107,19 @@ $this->registerJs(
     "footer" => "", // always need it for jquery plugin
 ]) ?>
 <?php Modal::end(); ?>
+
+
+<style>
+#ajaxCrudModal .modal-dialog {
+    width: 90vw; /* 90% del ancho de la ventana */
+    max-width: 90vw; /* Asegura que no exceda el 90% */
+    margin: auto; /* Centra el modal horizontalmente */
+    padding-top: 40px;
+    padding-left: 30px;
+}
+
+#ajaxCrudModal .modal-content {
+    height: auto; /* Ajusta la altura según el contenido */
+    max-height: auto; /* Opcional: limita la altura al 90% de la pantalla */
+}
+</style>

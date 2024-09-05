@@ -19,6 +19,7 @@ class InformaticaWebEventos extends \yii\db\ActiveRecord
 {
     public $fdesde;
     public $fhasta;
+    public $imageFile;
 
     public static function tableName()
     {
@@ -34,7 +35,9 @@ class InformaticaWebEventos extends \yii\db\ActiveRecord
             [['fecha', 'fdesde', 'fhasta'], 'safe'],
             [['descripcion'], 'string'],
             [['iddispositivo', 'activo'], 'integer'],
-            [['titulo', 'fotos'], 'string', 'max' => 100],
+            [['titulo', 'fotos'], 'string', 'max' => 1000],
+            [['imageFile'], 'file', 'extensions' => 'jpg, jpeg, gif, png', 'maxSize' => 1000000, 'maxFiles' => 10],
+
         ];
     }
 
@@ -44,12 +47,12 @@ class InformaticaWebEventos extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'idevento' => 'Idevento',
+            'idevento' => 'ID',
             'fecha' => 'Fecha',
             'titulo' => 'Titulo',
             'descripcion' => 'Descripcion',
             'fotos' => 'Fotos',
-            'iddispositivo' => 'Iddispositivo',
+            'iddispositivo' => 'Sector',
             'activo' => 'Activo',
         ];
     }
