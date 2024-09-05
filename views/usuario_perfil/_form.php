@@ -1,6 +1,6 @@
 <?php
 
-use app\controllers\SiteController;
+
 use app\models\ConfiguracionTipo;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
