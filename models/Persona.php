@@ -24,9 +24,7 @@ use Yii;
  */
 class Persona extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
+    public $nombre_apellido;
     public static function tableName()
     {
         return 'personas';
@@ -40,7 +38,7 @@ class Persona extends \yii\db\ActiveRecord
         return [
             [['documento', 'documento_tipo', 'nacionalidad', 'genero', 'nombre', 'apellido'], 'required'],
             [['documento', 'documento_tipo', 'nacionalidad', 'genero', 'padre', 'conviviente', 'idlocalidad'], 'integer'],
-            [['fecha_nacimiento'], 'safe'],
+            [['fecha_nacimiento','nombre_apellido'], 'safe'],
             [['nombre', 'apellido', 'domicilio'], 'string', 'max' => 100],
             [['domicilio_calle'], 'string', 'max' => 255],
             [['domicilio_numero'], 'string', 'max' => 45],
@@ -54,20 +52,21 @@ class Persona extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'idpersona' => 'Idpersona',
+            'idpersona' => 'ID',
             'documento' => 'Documento',
             'documento_tipo' => 'Documento Tipo',
             'nacionalidad' => 'Nacionalidad',
             'genero' => 'Genero',
-            'fecha_nacimiento' => 'Fecha Nacimiento',
+            'fecha_nacimiento' => 'Nacimiento',
             'nombre' => 'Nombre',
             'apellido' => 'Apellido',
             'padre' => 'Padre',
             'conviviente' => 'Conviviente',
             'domicilio' => 'Domicilio',
-            'domicilio_calle' => 'Domicilio Calle',
-            'domicilio_numero' => 'Domicilio Numero',
-            'idlocalidad' => 'Idlocalidad',
+            'domicilio_calle' => 'Calle',
+            'domicilio_numero' => 'Numero',
+            'idlocalidad' => 'Localidad
+            ',
         ];
     }
 }

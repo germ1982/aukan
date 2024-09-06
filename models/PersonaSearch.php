@@ -18,10 +18,10 @@ class PersonaSearch extends Persona
     {
         return [
             [['idpersona', 'documento', 'documento_tipo', 'nacionalidad', 'genero', 'padre', 'conviviente', 'idlocalidad'], 'integer'],
-            [['fecha_nacimiento', 'nombre', 'apellido', 'domicilio', 'domicilio_calle', 'domicilio_numero'], 'safe'],
+            [['fecha_nacimiento', 'nombre', 'apellido', 'domicilio', 'domicilio_calle', 'domicilio_numero','nombre_apellido'], 'safe'],
         ];
     }
-
+ 
     /**
      * {@inheritdoc}
      */
