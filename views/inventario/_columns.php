@@ -64,15 +64,15 @@ return [
         'filterWidgetOptions' => [
             'pluginOptions' => ['allowClear' => true],
         ],
-        'filterInputOptions' => ['placeholder' => 'dispositivo...'],
+        'filterInputOptions' => ['placeholder' => 'empleado...'],
         'format' => 'raw',
         'width' => '25%',
     ],
-    [
+   /*  [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'idempleado',
         'width' => '25%',
-    ],
+    ], */
     // [
     // 'class'=>'\kartik\grid\DataColumn',
     // 'attribute'=>'idestado',

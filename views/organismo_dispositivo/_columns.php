@@ -2,17 +2,18 @@
 use yii\helpers\Url;
 
 return [
-    [
+    /* [
         'class' => 'kartik\grid\CheckboxColumn',
         'width' => '20px',
-    ],
-    [
+    ], */
+   /*  [
         'class' => 'kartik\grid\SerialColumn',
         'width' => '30px',
-    ],
+    ], */
         [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'iddispositivo',
+        'width' => '1%',
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
@@ -21,14 +22,25 @@ return [
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'idorganismo',
+        'width' => '1%',
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'es_oficial',
+        'value' => function ($model) {
+                  return $model->es_oficial == 1 ? 'Si' : 'No';
+            },
+            'filter' => ['0' => 'No', '1' => ' Si'],
+            'width' => '10%',
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'es_organismo',
+        'value' => function ($model) {
+                  return $model->es_organismo == 1 ? 'Si' : 'No';
+            },
+            'filter' => ['0' => 'No', '1' => ' Si'],
+            'width' => '10%',
     ],
     // [
         // 'class'=>'\kartik\grid\DataColumn',

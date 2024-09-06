@@ -86,4 +86,15 @@ class Organismo extends \yii\db\ActiveRecord
     {
         return $this->hasMany(OrganismoDispositivo::className(), ['idorganismo' => 'idorganismo']);
     }
+    public static function get_organismos()
+    {
+        
+        $sql = "SELECT o.idorganismo, o.descripcion
+        FROM organismo o 
+        
+        where o.activo = 1 
+        order by o.descripcion";
+        $array = Organismo::findBySql($sql)->all();
+        return $array;
+    }
 }
