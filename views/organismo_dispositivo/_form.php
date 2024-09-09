@@ -50,7 +50,7 @@ $organismo = Organismo::findOne($model->idorganismo)
                 <?= $form->field($model,'descripcion')->textInput() ?>                
             </div>
                 <div class=" col-md-5">
-                    <?= SiteController::actionGet_input_select2($form,$model, 'idorganismo', 'cmb_organismo',Organismo::get_organismos(),'idorganismo','descripcion', 'Descripcion')?>
+                    <?= SiteController::actionGet_input_select2($form,$model, 'idorganismo', 'cmb_organismo',Organismo::get_organismos(),'idorganismo','descripcion', 'Organismo')?>
                 </div>
                 
                 
@@ -61,13 +61,13 @@ $organismo = Organismo::findOne($model->idorganismo)
             <div class=" col-md-6">
                     <?= $form->field($model, 'direccion')->textInput(['maxlength' => true]) ?>
                 </div>
-                <div class=" col-md-2">
+                <div class=" col-md-2"style="padding-top:30px;">
                     <?= $form->field($model,'es_oficial')->checkbox(['checked' => true]) ?>
                 </div>
-                <div class=" col-md-2">
+                <div class=" col-md-2"style="padding-top:30px;">
                     <?= $form->field($model, 'es_organismo')->checkbox(['checked' => true]) ?>
                 </div>
-                <div class=" col-md-2">
+                <div class=" col-md-2"style="padding-top:30px;">
                     <?= $form->field($model, 'activo')->checkbox(['checked' => true]) ?>
                 </div>
                 
