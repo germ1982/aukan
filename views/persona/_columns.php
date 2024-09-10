@@ -9,21 +9,11 @@ use yii\helpers\Url;
 return [
     [
         'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'idpersona',
+        'attribute' => 'nombre_apellido', // Debe ser el nombre del atributo virtual
         'value' => function ($model) {
-            $id = $model->idpersona;
-            if ($id != null) {
-                $persona = Persona::findOne($id);
-                return "$persona->apellido $persona->nombre";
-            }
-            return "";
+            return $model->apellido . ' ' . $model->nombre;
         },
-
-
-        'filterWidgetOptions' => [
-            'pluginOptions' => ['allowClear' => true],
-        ],
-        'filterInputOptions' => ['placeholder' => 'Usuario...'],
+        'filterInputOptions' => ['placeholder' => 'Nombre o Apellido', 'class' => 'form-control'],
         'format' => 'raw',
         'width' => '30%',
     ],

@@ -11,9 +11,7 @@ use app\models\Persona;
  */
 class PersonaSearch extends Persona
 {
-    /**
-     * {@inheritdoc}
-     */
+    public $nombre_apellido; // Atributo virtual
     public function rules()
     {
         return [
@@ -56,6 +54,9 @@ class PersonaSearch extends Persona
             return $dataProvider;
         }
 
+        $sql_nombre = "SELECT concat(p.apellido,' ', p.nombre) as nombre_apellido
+                        FROM persona"
+
         // grid filtering conditions
         $query->andFilterWhere([
             'idpersona' => $this->idpersona,
@@ -69,11 +70,10 @@ class PersonaSearch extends Persona
             'idlocalidad' => $this->idlocalidad,
         ]);
 
-        $query->andFilterWhere(['like', 'nombre', $this->nombre])
-            ->andFilterWhere(['like', 'apellido', $this->apellido])
-            ->andFilterWhere(['like', 'domicilio', $this->domicilio])
+        $query->andFilterWhere(['like', 'domicilio', $this->domicilio])
             ->andFilterWhere(['like', 'domicilio_calle', $this->domicilio_calle])
             ->andFilterWhere(['like', 'domicilio_numero', $this->domicilio_numero]);
+            
 
         return $dataProvider;
     }
