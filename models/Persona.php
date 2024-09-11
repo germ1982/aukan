@@ -25,6 +25,7 @@ use Yii;
 class Persona extends \yii\db\ActiveRecord
 {
     public $nombre_apellido;
+    public $dni;
     public static function tableName()
     {
         return 'personas';
@@ -38,7 +39,7 @@ class Persona extends \yii\db\ActiveRecord
         return [
             [['documento', 'documento_tipo', 'nacionalidad', 'genero', 'nombre', 'apellido'], 'required'],
             [['documento', 'documento_tipo', 'nacionalidad', 'genero', 'padre', 'conviviente', 'idlocalidad'], 'integer'],
-            [['fecha_nacimiento','nombre_apellido'], 'safe'],
+            [['fecha_nacimiento','nombre_apellido','dni'], 'safe'],
             [['nombre', 'apellido', 'domicilio'], 'string', 'max' => 100],
             [['domicilio_calle'], 'string', 'max' => 255],
             [['domicilio_numero'], 'string', 'max' => 45],

@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Configuracion;
 use app\models\Persona;
 use kartik\grid\GridView;
 use kartik\helpers\Html;
@@ -17,10 +18,19 @@ return [
         'format' => 'raw',
         'width' => '30%',
     ],
+
     [
         'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'documento',
+        'attribute' => 'documento', // Debe ser el nombre del atributo virtual
+        'value' => function ($model) {
+            $tipo = Configuracion::findOne($model->documento_tipo)->descripcion;
+            return $tipo . ' ' . $model->documento;
+        },
+
+        'format' => 'raw',
+        'width' => '30%',
     ],
+
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'documento_tipo',

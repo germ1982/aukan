@@ -16,7 +16,7 @@ class PersonaSearch extends Persona
     {
         return [
             [['idpersona', 'documento', 'documento_tipo', 'nacionalidad', 'genero', 'padre', 'conviviente', 'idlocalidad'], 'integer'],
-            [['fecha_nacimiento', 'nombre', 'apellido', 'domicilio', 'domicilio_calle', 'domicilio_numero','nombre_apellido'], 'safe'],
+            [['fecha_nacimiento', 'nombre', 'apellido', 'domicilio', 'domicilio_calle', 'domicilio_numero','nombre_apellido', 'dni'], 'safe'],
         ];
     }
  
@@ -54,7 +54,8 @@ class PersonaSearch extends Persona
             return $dataProvider;
         }
 
-        
+        $subsql = "select descripcion from configuracion where id_configuracion = personas.documento_tipo";
+
         $query->addSelect([
             'personas.*', // Selecciona todos los campos de la tabla persona
             "CONCAT(personas.apellido, ' ', personas.nombre) AS nombre_apellido", // Concatenamos nombre y apellido
@@ -77,7 +78,6 @@ class PersonaSearch extends Persona
             ->andFilterWhere(['like', 'domicilio_calle', $this->domicilio_calle])
             ->andFilterWhere(['like', 'domicilio_numero', $this->domicilio_numero])
             ->andFilterWhere(['like', "CONCAT(personas.apellido, ' ', personas.nombre)", $this->nombre_apellido]);
-
         return $dataProvider;
     }
 }
