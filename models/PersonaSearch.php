@@ -54,8 +54,11 @@ class PersonaSearch extends Persona
             return $dataProvider;
         }
 
-        $sql_nombre = "SELECT concat(p.apellido,' ', p.nombre) as nombre_apellido
-                        FROM persona"
+        
+        $query->addSelect([
+            'personas.*', // Selecciona todos los campos de la tabla persona
+            "CONCAT(personas.apellido, ' ', personas.nombre) AS nombre_apellido", // Concatenamos nombre y apellido
+        ]);
 
         // grid filtering conditions
         $query->andFilterWhere([
@@ -72,8 +75,8 @@ class PersonaSearch extends Persona
 
         $query->andFilterWhere(['like', 'domicilio', $this->domicilio])
             ->andFilterWhere(['like', 'domicilio_calle', $this->domicilio_calle])
-            ->andFilterWhere(['like', 'domicilio_numero', $this->domicilio_numero]);
-            
+            ->andFilterWhere(['like', 'domicilio_numero', $this->domicilio_numero])
+            ->andFilterWhere(['like', "CONCAT(personas.apellido, ' ', personas.nombre)", $this->nombre_apellido]);
 
         return $dataProvider;
     }

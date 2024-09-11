@@ -13,7 +13,7 @@ return [
         'value' => function ($model) {
             return $model->apellido . ' ' . $model->nombre;
         },
-        'filterInputOptions' => ['placeholder' => 'Nombre o Apellido', 'class' => 'form-control'],
+
         'format' => 'raw',
         'width' => '30%',
     ],
