@@ -48,7 +48,7 @@ class Organismo extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'idorganismo' => 'Idorganismo',
+            'idorganismo' => 'Id',
             'descripcion' => 'Descripcion',
             'padre' => 'Padre',
             'nivel' => 'Nivel',
@@ -96,5 +96,16 @@ class Organismo extends \yii\db\ActiveRecord
         order by o.descripcion";
         $array = Organismo::findBySql($sql)->all();
         return $array;
+    }
+    public static function get_organismo($id)
+    {
+        
+        $sql = "SELECT o.idorganismo, o.descripcion
+        FROM organismo o 
+        
+        where o.activo = 1 and o.idorganismo=$id
+        order by o.descripcion";
+        $dato = Organismo::findBySql($sql)->one();
+        return $dato;
     }
 }
