@@ -16,7 +16,7 @@ class PersonaSearch extends Persona
     {
         return [
             [['idpersona', 'documento', 'documento_tipo', 'nacionalidad', 'genero', 'padre', 'conviviente', 'idlocalidad'], 'integer'],
-            [['fecha_nacimiento', 'nombre', 'apellido', 'domicilio', 'domicilio_calle', 'domicilio_numero','nombre_apellido', 'dni'], 'safe'],
+            [['fecha_nacimiento', 'nombre', 'apellido', 'domicilio', 'domicilio_calle', 'domicilio_numero','nombre_apellido'], 'safe'],
         ];
     }
  
@@ -44,6 +44,27 @@ class PersonaSearch extends Persona
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 100,
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'nombre_apellido' => SORT_ASC,
+                    //'nombre' => SORT_ASC,  // Orden predeterminado por apellido y nombre
+                ],
+                'attributes' => [
+                  'idpersona',
+                  'documento',
+                    'nombre_apellido' => [
+                        'asc' => ['personas.apellido' => SORT_ASC, 'personas.nombre' => SORT_ASC],
+                        'desc' => ['personas.apellido' => SORT_DESC, 'personas.nombre' => SORT_DESC],
+                    ],
+                    'fecha_nacimiento',
+                    'nacionalidad',
+                    'genero',
+                    'activo', // Otras columnas para ordenar
+                ],
+            ],
         ]);
 
         $this->load($params);
