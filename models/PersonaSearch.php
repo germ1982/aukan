@@ -16,7 +16,7 @@ class PersonaSearch extends Persona
     {
         return [
             [['idpersona', 'documento', 'documento_tipo', 'nacionalidad', 'genero', 'padre', 'conviviente', 'idlocalidad'], 'integer'],
-            [['fecha_nacimiento', 'nombre', 'apellido', 'domicilio', 'domicilio_calle', 'domicilio_numero','nombre_apellido'], 'safe'],
+            [['fecha_nacimiento', 'nombre', 'apellido', 'domicilio', 'domicilio_calle', 'domicilio_numero','nombre_apellido', 'fdesde', 'fhasta'], 'safe'],
         ];
     }
  
@@ -75,6 +75,17 @@ class PersonaSearch extends Persona
             return $dataProvider;
         }
 
+        $sql_desde = '';
+        $sql_hasta = '';
+        if ($this->fdesde != null) {
+            $fecha_desde_aux = date_format(date_create(str_replace('/', '-', $this->fdesde)), 'Y-m-d');
+            $sql_desde = "DATEDIFF(fecha_nacimiento,'$fecha_desde_aux')>=0 ";
+        }
+        if ($this->fhasta != null) {
+            $fecha_hasta_aux = date_format(date_create(str_replace('/', '-', $this->fhasta)), 'Y-m-d');
+            $sql_hasta = "DATEDIFF(fecha_nacimiento,'$fecha_hasta_aux')<=0 ";
+        }
+
         $subsql = "select descripcion from configuracion where id_configuracion = personas.documento_tipo";
 
         $query->addSelect([
@@ -98,7 +109,9 @@ class PersonaSearch extends Persona
         $query->andFilterWhere(['like', 'domicilio', $this->domicilio])
             ->andFilterWhere(['like', 'domicilio_calle', $this->domicilio_calle])
             ->andFilterWhere(['like', 'domicilio_numero', $this->domicilio_numero])
-            ->andFilterWhere(['like', "CONCAT(personas.apellido, ' ', personas.nombre)", $this->nombre_apellido]);
+            ->andFilterWhere(['like', "CONCAT(personas.apellido, ' ', personas.nombre)", $this->nombre_apellido])
+            ->andWhere($sql_desde)
+            ->andWhere($sql_hasta);
         return $dataProvider;
     }
 }

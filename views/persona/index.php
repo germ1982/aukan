@@ -15,7 +15,11 @@ $clase = 'persona-index';
 CrudAsset::register($this);
 ?>
 
-
+<style>
+    .custom-grid {
+    font-size: 13px; /* Cambia el tamaño según tus necesidades */
+}
+</style>
 
 
 
@@ -48,6 +52,7 @@ CrudAsset::register($this);
                         <?= GridView::widget([
                             'id' => 'crud-datatable',
                             'dataProvider' => $dataProvider,
+                            'tableOptions' => ['class' => 'custom-grid'],
                             'filterModel' => $searchModel,
                             'pjax' => false,
                             'columns' => require(__DIR__ . '/_columns.php'),
