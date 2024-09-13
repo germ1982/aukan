@@ -128,9 +128,13 @@ return [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'direccion_completa', // Debe ser el nombre del atributo virtual
         'value' => function ($model) {
+            $dire = '';
             $localidad = Localidades::findOne($model->idlocalidad);
-            $provincia = Provincias::findOne($localidad->id_provincia);
-            return "$provincia->provincia";
+            if($localidad){
+                  $provincia = Provincias::findOne($localidad->id_provincia);
+                  $dire = "$provincia->provincia";
+            }
+            return "$dire";
         },
         'format' => 'raw',
         'width' => $columna6,
