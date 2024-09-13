@@ -40,7 +40,7 @@ class Persona extends \yii\db\ActiveRecord
         return [
             [['documento', 'documento_tipo', 'nacionalidad', 'genero', 'nombre', 'apellido'], 'required'],
             [['documento', 'documento_tipo', 'nacionalidad', 'genero', 'padre', 'conviviente', 'idlocalidad'], 'integer'],
-            [['fecha_nacimiento','nombre_apellido', 'fdesde', 'fhasta'], 'safe'],
+            [['fecha_nacimiento', 'nombre_apellido', 'fdesde', 'fhasta'], 'safe'],
             [['nombre', 'apellido', 'domicilio'], 'string', 'max' => 100],
             [['domicilio_calle'], 'string', 'max' => 255],
             [['domicilio_numero'], 'string', 'max' => 45],
@@ -74,11 +74,21 @@ class Persona extends \yii\db\ActiveRecord
 
     public static function get_direccion($id)
     {
-        $sql = "SELECT v.provincia, l.localidad, p.domicilio_calle, p.domicilio_numero, p.domicilio 
-FROM personas p
-join localidades l on p.idlocalidad = l.id
-join provincias v on l.id_provincia = v.id";
-        $dato = OrganismoDispositivo::findBySql($sql)->one();
+        $sql = "SELECT 
+                    CONCAT_WS(
+                        ' ', -- Aquí defines el separador (en este caso un espacio)
+                        COALESCE(v.provincia, ''), 
+                        COALESCE(l.localidad, ''), 
+                        COALESCE(p.domicilio_calle, ''), 
+                        COALESCE(p.domicilio_numero, ''), 
+                        COALESCE(p.domicilio, '')
+                    ) as domicilio 
+                FROM personas p
+                LEFT JOIN localidades l ON p.idlocalidad = l.id
+                LEFT JOIN provincias v ON l.id_provincia = v.id
+                WHERE p.idpersona = $id";
+
+        $dato = Persona::findBySql($sql)->one()->domicilio;
         return $dato;
     }
 }

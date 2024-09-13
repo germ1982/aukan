@@ -12,11 +12,12 @@ use app\models\Persona;
 class PersonaSearch extends Persona
 {
     public $nombre_apellido; // Atributo virtual
+    public $direccion_completa;
     public function rules()
     {
         return [
             [['idpersona', 'documento', 'documento_tipo', 'nacionalidad', 'genero', 'padre', 'conviviente', 'idlocalidad'], 'integer'],
-            [['fecha_nacimiento', 'nombre', 'apellido', 'domicilio', 'domicilio_calle', 'domicilio_numero','nombre_apellido', 'fdesde', 'fhasta'], 'safe'],
+            [['fecha_nacimiento', 'nombre', 'apellido', 'domicilio', 'domicilio_calle', 'domicilio_numero','nombre_apellido', 'fdesde', 'fhasta','direccion_completa'], 'safe'],
         ];
     }
  
@@ -62,7 +63,8 @@ class PersonaSearch extends Persona
                     'fecha_nacimiento',
                     'nacionalidad',
                     'genero',
-                    'activo', // Otras columnas para ordenar
+                    'activo',
+                    'direccion_completa', // Otras columnas para ordenar
                 ],
             ],
         ]);
@@ -90,8 +92,19 @@ class PersonaSearch extends Persona
 
         $query->addSelect([
             'personas.*', // Selecciona todos los campos de la tabla persona
-            "CONCAT(personas.apellido, ' ', personas.nombre) AS nombre_apellido", // Concatenamos nombre y apellido
+            "CONCAT(personas.apellido, ' ', personas.nombre) AS nombre_apellido",
+            "CONCAT_WS(' ', 
+                COALESCE(v.provincia, ''), 
+                COALESCE(l.localidad, ''), 
+                COALESCE(personas.domicilio_calle, ''), 
+                COALESCE(personas.domicilio_numero, ''), 
+                COALESCE(personas.domicilio, '')
+            ) AS direccion_completa"
         ]);
+        
+        $query->leftJoin('localidades l', 'personas.idlocalidad = l.id')
+            ->leftJoin('provincias v', 'l.id_provincia = v.id');
+        
 
         // grid filtering conditions
         $query->andFilterWhere([
@@ -110,6 +123,13 @@ class PersonaSearch extends Persona
             ->andFilterWhere(['like', 'domicilio_calle', $this->domicilio_calle])
             ->andFilterWhere(['like', 'domicilio_numero', $this->domicilio_numero])
             ->andFilterWhere(['like', "CONCAT(personas.apellido, ' ', personas.nombre)", $this->nombre_apellido])
+            ->andFilterWhere(['like', "CONCAT_WS(' ', 
+                                                    COALESCE(v.provincia, ''), 
+                                                    COALESCE(l.localidad, ''), 
+                                                    COALESCE(personas.domicilio_calle, ''), 
+                                                    COALESCE(personas.domicilio_numero, ''), 
+                                                    COALESCE(personas.domicilio, '')
+                                                )", $this->direccion_completa])
             ->andWhere($sql_desde)
             ->andWhere($sql_hasta);
         return $dataProvider;
