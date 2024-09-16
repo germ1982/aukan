@@ -54,11 +54,24 @@ class PersonaController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+        $request = Yii::$app->request;
 
+        if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return [
+                'title' => "Persona Id " . $id,
+                'content' => $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+                ]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::a('Editar', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+            ];
+        } else {
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+        }
+    }
     /**
      * Creates a new Persona model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -94,7 +107,8 @@ class PersonaController extends Controller
                   $transaction = Yii::$app->db->beginTransaction();
                   $guardado = true;
 
-
+                    $model->padre = null;
+                    $model->conviviente=0;
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
@@ -117,37 +131,58 @@ class PersonaController extends Controller
               ];
           }
     }
-    public function actionCreate_old()
-    {
-        $model = new Persona();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->idpersona]);
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Updates an existing Persona model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($id)
     {
+        $request = Yii::$app->request;
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->idpersona]);
-        }
+        if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            if ($request->isGet) {
+                return [
+                    'title' => 'Editar Persona',
+                    'content' => $this->renderAjax('update', [
+                        'model' => $model,
+                    ]),
+                    'footer' =>
+                    Html::button('Cerrar', [
+                        'id' => 'btnCerrar',
+                        'class' => 'btn btn-default pull-left',
+                        'data-dismiss' => 'modal',
+                    ]) .
+                        Html::button('Guardar', [
+                            'id' => 'btnGuardar',
+                            'class' => 'btn btn-primary',
+                            'type' => 'submit',
+                        ]),
+                ];
+            }
+            else if ($model->load($request->post())) {
+                  $transaction = Yii::$app->db->beginTransaction();
+                  $guardado = true;
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+                  
+                  if ($guardado && $model->save()) {
+                      $transaction->commit();
+
+                      return [
+                          'title' => "Editar Persona",
+                          'content' => '<span class="text-success">Persona Editada Correctamente</span>',
+                          'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                      ];
+                  }
+              }
+              return [
+                  'title' => "Editar Persona Faltan datos!!! Complete Los datos Faltantes!!!",
+                  'content' => $this->renderAjax('create', [
+                      'model' => $model,
+                  ]),
+                  'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                      Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+  
+              ];
+          }
     }
 
     /**

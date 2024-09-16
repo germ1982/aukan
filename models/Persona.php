@@ -41,7 +41,7 @@ class Persona extends \yii\db\ActiveRecord
         return [
             [['documento', 'documento_tipo', 'nacionalidad', 'genero', 'nombre', 'apellido'], 'required'],
             [['documento', 'documento_tipo', 'nacionalidad', 'genero', 'padre', 'conviviente', 'idlocalidad'], 'integer'],
-            [['fecha_nacimiento', 'nombre_apellido', 'fdesde', 'fhasta','idprovincia'], 'safe'],
+            [['fecha_nacimiento', 'nombre_apellido', 'fdesde', 'fhasta', 'idprovincia'], 'safe'],
             [['nombre', 'apellido', 'domicilio'], 'string', 'max' => 100],
             [['domicilio_calle'], 'string', 'max' => 255],
             [['domicilio_numero'], 'string', 'max' => 45],
@@ -78,11 +78,15 @@ class Persona extends \yii\db\ActiveRecord
         $sql = "SELECT 
                     CONCAT_WS(
                         ' ', -- Aquí defines el separador (en este caso un espacio)
-                        COALESCE(v.provincia, ''), 
-                        COALESCE(l.localidad, ''), 
                         COALESCE(p.domicilio_calle, ''), 
                         COALESCE(p.domicilio_numero, ''), 
-                        COALESCE(p.domicilio, '')
+                        COALESCE(p.domicilio, ''),
+                        COALESCE(l.localidad, ''), 
+                        CASE 
+                            WHEN v.provincia IS NOT NULL THEN CONCAT('(', v.provincia, ')')
+                            ELSE '' -- Si la provincia no existe, no muestra nada
+                        END
+                        
                     ) as domicilio 
                 FROM personas p
                 LEFT JOIN localidades l ON p.idlocalidad = l.id

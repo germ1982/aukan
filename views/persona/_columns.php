@@ -136,22 +136,6 @@ return [
     ],
 
 
-    // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'domicilio',
-    // ],
-    // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'domicilio_calle',
-    // ],
-    // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'domicilio_numero',
-    // ],
-    // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'idlocalidad',
-    // ],
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
