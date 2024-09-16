@@ -27,6 +27,7 @@ class Persona extends \yii\db\ActiveRecord
     public $nombre_apellido;
     public $fdesde;
     public $fhasta;
+    public $idprovincia;
     public static function tableName()
     {
         return 'personas';
@@ -40,7 +41,7 @@ class Persona extends \yii\db\ActiveRecord
         return [
             [['documento', 'documento_tipo', 'nacionalidad', 'genero', 'nombre', 'apellido'], 'required'],
             [['documento', 'documento_tipo', 'nacionalidad', 'genero', 'padre', 'conviviente', 'idlocalidad'], 'integer'],
-            [['fecha_nacimiento', 'nombre_apellido', 'fdesde', 'fhasta'], 'safe'],
+            [['fecha_nacimiento', 'nombre_apellido', 'fdesde', 'fhasta','idprovincia'], 'safe'],
             [['nombre', 'apellido', 'domicilio'], 'string', 'max' => 100],
             [['domicilio_calle'], 'string', 'max' => 255],
             [['domicilio_numero'], 'string', 'max' => 45],
