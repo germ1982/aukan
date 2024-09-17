@@ -1,83 +1,100 @@
 <?php
+
+use app\models\Organismo;
 use yii\helpers\Url;
 
+$columna01 = "5%";
+$columna02 = "25%";
+$columna03 = "10%";
+$columna04 = "25%";
+$columna05 = "5%";
+$columna06 = "5%";
+$columna07 = "5%";
+$columna08 = "5%";
+$columna09 = "5%";
+$columna10 = "5%";
+
 return [
+
     /* [
-        'class' => 'kartik\grid\CheckboxColumn',
-        'width' => '20px',
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'iddispositivo',
+        'width' => $columna01,
     ], */
-   /*  [
-        'class' => 'kartik\grid\SerialColumn',
-        'width' => '30px',
-    ], */
-        [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'iddispositivo',
-        'width' => '1%',
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'descripcion',
+        'width' => $columna02,
     ],
     [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'descripcion',
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'alias',
+        'width' => $columna03,
     ],
     [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'idorganismo',
-        'width' => '1%',
-    ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'es_oficial',
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'organismo',
         'value' => function ($model) {
-                  return $model->es_oficial == 1 ? 'Si' : 'No';
-            },
-            'filter' => ['0' => 'No', '1' => ' Si'],
-            'width' => '10%',
+            return Organismo::findOne($model->idorganismo)->descripcion;
+        },
+        'width' => $columna04,
     ],
     [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'es_organismo',
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'es_oficial',
         'value' => function ($model) {
-                  return $model->es_organismo == 1 ? 'Si' : 'No';
-            },
-            'filter' => ['0' => 'No', '1' => ' Si'],
-            'width' => '10%',
+            return $model->es_oficial == 1 ? 'Si' : 'No';
+        },
+        'filter' => ['0' => 'No', '1' => ' Si'],
+        'width' => $columna05,
     ],
-    // [
-        // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'activo',
-    // ],
-    // [
-        // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'direccion',
-    // ],
-    // [
-        // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'alias',
-    // ],
-    // [
-        // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'idcapaitem',
-    // ],
-    // [
-        // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'telefono',
-    // ],
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'es_organismo',
+        'value' => function ($model) {
+            return $model->es_organismo == 1 ? 'Si' : 'No';
+        },
+        'filter' => ['0' => 'No', '1' => ' Si'],
+        'width' => $columna06,
+    ],
+
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'telefono',
+        'width' => $columna07,
+    ],
+
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'activo',
+        'value' => function ($model) {
+            return $model->activo == 1 ? 'Si' : 'No';
+        },
+        'filter' => ['0' => 'No', '1' => ' Si'],
+        'width' => $columna08,
+    ],
+
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
-        'vAlign'=>'middle',
+        'width' => $columna09,
+        'vAlign' => 'middle',
         'template' => '{view} {update} ',
-        'urlCreator' => function($action, $model, $key, $index) { 
-                return Url::to([$action,'id'=>$key]);
+        'urlCreator' => function ($action, $model, $key, $index) {
+            return Url::to([$action, 'id' => $key]);
         },
-        'viewOptions'=>['role'=>'modal-remote','title'=>'View','data-toggle'=>'tooltip'],
-        'updateOptions'=>['role'=>'modal-remote','title'=>'Update', 'data-toggle'=>'tooltip'],
-        'deleteOptions'=>['role'=>'modal-remote','title'=>'Delete', 
-                          'data-confirm'=>false, 'data-method'=>false,// for overide yii data api
-                          'data-request-method'=>'post',
-                          'data-toggle'=>'tooltip',
-                          'data-confirm-title'=>'Are you sure?',
-                          'data-confirm-message'=>'Are you sure want to delete this item'], 
+        'viewOptions' => ['role' => 'modal-remote', 'title' => 'View', 'data-toggle' => 'tooltip'],
+        'updateOptions' => ['role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip'],
+        'deleteOptions' => [
+            'role' => 'modal-remote',
+            'title' => 'Delete',
+            'data-confirm' => false,
+            'data-method' => false, // for overide yii data api
+            'data-request-method' => 'post',
+            'data-toggle' => 'tooltip',
+            'data-confirm-title' => 'Are you sure?',
+            'data-confirm-message' => 'Are you sure want to delete this item'
+        ],
     ],
 
-];   
+];

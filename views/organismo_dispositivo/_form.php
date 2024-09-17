@@ -62,13 +62,13 @@ $organismo = Organismo::findOne($model->idorganismo)
                     <?= $form->field($model, 'direccion')->textInput(['maxlength' => true]) ?>
                 </div>
                 <div class=" col-md-2"style="padding-top:30px;">
-                    <?= $form->field($model,'es_oficial')->checkbox(['checked' => true]) ?>
+                    <?= $form->field($model,'es_oficial')->checkbox(['checked' => $model->isNewRecord ? true : (bool)$model->es_oficial]) ?>
                 </div>
                 <div class=" col-md-2"style="padding-top:30px;">
-                    <?= $form->field($model, 'es_organismo')->checkbox(['checked' => true]) ?>
+                    <?= $form->field($model, 'es_organismo')->checkbox(['checked' => $model->isNewRecord ? true : (bool)$model->es_organismo]) ?>
                 </div>
                 <div class=" col-md-2"style="padding-top:30px;">
-                    <?= $form->field($model, 'activo')->checkbox(['checked' => true]) ?>
+                    <?= $form->field($model, 'activo')->checkbox(['checked' => $model->isNewRecord ? true : (bool)$model->activo]) ?>
                 </div>
                 
             </div>
