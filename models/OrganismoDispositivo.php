@@ -22,9 +22,8 @@ use Yii;
  */
 class OrganismoDispositivo extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
+    public $organismo;
+
     public static function tableName()
     {
         return 'organismo_dispositivo';
@@ -40,6 +39,7 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
             [['idorganismo', 'es_oficial', 'es_organismo', 'activo', 'idcapaitem'], 'integer'],
             [['descripcion', 'direccion', 'alias', 'telefono'], 'string', 'max' => 100],
             [['idorganismo'], 'exist', 'skipOnError' => true, 'targetClass' => Organismo::className(), 'targetAttribute' => ['idorganismo' => 'idorganismo']],
+            [['organismo'], 'safe'],
         ];
     }
 
@@ -49,15 +49,15 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'iddispositivo' => 'Iddispositivo',
+            'iddispositivo' => 'ID',
             'descripcion' => 'Descripcion',
-            'idorganismo' => 'Idorganismo',
+            'idorganismo' => 'Organismo',
             'es_oficial' => 'Es Oficial',
             'es_organismo' => 'Es Organismo',
             'activo' => 'Activo',
             'direccion' => 'Direccion',
             'alias' => 'Alias',
-            'idcapaitem' => 'Idcapaitem',
+            'idcapaitem' => 'Capa',
             'telefono' => 'Telefono',
         ];
     }

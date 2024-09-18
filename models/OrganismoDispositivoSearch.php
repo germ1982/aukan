@@ -12,14 +12,12 @@ use app\models\OrganismoDispositivo;
  */
 class OrganismoDispositivoSearch extends OrganismoDispositivo
 {
-    /**
-     * @inheritdoc
-     */
+    
     public function rules()
     {
         return [
-            [['iddispositivo', 'idorganismo', 'idcapaitem'], 'integer'],
-            [['descripcion', 'es_oficial', 'es_organismo', 'activo', 'direccion', 'alias', 'telefono'], 'safe'],
+            [['iddispositivo', 'idcapaitem'], 'integer'],
+            [['descripcion', 'es_oficial', 'es_organismo', 'activo', 'direccion', 'alias', 'telefono','organismo'], 'safe'],
         ];
     }
 
@@ -45,6 +43,25 @@ class OrganismoDispositivoSearch extends OrganismoDispositivo
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 20,
+            ],
+            'sort' => [
+                'attributes' => [
+                    'descripcion',
+                    'es_oficial',
+                    'es_organismo',
+                    'activo',
+                    'direccion',
+                    'alias',
+                    'telefono',
+                    // Define el ordenamiento para 'organismo'
+                    'organismo' => [
+                        'asc' => ['o.descripcion' => SORT_ASC],
+                        'desc' => ['o.descripcion' => SORT_DESC],
+                    ],
+                ],
+            ],
         ]);
 
         $this->load($params);
@@ -55,19 +72,28 @@ class OrganismoDispositivoSearch extends OrganismoDispositivo
             return $dataProvider;
         }
 
+        $query->leftJoin('organismo', 'organismo_dispositivo.idorganismo = organismo.idorganismo');
+        $query->addSelect([
+            'organismo_dispositivo.*', // Selecciona todos los campos de la tabla persona
+            "organismo.descripcion as organismo"
+        ]);
+
+        
+
         $query->andFilterWhere([
             'iddispositivo' => $this->iddispositivo,
-            'idorganismo' => $this->idorganismo,
+            //'idorganismo' => $this->idorganismo,
             'idcapaitem' => $this->idcapaitem,
         ]);
 
         $query->andFilterWhere(['like', 'descripcion', $this->descripcion])
-            ->andFilterWhere(['like', 'es_oficial', $this->es_oficial])
-            ->andFilterWhere(['like', 'es_organismo', $this->es_organismo])
-            ->andFilterWhere(['like', 'activo', $this->activo])
-            ->andFilterWhere(['like', 'direccion', $this->direccion])
-            ->andFilterWhere(['like', 'alias', $this->alias])
-            ->andFilterWhere(['like', 'telefono', $this->telefono]);
+                ->andFilterWhere(['like', 'es_oficial', $this->es_oficial])
+                ->andFilterWhere(['like', 'es_organismo', $this->es_organismo])
+                ->andFilterWhere(['like', 'activo', $this->activo])
+                ->andFilterWhere(['like', 'direccion', $this->direccion])
+                ->andFilterWhere(['like', 'alias', $this->alias])
+                ->andFilterWhere(['like', 'telefono', $this->telefono])
+                ->andFilterWhere(['like', 'organismo.descripcion', $this->organismo]);
 
         return $dataProvider;
     }

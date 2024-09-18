@@ -14,7 +14,11 @@ $clase = 'organismo-dispositivo-index';
 
 CrudAsset::register($this);
 ?>
-
+<style>
+    .custom-grid {
+    font-size: 13px; /* Cambia el tamaño según tus necesidades */
+}
+</style>
 
 <header class="page-header">
     <h2><?= $this->title ?></h2>
@@ -44,6 +48,7 @@ CrudAsset::register($this);
 
                         <?= GridView::widget([
                             'id' => 'crud-datatable',
+                            'tableOptions' => ['class' => 'custom-grid'],
                             'dataProvider' => $dataProvider,
                             'filterModel' => $searchModel,
                             'pjax' => false,
