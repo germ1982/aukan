@@ -92,7 +92,7 @@ class Inf_ipsController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Crear Nuevo Ip",
+                    'title'=> "Nuevo Ip",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),

@@ -15,11 +15,12 @@ class InfIpsSearch extends InfIps
     /**
      * @inheritdoc
      */
-    public function rules()
+    public $iddispositivo;
+     public function rules()
     {
         return [
             [['idip'], 'integer'],
-            [['ip', 'idempleado'], 'safe'],
+            [['ip', 'idempleado','iddispositivo'], 'safe'],
         ];
     }
 
@@ -60,7 +61,8 @@ class InfIpsSearch extends InfIps
         ]);
 
         $query->andFilterWhere(['like', 'ip', $this->ip])
-            ->andFilterWhere(['like', 'idempleado', $this->idempleado]);
+            ->andFilterWhere(['like', 'idempleado', $this->idempleado])
+            ->andFilterWhere(['like', 'iddispositivo', $this->iddispositivo]);
 
         return $dataProvider;
     }
