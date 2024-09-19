@@ -46,6 +46,22 @@ class InfIpsSearch extends InfIps
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 100,
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'ip' => SORT_ASC,
+                    //'nombre' => SORT_ASC,  // Orden predeterminado por apellido y nombre
+                ],
+                'attributes' => [
+                  'idip',
+                    'ip',
+                    'idempleado',
+                    'iddispositivo',
+
+                ],
+            ],
         ]);
 
         $this->load($params);
@@ -56,13 +72,17 @@ class InfIpsSearch extends InfIps
             return $dataProvider;
         }
 
+        $query->leftJoin('empleado e', 'inf_ips.idempleado = e.idempleado');
+
+
         $query->andFilterWhere([
             'idip' => $this->idip,
+            'e.iddispositivo' => $this->iddispositivo,
         ]);
 
         $query->andFilterWhere(['like', 'ip', $this->ip])
-            ->andFilterWhere(['like', 'idempleado', $this->idempleado])
-            ->andFilterWhere(['like', 'iddispositivo', $this->iddispositivo]);
+            ->andFilterWhere(['like', 'idempleado', $this->idempleado]);
+
 
         return $dataProvider;
     }

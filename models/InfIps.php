@@ -17,7 +17,7 @@ class InfIps extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public $iddispositivo;
+
     public $persona;
     public static function tableName()
     {
@@ -30,7 +30,8 @@ class InfIps extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['ip', 'idempleado' , 'iddispositivo'], 'string', 'max' => 45],
+            [['ip', 'idempleado' ], 'string', 'max' => 45],
+
         ];
     }
     public static function get_empleado($id)

@@ -15,9 +15,10 @@ function campo($titulo, $contenido)
           $contenido
       </p>";
 }
+$model_empleado = Empleado::findOne($model->idempleado);
+$model_persona = Persona::findOne($model_empleado->idpersona);
+$dispositivo = OrganismoDispositivo::get_dispositivo($model_empleado->iddispositivo)
 
-$model_persona = Persona::findOne($model->idpersona);
-$dispositivo = OrganismoDispositivo::get_dispositivo($model->iddispositivo)
 ?>
 
 <style>
@@ -46,39 +47,24 @@ $dispositivo = OrganismoDispositivo::get_dispositivo($model->iddispositivo)
         <div class="col-md-12">
             <div class="row">
                 <div class="col-md-3">
-                    <?= campo('id', "$model->id") ?>
+                    <?= campo('id', "$model->idip") ?>
                 </div>        
              
                 <div class="col-md-3">
-                    <?= campo('Direccion ip',"$model->idip") ?>
+                    <?= campo('Direccion ip',"$model->ip") ?>
                 </div>               
                 
                 <div class="col-md-3">
-                    <?= campo('Dispositivo', "$dispositivo->descripcion") ?>
+                    <?= campo('Empleado', "$model_persona->apellido $model_persona->nombre") ?>
                 </div>
-                
+
                 <div class="col-md-3">
-                    <?= campo('Empleado', "$model_persona->idpersona") ?>
-                </div>
+                    <?= campo('Dispositivo', "$dispositivo->descripcion") ?>
+                </div>                
+                
             </div>    
         </div>
 
             
     </div>
 </div>
-<!-- <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'idip',
-            'ip',
-            'iddispositivo',
-            [
-                'attribute' => 'idempleado',
-                'value' => function ($model) {
-                    $empleado = Empleado::findOne($model->idempleado);
-                    $persona = Persona::findOne($empleado->idpersona);
-                    return "$persona->apellido $persona->nombre";
-                },
-            ],
-        ],
-    ]) ?> -->
