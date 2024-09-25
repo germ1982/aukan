@@ -12,15 +12,19 @@ use Yii;
  * @property int|null $cantidad
  * @property int|null $iddispositivo
  * @property int|null $idempleado
+ * @property int|null $idpersona
  * @property int|null $idestado
- * @property string|null $observacion
+ * @property string|null $observacion 
  * @property int|null $activo
+ * @property int|null $idtipo
  */
 class Inventario extends \yii\db\ActiveRecord
 {
+    public $idpersona;
     /**
      * {@inheritdoc}
      */
+    
     public static function tableName()
     {
         return 'inventario';
@@ -32,7 +36,7 @@ class Inventario extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['idarticulo', 'cantidad', 'iddispositivo', 'idempleado', 'idestado', 'activo'], 'integer'],
+            [['idarticulo', 'cantidad', 'iddispositivo', 'idempleado', 'idestado', 'activo','idpersona'], 'integer'],
             [['observacion'], 'string'],
         ];
     }

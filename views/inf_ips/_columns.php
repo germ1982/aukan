@@ -63,6 +63,7 @@ return [
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
+        'template' => '{view} {update} ',
         'vAlign'=>'middle',
         'width' => '10%',
         'urlCreator' => function($action, $model, $key, $index) { 

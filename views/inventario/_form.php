@@ -5,6 +5,7 @@ use app\models\Articulo;
 use app\models\Configuracion;
 use app\models\Empleado;
 use app\models\OrganismoDispositivo;
+use app\models\ConfiguracionTipo;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -12,42 +13,36 @@ use yii\widgets\ActiveForm;
 /* @var $model app\models\Inventario */
 /* @var $form yii\widgets\ActiveForm */
 
-$array_tipos = Configuracion::find()->where(['activo' => 1, 'id_configuracion_tipo' => 12])->orderBy('descripcion')->all();
+
 ?>
+
 
 <div class="inventario-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
     <div class="row">
-        <div class="col-md-2">
-            <?= $form->field($model, 'idInventario')->textInput() ?>
-        </div>
-        <div class="col-md-8">
+
+        <div class="col-md-10">
             <?= SiteController::actionGet_input_select2($form, $model, 'idarticulo', 'cmb_articulo', Articulo::get_articulos(), 'idarticulo', 'descripcion', 'Articulo', 'seleccione articulo...') ?>
         </div>
-
         <div class="col-md-2">
             <?= $form->field($model, 'cantidad')->textInput() ?>
         </div>
-
-
-
     </div>
+
     <div class="row">
         <div class="col-md-7">
             <?= SiteController::actionGet_input_select2($form, $model, 'iddispositivo', 'cmb_dispositivo', OrganismoDispositivo::get_dispositivos(), 'iddispositivo', 'descripcion', 'Dispositivo', 'seleccione dispositivo...') ?>
         </div>
         <div class="col-md-5">
             <?= SiteController::actionGet_input_select2($form, $model, 'idempleado', 'cmb_empleado', Empleado::get_empleados(), 'idempleado', 'descripcion', 'Empleado', 'seleccione empleado...') ?>
-
         </div>
-
-
     </div>
+
     <div class="row">
         <div class="col-md-6">
-            <?= $form->field($model, 'idestado')->textInput() ?>
+            <?= SiteController::actionGet_input_select2($form, $model, 'idestado', 'cmb_estado', Configuracion::get_configuraciones(ConfiguracionTipo::TIPO_ESTADO_ARTICULO), 'id_configuracion', 'descripcion', 'Estado', 'seleccione estado...') ?>
         </div>
 
         <div class=" col-md-4" style="padding-top:30px;">
@@ -56,17 +51,12 @@ $array_tipos = Configuracion::find()->where(['activo' => 1, 'id_configuracion_ti
 
     </div>
 
-</div class="row">
-<?= $form->field($model, 'observacion')->textarea(['rows' => 6]) ?>
+    <div class="row">
+        <div class="col-md-12">
+            <?= $form->field($model, 'observacion')->textarea(['rows' => 6]) ?>
+        </div>
+    </div>
 </div>
 
-
-<?php if (!Yii::$app->request->isAjax) { ?>
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
-<?php } ?>
 
 <?php ActiveForm::end(); ?>
-
-</div>

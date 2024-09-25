@@ -8,11 +8,16 @@ use yii\bootstrap\Modal;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset;
 
-$this->title = 'Inventarios';
+$this->title = 'Inventario Informatica';
 $this->params['breadcrumbs'][] = $this->title;
 $clase = 'inventario-index';
 
-CrudAsset::register($this);?>
+CrudAsset::register($this);?> 
+<style>
+.custom-grid {
+font-size: 13px; /* Cambia el tamaño según tus necesidades */
+}
+</style>
 
 <header class="page-header">
     <h2><?= $this->title ?></h2>
@@ -44,6 +49,7 @@ CrudAsset::register($this);?>
                             'id' => 'crud-datatable',
                             'dataProvider' => $dataProvider,
                             'filterModel' => $searchModel,
+                            'tableOptions' => ['class' => 'custom-grid'],
                             'pjax' => false,
                             'columns' => require(__DIR__ . '/_columns.php'),
                             'toolbar' => [

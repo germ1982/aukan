@@ -30,7 +30,7 @@ class InfIps extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['ip', 'idempleado' ], 'string', 'max' => 45],
+            [['ip', 'idempleado',  ], 'string', 'max' => 45],
 
         ];
     }
