@@ -44,12 +44,12 @@ class StockInformaticaEgreso extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'idegreso' => 'Idegreso',
+            'idegreso' => 'Nro.',
             'fecha' => 'Fecha',
-            'idpersona_solicitante' => 'Idpersona Solicitante',
-            'idempleado_autorizacion' => 'Idempleado Autorizacion',
-            'idempleado_despacha' => 'Idempleado Despacha',
-            'idpersona_recibe' => 'Idpersona Recibe',
+            'idpersona_solicitante' => 'Solicitante',
+            'idempleado_autorizacion' => 'Autorizacion',
+            'idempleado_despacha' => 'Despachante',
+            'idpersona_recibe' => 'Receptor',
             'observacion' => 'Observacion',
         ];
     }

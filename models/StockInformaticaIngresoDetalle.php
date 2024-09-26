@@ -39,9 +39,9 @@ class StockInformaticaIngresoDetalle extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'iddetalle' => 'Iddetalle',
-            'idingreso' => 'Idingreso',
-            'idarticulo' => 'Idarticulo',
+            'iddetalle' => 'Id',
+            'idingreso' => 'Nro. Ingreso',
+            'idarticulo' => 'Articulo',
             'cantidad' => 'Cantidad',
         ];
     }

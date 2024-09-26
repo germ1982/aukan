@@ -45,12 +45,12 @@ class StockInformaticaIngreso extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'idingreso' => 'Idingreso',
+            'idingreso' => 'Nro.',
             'fecha' => 'Fecha',
-            'idorigen' => 'Idorigen',
-            'origen_referencia' => 'Origen Referencia',
-            'idempleado_recepcion' => 'Idempleado Recepcion',
-            'idusuario_carga' => 'Idusuario Carga',
+            'idorigen' => 'Origen',
+            'origen_referencia' => 'Referencia',
+            'idempleado_recepcion' => 'Receptor',
+            'idusuario_carga' => 'Carga',
             'observacion' => 'Observacion',
         ];
     }
