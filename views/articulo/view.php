@@ -44,7 +44,7 @@ $articulo = Configuracion::findOne($model->idtipo)->descripcion . " " . Configur
         <div class="col-md-8">
             <div class="row">
                 <div class="col-md-12">
-                <?= campo('idarticulo', "$articulo") ?>
+                <?= campo('Articulo', "$articulo") ?>
                 </div>
             </div>
             <div class="row">

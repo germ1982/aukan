@@ -1,13 +1,20 @@
 <?php
 
-use app\models\Organismo;
+
 use app\models\OrganismoDispositivo;
 use app\models\Articulo;
+use app\models\Configuracion;
+use app\models\ConfiguracionTipo;
 use app\models\Empleado;
+use app\models\Persona;
 use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
+$mysql_persona = "SELECT e.idempleado, concat(p.apellido,' ',p.nombre) as persona 
+                        FROM empleado e join personas p on e.idpersona = p.idpersona
+                        where e.activo = 1
+                        order by p.apellido, p.nombre";
 
 return [
 
@@ -54,40 +61,46 @@ return [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'idempleado',
         'value' => function ($model) {
-            $idempleado = $model->idempleado;
-            $empleado = Empleado::get_empleado($idempleado);
-            return   "$empleado->descripcion";
+            $id = $model->idempleado;
+            $empleado=Empleado::findOne($id);
+            if ($id != null) {
+                $persona = Persona::findOne($empleado->idpersona);               
+               
+                return "$persona->apellido $persona->nombre";
+            }
+            return "";
         },
         'filterType' => GridView::FILTER_SELECT2,
-        //'filter' => ArrayHelper::map(OrganismoDispositivo::find()->orderBy(['descripcion' => SORT_ASC])->all(), 'iddispositivo', 'descripcion'),
-        'filter' => ArrayHelper::map(Empleado::get_empleados('inventario'), 'idempleado', 'descripcion'),
+        'filter' => ArrayHelper::map(Persona::findBySql($mysql_persona)->all(), 'idpersona', 'nombre', 'apellido'),
         'filterWidgetOptions' => [
             'pluginOptions' => ['allowClear' => true],
         ],
-        'filterInputOptions' => ['placeholder' => 'empleado...'],
+        'filterInputOptions' => ['placeholder' => 'Empleado...'],
         'format' => 'raw',
-        'width' => '25%',
+        'width' => '30%',
     ],
-   /*  [
+    [
         'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'idempleado',
-        'width' => '25%',
-    ], */
-    // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'idestado',
-    // ],
-    // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'observacion',
-    // ],
-    // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'activo',
-    // ],
+        'attribute' => 'idestado',
+        'value' => function ($model) {
+            if($model->idestado){
+            $estado = Configuracion::findOne($model->idestado);
+            return   "$estado->descripcion";}
+            return "";
+        },
+        'filterType' => GridView::FILTER_SELECT2,
+        'filter' => ArrayHelper::map(Configuracion::get_configuraciones(ConfiguracionTipo::TIPO_ESTADO_ARTICULO), 'id_configuracion', 'descripcion'),
+        'filterWidgetOptions' => [
+            'pluginOptions' => ['allowClear' => true],
+        ],
+        'filterInputOptions' => ['placeholder' => 'estado...'],
+        'format' => 'raw',
+        'width' => '30%',
+    ],
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
+        'template' => '{view} {update} ',
         'width' => '10%',
         'vAlign' => 'middle',
         'urlCreator' => function ($action, $model, $key, $index) {
