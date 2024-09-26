@@ -19,6 +19,10 @@
     border-color: darkgrey !important;
 }
 
+.custom-grid {
+    font-size: 13px!important; /* Cambia el tamaño según tus necesidades */
+}
+
 .modal-header {
 background: linear-gradient(135deg, #6b8cff 0%, #89f7fe 100%);
 color: white;

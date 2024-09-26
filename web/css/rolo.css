@@ -23,6 +23,10 @@
     border-color: darkgrey !important;
 }
 
+.custom-grid {
+    font-size: 13px!important; /* Cambia el tamaño según tus necesidades */
+}
+
 
 
 .modal-header {

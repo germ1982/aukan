@@ -19,8 +19,13 @@ CrudAsset::register($this);
     .custom-grid {
     font-size: 13px; /* Cambia el tamaño según tus necesidades */
 }
-</style>
 
+.kv-grid-toolbar .btn {
+    height: 30px;  /* Ajusta la altura de todos los botones */
+    line-height: 1.42857143;  /* Esto centra el contenido verticalmente */
+}
+
+</style>
 
 
 <header class="page-header">

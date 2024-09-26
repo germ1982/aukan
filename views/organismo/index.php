@@ -15,7 +15,17 @@ $clase = 'organismo-index';
 CrudAsset::register($this);
 ?>
 
+<style>
+    .custom-grid {
+    font-size: 13px; /* Cambia el tamaño según tus necesidades */
+}
 
+.kv-grid-toolbar .btn {
+    height: 30px;  /* Ajusta la altura de todos los botones */
+    line-height: 1.42857143;  /* Esto centra el contenido verticalmente */
+}
+
+</style>
 <header class="page-header">
     <h2><?= $this->title ?></h2>
 
