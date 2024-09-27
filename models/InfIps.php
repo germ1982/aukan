@@ -30,7 +30,8 @@ class InfIps extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['ip', 'idempleado',  ], 'string', 'max' => 45],
+            [['ip', 'observacion'], 'string', 'max' => 45],
+            [['idempleado', 'idoficina'], 'integer'],
 
         ];
     }
@@ -65,7 +66,9 @@ class InfIps extends \yii\db\ActiveRecord
             'idip' => 'ID',
             'ip' => 'Direccion Ip',
             'idempleado' => 'Empleado',
-            'iddispositivo'=> 'Dispositivo'
+            'iddispositivo'=> 'Dispositivo',
+            'idoficina'=> 'Oficina',
+            'activo' => 'Activo'
         ];
     }
 }

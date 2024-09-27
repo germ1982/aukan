@@ -19,8 +19,8 @@ class InfIpsSearch extends InfIps
      public function rules()
     {
         return [
-            [['idip'], 'integer'],
-            [['ip', 'idempleado','iddispositivo'], 'safe'],
+            [['idip','idoficina'], 'integer'],
+            [['ip', 'idempleado','iddispositivo','observacion'], 'safe'],
         ];
     }
 
@@ -51,7 +51,7 @@ class InfIpsSearch extends InfIps
             ],
             'sort' => [
                 'defaultOrder' => [
-                    'ip' => SORT_ASC,
+                    'idip' => SORT_ASC,
                     //'nombre' => SORT_ASC,  // Orden predeterminado por apellido y nombre
                 ],
                 'attributes' => [
@@ -59,6 +59,8 @@ class InfIpsSearch extends InfIps
                     'ip',
                     'idempleado',
                     'iddispositivo',
+                    'idoficina',
+                    'observacion',
 
                 ],
             ],
@@ -77,6 +79,7 @@ class InfIpsSearch extends InfIps
 
         $query->andFilterWhere([
             'idip' => $this->idip,
+            'idoficina' => $this->idoficina,
             'e.iddispositivo' => $this->iddispositivo,
         ]);
 

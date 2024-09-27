@@ -1,6 +1,6 @@
 <?php
 
-use app\models\InfIps;
+use app\models\Persona;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
@@ -8,13 +8,12 @@ use yii\bootstrap\Modal;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset;
 
-$this->title = 'Registro Ip';
+$this->title = 'Oficinas';
 $this->params['breadcrumbs'][] = $this->title;
-$clase = 'inf_ips-index';
+$clase = 'oficina-index';
 
 CrudAsset::register($this);
 ?>
-
 
 <style>
     .custom-grid {
@@ -27,7 +26,6 @@ CrudAsset::register($this);
 }
 
 </style>
-
 
 <header class="page-header">
     <h2><?= $this->title ?></h2>
@@ -57,8 +55,8 @@ CrudAsset::register($this);
 
                         <?= GridView::widget([
                             'id' => 'crud-datatable',
-                            'tableOptions' => ['class' => 'custom-grid'],
                             'dataProvider' => $dataProvider,
+                            'tableOptions' => ['class' => 'custom-grid'],
                             'filterModel' => $searchModel,
                             'pjax' => false,
                             'columns' => require(__DIR__ . '/_columns.php'),
