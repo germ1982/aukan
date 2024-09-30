@@ -10,6 +10,7 @@ use app\models\Organismo;
 use app\models\OrganismoDispositivo;
 use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 $mysql_sectores = "SELECT d.iddispositivo as iddispositivo, concat(o.abreviatura,' - ', d.descripcion) as descripcion 
                     from organismo o 
@@ -117,7 +118,7 @@ return [
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
-        'template' => '{view} {update} ',
+        'template' => '{view} {update} {liberar}',
         'vAlign' => 'middle',
         'width' => $columna7,
         'urlCreator' => function ($action, $model, $key, $index) {
@@ -134,6 +135,23 @@ return [
             'data-toggle' => 'tooltip',
             'data-confirm-title' => 'Are you sure?',
             'data-confirm-message' => 'Are you sure want to delete this item'
+        ],
+        'buttons' => [
+
+            'liberar' => function ($url, $model) {
+                $url =  Url::to(['/inf_ips/liberar_ip', 'id' => $model->idip]);
+
+                return $model->idoficina==null ? '' : Html::a(
+                    '<i class="fas fa-recycle"></i>',
+                    $url,
+                    ['data-pjax' => 1, 
+                    'class' => '', 
+                    'role' => 'modal-remote',
+                    'title' => 'liberar Ip']
+                );
+
+            },
+            
         ],
     ],
 

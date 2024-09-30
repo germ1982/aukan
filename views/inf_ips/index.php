@@ -18,7 +18,7 @@ CrudAsset::register($this);
 
 <style>
     .custom-grid {
-    font-size: 13px; /* Cambia el tamaño según tus necesidades */
+    font-size: 12px; /* Cambia el tamaño según tus necesidades */
 }
 
 .kv-grid-toolbar .btn {
@@ -58,6 +58,12 @@ CrudAsset::register($this);
                         <?= GridView::widget([
                             'id' => 'crud-datatable',
                             'tableOptions' => ['class' => 'custom-grid'],
+                            'rowOptions' => function($model,$key,$index,$widget) {
+                                //$pagado = $this->recalcular_importe_pagado($model->idcompra);
+                                //if($model->importe_pagado < $model->importe)
+                                    //{return ['style' => 'background-color: pink'];}
+                                
+                            },
                             'dataProvider' => $dataProvider,
                             'filterModel' => $searchModel,
                             'pjax' => false,
