@@ -23,6 +23,8 @@ $mysql_oficinas = "SELECT o.idoficina, concat(e.descripcion_fija, ' - ' ,o.descr
                     where o.activo = 1
                     order by e.descripcion_fija, o.descripcion";
 
+                
+
 $columna1 = "4%";
 $columna2 = "8%";
 $columna3 = "18%";

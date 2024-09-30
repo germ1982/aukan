@@ -99,7 +99,7 @@ $dispositivo = OrganismoDispositivo::get_dispositivo($model->iddispositivo)
             <?= campo('Categoria', Configuracion::findOne($model->categoria)->descripcion) ?>
         </div>
         <div class="col-md-3">
-            <?= campo('Ingreso Administrativo', date_format(date_create($model_persona->fecha_nacimiento), 'd/m/Y')) ?>
+            <?= campo('Ingreso Administrativo', date_format(date_create($model->ingreso_administrativo), 'd/m/Y')) ?>
         </div>
         <div class="col-md-3">
             <?= campo('Antiguedad Legal', "$model->antiguedad_legal") ?>
@@ -112,7 +112,7 @@ $dispositivo = OrganismoDispositivo::get_dispositivo($model->iddispositivo)
 
 
         <div class="col-md-3">
-            <?= campo('Ingreso Real', date_format(date_create($model_persona->fecha_nacimiento), 'd/m/Y')) ?>
+            <?= campo('Ingreso Real', date_format(date_create($model->ingreso_real), 'd/m/Y')) ?>
         </div>
         <div class="col-md-2">
             <?= campo('Antiguedad Real', "$model->antiguedad_total") ?>

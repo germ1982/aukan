@@ -178,6 +178,16 @@ class EmpleadoController extends Controller
                 $transaction = Yii::$app->db->beginTransaction();
                 $guardado = true;
 
+                $ingreso_real = ArmarDateParaMySql($model->ingreso_real);
+                $ingreso_real = date_create($ingreso_real);
+                $ingreso_real = date_format($ingreso_real, 'Y-m-d');
+                $model->ingreso_real = $ingreso_real;
+
+                $ingreso_administrativo = ArmarDateParaMySql($model->ingreso_administrativo);
+                $ingreso_administrativo = date_create($ingreso_administrativo);
+                $ingreso_administrativo = date_format($ingreso_administrativo, 'Y-m-d');
+                $model->ingreso_administrativo = $ingreso_administrativo;
+
                 if ($model->idpersona == null) $guardado = false;
 
                 //Aca comienza el proceso de guardado de la imagen:
@@ -287,4 +297,13 @@ class EmpleadoController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+}
+
+function ArmarDateParaMySql($Fecha)
+{
+    $anio = substr($Fecha, 6, 4);
+    $mes  = substr($Fecha, 3, 2);
+    $dia = substr($Fecha, 0, 2);
+    $DT = "$anio-$mes-$dia";
+    return $DT;
 }

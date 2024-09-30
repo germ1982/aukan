@@ -32,7 +32,8 @@ if (isset($model->foto)) {
         Html::img($imagePath, ['class' => 'file-preview-image', 'alt' => 'Foto', 'title' => $model->foto, 'width' => '100%', 'height' => 'auto']),
     ];
 }
-
+$model->ingreso_administrativo = date('d/m/Y', strtotime($model->ingreso_administrativo));
+$model->ingreso_real = date('d/m/Y', strtotime($model->ingreso_real));
 ?>
 <style>
     .file-drop-zone {

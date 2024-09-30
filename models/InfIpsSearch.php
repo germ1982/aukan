@@ -75,6 +75,7 @@ class InfIpsSearch extends InfIps
         }
 
         $query->leftJoin('empleado e', 'inf_ips.idempleado = e.idempleado');
+        $query->leftJoin('personas p', 'e.idpersona = p.idpersona');
 
 
         $query->andFilterWhere([
@@ -84,7 +85,8 @@ class InfIpsSearch extends InfIps
         ]);
 
         $query->andFilterWhere(['like', 'ip', $this->ip])
-            ->andFilterWhere(['like', 'idempleado', $this->idempleado]);
+            ->andFilterWhere(['like', 'p.nombre', $this->idempleado])
+            ->orFilterWhere(['like', 'p.apellido', $this->idempleado]);
 
 
         return $dataProvider;
