@@ -16,7 +16,7 @@ CrudAsset::register($this);
 ?>
 <style>
     .custom-grid {
-    font-size: 13px; /* Cambia el tamaño según tus necesidades */
+    font-size: 12px; /* Cambia el tamaño según tus necesidades */
 }
 
 .kv-grid-toolbar .btn {

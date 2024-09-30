@@ -35,8 +35,8 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['descripcion', 'idorganismo', 'direccion', 'alias'], 'required'],
-            [['idorganismo', 'es_oficial', 'es_organismo', 'activo', 'idcapaitem'], 'integer'],
+            [['descripcion', 'idorganismo', 'direccion', 'alias','idoficina'], 'required'],
+            [['idorganismo', 'es_oficial', 'es_organismo', 'activo', 'idcapaitem','idoficina'], 'integer'],
             [['descripcion', 'direccion', 'alias', 'telefono'], 'string', 'max' => 100],
             [['idorganismo'], 'exist', 'skipOnError' => true, 'targetClass' => Organismo::className(), 'targetAttribute' => ['idorganismo' => 'idorganismo']],
             [['organismo'], 'safe'],
@@ -59,6 +59,7 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
             'alias' => 'Alias',
             'idcapaitem' => 'Capa',
             'telefono' => 'Telefono',
+            'idoficina' => 'Oficina',
         ];
     }
 

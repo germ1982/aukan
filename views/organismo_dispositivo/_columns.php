@@ -1,5 +1,6 @@
 <?php
 
+use app\models\EdificioOficina;
 use app\models\Organismo;
 use yii\helpers\Url;
 
@@ -33,12 +34,32 @@ return [
     ],
     [
         'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'idoficina',
+        'value' => function ($model) {
+            $id = $model->idoficina;
+            if ($id != null) {
+                $tipo = EdificioOficina::findOne($id);
+                return "$tipo->descripcion";
+            }
+            return "";
+        },
+        'filterType' => GridView::FILTER_SELECT2,
+        'filter' => ArrayHelper::map(, 'id_configuracion', 'descripcion'),
+        'filterWidgetOptions' => [
+            'pluginOptions' => ['allowClear' => true],
+        ],
+        'filterInputOptions' => ['placeholder' => 'Tipo de Dato...'],
+        'format' => 'raw',
+        'width' => $columna4,
+    ],
+    /* [
+        'class' => '\kartik\grid\DataColumn',
         'attribute' => 'organismo',
         'value' => function ($model) {
             return Organismo::findOne($model->idorganismo)->descripcion;
         },
         'width' => $columna04,
-    ],
+    ], */
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'es_oficial',
