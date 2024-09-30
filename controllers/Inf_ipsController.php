@@ -247,4 +247,25 @@ class Inf_ipsController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+    public function actionLiberar_ip($id)
+    {
+        $request = Yii::$app->request;
+        $model = $this->findModel($id);       
+        $model->idempleado = null;
+        $model->idoficina = null;
+        $model->observacion = null;
+        $model->save();
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return [
+            //'forceReload'=>'#crud-datatable-pjax',
+            'title'=> "Liberar Ip: ".$model->ip,
+            'content'=>"Se liberó Ip: $model->ip",
+            //'content'=>$this->renderAjax('view', ['model' => $model,]),
+            'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"])
+                    //Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+        ];  
+
+    }
 }
