@@ -13,9 +13,9 @@ $mysql_oficinas = "SELECT o.idoficina as idoficina,
                     JOIN edificio e on o.idedificio = e.idedificio";
 
 $columna01 = "5%";
-$columna02 = "20%";
+$columna02 = "25%";
 $columna03 = "10%";
-$columna04 = "30%";
+$columna04 = "25%";
 $columna05 = "5%";
 $columna06 = "5%";
 $columna07 = "5%";
