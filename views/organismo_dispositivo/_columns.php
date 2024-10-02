@@ -1,13 +1,21 @@
 <?php
 
+use app\models\Edificio;
 use app\models\EdificioOficina;
 use app\models\Organismo;
+use kartik\grid\GridView;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
+$mysql_oficinas = "SELECT o.idoficina as idoficina,
+                    CONCAT(e.descripcion_fija,' - ', e.descripcion_gestion,' - ', o.descripcion) as descripcion
+                    FROM edificio_oficina o
+                    JOIN edificio e on o.idedificio = e.idedificio";
+
 $columna01 = "5%";
-$columna02 = "25%";
+$columna02 = "20%";
 $columna03 = "10%";
-$columna04 = "25%";
+$columna04 = "30%";
 $columna05 = "5%";
 $columna06 = "5%";
 $columna07 = "5%";
@@ -38,19 +46,20 @@ return [
         'value' => function ($model) {
             $id = $model->idoficina;
             if ($id != null) {
-                $tipo = EdificioOficina::findOne($id);
-                return "$tipo->descripcion";
+                $oficina = EdificioOficina::findOne($id);
+                $edificio = Edificio::findOne($oficina->idedificio);
+                return "$edificio->descripcion_fija - $edificio->descripcion_gestion - $oficina->descripcion";
             }
             return "";
         },
         'filterType' => GridView::FILTER_SELECT2,
-        'filter' => ArrayHelper::map(, 'id_configuracion', 'descripcion'),
+        'filter' => ArrayHelper::map(EdificioOficina::findBySql($mysql_oficinas)->all(), 'idoficina', 'descripcion'),
         'filterWidgetOptions' => [
             'pluginOptions' => ['allowClear' => true],
         ],
         'filterInputOptions' => ['placeholder' => 'Tipo de Dato...'],
         'format' => 'raw',
-        'width' => $columna4,
+        'width' => $columna04,
     ],
     /* [
         'class' => '\kartik\grid\DataColumn',

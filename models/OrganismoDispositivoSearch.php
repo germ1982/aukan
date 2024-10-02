@@ -16,7 +16,7 @@ class OrganismoDispositivoSearch extends OrganismoDispositivo
     public function rules()
     {
         return [
-            [['iddispositivo', 'idcapaitem'], 'integer'],
+            [['iddispositivo', 'idcapaitem','idoficina'], 'integer'],
             [['descripcion', 'es_oficial', 'es_organismo', 'activo', 'direccion', 'alias', 'telefono','organismo'], 'safe'],
         ];
     }
@@ -55,6 +55,7 @@ class OrganismoDispositivoSearch extends OrganismoDispositivo
                     'direccion',
                     'alias',
                     'telefono',
+                    'idoficina',
                     // Define el ordenamiento para 'organismo'
                     'organismo' => [
                         'asc' => ['o.descripcion' => SORT_ASC],
@@ -82,7 +83,7 @@ class OrganismoDispositivoSearch extends OrganismoDispositivo
 
         $query->andFilterWhere([
             'iddispositivo' => $this->iddispositivo,
-            //'idorganismo' => $this->idorganismo,
+            'idoficina' => $this->idoficina,
             'idcapaitem' => $this->idcapaitem,
         ]);
 
