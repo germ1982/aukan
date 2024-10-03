@@ -1,6 +1,9 @@
 <?php
 
 use app\controllers\SiteController;
+use app\models\Configuracion;
+use app\models\ConfiguracionTipo;
+use app\models\Empleado;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -15,14 +18,14 @@ $model->fecha = date('d/m/Y', strtotime($model->fecha));
             <?= SiteController::actionGet_input_fecha($form, $model, 'fecha', 'fecha', 'Fecha') ?>
         </div>
         <div class="col-md-6">
-            <?= $form->field($model, 'idempleado_recepcion')->textInput() ?>
+            <?= SiteController::actionGet_input_select2($form,$model,'idempleado_recepcion','cmb_idempleado_recepcion',Empleado::get_empleados(),'idempleado','descripcion','Recepcion')?>
         </div>
 
     </div>
 
     <div class="row">
         <div class="col-md-4">
-            <?= $form->field($model, 'idorigen')->textInput() ?>
+        <?= SiteController::actionGet_input_select2($form,$model,'idorigen','cmb_idorigen',Configuracion::get_configuraciones(ConfiguracionTipo::STOCK_ORIGEN),'id_configuracion','descripcion','Origen')?>
         </div>
         <div class="col-md-8">
             <?= $form->field($model, 'origen_referencia')->textInput(['maxlength' => true]) ?>
