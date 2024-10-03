@@ -41,7 +41,7 @@ if (isset($model->plano_ubicacion)) {
         </div>
         <div class="row">
             <div class="col-md-12">
-                <?= $form->field($model, 'activo')->checkbox(['checked' => true]) ?>
+                <?= $form->field($model, 'activo')->checkbox(['checked' => $model->isNewRecord ? true : (bool)$model->activo]) ?>
             </div>
         </div>
 

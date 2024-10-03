@@ -98,7 +98,7 @@ if (isset($model->fotos) && !empty($model->fotos)) {
                               <?= SiteController::actionGet_input_select2($form, $model, 'iddispositivo', 'cmb_dispositivos', OrganismoDispositivo::get_dispositivos(), 'iddispositivo', 'descripcion', 'Sector', 'Seleccione Sector...') ?>
                         </div>
                         <div class="col-md-2" style="padding-top:30px;">
-                              <?= $form->field($model, 'activo')->checkbox(['checked' => true]) ?>
+                              <?= $form->field($model, 'activo')->checkbox(['checked' => $model->isNewRecord ? true : (bool)$model->activo]) ?>
                         </div>
                   </div>
 

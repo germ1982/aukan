@@ -47,7 +47,7 @@ foreach ($array_iconos as $icon) {
                   <?= $form->field($model, 'orden')->textInput() ?>
             </div>
             <div class="col-md-2" style="padding-top:30px;">
-                  <?= $form->field($model, 'activo')->checkbox(['checked' => true]) ?>
+                  <?= $form->field($model, 'activo')->checkbox(['checked' => $model->isNewRecord ? true : (bool)$model->activo]) ?>
             </div>
             <div class="col-md-4" id="children_list">
 

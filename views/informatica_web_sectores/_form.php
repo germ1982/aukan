@@ -28,7 +28,7 @@ use yii\widgets\ActiveForm;
                               <?= $form->field($model, 'alto_foto')->textInput() ?>
                         </div>
                         <div class="col-md-4" style="padding-top:30px;">
-                              <?= $form->field($model, 'activo')->checkbox(['checked' => true]) ?>
+                              <?= $form->field($model, 'activo')->checkbox(['checked' => $model->isNewRecord ? true : (bool)$model->activo]) ?>
                         </div>
 
                   </div>

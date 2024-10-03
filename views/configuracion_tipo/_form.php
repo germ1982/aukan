@@ -17,7 +17,7 @@ use yii\widgets\ActiveForm;
 			<?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
 		</div>
 		<div class="col-md-2" style="padding-top:30px;">
-			<?= $form->field($model, 'activo')->checkbox(['checked' => true]) ?>
+			<?= $form->field($model, 'activo')->checkbox(['checked' => $model->isNewRecord ? true : (bool)$model->activo]) ?>
 		</div>
 
 	</div>

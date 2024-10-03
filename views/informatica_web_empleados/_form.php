@@ -4,6 +4,7 @@ use app\controllers\SiteController;
 use app\models\Empleado;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+$model->activo = $model->isNewRecord ? true :(bool)$model->activo;
 ?>
 
 <div class="informatica-web-empleados-form">
@@ -20,7 +21,7 @@ use yii\widgets\ActiveForm;
                               <?= $form->field($model, 'orden')->textInput() ?>
                         </div>
                         <div class="col-md-2" style="padding-top:30px;">
-                              <?= $form->field($model, 'activo')->checkbox(['checked' => true]) ?>
+                              <?= $form->field($model, 'activo')->checkbox(['checked' => $model->isNewRecord ? true : (bool)$model->activo]) ?>
                         </div>
                   </div>
 

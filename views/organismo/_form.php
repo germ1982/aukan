@@ -35,7 +35,7 @@ $organismo = Organismo::findOne($model->abreviatura)
                     <?= $form->field($model, 'abreviatura')->textInput(['maxlength' => true]) ?>
                 </div>
                 <div class=" col-md-2"style="padding-top:30px;">
-                    <?= $form->field($model, 'activo')->checkbox(['checked' => true]) ?>
+                    <?= $form->field($model, 'activo')->checkbox(['checked' => $model->isNewRecord ? true : (bool)$model->activo]) ?>
                 </div>
                 <div class=" col-md-2">
                     <?= $form->field($model, 'nivel')->textInput() ?>

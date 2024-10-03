@@ -80,7 +80,7 @@ $array_unidad_de_medida = Configuracion::find()->where(['activo' => 1, 'id_confi
                     <?= SiteController::actionGet_input_select2($form, $model, 'id_unidad_medida', 'cmb_tipo_unidad_de_medida', $array_unidad_de_medida, 'id_configuracion', 'descripcion', 'Unidad_de_Medida', 'seleccione unidad...') ?>
                 </div>
                 <div class=" col-md-4" style="padding-top:30px;">
-                    <?= $form->field($model, 'activo')->checkbox(['checked' => true]) ?>
+                    <?= $form->field($model, 'activo')->checkbox(['checked' => $model->isNewRecord ? true : (bool)$model->activo]) ?>
                 </div>
 
             </div>
