@@ -104,7 +104,7 @@ class Empleado extends \yii\db\ActiveRecord
     {
         $sql = "SELECT  e.idempleado,concat( p.apellido ,' ', p.nombre) as descripcion
                 from empleado e 
-                join persona p on p.idpersona = e.idpersona
+                join personas p on p.idpersona = e.idpersona
                 where e.activo=1 and e.idempleado = $id";
         $empleado = Empleado::findBySql($sql)->one();
         return $empleado;

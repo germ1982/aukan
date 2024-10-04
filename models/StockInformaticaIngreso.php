@@ -17,9 +17,8 @@ use Yii;
  */
 class StockInformaticaIngreso extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
+    public $fdesde;
+    public $fhasta;
     public static function tableName()
     {
         return 'stock_informatica_ingreso';
@@ -32,7 +31,7 @@ class StockInformaticaIngreso extends \yii\db\ActiveRecord
     {
         return [
             [['fecha', 'idorigen', 'idempleado_recepcion', 'idusuario_carga'], 'required'],
-            [['fecha'], 'safe'],
+            [['fecha', 'fdesde', 'fhasta'], 'safe'],
             [['idorigen', 'idempleado_recepcion', 'idusuario_carga'], 'integer'],
             [['origen_referencia'], 'string', 'max' => 100],
             [['observacion'], 'string', 'max' => 45],
@@ -48,7 +47,7 @@ class StockInformaticaIngreso extends \yii\db\ActiveRecord
             'idingreso' => 'Nro.',
             'fecha' => 'Fecha',
             'idorigen' => 'Origen',
-            'origen_referencia' => 'Referencia',
+            'origen_referencia' => 'Referencia Origen',
             'idempleado_recepcion' => 'Receptor',
             'idusuario_carga' => 'Carga',
             'observacion' => 'Observacion',
