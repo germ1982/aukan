@@ -54,9 +54,9 @@
 
       <div class="col-md-10">
 
-            <div class="titulo"><?= $nombre ?> - <?= $funcion ?></div>
+            <div class="titulo" style="font-size: 20px"><?= $nombre ?> - <?= $funcion ?></div>
 
-            <div class="descripcion"><?= $descripcion ?></div>
+            <div class="descripcion" style="font-size: 14px;"><?= $descripcion ?></div>
 
       </div>
 </div><br>
