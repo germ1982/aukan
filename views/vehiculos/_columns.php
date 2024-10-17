@@ -1,5 +1,9 @@
 <?php
+
+use app\models\Configuracion;
 use yii\helpers\Url;
+use app\models\Persona;
+use app\models\Empleado;
 
 return [
  /*    [
@@ -14,9 +18,22 @@ return [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'idvehiculo',
     ],
-    [
+    /* [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'idempleado',
+    ], */
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'idempleado',
+        'value' => function ($model) {
+            if ($model->idempleado) {
+                $empleado = Empleado::findOne($model->idempleado);
+                $persona = Persona::findOne($empleado->idpersona);
+                return "$persona->apellido $persona->nombre";
+            }
+            return "";
+        },
+        
     ],
    /*  [
         'class'=>'\kartik\grid\DataColumn',
@@ -27,9 +44,22 @@ return [
         'attribute'=>'dominio',
     ],
     [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'idmarca',        
+        'value' => function ($model) {
+            $id = $model->idmarca;
+            if ($id != null) {
+                $tipo = Configuracion::findOne($id);
+                return "$tipo->descripcion";
+            }
+            return "";
+        },
+        
+    ],
+    /* [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'idmarca',
-    ],
+    ], */
     // [
         // 'class'=>'\kartik\grid\DataColumn',
         // 'attribute'=>'modelo',
