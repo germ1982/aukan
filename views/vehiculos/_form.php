@@ -63,7 +63,7 @@ use app\models\Empleado;
                     <?= SiteController::actionGet_input_select2($form, $model, 'idempleado', 'cmb_empleado', Empleado::get_empleados(), 'idempleado', 'descripcion', 'Empleado', 'seleccione empleado...') ?>
                 </div>
                 <div class=" col-md-3">
-                    <?= $form->field($model, 'vehiculo_oficial')->checkbox(['checked' => $model->isNewRecord ? true : (bool)$model->activo]) ?>
+                    <?= $form->field($model, 'vehiculo_oficial')->textInput(['maxlength' => true]) ?>
                 </div>
             </div>
         </div>
