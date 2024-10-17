@@ -3,9 +3,9 @@
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Automotores */
+/* @var $model app\models\Vehiculos */
 ?>
-<div class="automotores-view">
+<div class="vehiculos-view">
  
     <?= DetailView::widget([
         'model' => $model,

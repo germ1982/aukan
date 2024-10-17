@@ -2,14 +2,14 @@
 use yii\helpers\Url;
 
 return [
-    [
+ /*    [
         'class' => 'kartik\grid\CheckboxColumn',
         'width' => '20px',
     ],
     [
         'class' => 'kartik\grid\SerialColumn',
         'width' => '30px',
-    ],
+    ], */
         [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'idvehiculo',
@@ -18,10 +18,10 @@ return [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'idempleado',
     ],
-    [
+   /*  [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'idpersona',
-    ],
+    ], */
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'dominio',
@@ -49,6 +49,7 @@ return [
         'urlCreator' => function($action, $model, $key, $index) { 
                 return Url::to([$action,'id'=>$key]);
         },
+        'template' => '{view} {update} ',
         'viewOptions'=>['role'=>'modal-remote','title'=>'View','data-toggle'=>'tooltip'],
         'updateOptions'=>['role'=>'modal-remote','title'=>'Update', 'data-toggle'=>'tooltip'],
         'deleteOptions'=>['role'=>'modal-remote','title'=>'Delete', 
