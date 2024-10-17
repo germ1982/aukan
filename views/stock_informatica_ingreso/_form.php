@@ -61,9 +61,9 @@ $model->fecha = $model->isNewRecord ? date('d/m/Y') : date('d/m/Y', strtotime($m
     <div class="col-md-12">
         <section>
             <header>
-                <h3 >
+                <h5 >
                     Agregar Item
-                </h3>
+                </h5>
             </header>
             <div class="panel-body">
                 <?php
