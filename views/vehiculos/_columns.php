@@ -4,47 +4,19 @@ use app\models\Configuracion;
 use yii\helpers\Url;
 use app\models\Persona;
 use app\models\Empleado;
+use app\models\OrganismoDispositivo;
 
 return [
- /*    [
-        'class' => 'kartik\grid\CheckboxColumn',
-        'width' => '20px',
-    ],
-    [
-        'class' => 'kartik\grid\SerialColumn',
-        'width' => '30px',
-    ], */
+ 
         [
         'class'=>'\kartik\grid\DataColumn',
+        'width' => '1px',
         'attribute'=>'idvehiculo',
-    ],
-    /* [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'idempleado',
-    ], */
+    ],  
+    
     [
         'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'idempleado',
-        'value' => function ($model) {
-            if ($model->idempleado) {
-                $empleado = Empleado::findOne($model->idempleado);
-                $persona = Persona::findOne($empleado->idpersona);
-                return "$persona->apellido $persona->nombre";
-            }
-            return "";
-        },
-        
-    ],
-   /*  [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'idpersona',
-    ], */
-    [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'dominio',
-    ],
-    [
-        'class' => '\kartik\grid\DataColumn',
+        'width' => '100px',
         'attribute' => 'idmarca',        
         'value' => function ($model) {
             $id = $model->idmarca;
@@ -56,24 +28,38 @@ return [
         },
         
     ],
-    /* [
+   
+    [
         'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'idmarca',
-    ], */
-    // [
-        // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'modelo',
-    // ],
-    // [
-        // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'color',
-    // ],
-    // [
-        // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'vehiculo_oficial',
-    // ],
+        'width' => '5px',
+        'attribute'=>'dominio',
+    ],
+    
+    [
+        'class'=>'\kartik\grid\DataColumn',
+        'width' => '10px',
+        'attribute'=>'color',
+    ],
+
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'width' => '200px',
+        'attribute' => 'idempleado',
+        'value' => function ($model) {
+            if ($model->idempleado) {
+                $empleado = Empleado::findOne($model->idempleado);
+                $sector = OrganismoDispositivo::get_dispositivo($empleado->iddispositivo);
+                $persona = Persona::findOne($empleado->idpersona);
+                return "$persona->apellido $persona->nombre - $sector->descripcion - $empleado->telefono";
+            }
+            return "";
+        },
+        
+    ],
+   
     [
         'class' => 'kartik\grid\ActionColumn',
+        'width' => '10px',
         'dropdown' => false,
         'vAlign'=>'middle',
         'urlCreator' => function($action, $model, $key, $index) { 

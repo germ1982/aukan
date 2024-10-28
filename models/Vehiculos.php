@@ -32,7 +32,7 @@ class Vehiculos extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['idempleado', 'idpersona', 'idmarca', 'vehiculo_oficial'], 'integer'],
+            [['idempleado', 'idpersona', 'idmarca', 'vehiculo_oficial', ], 'integer'],
             [['dominio'], 'required'],
             [['dominio'], 'string', 'max' => 20],
             [['modelo'], 'string', 'max' => 100],
