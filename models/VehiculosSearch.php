@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Automotores;
+use app\models\Vehiculos;
 
 /**
- * AutomotoresSearch represents the model behind the search form about `app\models\Automotores`.
+ * VehiculosSearch represents the model behind the search form about `app\models\Vehiculos`.
  */
-class AutomotoresSearch extends Automotores
+class VehiculosSearch extends Vehiculos
 {
     /**
      * @inheritdoc
@@ -41,7 +41,7 @@ class AutomotoresSearch extends Automotores
      */
     public function search($params)
     {
-        $query = Automotores::find();
+        $query = Vehiculos::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

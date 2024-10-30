@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "automotores".
+ * This is the model class for table "vehiculos".
  *
  * @property int $idvehiculo
  * @property int|null $idempleado
@@ -16,14 +16,14 @@ use Yii;
  * @property string|null $color
  * @property int|null $vehiculo_oficial
  */
-class Automotores extends \yii\db\ActiveRecord
+class Vehiculos extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'automotores';
+        return 'vehiculos';
     }
 
     /**
@@ -32,7 +32,7 @@ class Automotores extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['idempleado', 'idpersona', 'idmarca', 'vehiculo_oficial'], 'integer'],
+            [['idempleado', 'idpersona', 'idmarca', 'vehiculo_oficial', ], 'integer'],
             [['dominio'], 'required'],
             [['dominio'], 'string', 'max' => 20],
             [['modelo'], 'string', 'max' => 100],
@@ -46,11 +46,11 @@ class Automotores extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'idvehiculo' => 'Idvehiculo',
-            'idempleado' => 'Idempleado',
-            'idpersona' => 'Idpersona',
+            'idvehiculo' => 'idvehiculo',
+            'idempleado' => 'Empleado',
+            'idpersona' => 'Persona',
             'dominio' => 'Dominio',
-            'idmarca' => 'Idmarca',
+            'idmarca' => 'Marca',
             'modelo' => 'Modelo',
             'color' => 'Color',
             'vehiculo_oficial' => 'Vehiculo Oficial',
