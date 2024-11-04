@@ -3,6 +3,7 @@
 use app\models\Configuracion;
 use yii\widgets\DetailView;
 use app\models\Persona;
+use app\models\Empleado;
 use app\models\OrganismoDispositivo;
 use app\models\Vehiculos;
 
@@ -13,7 +14,8 @@ function campo($titulo, $contenido)
           $contenido
       </p>";
 }
-
+$empleado = Empleado::findOne($model->idempleado);
+$persona = Persona::findOne($empleado->idpersona);
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Vehiculos */
@@ -49,7 +51,7 @@ function campo($titulo, $contenido)
                     <?= campo('idvehiculo', "$model->idvehiculo") ?>
                 </div>
                 <div class="col-md-4">
-                    <?= campo('Empleado', "$model->idempleado") ?>
+                    <?= campo('Empleado', "$persona->nombre $persona->apellido") ?>
                 </div>                
                 <div class="col-md-4">
                     <?= campo('dominio', "$model->dominio") ?>
@@ -67,7 +69,7 @@ function campo($titulo, $contenido)
                     <?= campo('color', "$model->color") ?>
                 </div>
                 <div class="col-md-3">
-                    <?= campo('vehiculo_oficial', "$model->vehiculo_oficial") ?>
+                    <?= campo('vehiculo_oficial', $model->vehiculo_oficial ? "SI" : "NO") ?>
                 </div>
             </div>
         </div>
