@@ -14,11 +14,16 @@ function campo($titulo, $contenido)
           $contenido
       </p>";
 }
-$empleado = Empleado::findOne($model->idempleado);
-$persona = Persona::findOne($empleado->idpersona);
+$marca = Configuracion::findOne($model->idmarca);
+$vehiculo = "$marca->descripcion $model->modelo $model->color";
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Vehiculos */
+
+$empleado = Empleado::findOne($model->idempleado);
+$sector = OrganismoDispositivo::get_dispositivo($empleado->iddispositivo);
+$persona = Persona::findOne($empleado->idpersona);
+$aux_persona =  "$persona->apellido $persona->nombre - $sector->descripcion";
+
+
 ?>
 
 <style>
@@ -47,47 +52,26 @@ $persona = Persona::findOne($empleado->idpersona);
     <div class="row">
         <div class="col-md-12">
             <div class="row">
-                <div class="col-md-4">
-                    <?= campo('idvehiculo', "$model->idvehiculo") ?>
+                <div class="col-md-8">
+                    <?= campo('Vehiculo', $vehiculo) ?>
                 </div>
-                <div class="col-md-4">
-                    <?= campo('Empleado', "$persona->nombre $persona->apellido") ?>
-                </div>                
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <?= campo('dominio', "$model->dominio") ?>
+                </div>
+                <div class="col-md-2">
+                    <?= campo('Vehiculo Oficial', $model->vehiculo_oficial ? "SI" : "NO") ?>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-3">
-                    <!-- <?= campo('idmarca', "$model->idmarca") ?> --> 
-                    <?= campo('idmarca', Configuracion::findOne($model->idmarca)->descripcion) ?>                  
+
+                <div class="col-md-9">
+                    <?= campo('Modelo', "$aux_persona") ?>
                 </div>
                 <div class="col-md-3">
-                    <?= campo('modelo', "$model->modelo") ?>
+                    <?=campo('Telefono',$empleado->telefono)?>
                 </div>
-                <div class="col-md-3">
-                    <?= campo('color', "$model->color") ?>
-                </div>
-                <div class="col-md-3">
-                    <?= campo('vehiculo_oficial', $model->vehiculo_oficial ? "SI" : "NO") ?>
-                </div>
+
             </div>
         </div>
     </div>
 </div>
-<!--                         
-                <?= DetailView::widget([
-                    'model' => $model,
-                    'attributes' => [
-                        'idvehiculo',
-                        'idempleado',
-                        'idpersona',
-                        'dominio',
-                        'idmarca',
-                        'modelo',
-                        'color',
-                        'vehiculo_oficial',
-                    ],
-                ]) ?>
-
-            </div> -->
