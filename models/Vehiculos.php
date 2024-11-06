@@ -18,9 +18,8 @@ use Yii;
  */
 class Vehiculos extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
+    public $vehiculo;
+    public $empleado;
     public static function tableName()
     {
         return 'vehiculos';
@@ -32,10 +31,10 @@ class Vehiculos extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['idempleado', 'idpersona', 'idmarca', 'vehiculo_oficial', ], 'integer'],
-            [['dominio'], 'required'],
+            [['idempleado', 'idpersona', 'idmarca', 'vehiculo_oficial'], 'integer'],
+            [['dominio', 'modelo', 'color', 'idmarca', 'idempleado'], 'required'],
             [['dominio'], 'string', 'max' => 20],
-            [['modelo'], 'string', 'max' => 100],
+            [['modelo', 'vehiculo', 'empleado'], 'string', 'max' => 100],
             [['color'], 'string', 'max' => 50],
         ];
     }
@@ -55,5 +54,10 @@ class Vehiculos extends \yii\db\ActiveRecord
             'color' => 'Color',
             'vehiculo_oficial' => 'Vehiculo Oficial',
         ];
+    }
+
+    public function getEmpleado()
+    {
+        return $this->hasOne(Empleado::class, ['idempleado' => 'idempleado']);
     }
 }
