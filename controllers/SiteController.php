@@ -16,11 +16,26 @@ use kartik\time\TimePicker;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
+use app\models\Configuracion;
+use app\models\ConfiguracionTipo;
 
 
 class SiteController extends Controller
 {
-
+      public static function actionGet_marcas_combinadas()
+      {
+          // Obtener las marcas de vehículos
+          $marcasVehiculos = Configuracion::get_configuraciones(ConfiguracionTipo::MARCA_VEHICULO);
+  
+          // Obtener las marcas de motos
+          $marcasMotos = Configuracion::get_configuraciones(ConfiguracionTipo::MARCA_MOTO);
+  
+          // Combinar ambas listas de marcas
+          $marcasCombinadas = array_merge($marcasVehiculos, $marcasMotos);
+  
+          // Retornar la lista combinada de marcas
+          return $marcasCombinadas;
+      }
       public function behaviors()
       {
             return [

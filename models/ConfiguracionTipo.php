@@ -37,6 +37,8 @@ class ConfiguracionTipo extends \yii\db\ActiveRecord
     const MARCA_VEHICULO = 22 ;
     const MARCA_MOTO = 23 ;
 
+
+  
     public static function tableName()
     {
         return 'configuracion_tipo';
