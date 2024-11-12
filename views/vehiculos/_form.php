@@ -1,6 +1,7 @@
 <?php
 
 use app\controllers\SiteController;
+use app\controllers\VehiculosController;
 use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
 use yii\helpers\Html;
@@ -50,7 +51,7 @@ use app\models\Empleado;
                     <?= $form->field($model, 'dominio')->textInput(['maxlength' => true]) ?>
                 </div>
                 <div class=" col-md-7">                    
-                    <?=SiteController::actionGet_input_select2($form,$model, 'idmarca','cmb_marcas',SiteController::actionGet_marcas_combinadas(),'id_configuracion','descripcion','Marca','Ingrese marca...' )?>
+                    <?=SiteController::actionGet_input_select2($form,$model, 'idmarca','cmb_marcas',VehiculosController::actionGet_marcas_combinadas(),'id_configuracion','descripcion','Marca','Ingrese marca...' )?>
                 </div>
                 <div class=" col-md-3">
                     <?= $form->field($model, 'modelo')->textInput(['maxlength' => true]) ?>
