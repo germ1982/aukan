@@ -22,7 +22,7 @@ return [
 
             $marca = Configuracion::findOne($model->idmarca);
 
-            return "$marca->descripcion $model->modelo $model->color";
+            return "$marca->descripcion $model->modelo $model->anio $model->color";
         },
 
         'headerOptions' => [

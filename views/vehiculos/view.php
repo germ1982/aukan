@@ -15,7 +15,7 @@ function campo($titulo, $contenido)
       </p>";
 }
 $marca = Configuracion::findOne($model->idmarca);
-$vehiculo = "$marca->descripcion $model->modelo $model->color";
+$vehiculo = "$marca->descripcion $model->modelo $model->anio $model->color";
 
 
 $empleado = Empleado::findOne($model->idempleado);

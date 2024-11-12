@@ -50,11 +50,14 @@ use app\models\Empleado;
                 <div class=" col-md-2">
                     <?= $form->field($model, 'dominio')->textInput(['maxlength' => true]) ?>
                 </div>
-                <div class=" col-md-7">                    
+                <div class=" col-md-5">                    
                     <?=SiteController::actionGet_input_select2($form,$model, 'idmarca','cmb_marcas',VehiculosController::actionGet_marcas_combinadas(),'id_configuracion','descripcion','Marca','Ingrese marca...' )?>
                 </div>
                 <div class=" col-md-3">
                     <?= $form->field($model, 'modelo')->textInput(['maxlength' => true]) ?>
+                </div>
+                <div class=" col-md-2">   
+                    <?= $form->field($model, 'anio')->textInput(['maxlength' => true]) ?>
                 </div>
             </div>
             <div class=" row">

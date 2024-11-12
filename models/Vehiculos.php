@@ -31,7 +31,7 @@ class Vehiculos extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['idempleado', 'idpersona', 'idmarca', 'vehiculo_oficial'], 'integer'],
+            [['idempleado', 'idpersona', 'idmarca', 'vehiculo_oficial','anio'], 'integer'],
             [['dominio', 'modelo', 'color', 'idmarca', 'idempleado'], 'required'],
             [['dominio'], 'string', 'max' => 20],
             [['modelo', 'vehiculo', 'empleado'], 'string', 'max' => 100],
@@ -53,6 +53,7 @@ class Vehiculos extends \yii\db\ActiveRecord
             'modelo' => 'Modelo',
             'color' => 'Color',
             'vehiculo_oficial' => 'Vehiculo Oficial',
+            'anio' => 'Año',
         ];
     }
 
