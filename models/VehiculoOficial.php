@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "vehiculos_oficiales".
+ * This is the model class for table "vehiculo_oficial".
  *
  * @property int $idvehiculo
  * @property string $dominio
@@ -18,14 +18,14 @@ use Yii;
  * @property int|null $kilometraje
  * @property string|null $finalidad_viaje
  */
-class VehiculosOficiales extends \yii\db\ActiveRecord
+class VehiculoOficial extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'vehiculos_oficiales';
+        return 'vehiculo_oficial';
     }
 
     /**

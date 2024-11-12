@@ -3,8 +3,8 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\VehiculosOficiales;
-use app\models\VehiculosOficialesSearch;
+use app\models\VehiculoOficial;
+use app\models\VehiculoOficialSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -12,9 +12,9 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * VehiculosOficialesController implements the CRUD actions for VehiculosOficiales model.
+ * Vehiculo_oficialController implements the CRUD actions for VehiculoOficial model.
  */
-class VehiculosOficialesController extends Controller
+class Vehiculo_oficialController extends Controller
 {
     /**
      * @inheritdoc
@@ -33,12 +33,12 @@ class VehiculosOficialesController extends Controller
     }
 
     /**
-     * Lists all VehiculosOficiales models.
+     * Lists all VehiculoOficial models.
      * @return mixed
      */
     public function actionIndex()
     {    
-        $searchModel = new VehiculosOficialesSearch();
+        $searchModel = new VehiculoOficialSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -49,7 +49,7 @@ class VehiculosOficialesController extends Controller
 
 
     /**
-     * Displays a single VehiculosOficiales model.
+     * Displays a single VehiculoOficial model.
      * @param integer $id
      * @return mixed
      */
@@ -59,7 +59,7 @@ class VehiculosOficialesController extends Controller
         if($request->isAjax){
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                    'title'=> "VehiculosOficiales #".$id,
+                    'title'=> "VehiculoOficial #".$id,
                     'content'=>$this->renderAjax('view', [
                         'model' => $this->findModel($id),
                     ]),
@@ -74,7 +74,7 @@ class VehiculosOficialesController extends Controller
     }
 
     /**
-     * Creates a new VehiculosOficiales model.
+     * Creates a new VehiculoOficial model.
      * For ajax request will return json object
      * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -82,7 +82,7 @@ class VehiculosOficialesController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->request;
-        $model = new VehiculosOficiales();  
+        $model = new VehiculoOficial();  
 
         if($request->isAjax){
             /*
@@ -91,7 +91,7 @@ class VehiculosOficialesController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Create new VehiculosOficiales",
+                    'title'=> "Create new VehiculoOficial",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
@@ -102,15 +102,15 @@ class VehiculosOficialesController extends Controller
             }else if($model->load($request->post()) && $model->save()){
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Create new VehiculosOficiales",
-                    'content'=>'<span class="text-success">Create VehiculosOficiales success</span>',
+                    'title'=> "Create new VehiculoOficial",
+                    'content'=>'<span class="text-success">Create VehiculoOficial success</span>',
                     'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
                             Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
         
                 ];         
             }else{           
                 return [
-                    'title'=> "Create new VehiculosOficiales",
+                    'title'=> "Create new VehiculoOficial",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
@@ -135,7 +135,7 @@ class VehiculosOficialesController extends Controller
     }
 
     /**
-     * Updates an existing VehiculosOficiales model.
+     * Updates an existing VehiculoOficial model.
      * For ajax request will return json object
      * and for non-ajax request if update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
@@ -153,7 +153,7 @@ class VehiculosOficialesController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Update VehiculosOficiales #".$id,
+                    'title'=> "Update VehiculoOficial #".$id,
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
@@ -163,7 +163,7 @@ class VehiculosOficialesController extends Controller
             }else if($model->load($request->post()) && $model->save()){
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "VehiculosOficiales #".$id,
+                    'title'=> "VehiculoOficial #".$id,
                     'content'=>$this->renderAjax('view', [
                         'model' => $model,
                     ]),
@@ -172,7 +172,7 @@ class VehiculosOficialesController extends Controller
                 ];    
             }else{
                  return [
-                    'title'=> "Update VehiculosOficiales #".$id,
+                    'title'=> "Update VehiculoOficial #".$id,
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
@@ -195,7 +195,7 @@ class VehiculosOficialesController extends Controller
     }
 
     /**
-     * Delete an existing VehiculosOficiales model.
+     * Delete an existing VehiculoOficial model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -223,7 +223,7 @@ class VehiculosOficialesController extends Controller
     }
 
      /**
-     * Delete multiple existing VehiculosOficiales model.
+     * Delete multiple existing VehiculoOficial model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -254,15 +254,15 @@ class VehiculosOficialesController extends Controller
     }
 
     /**
-     * Finds the VehiculosOficiales model based on its primary key value.
+     * Finds the VehiculoOficial model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return VehiculosOficiales the loaded model
+     * @return VehiculoOficial the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = VehiculosOficiales::findOne($id)) !== null) {
+        if (($model = VehiculoOficial::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\VehiculosOficiales;
+use app\models\VehiculoOficial;
 
 /**
- * VehiculosOficialesSearch represents the model behind the search form about `app\models\VehiculosOficiales`.
+ * VehiculoOficialSearch represents the model behind the search form about `app\models\VehiculoOficial`.
  */
-class VehiculosOficialesSearch extends VehiculosOficiales
+class VehiculoOficialSearch extends VehiculoOficial
 {
     /**
      * @inheritdoc
@@ -41,7 +41,7 @@ class VehiculosOficialesSearch extends VehiculosOficiales
      */
     public function search($params)
     {
-        $query = VehiculosOficiales::find();
+        $query = VehiculoOficial::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
