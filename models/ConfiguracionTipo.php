@@ -35,7 +35,10 @@ class ConfiguracionTipo extends \yii\db\ActiveRecord
     const TIPO_ESTADO_ARTICULO = 20 ;
     const STOCK_ORIGEN = 21 ;
     const MARCA_VEHICULO = 22 ;
+    const MARCA_MOTO = 23 ;
 
+
+  
     public static function tableName()
     {
         return 'configuracion_tipo';

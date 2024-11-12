@@ -16,11 +16,13 @@ use kartik\time\TimePicker;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
+use app\models\Configuracion;
+use app\models\ConfiguracionTipo;
 
 
 class SiteController extends Controller
 {
-
+      
       public function behaviors()
       {
             return [

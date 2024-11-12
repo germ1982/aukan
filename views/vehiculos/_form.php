@@ -12,6 +12,7 @@ use app\models\Empleado;
 /* @var $form yii\widgets\ActiveForm */
 
 
+
 ?>
 <style>
     .file-drop-zone {
@@ -49,7 +50,7 @@ use app\models\Empleado;
                     <?= $form->field($model, 'dominio')->textInput(['maxlength' => true]) ?>
                 </div>
                 <div class=" col-md-7">                    
-                    <?=SiteController::actionGet_input_select2($form, $model,'idmarca','cmb_marcas',Configuracion::get_configuraciones(ConfiguracionTipo::MARCA_VEHICULO),'id_configuracion','descripcion','Marca','Ingrese marca...')?>                    
+                    <?=SiteController::actionGet_input_select2($form,$model, 'idmarca','cmb_marcas',SiteController::actionGet_marcas_combinadas(),'id_configuracion','descripcion','Marca','Ingrese marca...' )?>
                 </div>
                 <div class=" col-md-3">
                     <?= $form->field($model, 'modelo')->textInput(['maxlength' => true]) ?>
