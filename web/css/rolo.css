@@ -30,8 +30,8 @@
 
 
 .modal-header {
-background: linear-gradient(135deg, #6b8cff 0%, #89f7fe 100%);
-color: white;
+background: linear-gradient(135deg, #87B867 0%, #a3db7d 50%, #87B867 100%);
+color: #FCF2DC;
 padding: 12px;
 border-top-left-radius: 6px;
 border-top-right-radius: 6px;
@@ -43,7 +43,7 @@ height: 45px!important;
 
 .modal-header .close {
 margin-top: -4px;
-color: white;
+color: F4DFB9;
 opacity: 1;
 font-size: 3.5rem;
 position: relative;
