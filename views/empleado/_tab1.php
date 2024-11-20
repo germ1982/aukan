@@ -4,7 +4,14 @@ use app\controllers\SiteController;
 use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
 use app\models\OrganismoDispositivo;
+use app\models\Persona;
 use kartik\file\FileInput;
+
+if (isset($model->idpersona)) {
+    $persona = Persona::findOne($model->idpersona);
+    $model->documento = $persona->documento;
+    $persona_nombre = "$persona->apellido, $persona->nombre";
+}
 
 ?>
 
@@ -68,6 +75,8 @@ $this->registerJs($script);
         margin-top: -20px;
     }
 </style>
+
+
 
 <?= $form->field($model, 'idpersona')->hiddenInput(['id' => 'input_idpersona'])->label(false) ?>
 

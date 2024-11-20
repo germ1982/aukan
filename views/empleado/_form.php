@@ -18,11 +18,7 @@ $persona_nombre = '';
 $initialPreview = [];
 $initialPreviewConfig = [];
 
-if (isset($model->idpersona)) {
-    $persona = Persona::findOne($model->idpersona);
-    $model->documento = $persona->documento;
-    $persona_nombre = "$persona->apellido, $persona->nombre";
-}
+
 
 
 
@@ -95,7 +91,7 @@ $model->ingreso_real = date('d/m/Y', strtotime($model->ingreso_real));
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-    <?= $form->field($model, 'idpersona')->hiddenInput(['id' => 'input_idpersona'])->label(false) ?>
+    
 
 
     <?=
