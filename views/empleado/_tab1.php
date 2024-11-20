@@ -89,7 +89,7 @@ $this->registerJs($script);
                 'onkeyup' => 'ValidarIngresoDni();',
                 //'disabled' => $generada
             ])
-                ->label($model->isNewRecord ? 'Buscar Persona' : 'DNI Persona') ?>
+                ->label($model->isNewRecord ? 'Buscar Persona Por DNI' : 'DNI Persona') ?>
             <span class="input-group-btn" style="padding-top:27px;">
                 <?= SiteController::actionGet_boton_buscar_x_documento(
                     'btn_dni',

@@ -4,6 +4,9 @@ use app\controllers\SiteController;
 use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
 
+$model->ingreso_administrativo = date('d/m/Y', strtotime($model->ingreso_administrativo));
+$model->ingreso_real = date('d/m/Y', strtotime($model->ingreso_real));
+
 ?>
 <div class="row">
 
@@ -43,7 +46,7 @@ use app\models\ConfiguracionTipo;
 
 <div class="row">
 
-    <div class="col-md-2">
+    <div class="col-md-3">
         <?= SiteController::actionGet_input_select2($form, $model, 'afiliacion', 'cmb_afiliacion', Configuracion::get_configuraciones(ConfiguracionTipo::AFILIACION_GREMIAL), 'id_configuracion', 'descripcion', 'Afiliacion Gremial', 'Seleccione Afiliacion...') ?>
     </div>
 
