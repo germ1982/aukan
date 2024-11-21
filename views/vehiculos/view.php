@@ -56,7 +56,7 @@ $aux_persona =  "$persona->apellido $persona->nombre - $sector->descripcion";
                     <?= campo('Vehiculo', $vehiculo) ?>
                 </div>
                 <div class="col-md-2">
-                    <?= campo('dominio', "$model->dominio") ?>
+                    <?= campo('Dominio', "$model->dominio") ?>
                 </div>
                 <div class="col-md-2">
                     <?= campo('Vehiculo Oficial', $model->vehiculo_oficial ? "SI" : "NO") ?>
@@ -65,7 +65,7 @@ $aux_persona =  "$persona->apellido $persona->nombre - $sector->descripcion";
             <div class="row">
 
                 <div class="col-md-9">
-                    <?= campo('Modelo', "$aux_persona") ?>
+                    <?= campo('Empleado', "$aux_persona") ?>
                 </div>
                 <div class="col-md-3">
                     <?=campo('Telefono',$empleado->telefono)?>

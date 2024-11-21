@@ -18,8 +18,8 @@ class VehiculoOficialSearch extends VehiculoOficial
     public function rules()
     {
         return [
-            [['idvehiculo', 'kilometraje'], 'integer'],
-            [['dominio', 'poliza', 'VTO', 'salida', 'llegada', 'lugar', 'hora', 'finalidad_viaje'], 'safe'],
+            [['idvehiculo', 'idmarca'], 'integer'],
+            [['dominio', 'poliza', 'VTO', 'modelo', 'color', 'anio'], 'safe'],
         ];
     }
 
@@ -57,17 +57,15 @@ class VehiculoOficialSearch extends VehiculoOficial
 
         $query->andFilterWhere([
             'idvehiculo' => $this->idvehiculo,
-            'VTO' => $this->VTO,
-            'salida' => $this->salida,
-            'llegada' => $this->llegada,
-            'hora' => $this->hora,
-            'kilometraje' => $this->kilometraje,
+            'VTO' => $this->VTO,            
+            'idmarca' => $this->idmarca,
         ]);
 
         $query->andFilterWhere(['like', 'dominio', $this->dominio])
             ->andFilterWhere(['like', 'poliza', $this->poliza])
-            ->andFilterWhere(['like', 'lugar', $this->lugar])
-            ->andFilterWhere(['like', 'finalidad_viaje', $this->finalidad_viaje]);
+            ->andFilterWhere(['like', 'modelo', $this->modelo])
+            ->andFilterWhere(['like', 'color', $this->color])
+            ->andFilterWhere(['like', 'anio', $this->anio]);
 
         return $dataProvider;
     }

@@ -10,7 +10,7 @@ use johnitvn\ajaxcrud\BulkButtonWidget;
 /* @var $searchModel app\models\VehiculoOficialSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Vehiculo Oficials';
+$this->title = 'Vehiculo Oficial';
 $this->params['breadcrumbs'][] = $this->title;
 
 CrudAsset::register($this);
@@ -39,10 +39,9 @@ CrudAsset::register($this);
             'responsive' => true,          
             'panel' => [
                 'type' => 'primary', 
-                'heading' => '<i class="glyphicon glyphicon-list"></i> Vehiculo Oficials listing',
-                'before'=>'<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
+                'heading' => '<i class="glyphicon glyphicon-list"></i> Vehiculos Oficiales',                
                 'after'=>BulkButtonWidget::widget([
-                            'buttons'=>Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Delete All',
+                            /* 'buttons'=>Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Delete All',
                                 ["bulk-delete"] ,
                                 [
                                     "class"=>"btn btn-danger btn-xs",
@@ -51,7 +50,7 @@ CrudAsset::register($this);
                                     'data-request-method'=>'post',
                                     'data-confirm-title'=>'Are you sure?',
                                     'data-confirm-message'=>'Are you sure want to delete this item'
-                                ]),
+                                ]), */
                         ]).                        
                         '<div class="clearfix"></div>',
             ]
@@ -60,6 +59,7 @@ CrudAsset::register($this);
 </div>
 <?php Modal::begin([
     "id"=>"ajaxCrudModal",
+    'size' => Modal::SIZE_LARGE,    
     "footer"=>"",// always need it for jquery plugin
 ])?>
 <?php Modal::end(); ?>

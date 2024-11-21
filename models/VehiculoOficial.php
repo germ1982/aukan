@@ -11,12 +11,10 @@ use Yii;
  * @property string $dominio
  * @property string|null $poliza
  * @property string|null $VTO
- * @property string|null $salida
- * @property string|null $llegada
- * @property string|null $lugar
- * @property string|null $hora
- * @property int|null $kilometraje
- * @property string|null $finalidad_viaje
+ * @property string|null $idmarca
+ * @property string|null $modelo
+ * @property string|null $color
+ * @property string|null $anio
  */
 class VehiculoOficial extends \yii\db\ActiveRecord
 {
@@ -34,12 +32,12 @@ class VehiculoOficial extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['dominio'], 'required'],
-            [['VTO', 'salida', 'llegada', 'hora'], 'safe'],
-            [['kilometraje'], 'integer'],
+            [['dominio', 'modelo', 'color', 'idmarca'], 'required'],
+            [['VTO','poliza'], 'safe'],
+            [['idmarca','anio'], 'integer'],
             [['dominio'], 'string', 'max' => 20],
-            [['poliza'], 'string', 'max' => 50],
-            [['lugar', 'finalidad_viaje'], 'string', 'max' => 255],
+            [['modelo'], 'string', 'max' => 50],
+            [['color'], 'string', 'max' => 50],
         ];
     }
 
@@ -53,12 +51,10 @@ class VehiculoOficial extends \yii\db\ActiveRecord
             'dominio' => 'Dominio',
             'poliza' => 'Poliza',
             'VTO' => 'Vto',
-            'salida' => 'Salida',
-            'llegada' => 'Llegada',
-            'lugar' => 'Lugar',
-            'hora' => 'Hora',
-            'kilometraje' => 'Kilometraje',
-            'finalidad_viaje' => 'Finalidad Viaje',
+            'idmarca' => 'Marca',
+            'modelo' => 'Modelo',
+            'color' => 'Color',
+            'anio' => 'Año'
         ];
     }
 }
