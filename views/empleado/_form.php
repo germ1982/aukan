@@ -18,11 +18,7 @@ $persona_nombre = '';
 $initialPreview = [];
 $initialPreviewConfig = [];
 
-if (isset($model->idpersona)) {
-    $persona = Persona::findOne($model->idpersona);
-    $model->documento = $persona->documento;
-    $persona_nombre = "$persona->apellido, $persona->nombre";
-}
+
 
 
 
@@ -34,8 +30,7 @@ if (isset($model->foto)) {
         Html::img($imagePath, ['class' => 'file-preview-image', 'alt' => 'Foto', 'title' => $model->foto, 'width' => '100%', 'height' => 'auto']),
     ];
 }
-$model->ingreso_administrativo = date('d/m/Y', strtotime($model->ingreso_administrativo));
-$model->ingreso_real = date('d/m/Y', strtotime($model->ingreso_real));
+
 ?>
 <style>
     /* Estilo para las pestañas (tabs) */
@@ -95,7 +90,7 @@ $model->ingreso_real = date('d/m/Y', strtotime($model->ingreso_real));
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-    <?= $form->field($model, 'idpersona')->hiddenInput(['id' => 'input_idpersona'])->label(false) ?>
+    
 
 
     <?=

@@ -127,6 +127,10 @@ class EmpleadoController extends Controller
                     $model->foto = "empleado_0.png";
                 }
 
+                $model->ingreso_real = ($model->ingreso_real == '0000-00-00') ? date('Y-m-d') : $model->ingreso_real;
+                $model->ingreso_administrativo = ($model->ingreso_administrativo == '0000-00-00') ? date('Y-m-d') : $model->ingreso_administrativo;
+
+
                 if ($guardado && $model->save()) {
                     $transaction->commit();
 
@@ -177,6 +181,7 @@ class EmpleadoController extends Controller
             } else if ($model->load($request->post())) {
                 $transaction = Yii::$app->db->beginTransaction();
                 $guardado = true;
+                
 
                 $ingreso_real = ArmarDateParaMySql($model->ingreso_real);
                 $ingreso_real = date_create($ingreso_real);

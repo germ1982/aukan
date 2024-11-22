@@ -17,13 +17,24 @@ $cumpleañeros = Persona::find()
     ->all();
 
 
-$proximos_cumpleaños = Persona::find()
-    ->where(new Expression("DATE_FORMAT(fecha_nacimiento, '%m-%d') >= :hoy"))
+    $proximos_cumpleaños = Persona::find()
+    ->where([
+        'or',
+        new Expression("DATE_FORMAT(fecha_nacimiento, '%m-%d') >= :hoy"),
+        new Expression("DATE_FORMAT(fecha_nacimiento, '%m-%d') < :hoy")
+    ])
     ->andWhere(['in', 'idpersona', (new Query())->select('idpersona')->from('empleado')])
-    ->addParams([':hoy' => $hoy])
-    ->orderBy(new Expression("DATE_FORMAT(fecha_nacimiento, '%m-%d')"))
-    ->limit(10) // Limitar a los próximos 10 cumpleaños, puedes ajustar según tus necesidades
+    ->addParams([':hoy' => date('m-d')]) // Solo usamos el mes y día actuales
+    ->orderBy(new Expression("
+        CASE 
+            WHEN DATE_FORMAT(fecha_nacimiento, '%m-%d') >= :hoy THEN 0 
+            ELSE 1 
+        END, 
+        DATE_FORMAT(fecha_nacimiento, '%m-%d')
+    "))
+    ->limit(10) // Aquí limitamos a los 10 próximos
     ->all();
+
 
 
 function formatFecha($fecha)

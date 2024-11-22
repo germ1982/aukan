@@ -15,8 +15,14 @@ function campo($titulo, $contenido)
 }
 
 $model_persona = Persona::findOne($model->idpersona);
-$dispositivo = OrganismoDispositivo::get_dispositivo($model->iddispositivo)
-
+$dispositivo = OrganismoDispositivo::get_dispositivo($model->iddispositivo);
+$contratacion = $model->contratacion ? Configuracion::findOne($model->contratacion)->descripcion : 'Completar';
+$categoria = $model->categoria ? Configuracion::findOne($model->categoria)->descripcion : 'Completar';
+$afiliacion = $model->afiliacion ? Configuracion::findOne($model->afiliacion)->descripcion : 'Completar';
+$ingreso_real = ($model->ingreso_real == '0000-00-00') ? 'Completar' : date_format(date_create($model->ingreso_real), 'd/m/Y');
+$ingreso_administrativo = ($model->ingreso_administrativo == '0000-00-00') ? 'Completar' : date_format(date_create($model->ingreso_administrativo), 'd/m/Y');
+$antiguedad_legal = $model->antiguedad_legal ? $model->antiguedad_legal : 'Completar';
+$antiguedad_total = $model->antiguedad_total ? $model->antiguedad_total : 'Completar';
 ?>
 
 <style>
@@ -93,16 +99,16 @@ $dispositivo = OrganismoDispositivo::get_dispositivo($model->iddispositivo)
 
     <div class="row">
         <div class="col-md-3">
-            <?= campo('Contratacion', Configuracion::findOne($model->contratacion)->descripcion) ?>
+            <?= campo('Contratacion', $contratacion) ?>
         </div>
         <div class="col-md-3">
-            <?= campo('Categoria', Configuracion::findOne($model->categoria)->descripcion) ?>
+            <?= campo('Categoria', $categoria) ?>
         </div>
         <div class="col-md-3">
-            <?= campo('Ingreso Administrativo', date_format(date_create($model->ingreso_administrativo), 'd/m/Y')) ?>
+            <?= campo('Ingreso Administrativo', $ingreso_administrativo) ?>
         </div>
         <div class="col-md-3">
-            <?= campo('Antiguedad Legal', "$model->antiguedad_legal") ?>
+            <?= campo('Antiguedad Legal', $antiguedad_legal) ?>
         </div>
 
 
@@ -112,14 +118,14 @@ $dispositivo = OrganismoDispositivo::get_dispositivo($model->iddispositivo)
 
 
         <div class="col-md-3">
-            <?= campo('Ingreso Real', date_format(date_create($model->ingreso_real), 'd/m/Y')) ?>
+            <?= campo('Ingreso Real', $ingreso_real) ?>
         </div>
         <div class="col-md-2">
-            <?= campo('Antiguedad Real', "$model->antiguedad_total") ?>
+            <?= campo('Antiguedad Real', "$antiguedad_total") ?>
         </div>
 
         <div class="col-md-3">
-            <?= campo('Afiliacion Gremial', Configuracion::findOne($model->afiliacion)->descripcion) ?>
+            <?= campo('Afiliacion Gremial', $afiliacion) ?>
         </div>
         <div class="col-md-1">
             <?= campo('Fichado', $model->fichado ? 'Si' : 'No') ?>

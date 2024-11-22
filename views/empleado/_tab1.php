@@ -4,7 +4,14 @@ use app\controllers\SiteController;
 use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
 use app\models\OrganismoDispositivo;
+use app\models\Persona;
 use kartik\file\FileInput;
+
+if (isset($model->idpersona)) {
+    $persona = Persona::findOne($model->idpersona);
+    $model->documento = $persona->documento;
+    $persona_nombre = "$persona->apellido, $persona->nombre";
+}
 
 ?>
 
@@ -69,6 +76,8 @@ $this->registerJs($script);
     }
 </style>
 
+
+
 <?= $form->field($model, 'idpersona')->hiddenInput(['id' => 'input_idpersona'])->label(false) ?>
 
 <div class="row linea_busqueda">
@@ -80,7 +89,7 @@ $this->registerJs($script);
                 'onkeyup' => 'ValidarIngresoDni();',
                 //'disabled' => $generada
             ])
-                ->label($model->isNewRecord ? 'Buscar Persona' : 'DNI Persona') ?>
+                ->label($model->isNewRecord ? 'Buscar Persona Por DNI' : 'DNI Persona') ?>
             <span class="input-group-btn" style="padding-top:27px;">
                 <?= SiteController::actionGet_boton_buscar_x_documento(
                     'btn_dni',
