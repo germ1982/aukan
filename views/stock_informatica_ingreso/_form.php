@@ -45,8 +45,9 @@ $model->fecha = $model->isNewRecord ? date('d/m/Y') : date('d/m/Y', strtotime($m
         </div>
     </div>
 
-    <!-- LINEA GRILLA DE ITEMS ##################################################################################################################################################### -->
-    <div class="row" style="border-radius: 5px; padding: 15px;<?= $model->isNewRecord ? 'display:none' : '' ?>">
+<!-- LINEA GRILLA DE ITEMS ##################################################################################################################################################### -->
+    
+    <div class="row" style="border-radius: 5px; padding: 15px;">
         Items:
         <div id="div_grilla" class="col-md-12" style="border:1px solid #BEBEBE; border-radius: 5px; padding: 5px;"></div>
     </div>
@@ -84,14 +85,16 @@ $model->fecha = $model->isNewRecord ? date('d/m/Y') : date('d/m/Y', strtotime($m
     refrescar_grilla();
 
     function refrescar_grilla() {
-        id_model = $('#hidden_input_id_model').val();
-        if (id_model) {
-            aux = "index.php?r=stock_informatica_ingreso_detalle/grilla_items&id=" + id_model;
-            $.post(aux, function(data) {
-                $("#div_grilla").html(data);
-                recalcular_importe_total()
-            });
+        let id_model = $('#hidden_input_id_model').val();
+        if (!id_model) {
+            id_model = 0;
         }
+
+        aux = "index.php?r=stock_informatica_ingreso_detalle/grilla_items&id=" + id_model;
+        $.post(aux, function(data) {
+            $("#div_grilla").html(data);
+            recalcular_importe_total()
+        });
     }
 
     function mostrar_abm_item() {
