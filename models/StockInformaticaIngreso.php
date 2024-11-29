@@ -53,4 +53,10 @@ class StockInformaticaIngreso extends \yii\db\ActiveRecord
             'observacion' => 'Observacion',
         ];
     }
+    
+    /* Esto indica que cada registro en StockInformaticaIngreso tiene muchos StockInformaticaIngresoDetalle. */
+    public function getDetalles()
+    {
+        return $this->hasMany(StockInformaticaIngresoDetalle::class, ['idstock_informatica_ingreso' => 'id']);
+    }
 }

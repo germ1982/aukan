@@ -5,11 +5,9 @@ use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
 use app\models\Empleado;
 use app\models\StockInformaticaIngresoDetalleSearch;
-use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 $model->fecha = $model->isNewRecord ? date('d/m/Y') : date('d/m/Y', strtotime($model->fecha));
-
 
 ?>
 
