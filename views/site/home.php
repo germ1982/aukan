@@ -96,6 +96,31 @@ if (Yii::$app->session->hasFlash('error_modulo')) : ?>
     </div>
 
     <!-- Accesos -->
+
+    <div class="row" style="padding: 5px 0px 0px 10px; background: linear-gradient(to bottom, #a9a9a929, #ecedf3);">
+        <div class="col-md-9">
+            <?php
+            include 'tarjetas/tarjeta_futbol.php'
+            ?>
+
+
+        </div>
+        <div class="col-md-3">
+            <?php
+            $titulo = "Web Informatica";
+            $archivo_contenido_tarjeta = "web_informatica.php";
+            include 'tarjetas/tarjeta_base.php'
+            ?>
+            <br>
+            <?php
+            $titulo = "Cumpleaños";
+            $archivo_contenido_tarjeta = "cumpleaños.php";
+            include 'tarjetas/tarjeta_base.php'
+            ?>
+        </div>
+
+    </div>
+    <br>
     <div class="row" style="padding: 5px 0px 0px 10px; background: linear-gradient(to bottom, #a9a9a929, #ecedf3);">
         <div class="col-md-3">
             <?php
@@ -103,41 +128,32 @@ if (Yii::$app->session->hasFlash('error_modulo')) : ?>
             $archivo_contenido_tarjeta = "indicadores_tecnicos.php";
             include 'tarjetas/tarjeta_base.php'
             ?>
+        </div>
 
+        <div class="col-md-3">
             <?php
             $titulo = "Informacion Personal";
             $archivo_contenido_tarjeta = "sitio_en_construccion.php";
             include 'tarjetas/tarjeta_base.php'
             ?>
         </div>
-        <div class="col-md-3">
-        <?php
-            $titulo = "Cumpleaños";
-            $archivo_contenido_tarjeta = "cumpleaños.php";
-            include 'tarjetas/tarjeta_base.php'
-            ?>
-        </div>
+
         <div class="col-md-3">
         <?php
             $titulo = "El Clima en Neuquen";
             $archivo_contenido_tarjeta = "eventos_del_dia.php";
             include 'tarjetas/tarjeta_base.php'
             ?>
+        </div>
+        <div class="col-md-3">
+
             <?php
             $titulo = "Efemerides";
             $archivo_contenido_tarjeta = "sitio_en_construccion.php";
             include 'tarjetas/tarjeta_base.php'
             ?>
         </div>
-        <div class="col-md-3">
 
-        <?php
-            $titulo = "Web Informatica";
-            $archivo_contenido_tarjeta = "web_informatica.php";
-            include 'tarjetas/tarjeta_base.php'
-            ?>
-
-        </div>
 
     </div>
 
