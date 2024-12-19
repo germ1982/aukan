@@ -33,12 +33,17 @@ class VehiculoOficial extends \yii\db\ActiveRecord
     {
         return [
             [['dominio', 'modelo', 'color', 'idmarca'], 'required'],
-            [['VTO','poliza'], 'safe'],
-            [['idmarca','anio'], 'integer'],
+            [['VTO', 'poliza'], 'safe'],
+            [['idmarca', 'anio'], 'integer'],
             [['dominio'], 'string', 'max' => 20],
             [['modelo'], 'string', 'max' => 50],
             [['color'], 'string', 'max' => 50],
         ];
+    }
+    // Agregar los getters (si no están definidos automáticamente por ActiveRecord)
+    public function getMarca()
+    {
+        return $this->hasOne(Configuracion::class, ['id_configuracion' => 'idmarca']);
     }
 
     /**
@@ -56,5 +61,9 @@ class VehiculoOficial extends \yii\db\ActiveRecord
             'color' => 'Color',
             'anio' => 'Año'
         ];
+    }
+    public function getVehiculo()
+    {
+        return $this->hasOne(VehiculoOficial::class, ['id' => 'idvehiculo']);
     }
 }
