@@ -49,5 +49,5 @@ class StockInformaticaIngresoDetalle extends \yii\db\ActiveRecord
     public function getIngreso()
     {
         return $this->hasOne(StockInformaticaIngreso::class, ['id' => 'idstock_informatica_ingreso']);
-    }
+    } 
 }
