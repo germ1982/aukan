@@ -23,15 +23,18 @@ $array_detalles = $model->isNewRecord
 $json_detalles = Json::htmlEncode($array_detalles);
 $this->registerJs("let detallesArray = $json_detalles;", \yii\web\View::POS_HEAD);
 
+$idUsuario = Yii::$app->user->identity->id;
+$model->idusuario_carga = $model->isNewRecord ? $idUsuario : $model->idusuario_carga;
+$model->idusuario_edicion = $idUsuario;
 
 ?>
 
 <div id="formulario_principal">
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['id' => 'formulario']); ?>
+
+    <input type="hidden" id="detallesArray" name="detallesArray">
 
     <?= $form->field($model, 'idingreso')->hiddenInput(["id" => "hidden_input_id_model"])->label(false) ?>
-
-    <?= $form->field($model, 'idusuario_carga')->hiddenInput(['id' => 'input_idusuario_carga'])->label(false) ?>
 
     <div class="row">
         <div class="col-md-3">
@@ -96,26 +99,23 @@ $this->registerJs("let detallesArray = $json_detalles;", \yii\web\View::POS_HEAD
 
 
 <script>
-    
-
-
-
-
     refrescar_grilla();
 
 
     function refrescar_grilla() {
-    console.log(detallesArray); // Verificar el contenido del array en la consola
-    console.log('entro a refrescar grilla');
+        //console.log(detallesArray); // Verificar el contenido del array en la consola
+        console.log('entro a refrescar grilla');
 
-    $.post(
-        "index.php?r=stock_informatica_ingreso_detalle/grilla_items", 
-        { detalles: JSON.stringify(detallesArray) }, // Pasar el array como JSON
-        function(data) {
-            $("#div_grilla").html(data); // Actualizar el div con la nueva grilla
-        }
-    );
-}
+        $.post(
+            "index.php?r=stock_informatica_ingreso_detalle/grilla_items", {
+                detalles: JSON.stringify(detallesArray)
+            }, // Pasar el array como JSON
+            function(data) {
+                $("#div_grilla").html(data); // Actualizar el div con la nueva grilla
+            }
+        );
+        console.log('detallesArray despues de refrescar', detallesArray);
+    }
 
 
     function mostrar_abm_item() {
@@ -134,14 +134,22 @@ $this->registerJs("let detallesArray = $json_detalles;", \yii\web\View::POS_HEAD
 
 
     function guardarDetalle() {
-        let idArticulo = $('#idarticulo').val();
-        let cantidad = $('#cantidad').val();
+        let idArticulo = $('#cmb_articulos').val();
+        let cantidad = $('#input_cantidad').val();
 
         // Validar campos
         if (!idArticulo || !cantidad) {
             alert("Debe completar todos los campos");
             return;
         }
+
+        const existe = detallesArray.some(item => item.idarticulo === idArticulo);
+
+        if (existe) {
+            alert('El artículo ya está en la lista.');
+            return;
+        }
+
 
         // Crear objeto de detalle
         let detalle = {
@@ -151,19 +159,32 @@ $this->registerJs("let detallesArray = $json_detalles;", \yii\web\View::POS_HEAD
 
         // Añadir al array
         detallesArray.push(detalle);
-
+        console.log(detallesArray); // Verificar el contenido del array en la consola
         // Limpiar los campos del formulario
-        $('#idarticulo').val('');
-        $('#cantidad').val('');
+        $('#cmb_articulos').val(null).trigger('change');
+        $('#input_cantidad').val('');
 
         // Actualizar la grilla
-        actualizarGrilla();
+        refrescar_grilla();
+        ocultar_abm_item();
     }
 
+    function eliminar_item(idarticulo) {
+        // Buscar el índice del artículo a eliminar
+        console.log('entro a eliminar con idarticulo: ', idarticulo);
+        const index = detallesArray.findIndex(item => item.idarticulo == idarticulo);
 
+        if (index !== -1) {
+            detallesArray.splice(index, 1); // Eliminar el elemento del array
+            refrescar_grilla(); // Actualizar la grilla
+        }
+    }
 
-    function eliminarDetalle(index) {
-        detallesArray.splice(index, 1); // Eliminar del array
-        actualizarGrilla(); // Actualizar la grilla
+    function guardarFormulario() {
+        // Convertir detallesArray a JSON
+        $('#detallesArray').val(JSON.stringify(detallesArray));
+
+        // Luego de esto, el formulario puede ser enviado de manera normal
+        $('#formulario').submit(); // Suponiendo que el formulario tiene el ID 'formulario'
     }
 </script>

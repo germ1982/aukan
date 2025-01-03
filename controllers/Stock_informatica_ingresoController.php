@@ -4,12 +4,14 @@ namespace app\controllers;
 
 use Yii;
 use app\models\StockInformaticaIngreso;
+use app\models\StockInformaticaIngresoDetalle;
 use app\models\StockInformaticaIngresoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
+use yii\helpers\Json;
 
 class Stock_informatica_ingresoController extends Controller
 {
@@ -30,7 +32,7 @@ class Stock_informatica_ingresoController extends Controller
     }
 
     public function actionIndex()
-    {    
+    {
         $searchModel = new StockInformaticaIngresoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -41,19 +43,19 @@ class Stock_informatica_ingresoController extends Controller
     }
 
     public function actionView($id)
-    {   
+    {
         $request = Yii::$app->request;
-        if($request->isAjax){
+        if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                    'title'=> "StockInformaticaIngreso #".$id,
-                    'content'=>$this->renderAjax('view', [
-                        'model' => $this->findModel($id),
-                    ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
-        }else{
+                'title' => "StockInformaticaIngreso #" . $id,
+                'content' => $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+                ]),
+                'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+            ];
+        } else {
             return $this->render('view', [
                 'model' => $this->findModel($id),
             ]);
@@ -82,7 +84,8 @@ class Stock_informatica_ingresoController extends Controller
                         Html::button('Guardar', [
                             'id' => 'btnGuardar',
                             'class' => 'btn btn-primary',
-                            'type' => 'submit',
+                            'type' => 'submit',  // Cambiar de 'submit' a 'button'
+                            'onclick' => 'guardarFormulario()',  // Llamada a la función JavaScript
                         ]),
                 ];
             } else if ($model->load($request->post())) {
@@ -93,11 +96,52 @@ class Stock_informatica_ingresoController extends Controller
                 $fecha = date_create($fecha);
                 $fecha = date_format($fecha, 'Y-m-d');
                 $model->fecha = $fecha;
+                
+                // Aquí procesas el detallesArray recibido
+                $detallesArray = Json::decode($request->post('detallesArray')); // Deserializas el array JSON
 
-                $idUsuario = Yii::$app->user->identity->id;
-                $model->idusuario_carga = $idUsuario;
 
                 if ($guardado && $model->save()) {
+                    // Guardar los detalles relacionados (puedes iterar sobre $detallesArray y guardarlos en la base de datos)
+                    // 1. Obtener los detalles existentes
+                    $detallesExistentes = StockInformaticaIngresoDetalle::findAll(['idingreso' => $model->idingreso]);
+
+                    // 2. Comprobar qué detalles ya no están en el nuevo array y eliminarlos
+                    $detallesArrayIds = array_column($detallesArray, 'idarticulo'); // Obtener solo los ids de los artículos en el nuevo array
+                    foreach ($detallesExistentes as $detalleExistente) {
+                        if (!in_array($detalleExistente->idarticulo, $detallesArrayIds)) {
+                            // Si el detalle ya no está en el nuevo array, lo eliminamos
+                            $detalleExistente->delete();
+                        }
+                    }
+
+                    // 3. Ahora iteramos sobre el nuevo array de detalles
+                    foreach ($detallesArray as $detalle) {
+                        // Buscar si ya existe el detalle en la base de datos
+                        $detalleExistente = StockInformaticaIngresoDetalle::findOne([
+                            'idingreso' => $model->idingreso,
+                            'idarticulo' => $detalle['idarticulo']
+                        ]);
+
+                        if ($detalleExistente) {
+                            // Si existe, actualizamos la cantidad
+                            if ($detalle['cantidad'] == 0) {
+                                // Si la cantidad es 0, eliminamos el registro
+                                $detalleExistente->delete();
+                            } else {
+                                // Si no es 0, actualizamos la cantidad
+                                $detalleExistente->cantidad = $detalle['cantidad'];
+                                $detalleExistente->save();
+                            }
+                        } else {
+                            // Si no existe, creamos un nuevo detalle
+                            $detalleModel = new StockInformaticaIngresoDetalle();
+                            $detalleModel->idingreso = $model->idingreso;
+                            $detalleModel->idarticulo = $detalle['idarticulo'];
+                            $detalleModel->cantidad = $detalle['cantidad'];
+                            $detalleModel->save();
+                        }
+                    }
                     $transaction->commit();
 
                     return [
@@ -121,7 +165,7 @@ class Stock_informatica_ingresoController extends Controller
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
-        $model = $this->findModel($id);       
+        $model = $this->findModel($id);
 
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -181,37 +225,34 @@ class Stock_informatica_ingresoController extends Controller
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
 
-        if($request->isAjax){
+        if ($request->isAjax) {
 
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
 
             return $this->redirect(['index']);
         }
-
-
     }
 
 
     public function actionBulkDelete()
-    {        
+    {
         $request = Yii::$app->request;
-        $pks = explode(',', $request->post( 'pks' )); // Array or selected records primary keys
-        foreach ( $pks as $pk ) {
+        $pks = explode(',', $request->post('pks')); // Array or selected records primary keys
+        foreach ($pks as $pk) {
             $model = $this->findModel($pk);
             $model->delete();
         }
 
-        if($request->isAjax){
+        if ($request->isAjax) {
 
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
 
             return $this->redirect(['index']);
         }
-       
     }
 
 

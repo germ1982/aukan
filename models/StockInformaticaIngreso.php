@@ -30,7 +30,7 @@ class StockInformaticaIngreso extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['fecha', 'idorigen', 'idempleado_recepcion', 'idusuario_carga'], 'required'],
+            [['fecha', 'idorigen', 'idempleado_recepcion'], 'required'],
             [['fecha', 'fdesde', 'fhasta'], 'safe'],
             [['idorigen', 'idempleado_recepcion', 'idusuario_carga'], 'integer'],
             [['origen_referencia'], 'string', 'max' => 100],

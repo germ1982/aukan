@@ -268,7 +268,7 @@ class Stock_informatica_ingreso_detalleController extends Controller
         }
     }
 
-    
+
     public function actionGrilla_items()
     {
         $request = Yii::$app->request;
@@ -279,6 +279,7 @@ class Stock_informatica_ingreso_detalleController extends Controller
         // Recibir el array desde la solicitud POST
         $detallesJson = $request->post('detalles', '[]'); // Default vacío si no hay datos
         $detallesArray = Json::decode($detallesJson);
+
 
         // Crear un DataProvider basado en el array recibido
         $dataProvider = new ArrayDataProvider([
@@ -308,8 +309,8 @@ class Stock_informatica_ingreso_detalleController extends Controller
                     'attribute' => 'idarticulo',
                     'headerOptions' => ['style' => 'width:65%'],
                     'value' => function ($model) {
-                        $articulo = Articulo::get_articulo($model->idarticulo);
-                        return "$articulo";
+                        $articulo = Articulo::get_articulo($model['idarticulo']);
+                        return "$articulo->descripcion";
                     },
                     'label' => 'Articulo',
                 ],
@@ -317,7 +318,7 @@ class Stock_informatica_ingreso_detalleController extends Controller
                     'attribute' => 'cantidad',
                     'headerOptions' => ['style' => 'width:15%'],
                     'value' => function ($model) {
-                        $aux = truncate($model->cantidad, 2);
+                        $aux = truncate($model['cantidad'], 2);
                         return "$aux";
                     },
                 ],
@@ -328,14 +329,15 @@ class Stock_informatica_ingreso_detalleController extends Controller
                     'template' => '{eliminar}',  // the default buttons + your custom button
                     'buttons' => [
                         'eliminar' => function ($url, $model) {
-                            $id_item = $model->iddetalle;
+                            $idarticulo = $model['idarticulo'];
                             return Html::button('<i class="glyphicon glyphicon-trash"></i>', [
                                 'title' => "Eliminar Item",
                                 'data-toggle' => 'tooltip',
                                 'class' => 'btn btn-link',
-                                'onclick' => "eliminar_item({$model['idarticulo']});",
+                                'onclick' => "console.log('idarticulo:', {$idarticulo}); eliminar_item({$idarticulo});", // Log para verificar el valor
                             ]);
                         },
+
                     ]
                 ]
             ],
