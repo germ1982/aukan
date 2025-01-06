@@ -39,7 +39,7 @@ class MovimVehiOficial extends \yii\db\ActiveRecord
     {
         return [
             [['idvehiculo', 'chofer', 'salida', 'regreso', 'finalidad_viaje', 'fecha', 'lugar', 'hora', 'kilometraje'], 'required'],
-            [['idvehiculo', 'chofer', 'kilometraje'], 'integer'],
+            [['chofer', 'kilometraje'], 'integer'],
             [['salida', 'regreso', 'fecha', 'hora'], 'safe'],            
             [['finalidad_viaje', 'lugar'], 'string', 'max' => 255],
             [['idvehiculo'], 'exist', 'skipOnError' => true, 'targetClass' => VehiculoOficial::className(), 'targetAttribute' => ['idvehiculo' => 'idvehiculo']],
