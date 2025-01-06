@@ -1,55 +1,47 @@
 <?php
+
+use app\models\Configuracion;
 use yii\helpers\Url;
 
+$columna_1 = '40%';
+$columna_2 = '20%';
+$columna_3 = '20%';
+$columna_4 = '20%';
+
+
 return [
+     
     [
-        'class' => 'kartik\grid\CheckboxColumn',
-        'width' => '20px',
+        'class' => '\kartik\grid\DataColumn',
+        'width' => $columna_1,
+        'attribute' => 'vehiculo',
+        'value' => function ($model) {
+
+            $marca = Configuracion::findOne($model->idmarca);
+
+            return "$marca->descripcion $model->modelo $model->anio $model->color";
+        },
+
+        'headerOptions' => [
+            'style' => 'color: #87b867;', // Cambia el color del texto del encabezado
+        ],
+
     ],
     [
-        'class' => 'kartik\grid\SerialColumn',
-        'width' => '30px',
-    ],
-        [
         'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'idvehiculo',
-    ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
+        'width' => $columna_2,
         'attribute'=>'dominio',
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
+        'width' => $columna_3,
         'attribute'=>'poliza',
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'VTO',
-    ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'salida',
-    ],
-    // [
-        // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'llegada',
-    // ],
-    // [
-        // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'lugar',
-    // ],
-    // [
-        // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'hora',
-    // ],
-    // [
-        // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'kilometraje',
-    // ],
-    // [
-        // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'finalidad_viaje',
-    // ],
+        'width' => $columna_4,
+        'attribute'=>'VTO', 
+    ], 
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
@@ -57,6 +49,7 @@ return [
         'urlCreator' => function($action, $model, $key, $index) { 
                 return Url::to([$action,'id'=>$key]);
         },
+        'template' => '{view} {update} ',
         'viewOptions'=>['role'=>'modal-remote','title'=>'View','data-toggle'=>'tooltip'],
         'updateOptions'=>['role'=>'modal-remote','title'=>'Update', 'data-toggle'=>'tooltip'],
         'deleteOptions'=>['role'=>'modal-remote','title'=>'Delete', 
