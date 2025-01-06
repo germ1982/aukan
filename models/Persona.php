@@ -96,4 +96,10 @@ class Persona extends \yii\db\ActiveRecord
         $dato = Persona::findBySql($sql)->one()->domicilio;
         return $dato;
     }
+
+    public static function get_persona_ayn($id)
+    {
+        $dato = Persona::findOne($id);
+        return "$dato->apellido $dato->nombre";
+    }
 }
