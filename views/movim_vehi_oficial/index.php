@@ -10,6 +10,7 @@ use johnitvn\ajaxcrud\BulkButtonWidget;
 /* @var $searchModel app\models\MovimVehiOficialSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
+
 $this->title = 'Movim Vehi Oficials';
 $this->params['breadcrumbs'][] = $this->title;
 

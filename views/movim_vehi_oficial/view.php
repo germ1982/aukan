@@ -61,7 +61,7 @@ $vehiculos = ArrayHelper::map(
                     <?= campo('idmovimiento', "$model->idmovimiento") ?>
                 </div>
                 <div class="col-md-12">
-                    <?= campo('idvehiculo', "$model->Vehiculo") ?>
+                    <?= campo('idvehiculo', "$model->$vehiculos") ?>
                 </div>
                 <div class="col-md-12">
                     <?= campo('chofer', "$model->chofer") ?>

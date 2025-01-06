@@ -45,7 +45,7 @@ return [
         // 'attribute'=>'kilometraje',
     // ],
     [
-        'class' => 'kartik\grid\ActionColumn',
+        'class' => 'kartik\grid\ActionColumn' ,
         'dropdown' => false,
         'vAlign'=>'middle',
         'urlCreator' => function($action, $model, $key, $index) { 

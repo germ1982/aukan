@@ -81,7 +81,7 @@ class MovimVehiOficial extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getChofer0()
+    public function  getChofer0()
     {
         return $this->hasOne(Empleado::className(), ['idempleado' => 'chofer']);
     }

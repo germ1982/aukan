@@ -62,7 +62,7 @@ class VehiculoOficial extends \yii\db\ActiveRecord
             'anio' => 'Año'
         ];
     }
-    public function getVehiculo()
+    public function  getVehiculo()
     {
         return $this->hasOne(VehiculoOficial::class, ['id' => 'idvehiculo']);
     }
