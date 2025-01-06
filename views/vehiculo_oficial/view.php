@@ -10,10 +10,8 @@ function campo($titulo, $contenido)
           $contenido
       </p>";
 }
+
 $marca = Configuracion::findOne($model->idmarca);
-$vehiculo = "$marca->descripcion $model->modelo $model->anio $model->color";
-
-
 
 ?>
 
@@ -38,58 +36,57 @@ $vehiculo = "$marca->descripcion $model->modelo $model->anio $model->color";
     }
 </style>
 
-
-
 <div class="vehiculo-oficial-view">
+
     <div class="row">
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-4">
-                        <?= campo('Vehiculo', $vehiculo) ?>
-                    </div>
-                    <div class="col-md-4">
-                        <?= campo('dominio', "$model->dominio") ?>
-                    </div>
-                    <div class="col-md-4">
-                        <?= campo('color',  "$model->color") ?>
-                    </div>
-                    <div class="col-md-4">
-                        <?= campo('anio',  "$model->anio") ?>
-                    </div>
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-3">
+                    <?= campo('Vehiculo', "$model->idvehiculo") ?>
                 </div>
-                <div class="row">
-                    <div class="col-md-4">
-                            <?= campo('marca', "$marca") ?>
-                        </div>
-                        <div class="col-md-4">
-                            <?= campo('Modelo', "$modelo") ?>
-                        </div>
-                        <div class="col-md-4">
-                            <?=campo('poliza',$poliza)?>
-                        </div>
-                        <div class="col-md-4">
-                            <?=campo('VTO',$VTO)?>
-                        </div>
+                <div class="col-md-3">
+                    <?= campo('marca', "$marca->descripcion") ?>
+                </div>
+                <div class="col-md-3">
+                    <?= campo('modelo', "$model->modelo") ?>
+                </div>
+                <div class="col-md-3">
+                    <?= campo('color', "$model->color") ?>
+                </div>
+                
 
-                    </div>
             </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <?= campo('anio', "$model->anio") ?>
+                </div>
+                <div class="col-md-3">
+                    <?= campo('Dominio', "$model->dominio") ?>
+                </div>
+                <div class="col-md-3">
+                    <?= campo('Poliza', "$model->poliza") ?>
+                </div>
+                <div class="col-md-3">
+                    <?= campo('VTO', "$model->VTO") ?>
+                </div>
+            </div>
+            
         </div>
-    
-        <!-- <?= DetailView::widget([
-            'model' => $model,
-            'attributes' => [
-                'idvehiculo',
-                'dominio',
-                'poliza',
-                'VTO',
-                'salida',
-                'llegada',
-                'lugar',
-                'hora',
-                'kilometraje',
-                'finalidad_viaje',
-            ],
-        ]) ?> -->
-
     </div>
+
+
+  <!--   <?= DetailView::widget([
+        'model' => $model,
+        'attributes' => [
+            'idvehiculo',
+            'dominio',
+            'poliza',
+            'VTO',
+            'idmarca',
+            'modelo',
+            'color',
+            'anio',            
+        ],
+    ]) ?> -->
+
 </div>
