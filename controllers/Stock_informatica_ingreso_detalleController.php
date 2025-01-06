@@ -8,11 +8,13 @@ use app\models\StockInformaticaIngresoDetalle;
 use app\models\StockInformaticaIngresoDetalleSearch;
 use kartik\grid\GridView;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
+use yii\helpers\Json;
 
 /**
  * Stock_informatica_ingreso_detalleController implements the CRUD actions for StockInformaticaIngresoDetalle model.
@@ -40,7 +42,7 @@ class Stock_informatica_ingreso_detalleController extends Controller
      * @return mixed
      */
     public function actionIndex()
-    {    
+    {
         $searchModel = new StockInformaticaIngresoDetalleSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -57,19 +59,19 @@ class Stock_informatica_ingreso_detalleController extends Controller
      * @return mixed
      */
     public function actionView($id)
-    {   
+    {
         $request = Yii::$app->request;
-        if($request->isAjax){
+        if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                    'title'=> "StockInformaticaIngresoDetalle #".$id,
-                    'content'=>$this->renderAjax('view', [
-                        'model' => $this->findModel($id),
-                    ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
-        }else{
+                'title' => "StockInformaticaIngresoDetalle #" . $id,
+                'content' => $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+                ]),
+                'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+            ];
+        } else {
             return $this->render('view', [
                 'model' => $this->findModel($id),
             ]);
@@ -85,44 +87,44 @@ class Stock_informatica_ingreso_detalleController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->request;
-        $model = new StockInformaticaIngresoDetalle();  
+        $model = new StockInformaticaIngresoDetalle();
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            if($request->isGet){
+            if ($request->isGet) {
                 return [
-                    'title'=> "Create new StockInformaticaIngresoDetalle",
-                    'content'=>$this->renderAjax('create', [
+                    'title' => "Create new StockInformaticaIngresoDetalle",
+                    'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-        
-                ];         
-            }else if($model->load($request->post()) && $model->save()){
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+
+                ];
+            } else if ($model->load($request->post()) && $model->save()) {
                 return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Create new StockInformaticaIngresoDetalle",
-                    'content'=>'<span class="text-success">Create StockInformaticaIngresoDetalle success</span>',
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
-        
-                ];         
-            }else{           
+                    'forceReload' => '#crud-datatable-pjax',
+                    'title' => "Create new StockInformaticaIngresoDetalle",
+                    'content' => '<span class="text-success">Create StockInformaticaIngresoDetalle success</span>',
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::a('Create More', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+
+                ];
+            } else {
                 return [
-                    'title'=> "Create new StockInformaticaIngresoDetalle",
-                    'content'=>$this->renderAjax('create', [
+                    'title' => "Create new StockInformaticaIngresoDetalle",
+                    'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-        
-                ];         
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+
+                ];
             }
-        }else{
+        } else {
             /*
             *   Process for non-ajax request
             */
@@ -134,7 +136,6 @@ class Stock_informatica_ingreso_detalleController extends Controller
                 ]);
             }
         }
-       
     }
 
     /**
@@ -147,43 +148,43 @@ class Stock_informatica_ingreso_detalleController extends Controller
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
-        $model = $this->findModel($id);       
+        $model = $this->findModel($id);
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            if($request->isGet){
+            if ($request->isGet) {
                 return [
-                    'title'=> "Update StockInformaticaIngresoDetalle #".$id,
-                    'content'=>$this->renderAjax('update', [
+                    'title' => "Update StockInformaticaIngresoDetalle #" . $id,
+                    'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-                ];         
-            }else if($model->load($request->post()) && $model->save()){
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                ];
+            } else if ($model->load($request->post()) && $model->save()) {
                 return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "StockInformaticaIngresoDetalle #".$id,
-                    'content'=>$this->renderAjax('view', [
+                    'forceReload' => '#crud-datatable-pjax',
+                    'title' => "StockInformaticaIngresoDetalle #" . $id,
+                    'content' => $this->renderAjax('view', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
-            }else{
-                 return [
-                    'title'=> "Update StockInformaticaIngresoDetalle #".$id,
-                    'content'=>$this->renderAjax('update', [
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                ];
+            } else {
+                return [
+                    'title' => "Update StockInformaticaIngresoDetalle #" . $id,
+                    'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-                ];        
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                ];
             }
-        }else{
+        } else {
             /*
             *   Process for non-ajax request
             */
@@ -207,23 +208,21 @@ class Stock_informatica_ingreso_detalleController extends Controller
     public function actionDelete($id)
     {
         $request = Yii::$app->request;
-        if(!$request->isAjax){
+        if (!$request->isAjax) {
             return $this->redirect(['/']);
         }
         $model = $this->findModel($id);
         $transaction = Yii::$app->db->beginTransaction();
         if ($model->delete()) {
 
-                $transaction->commit();
-                return 1;
-            
-
+            $transaction->commit();
+            return 1;
         }
         $transaction->rollBack();
         return 0;
     }
 
-     /**
+    /**
      * Delete multiple existing StockInformaticaIngresoDetalle model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
@@ -231,27 +230,26 @@ class Stock_informatica_ingreso_detalleController extends Controller
      * @return mixed
      */
     public function actionBulkDelete()
-    {        
+    {
         $request = Yii::$app->request;
-        $pks = explode(',', $request->post( 'pks' )); // Array or selected records primary keys
-        foreach ( $pks as $pk ) {
+        $pks = explode(',', $request->post('pks')); // Array or selected records primary keys
+        foreach ($pks as $pk) {
             $model = $this->findModel($pk);
             $model->delete();
         }
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
             /*
             *   Process for non-ajax request
             */
             return $this->redirect(['index']);
         }
-       
     }
 
     /**
@@ -270,30 +268,38 @@ class Stock_informatica_ingreso_detalleController extends Controller
         }
     }
 
-    public function actionGrilla_items($id)
+
+    public function actionGrilla_items()
     {
         $request = Yii::$app->request;
-        if(!$request->isAjax){
+        if (!$request->isAjax) {
             return $this->redirect(['/']);
         }
-        
-        $dataProvider = new ActiveDataProvider([
-            'query' => StockInformaticaIngresoDetalle::findBySql('Select * from stock_informatica_ingreso_detalle where idingreso = '.$id),
+
+        // Recibir el array desde la solicitud POST
+        $detallesJson = $request->post('detalles', '[]'); // Default vacío si no hay datos
+        $detallesArray = Json::decode($detallesJson);
+
+
+        // Crear un DataProvider basado en el array recibido
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $detallesArray,
+            'pagination' => false,
             'sort' => [
-                'attributes' => ['idarticulo','cantidad'],
-            ]                
+                'attributes' => ['idarticulo', 'cantidad'],
+            ],
         ]);
 
-        $dataProvider->pagination = false;
 
         $aux_alta = Html::button('<i class="glyphicon glyphicon-plus"></i>', [
             'class' => 'btn btn-primary',
             'id' => 'btnItem',
             'title' => "Nuevo Item",
             'data-toggle' => 'tooltip',
-            'onclick' => "js:mostrar_abm_item();"]);
-        
-            
+            'onclick' => "js:mostrar_abm_item();"
+        ]);
+
+
         return GridView::widget([
             'id' => 'grilla_items',
             'dataProvider' => $dataProvider,
@@ -303,36 +309,35 @@ class Stock_informatica_ingreso_detalleController extends Controller
                     'attribute' => 'idarticulo',
                     'headerOptions' => ['style' => 'width:65%'],
                     'value' => function ($model) {
-                        $articulo = Articulo::get_articulo($model->idarticulo);
-                        return "$articulo";
-                    
+                        $articulo = Articulo::get_articulo($model['idarticulo']);
+                        return "$articulo->descripcion";
                     },
-                    'label'=>'Articulo',
+                    'label' => 'Articulo',
                 ],
                 [
                     'attribute' => 'cantidad',
                     'headerOptions' => ['style' => 'width:15%'],
                     'value' => function ($model) {
-                        $aux = truncate($model->cantidad,2);
+                        $aux = truncate($model['cantidad'], 2);
                         return "$aux";
-                    
                     },
                 ],
                 [
-                    'header'=>  $aux_alta,
+                    'header' =>  $aux_alta,
                     'class' => 'yii\grid\ActionColumn',
                     'headerOptions' => ['style' => 'width:5%'],
                     'template' => '{eliminar}',  // the default buttons + your custom button
                     'buttons' => [
-                        'eliminar' => function ($url,$model) {
-                            $id_item = $model->iddetalle;
+                        'eliminar' => function ($url, $model) {
+                            $idarticulo = $model['idarticulo'];
                             return Html::button('<i class="glyphicon glyphicon-trash"></i>', [
                                 'title' => "Eliminar Item",
                                 'data-toggle' => 'tooltip',
                                 'class' => 'btn btn-link',
-                                'onclick' => "js:eliminar_item($id_item);"
+                                'onclick' => "console.log('idarticulo:', {$idarticulo}); eliminar_item({$idarticulo});", // Log para verificar el valor
                             ]);
                         },
+
                     ]
                 ]
             ],
@@ -341,8 +346,9 @@ class Stock_informatica_ingreso_detalleController extends Controller
 }
 
 
-function truncate($number, $precision = 0) {
+function truncate($number, $precision = 0)
+{
     // warning: precision is limited by the size of the int type
     $shift = pow(10, $precision);
-    return intval($number * $shift)/$shift;
- }
+    return intval($number * $shift) / $shift;
+}
