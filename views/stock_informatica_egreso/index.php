@@ -26,13 +26,13 @@ CrudAsset::register($this);
 }
 
 .custom-modal .modal-dialog {
-    max-width: 95%; /* Personaliza el ancho */
+    max-width: 85%; /* Personaliza el ancho */
     width: auto;
 }
 
-.custom-modal .modal-content {
-    /* padding: 20px; */ /* Opcional: Personaliza el contenido */
-}
+/* .custom-modal .modal-content {
+    padding: 20px; 
+} */
 </style>
 
 <header class="page-header">

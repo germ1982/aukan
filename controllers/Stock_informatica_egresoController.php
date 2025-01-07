@@ -4,12 +4,14 @@ namespace app\controllers;
 
 use Yii;
 use app\models\StockInformaticaEgreso;
+use app\models\StockInformaticaEgresoDetalle;
 use app\models\StockInformaticaEgresoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
+use yii\helpers\Json;
 
 /**
  * Stock_informatica_egresoController implements the CRUD actions for StockInformaticaEgreso model.
@@ -79,7 +81,7 @@ class Stock_informatica_egresoController extends Controller
      * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate_original()
     {
         $request = Yii::$app->request;
         $model = new StockInformaticaEgreso();  
@@ -141,7 +143,7 @@ class Stock_informatica_egresoController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function actionUpdate_original($id)
     {
         $request = Yii::$app->request;
         $model = $this->findModel($id);       
@@ -194,6 +196,178 @@ class Stock_informatica_egresoController extends Controller
         }
     }
 
+
+    public function actionCreate()
+    {
+        $request = Yii::$app->request;
+        $model = new StockInformaticaEgreso();
+
+        if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            if ($request->isGet) {
+                return [
+                    'title' => 'Nuevo Egreso',
+                    'content' => $this->renderAjax('create', [
+                        'model' => $model,
+                    ]),
+                    'footer' =>
+                    Html::button('Cerrar', [
+                        'id' => 'btnCerrar',
+                        'class' => 'btn btn-default pull-left',
+                        'data-dismiss' => 'modal',
+                    ]) .
+                        Html::button('Guardar', [
+                            'id' => 'btnGuardar',
+                            'class' => 'btn btn-primary',
+                            'type' => 'submit',  
+                            'onclick' => 'guardarFormulario()',  // Llamada a la función JavaScript
+                        ]),
+                ];
+            } else if ($model->load($request->post())) {
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
+
+                $fecha = ArmarDateParaMySql($model->fecha);
+                $fecha = date_create($fecha);
+                $fecha = date_format($fecha, 'Y-m-d');
+                $model->fecha = $fecha;
+                
+
+                if ($guardado && $model->save()) {
+                    
+                    // Aquí procesas el detallesArray recibido
+                    $detallesArray = [];
+                    $detallesArray = Json::decode($request->post('detallesArray')); // Deserializas el array JSON
+
+                    foreach ($detallesArray as $detalle) {
+                            $detalleModel = new StockInformaticaEgresoDetalle();
+                            $detalleModel->idegreso = $model->idegreso;
+                            $detalleModel->idarticulo = $detalle['idarticulo'];
+                            $detalleModel->cantidad = $detalle['cantidad'];
+                            $detalleModel->save();
+                        }
+                    
+                    $transaction->commit();
+
+                    return [
+                        'title' => "Nuevo Egreso",
+                        'content' => '<span class="text-success">Egreso Creado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
+                    ];
+                }
+            }
+            return [
+                'title' => "Nuevo Egreso, Faltan datos!!! Complete Los datos Faltantes!!!",
+                'content' => $this->renderAjax('create', [
+                    'model' => $model,
+                ]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+            ];
+        }
+    }
+
+    public function actionUpdate($id)
+    {
+        $request = Yii::$app->request;
+        $model = $this->findModel($id);
+
+        if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            if ($request->isGet) {
+                return [
+                    'title' => 'Editar Egreso',
+                    'content' => $this->renderAjax('create', [
+                        'model' => $model,
+                    ]),
+                    'footer' =>
+                    Html::button('Cerrar', [
+                        'id' => 'btnCerrar',
+                        'class' => 'btn btn-default pull-left',
+                        'data-dismiss' => 'modal',
+                    ]) .
+                    Html::button('Guardar', [
+                        'id' => 'btnGuardar',
+                        'class' => 'btn btn-primary',
+                        'type' => 'submit',  // Cambiar de 'submit' a 'button'
+                        'onclick' => 'guardarFormulario()',  // Llamada a la función JavaScript
+                    ]),
+                ];
+            } else if ($model->load($request->post())) {
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
+
+                $fecha = ArmarDateParaMySql($model->fecha);
+                $fecha = date_create($fecha);
+                $fecha = date_format($fecha, 'Y-m-d');
+                $model->fecha = $fecha;
+
+                $idUsuario = Yii::$app->user->identity->id;
+                $model->idusuario_edicion = $idUsuario;
+
+                // Aquí procesas el detallesArray recibido
+                $detallesArray = Json::decode($request->post('detallesArray')); // Deserializas el array JSON
+
+                if ($guardado && $model->save()) {
+                    // Guardar los detalles relacionados (puedes iterar sobre $detallesArray y guardarlos en la base de datos)
+                    // 1. Obtener los detalles existentes
+                    $detallesExistentes = StockInformaticaEgresoDetalle::findAll(['idegreso' => $model->idegreso]);
+
+                    // 2. Comprobar qué detalles ya no están en el nuevo array y eliminarlos
+                    $detallesArrayIds = array_column($detallesArray, 'idarticulo'); // Obtener solo los ids de los artículos en el nuevo array
+                    foreach ($detallesExistentes as $detalleExistente) {
+                        if (!in_array($detalleExistente->idarticulo, $detallesArrayIds)) {
+                            // Si el detalle ya no está en el nuevo array, lo eliminamos
+                            $detalleExistente->delete();
+                        }
+                    }
+
+                    // 3. Ahora iteramos sobre el nuevo array de detalles
+                    foreach ($detallesArray as $detalle) {
+                        // Buscar si ya existe el detalle en la base de datos
+                        $detalleExistente = StockInformaticaEgresoDetalle::findOne([
+                            'idegreso' => $model->idegreso,
+                            'idarticulo' => $detalle['idarticulo']
+                        ]);
+
+                        if ($detalleExistente) {
+                            // Si existe, actualizamos la cantidad
+                            if ($detalle['cantidad'] == 0) {
+                                // Si la cantidad es 0, eliminamos el registro
+                                $detalleExistente->delete();
+                            } else {
+                                // Si no es 0, actualizamos la cantidad
+                                $detalleExistente->cantidad = $detalle['cantidad'];
+                                $detalleExistente->save();
+                            }
+                        } else {
+                            // Si no existe, creamos un nuevo detalle
+                            $detalleModel = new StockInformaticaEgresoDetalle();
+                            $detalleModel->idegreso = $model->idegreso;
+                            $detalleModel->idarticulo = $detalle['idarticulo'];
+                            $detalleModel->cantidad = $detalle['cantidad'];
+                            $detalleModel->save();
+                        }
+                    }
+                    $transaction->commit();
+
+                    return [
+                        'title' => "Editar Egreso",
+                        'content' => '<span class="text-success">Egreso editado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
+                    ];
+                }
+            }
+            return [
+                'title' => "Editar Egreso, Faltan datos!!! Complete Los datos Faltantes!!!",
+                'content' => $this->renderAjax('create', [
+                    'model' => $model,
+                ]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+            ];
+        }
+    }
     /**
      * Delete an existing StockInformaticaEgreso model.
      * For ajax request will return json object
@@ -268,4 +442,12 @@ class Stock_informatica_egresoController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+}
+function ArmarDateParaMySql($Fecha)
+{
+    $anio = substr($Fecha, 6, 4);
+    $mes  = substr($Fecha, 3, 2);
+    $dia = substr($Fecha, 0, 2);
+    $DT = "$anio-$mes-$dia";
+    return $DT;
 }

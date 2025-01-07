@@ -1,116 +1,112 @@
 <?php
 
-use app\controllers\SiteController;
-use app\models\Empleado;
-use app\models\Persona;
-use app\models\StockInformaticaEgresoDetalle;
-use yii\helpers\Html;
-use yii\helpers\Json;
+use app\models\StockInformaticaEgresoDetalleSearch;
+use yii\bootstrap\Tabs;
 use yii\widgets\ActiveForm;
 
-$model->fecha = $model->isNewRecord ? date('d/m/Y') : date('d/m/Y', strtotime($model->fecha));
-
-$array_detalles = $model->isNewRecord
-    ? []
-    : StockInformaticaEgresoDetalle::find()
-    ->select(['idarticulo', 'cantidad']) // Selecciona solo los campos necesarios
-    ->where(['idegreso' => $model->idegreso])
-    ->asArray() // Obtiene un array simple
-    ->all();
-
-// Convertir el array PHP a JSON
-$json_detalles = Json::htmlEncode($array_detalles);
-$this->registerJs("let detallesArray = $json_detalles;", \yii\web\View::POS_HEAD);
-
-$idUsuario = Yii::$app->user->identity->id;
-$model->idusuario_carga = $model->isNewRecord ? $idUsuario : $model->idusuario_carga;
-$model->idusuario_edicion = $idUsuario;
-
-
-$persona_nombre_solicitante = '';
-$persona_nombre_receptor = '';
-
-if(isset($model->idpersona_solicitante)){
-    $persona = Persona::findOne($model->idpersona_solicitante);
-    $model->documento_solicitante = $persona->documento;
-    $persona_nombre_solicitante = "$persona->apellido, $persona->nombre";
-}
-
-if(isset($model->idpersona_recibe)){
-    $persona = Persona::findOne($model->idpersona_recibe);
-    $model->documento_receptor = $persona->documento;
-    $persona_nombre_receptor = "$persona->apellido, $persona->nombre";
-}
-
 ?>
+
+<style>
+    /* Estilo para las pestañas (tabs) */
+    .nav-tabs {
+        border-bottom: 2px solid #ddd;
+        /* Línea de borde debajo de las pestañas */
+    }
+
+    .nav-tabs>li>a {
+        background-color: #2B3E4C;
+        /* Fondo gris claro para las pestañas */
+        color: #F4DFB9;
+        /* Color de texto gris */
+        border-radius: 8px 8px 0 0;
+        /* Bordes redondeados en la parte superior */
+        padding: 10px 20px;
+        /* font-weight: bold; */
+        text-transform: uppercase;
+        /* Texto en mayúsculas */
+        transition: background-color 0.3s ease, color 0.3s ease;
+        /* Transición suave */
+    }
+
+    .nav-tabs>li>a:hover {
+        background-color: #87B867;
+        /* Color de fondo en hover */
+        color: white;
+        /* Color de texto en hover */
+    }
+
+    .nav-tabs>li.active>a {
+        background-color: #87B867;
+        /* Color de fondo de la pestaña activa */
+        color: white;
+        /* Color de texto en la pestaña activa */
+        box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
+        /* Sombra para darle un efecto destacado */
+    }
+
+    .nav-tabs>li.active>a:hover {
+        background-color: #87B867;
+        /* Sombra más oscura en hover de la pestaña activa */
+    }
+
+    /* Estilo para el contenido de la pestaña */
+    .tab-content {
+        background-color: #fff;
+        /* Fondo blanco para el contenido */
+        padding: 20px;
+        border-radius: 0 0 8px 8px;
+        /* Bordes redondeados en la parte inferior */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        /* Sombra suave para el contenido */
+    }
+</style>
 
 <div id="formulario_principal">
     <?php $form = ActiveForm::begin(['id' => 'formulario']); ?>
 
-    <?= $form->field($model, 'idegreso')->hiddenInput(["id" => "hidden_input_id_model"])->label(false) ?>
-    <?= $form->field($model, 'idpersona_solicitante')->hiddenInput(['id' => 'input_idpersona_solicitante'])->label(false) ?>
-    <?= $form->field($model, 'idpersona_recibe')->hiddenInput(['id' => 'input_idpersona_recibe'])->label(false) ?>
+    <?=
+    Tabs::widget([
+        'items' => [
+            [
+                'label' => 'Datos de Entrega',
+                'content' => $this->render('_tab1', ['form' => $form, 'model' => $model]),
+                'active' => true, // Define la pestaña activa
 
-    <div class="row">
-        <div class="col-md-2">
-            <?= SiteController::actionGet_input_fecha($form, $model, 'fecha', 'fecha', 'Fecha') ?>
-        </div>
-        <div class="col-md-3">
-            <div class="input-group">
-                <?= $form->field($model, 'documento_solicitante')->textInput([
-                    'id' => 'input_dni_solicitante',
-                    'onkeyup' => 'ValidarIngresoDniSolicitante();',
-                ])
-                    ->label($model->isNewRecord ? 'Buscar Solicitante' : 'DNI Solicitante') ?>
-                <span class="input-group-btn" style="padding-top:27px;">
-                    <?= SiteController::actionGet_boton_buscar_x_documento(
-                        'btn_dni_solicitante',
-                        'Buscar Dni',
-                        'datos_persona_solicitante();'
-                    ) ?>
-                </span>
-            </div>
-        </div>
-        <div class="col-md-3" style="padding-top:30px;" id="txt_mensaje_solicitante"><?= $persona_nombre_solicitante ?></div>
-        <div class="col-md-4">
-            <?= SiteController::actionGet_input_select2($form, $model, 'idempleado_autorizacion', 'cmb_idempleado_autorizacion', Empleado::get_empleados(), 'idempleado', 'descripcion', 'Autorizacion') ?>
-        </div>
-    </div>
+            ],
+            [
+                'label' => 'Articulos',
+                'content' => $this->render('_tab2', ['form' => $form, 'model' => $model]),
+            ],
 
-    <div class="row">
+        ],
+    ]);
+    ?>
 
-        <div class="col-md-4">
-            <?= SiteController::actionGet_input_select2($form, $model, 'idempleado_despacha', 'cmb_idempleado_despacha', Empleado::get_empleados(), 'idempleado', 'descripcion', 'Despachante') ?>
-        </div>
 
-        <div class="col-md-3">
-            <div class="input-group">
-                <?= $form->field($model, 'documento_receptor')->textInput([
-                    'id' => 'input_dni_receptor',
-                    'onkeyup' => 'ValidarIngresoDniReceptor();',
-                ])
-                    ->label($model->isNewRecord ? 'Buscar Receptor' : 'DNI Receptor') ?>
-                <span class="input-group-btn" style="padding-top:27px;">
-                    <?= SiteController::actionGet_boton_buscar_x_documento(
-                        'btn_dni_receptor',
-                        'Buscar Dni',
-                        'datos_persona_receptor();'
-                    ) ?>
-                </span>
-            </div>
-
-        </div>
-
-        <div class="col-md-5" style="padding-top:30px;" id="txt_mensaje_receptor"><?= $persona_nombre_receptor ?></div>
-
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <?= $form->field($model, 'observacion')->textarea(['rows' => 6]) ?>
-        </div>
-    </div>
 
     <?php ActiveForm::end(); ?>
 
+</div>
+
+<!-- DIV ITEMS ##################################################################################################################################################### -->
+<div class="row" id="abm_items" style="display:none;">
+    <div class="col-md-12">
+        <section>
+            <header>
+                <h5>
+                    Agregar Item
+                </h5>
+            </header>
+            <div class="panel-body">
+                <?php
+                    $model_item = new StockInformaticaEgresoDetalleSearch();
+                    echo $this->render('/stock_informatica_egreso_detalle/_form', [
+                        'model' => $model_item,
+                        'idpadreitem' => $model->idegreso, // <----- aca le paso como parametro el id de la recepcion
+                        'botones' => true
+                    ]);
+                ?>
+            </div>
+        </section>
+    </div>
 </div>

@@ -2,14 +2,18 @@
 
 namespace app\controllers;
 
+use app\models\Articulo;
 use Yii;
 use app\models\StockInformaticaEgresoDetalle;
 use app\models\StockInformaticaEgresoDetalleSearch;
+use kartik\grid\GridView;
+use yii\data\ArrayDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
+use yii\helpers\Json;
 
 /**
  * Stock_informatica_egreso_detalleController implements the CRUD actions for StockInformaticaEgresoDetalle model.
@@ -194,13 +198,9 @@ class Stock_informatica_egreso_detalleController extends Controller
         }
     }
 
-    /**
-     * Delete an existing StockInformaticaEgresoDetalle model.
-     * For ajax request will return json object
-     * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
+    
+
+    
     public function actionDelete($id)
     {
         $request = Yii::$app->request;
@@ -222,13 +222,83 @@ class Stock_informatica_egreso_detalleController extends Controller
 
     }
 
-     /**
-     * Delete multiple existing StockInformaticaEgresoDetalle model.
-     * For ajax request will return json object
-     * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
+
+    public function actionGrilla_items()
+    {
+        $request = Yii::$app->request;
+        if (!$request->isAjax) {
+            return $this->redirect(['/']);
+        }
+
+        // Recibir el array desde la solicitud POST
+        $detallesJson = $request->post('detalles', '[]'); // Default vacío si no hay datos
+        $detallesArray = Json::decode($detallesJson);
+
+
+        // Crear un DataProvider basado en el array recibido
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $detallesArray,
+            'pagination' => false,
+            'sort' => [
+                'attributes' => ['idarticulo', 'cantidad'],
+            ],
+        ]);
+
+
+        $aux_alta = Html::button('<i class="glyphicon glyphicon-plus"></i>', [
+            'class' => 'btn btn-primary',
+            'id' => 'btnItem',
+            'title' => "Nuevo Item",
+            'data-toggle' => 'tooltip',
+            'onclick' => "js:mostrar_abm_item();"
+        ]);
+
+
+        return GridView::widget([
+            'id' => 'grilla_items',
+            'dataProvider' => $dataProvider,
+            'summary' => '',
+            'columns' => [
+                [
+                    'attribute' => 'idarticulo',
+                    'headerOptions' => ['style' => 'width:65%'],
+                    'value' => function ($model) {
+                        $articulo = Articulo::get_articulo($model['idarticulo']);
+                        return "$articulo->descripcion";
+                    },
+                    'label' => 'Articulo',
+                ],
+                [
+                    'attribute' => 'cantidad',
+                    'headerOptions' => ['style' => 'width:15%'],
+                    'value' => function ($model) {
+                        $aux = truncate($model['cantidad'], 2);
+                        return "$aux";
+                    },
+                ],
+                [
+                    'header' =>  $aux_alta,
+                    'class' => 'yii\grid\ActionColumn',
+                    'headerOptions' => ['style' => 'width:5%'],
+                    'template' => '{eliminar}',  // the default buttons + your custom button
+                    'buttons' => [
+                        'eliminar' => function ($url, $model) {
+                            $idarticulo = $model['idarticulo'];
+                            return Html::button('<i class="glyphicon glyphicon-trash"></i>', [
+                                'title' => "Eliminar Item",
+                                'data-toggle' => 'tooltip',
+                                'class' => 'btn btn-link',
+                                'onclick' => "console.log('idarticulo:', {$idarticulo}); eliminar_item({$idarticulo});", // Log para verificar el valor
+                            ]);
+                        },
+
+                    ]
+                ]
+            ],
+        ]);
+    }
+
+
     public function actionBulkDelete()
     {        
         $request = Yii::$app->request;
@@ -268,4 +338,11 @@ class Stock_informatica_egreso_detalleController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+}
+
+function truncate($number, $precision = 0)
+{
+    // warning: precision is limited by the size of the int type
+    $shift = pow(10, $precision);
+    return intval($number * $shift) / $shift;
 }

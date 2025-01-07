@@ -84,7 +84,7 @@ class Stock_informatica_ingresoController extends Controller
                         Html::button('Guardar', [
                             'id' => 'btnGuardar',
                             'class' => 'btn btn-primary',
-                            'type' => 'submit',  // Cambiar de 'submit' a 'button'
+                            'type' => 'submit',  
                             'onclick' => 'guardarFormulario()',  // Llamada a la función JavaScript
                         ]),
                 ];
@@ -140,7 +140,7 @@ class Stock_informatica_ingresoController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
                 return [
-                    'title' => 'Nuevo Ingreso',
+                    'title' => 'Editar Ingreso',
                     'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
@@ -153,7 +153,7 @@ class Stock_informatica_ingresoController extends Controller
                     Html::button('Guardar', [
                         'id' => 'btnGuardar',
                         'class' => 'btn btn-primary',
-                        'type' => 'submit',  // Cambiar de 'submit' a 'button'
+                        'type' => 'submit',  
                         'onclick' => 'guardarFormulario()',  // Llamada a la función JavaScript
                     ]),
                 ];
@@ -216,14 +216,14 @@ class Stock_informatica_ingresoController extends Controller
                     $transaction->commit();
 
                     return [
-                        'title' => "Nuevo Ingreso",
-                        'content' => '<span class="text-success">Ingreso Creado Correctamente</span>',
+                        'title' => "Editar Ingreso",
+                        'content' => '<span class="text-success">Ingreso Editado Correctamente</span>',
                         'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
                     ];
                 }
             }
             return [
-                'title' => "Nuevo Ingreso, Faltan datos!!! Complete Los datos Faltantes!!!",
+                'title' => "Editar Ingreso, Faltan datos!!! Complete Los datos Faltantes!!!",
                 'content' => $this->renderAjax('create', [
                     'model' => $model,
                 ]),
