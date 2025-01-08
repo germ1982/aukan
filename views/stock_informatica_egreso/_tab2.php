@@ -18,11 +18,11 @@ $this->registerJs("let detallesArray = $json_detalles;", \yii\web\View::POS_HEAD
 
 ?>
 <!-- LINEA GRILLA DE ITEMS ##################################################################################################################################################### -->
-
+<input type="hidden" id="detallesArray" name="detallesArray">
 <div class="row" style="border-radius: 5px; padding: 15px;">
-        Items:
-        <div id="div_grilla" class="col-md-12" style="border:1px solid #BEBEBE; border-radius: 5px; padding: 5px;"></div>
-    </div>
+    Items:
+    <div id="div_grilla" class="col-md-12" style="border:1px solid #BEBEBE; border-radius: 5px; padding: 5px;"></div>
+</div>
 
 
 
@@ -71,7 +71,7 @@ $this->registerJs("let detallesArray = $json_detalles;", \yii\web\View::POS_HEAD
             alert("Debe completar todos los campos");
             return;
         }
-        console.log('detallesArray en validacion de existencia: ',detallesArray);
+        console.log('detallesArray en validacion de existencia: ', detallesArray);
         const existe = detallesArray.some(item => Number(item.idarticulo) === Number(idArticulo));
 
         if (existe) {
