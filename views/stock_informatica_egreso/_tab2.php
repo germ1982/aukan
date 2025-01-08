@@ -63,6 +63,8 @@ $this->registerJs("let detallesArray = $json_detalles;", \yii\web\View::POS_HEAD
 
 
     function guardarDetalle() {
+
+        //alert(cantidad_maxima)
         let idArticulo = $('#cmb_articulos').val();
         let cantidad = $('#input_cantidad').val();
 

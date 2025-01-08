@@ -298,7 +298,24 @@ class Stock_informatica_egreso_detalleController extends Controller
         ]);
     }
 
-
+    public function actionDisponible_articulo($idarticulo)
+    {
+        // Sumar cantidades de ingresos
+        $cantidadIngresos = \app\models\StockInformaticaIngresoDetalle::find()
+            ->where(['idarticulo' => $idarticulo])
+            ->sum('cantidad') ?? 0;
+    
+        // Restar cantidades de egresos
+        $cantidadEgresos = \app\models\StockInformaticaEgresoDetalle::find()
+            ->where(['idarticulo' => $idarticulo])
+            ->sum('cantidad') ?? 0;
+    
+        // Calcular la cantidad disponible
+        $cantidadDisponible = $cantidadIngresos - $cantidadEgresos;
+    
+        return $cantidadDisponible > 0 ? $cantidadDisponible : 0; // Evitar valores negativos
+    }
+    
     public function actionBulkDelete()
     {        
         $request = Yii::$app->request;
