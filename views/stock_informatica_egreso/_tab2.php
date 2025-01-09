@@ -61,9 +61,24 @@ $this->registerJs("let detallesArray = $json_detalles;", \yii\web\View::POS_HEAD
         $("#btnCerrar").show();
     }
 
+    function validarCantidad(){
+        
+        var idarticulo = $('#cmb_articulos').val(); // Obtén el ID del artículo seleccionado
+        var cantidad = $('#input_cantidad').val(); // Obtén la cantidad ingresada
 
+        if (!idarticulo) {
+            alert('Por favor, selecciona un artículo antes de ingresar la cantidad.');
+            $('#input_cantidad').val(''); // Limpia el campo si no hay artículo seleccionado
+            return;
+        }
+
+        if (cantidad>cantidad_maxima) {
+            alert('La cantidad disponible es ' + cantidad_maxima);
+            $('#input_cantidad').val(cantidad_maxima);
+        }
+    }
     function guardarDetalle() {
-
+        validarCantidad();
         //alert(cantidad_maxima)
         let idArticulo = $('#cmb_articulos').val();
         let cantidad = $('#input_cantidad').val();

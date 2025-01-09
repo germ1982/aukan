@@ -15,7 +15,7 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin(); ?>
     <div class="row">
         <div class="col-md-10">
-            <?= SiteController::actionGet_input_select2($form, $model, 'idarticulo', 'cmb_articulos', Articulo::get_articulos_rubro(115), 'idarticulo', 'descripcion', 'Articulo',null,null,'get_disponible_articulo();') ?>
+            <?= SiteController::actionGet_input_select2($form, $model, 'idarticulo', 'cmb_articulos', Articulo::get_articulos_rubro_disponible(115), 'idarticulo', 'descripcion', 'Articulo',null,null,'get_disponible_articulo();') ?>
         </div>
         <div class="col-md-2">
             <?= $form->field($model, 'cantidad')->textInput(['id' => 'input_cantidad','onblur' => 'validarCantidad()',]) ?>
@@ -56,19 +56,5 @@ use yii\widgets\ActiveForm;
         });
     }
 
-    function validarCantidad(){
-        var idarticulo = $('#cmb_articulos').val(); // Obtén el ID del artículo seleccionado
-        var cantidad = $('#input_cantidad').val(); // Obtén la cantidad ingresada
 
-        if (!idarticulo) {
-            alert('Por favor, selecciona un artículo antes de ingresar la cantidad.');
-            $('#input_cantidad').val(''); // Limpia el campo si no hay artículo seleccionado
-            return;
-        }
-
-        if (cantidad>cantidad_maxima) {
-            alert('La cantidad disponibel es ' + cantidad_maxima);
-            $('#input_cantidad').val(cantidad_maxima);
-        }
-    }
 </script>

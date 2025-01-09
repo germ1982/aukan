@@ -59,7 +59,7 @@ CrudAsset::register($this);
         <section class="panel">
             <div class="panel-body">
                 <div class="<?= $clase ?>">
-                    <div id="ajaxCrudDatatable">
+                    <div id="ajaxCrudDatatable_egresos">
 
                         <?= GridView::widget([
                             'id' => 'crud-datatable',
@@ -70,6 +70,12 @@ CrudAsset::register($this);
                             'columns' => require(__DIR__ . '/_columns.php'),
                             'toolbar' => [
                                 ['content' =>
+
+                                Html::a(
+                                    'Articulos',
+                                    ['view_stock_articulos_cantidades'],
+                                    ['role' => 'modal-remote', 'title' => 'Articulos', 'class' => 'btn btn-default']
+                                ) .
 
                                 Html::a(
                                         '<i class="glyphicon glyphicon-plus"></i>',
