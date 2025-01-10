@@ -2,8 +2,8 @@
 
 namespace app\controllers;
 
-use app\models\Configuracion;
-use app\models\ConfiguracionTipo;
+use app\models\Persona;
+use app\models\Empleado;
 use Yii;
 use app\models\MovimVehiOficial;
 use app\models\MovimVehiOficialSearch;
@@ -35,7 +35,7 @@ class Movim_vehi_oficialController extends Controller
         // Verificar si el vehículo existe
         if ($vehiculoOficial) {
             return [
-                
+
                 'dominio' => $vehiculoOficial->dominio,
                 'modelo' => $vehiculoOficial->modelo,
                 'anio' => $vehiculoOficial->anio,
@@ -91,12 +91,27 @@ class Movim_vehi_oficialController extends Controller
     public function actionView($id)
     {
         $request = Yii::$app->request;
+
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
+
+            // Obtener el empleado y chofer
+
+            $model = $this->findModel($id);
+
+            $empleado = Empleado::findOne($model->chofer);
+            if ($empleado) {
+                $chofer = Persona::findOne($empleado->idpersona);
+                $choferInfo = $chofer ? $chofer->nombre . ' - ' . $chofer->apellido . ' - ' . $empleado->legajo : 'No encontrado';
+            } else {
+                $choferInfo = 'Empleado no encontrado';
+            }
+
             return [
                 'title' => "MovimVehiOficial #" . $id,
                 'content' => $this->renderAjax('view', [
                     'model' => $this->findModel($id),
+                    'choferInfo' => $choferInfo,  // Aquí pasas la información del chofer
                 ]),
                 'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                     Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
@@ -108,13 +123,14 @@ class Movim_vehi_oficialController extends Controller
         }
     }
 
+
     /**
      * Creates a new MovimVehiOficial model.
      * For ajax request will return json object
      * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    
+
     public function actionCreate()
     {
         $request = Yii::$app->request;

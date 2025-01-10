@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Empleado;
 use app\models\VehiculoOficial;
 use yii\helpers\ArrayHelper;
 use yii\widgets\DetailView;
@@ -25,6 +26,10 @@ $vehiculos = ArrayHelper::map(
         return $marca . ' - ' . $model->modelo . ' - ' . $model->dominio . ' - ' . $model->anio;
     }
 );
+
+$vehiculo = VehiculoOficial::getVehiculoOficial($model->idvehiculo);
+$choferInformacion = Empleado::get_empleado($model->chofer)->descripcion;
+
 
 ?>
 
@@ -61,10 +66,10 @@ $vehiculos = ArrayHelper::map(
                     <?= campo('idmovimiento', "$model->idmovimiento") ?>
                 </div>
                 <div class="col-md-12">
-                    <?= campo('idvehiculo', "$model->$vehiculos") ?>
+                    <?= campo('idvehiculo', "$vehiculo") ?>
                 </div>
                 <div class="col-md-12">
-                    <?= campo('chofer', "$model->chofer") ?>
+                    <?= campo('chofer', "$choferInfo") ?>
                 </div>
             </div>
             <div class="row">
