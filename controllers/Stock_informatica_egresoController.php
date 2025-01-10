@@ -15,6 +15,7 @@ use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
 use yii\helpers\Json;
+use kartik\mpdf\Pdf;
 
 /**
  * Stock_informatica_egresoController implements the CRUD actions for StockInformaticaEgreso model.
@@ -274,6 +275,32 @@ class Stock_informatica_egresoController extends Controller
             'footer' => '<div class="text-center">' . Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default text-center', 'data-dismiss' => "modal"]) . '</div>',
         ];
     } */
+    public function actionImprimir_acta_entrega($idegreso)
+    {
+        $content = $this->renderPartial('imprimir_acta_entrega', [
+            'idegreso' => $idegreso,
+        ]);
+        $pdf = new Pdf([
+            'mode' => Pdf::MODE_UTF8,
+            'format' => Pdf::FORMAT_A4,
+            'orientation' => Pdf::ORIENT_PORTRAIT,
+            'destination' => Pdf::DEST_BROWSER,
+            'content' => $content,
+            'defaultFontSize' => 12,
+            'cssFile' =>
+            '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
+            'cssInline' => '.kv-heading-1{font-size:18px}',
+            'methods' => [
+                'SetTitle' => 'ACTA DE ENTREGA',
+                'SetHeader' => null,
+                'SetFooter' => null,
+            ],
+        ]);
+
+        return $pdf->render();
+    }
+
+
     public function actionDelete($id)
     {
         $request = Yii::$app->request;

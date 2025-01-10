@@ -16,17 +16,28 @@ $model->idusuario_edicion = $idUsuario;
 $persona_nombre_solicitante = '';
 $persona_nombre_receptor = '';
 
-if(isset($model->idpersona_solicitante)){
+if (isset($model->idpersona_solicitante)) {
     $persona = Persona::findOne($model->idpersona_solicitante);
-    $model->documento_solicitante = $persona->documento;
-    $persona_nombre_solicitante = "$persona->apellido, $persona->nombre";
+    if ($persona !== null) {
+        $model->documento_solicitante = $persona->documento;
+        $persona_nombre_solicitante = "$persona->apellido, $persona->nombre";
+    } else {
+        $model->documento_solicitante = null;
+        $persona_nombre_solicitante = 'No encontrado';
+    }
 }
 
-if(isset($model->idpersona_recibe)){
+if (isset($model->idpersona_recibe)) {
     $persona = Persona::findOne($model->idpersona_recibe);
-    $model->documento_receptor = $persona->documento;
-    $persona_nombre_receptor = "$persona->apellido, $persona->nombre";
+    if ($persona !== null) {
+        $model->documento_receptor = $persona->documento;
+        $persona_nombre_receptor = "$persona->apellido, $persona->nombre";
+    } else {
+        $model->documento_receptor = null;
+        $persona_nombre_receptor = 'No encontrado';
+    }
 }
+
 
 ?>
 
@@ -43,6 +54,7 @@ if(isset($model->idpersona_recibe)){
                 <?= $form->field($model, 'documento_solicitante')->textInput([
                     'id' => 'input_dni_solicitante',
                     'onkeyup' => 'ValidarIngresoDni(1);',
+                    'onblur' => 'datos_persona_solicitante();',
                 ])
                     ->label($model->isNewRecord ? 'Buscar Solicitante' : 'DNI Solicitante') ?>
                 <span class="input-group-btn" style="padding-top:27px;">
@@ -77,6 +89,7 @@ if(isset($model->idpersona_recibe)){
                 <?= $form->field($model, 'documento_receptor')->textInput([
                     'id' => 'input_dni_receptor',
                     'onkeyup' => 'ValidarIngresoDni(2);',
+                    'onblur' => 'datos_persona_receptor();',
                 ])
                     ->label($model->isNewRecord ? 'Buscar Receptor' : 'DNI Receptor') ?>
                 <span class="input-group-btn" style="padding-top:27px;">
