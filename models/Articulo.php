@@ -56,9 +56,9 @@ class Articulo extends \yii\db\ActiveRecord
             'imagen' => 'Imagen',
         ];
     }
-    public static function get_articulos($modulo='')
+    public static function get_articulos($modulo = '')
     {
-        $filtro = $modulo ? " and idarticulo in (SELECT idarticulo from $modulo)" :'';
+        $filtro = $modulo ? " and idarticulo in (SELECT idarticulo from $modulo)" : '';
         $sql = "SELECT  a.idarticulo,concat( ct.descripcion ,' ', cm.descripcion ,' ' ,a.modelo ,' ' , cum.descripcion ,' ', a.descripcion) as descripcion
                 from articulo a 
                 join configuracion ct on ct.id_configuracion=a.idtipo
@@ -72,7 +72,7 @@ class Articulo extends \yii\db\ActiveRecord
 
     public static function get_articulos_rubro($idrubro = null)
     {
-        $filtro = $idrubro ? " and idrubro = $idrubro" :'';
+        $filtro = $idrubro ? " and idrubro = $idrubro" : '';
         $sql = "SELECT  a.idarticulo,concat( ct.descripcion ,' ', cm.descripcion ,' ' ,a.modelo ,' ' , cum.descripcion ,' ', a.descripcion) as descripcion
                 from articulo a 
                 join configuracion ct on ct.id_configuracion=a.idtipo
@@ -83,6 +83,51 @@ class Articulo extends \yii\db\ActiveRecord
         $articulos = Articulo::findBySql($sql)->all();
         return $articulos;
     }
+
+    public static function get_articulos_rubro_disponible($idrubro = null)
+    {
+        $filtro = $idrubro ? " AND a.idrubro = $idrubro" : '';
+
+        $sql_disponible = "SELECT 
+                            COALESCE(
+                                (SELECT SUM(sii.cantidad) 
+                                FROM stock_informatica_ingreso_detalle sii 
+                                WHERE sii.idarticulo = a.idarticulo), 0
+                            )
+                            -
+                            COALESCE(
+                                (SELECT SUM(sie.cantidad) 
+                                FROM stock_informatica_egreso_detalle sie 
+                                WHERE sie.idarticulo = a.idarticulo), 0
+                            )";
+
+
+        $sql = "SELECT 
+                    a.idarticulo,
+                    CONCAT(
+                        ct.descripcion, ' ', 
+                        cm.descripcion, ' ', 
+                        a.modelo, ' ', 
+                        cum.descripcion, ' ', 
+                        a.descripcion, ' (disponible ', 
+                        ($sql_disponible), 
+                        ')'
+                    ) AS descripcion
+                FROM articulo a
+                JOIN configuracion ct ON ct.id_configuracion = a.idtipo
+                JOIN configuracion cm ON cm.id_configuracion = a.idmarca
+                JOIN configuracion cum ON cum.id_configuracion = a.id_unidad_medida
+                WHERE a.activo = 1
+                $filtro
+                AND ($sql_disponible) > 0
+                ORDER BY ct.descripcion, cm.descripcion, a.modelo, cum.descripcion, a.descripcion
+            ";
+
+        $articulos = Articulo::findBySql($sql)->all();
+        return $articulos;
+    }
+
+
 
     public static function get_articulo($id)
     {

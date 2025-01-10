@@ -84,7 +84,7 @@ class Stock_informatica_ingresoController extends Controller
                         Html::button('Guardar', [
                             'id' => 'btnGuardar',
                             'class' => 'btn btn-primary',
-                            'type' => 'submit',  // Cambiar de 'submit' a 'button'
+                            'type' => 'submit',  
                             'onclick' => 'guardarFormulario()',  // Llamada a la función JavaScript
                         ]),
                 ];
@@ -97,9 +97,80 @@ class Stock_informatica_ingresoController extends Controller
                 $fecha = date_format($fecha, 'Y-m-d');
                 $model->fecha = $fecha;
                 
+
+                if ($guardado && $model->save()) {
+                    
+                    // Aquí procesas el detallesArray recibido
+                    $detallesArray = Json::decode($request->post('detallesArray')); // Deserializas el array JSON
+
+                    foreach ($detallesArray as $detalle) {
+                            $detalleModel = new StockInformaticaIngresoDetalle();
+                            $detalleModel->idingreso = $model->idingreso;
+                            $detalleModel->idarticulo = $detalle['idarticulo'];
+                            $detalleModel->cantidad = $detalle['cantidad'];
+                            $detalleModel->save();
+                        }
+                    
+                    $transaction->commit();
+
+                    return [
+                        'title' => "Nuevo Ingreso",
+                        'content' => '<span class="text-success">Ingreso Creado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
+                    ];
+                }
+            }
+            return [
+                'title' => "Nuevo Ingreso, Faltan datos!!! Complete Los datos Faltantes!!!",
+                'content' => $this->renderAjax('create', [
+                    'model' => $model,
+                ]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+            ];
+        }
+    }
+
+    public function actionUpdate($id)
+    {
+        $request = Yii::$app->request;
+        $model = $this->findModel($id);
+
+        if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            if ($request->isGet) {
+                return [
+                    'title' => 'Editar Ingreso',
+                    'content' => $this->renderAjax('create', [
+                        'model' => $model,
+                    ]),
+                    'footer' =>
+                    Html::button('Cerrar', [
+                        'id' => 'btnCerrar',
+                        'class' => 'btn btn-default pull-left',
+                        'data-dismiss' => 'modal',
+                    ]) .
+                    Html::button('Guardar', [
+                        'id' => 'btnGuardar',
+                        'class' => 'btn btn-primary',
+                        'type' => 'submit',  
+                        'onclick' => 'guardarFormulario()',  // Llamada a la función JavaScript
+                    ]),
+                ];
+            } else if ($model->load($request->post())) {
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
+
+                $fecha = ArmarDateParaMySql($model->fecha);
+                $fecha = date_create($fecha);
+                $fecha = date_format($fecha, 'Y-m-d');
+                $model->fecha = $fecha;
+
+                $idUsuario = Yii::$app->user->identity->id;
+                $model->idusuario_edicion = $idUsuario;
+
                 // Aquí procesas el detallesArray recibido
                 $detallesArray = Json::decode($request->post('detallesArray')); // Deserializas el array JSON
-
 
                 if ($guardado && $model->save()) {
                     // Guardar los detalles relacionados (puedes iterar sobre $detallesArray y guardarlos en la base de datos)
@@ -145,72 +216,14 @@ class Stock_informatica_ingresoController extends Controller
                     $transaction->commit();
 
                     return [
-                        'title' => "Nuevo Ingreso",
-                        'content' => '<span class="text-success">Ingreso Creado Correctamente</span>',
+                        'title' => "Editar Ingreso",
+                        'content' => '<span class="text-success">Ingreso Editado Correctamente</span>',
                         'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
                     ];
                 }
             }
             return [
-                'title' => "Nuevo Ingreso, Faltan datos!!! Complete Los datos Faltantes!!!",
-                'content' => $this->renderAjax('create', [
-                    'model' => $model,
-                ]),
-                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
-            ];
-        }
-    }
-
-    public function actionUpdate($id)
-    {
-        $request = Yii::$app->request;
-        $model = $this->findModel($id);
-
-        if ($request->isAjax) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            if ($request->isGet) {
-                return [
-                    'title' => 'Nuevo Ingreso',
-                    'content' => $this->renderAjax('create', [
-                        'model' => $model,
-                    ]),
-                    'footer' =>
-                    Html::button('Cerrar', [
-                        'id' => 'btnCerrar',
-                        'class' => 'btn btn-default pull-left',
-                        'data-dismiss' => 'modal',
-                    ]) .
-                        Html::button('Guardar', [
-                            'id' => 'btnGuardar',
-                            'class' => 'btn btn-primary',
-                            'type' => 'submit',
-                        ]),
-                ];
-            } else if ($model->load($request->post())) {
-                $transaction = Yii::$app->db->beginTransaction();
-                $guardado = true;
-
-                $fecha = ArmarDateParaMySql($model->fecha);
-                $fecha = date_create($fecha);
-                $fecha = date_format($fecha, 'Y-m-d');
-                $model->fecha = $fecha;
-
-                $idUsuario = Yii::$app->user->identity->id;
-                $model->idusuario_edicion = $idUsuario;
-
-                if ($guardado && $model->save()) {
-                    $transaction->commit();
-
-                    return [
-                        'title' => "Nuevo Ingreso",
-                        'content' => '<span class="text-success">Ingreso Creado Correctamente</span>',
-                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
-                    ];
-                }
-            }
-            return [
-                'title' => "Nuevo Ingreso, Faltan datos!!! Complete Los datos Faltantes!!!",
+                'title' => "Editar Ingreso, Faltan datos!!! Complete Los datos Faltantes!!!",
                 'content' => $this->renderAjax('create', [
                     'model' => $model,
                 ]),

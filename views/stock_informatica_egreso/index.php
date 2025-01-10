@@ -17,7 +17,7 @@ CrudAsset::register($this);
 
 <style>
     .custom-grid {
-    font-size: 13px; /* Cambia el tamaño según tus necesidades */
+    font-size: 12px; /* Cambia el tamaño según tus necesidades */
 }
 
 .kv-grid-toolbar .btn {
@@ -25,6 +25,14 @@ CrudAsset::register($this);
     line-height: 1.42857143;  /* Esto centra el contenido verticalmente */
 }
 
+.custom-modal .modal-dialog {
+    max-width: 85%; /* Personaliza el ancho */
+    width: auto;
+}
+
+/* .custom-modal .modal-content {
+    padding: 20px; 
+} */
 </style>
 
 <header class="page-header">
@@ -51,7 +59,7 @@ CrudAsset::register($this);
         <section class="panel">
             <div class="panel-body">
                 <div class="<?= $clase ?>">
-                    <div id="ajaxCrudDatatable">
+                    <div id="ajaxCrudDatatable_egresos">
 
                         <?= GridView::widget([
                             'id' => 'crud-datatable',
@@ -62,6 +70,12 @@ CrudAsset::register($this);
                             'columns' => require(__DIR__ . '/_columns.php'),
                             'toolbar' => [
                                 ['content' =>
+
+                                Html::a(
+                                    'Articulos',
+                                    ['view_stock_articulos_cantidades'],
+                                    ['role' => 'modal-remote', 'title' => 'Articulos', 'class' => 'btn btn-default']
+                                ) .
 
                                 Html::a(
                                         '<i class="glyphicon glyphicon-plus"></i>',
@@ -106,9 +120,10 @@ $this->registerJs(
 <?php Modal::begin([
     "id" => "ajaxCrudModal",
     'options' => [
+        'class' => 'custom-modal', // Clase personalizada para el modal
         'tabindex' => false // important for Select2 to work properly
     ],
-    'size' => Modal::SIZE_LARGE,
+    'size' => Modal::SIZE_LARGE, // Punto de partida para el tamaño
     'clientOptions' => [
         'backdrop' => 'static'
     ],

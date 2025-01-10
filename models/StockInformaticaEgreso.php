@@ -17,9 +17,10 @@ use Yii;
  */
 class StockInformaticaEgreso extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
+    public $fdesde;
+    public $fhasta;
+    public $documento_solicitante;
+    public $documento_receptor;
     public static function tableName()
     {
         return 'stock_informatica_egreso';
@@ -33,7 +34,7 @@ class StockInformaticaEgreso extends \yii\db\ActiveRecord
         return [
             [['fecha', 'idpersona_solicitante', 'idempleado_autorizacion', 'idempleado_despacha', 'idpersona_recibe'], 'required'],
             [['fecha'], 'safe'],
-            [['idpersona_solicitante', 'idempleado_autorizacion', 'idempleado_despacha', 'idpersona_recibe'], 'integer'],
+            [['idpersona_solicitante', 'idempleado_autorizacion', 'idempleado_despacha', 'idpersona_recibe', 'idusuario_carga','idusuario_edicion'], 'integer'],
             [['observacion'], 'string'],
         ];
     }
@@ -51,6 +52,14 @@ class StockInformaticaEgreso extends \yii\db\ActiveRecord
             'idempleado_despacha' => 'Despachante',
             'idpersona_recibe' => 'Receptor',
             'observacion' => 'Observacion',
+            'idusuario_carga' => 'Carga',
+            'idusuario_edicion' => 'Edicion',
         ];
     }
+
+        /* Esto indica que cada registro en StockInformaticaEgreso tiene muchos StockInformaticaEgresoDetalle. */
+        public function getDetalles()
+        {
+            return $this->hasMany(StockInformaticaEgresoDetalle::class, ['idstock_informatica_Egreso' => 'id']);
+        }
 }

@@ -2,23 +2,19 @@
 
 namespace app\controllers;
 
-use app\models\Articulo;
 use Yii;
-use app\models\StockInformaticaEgresoDetalle;
-use app\models\StockInformaticaEgresoDetalleSearch;
-use kartik\grid\GridView;
-use yii\data\ArrayDataProvider;
+use app\models\ViewStockArticulosCantidades;
+use app\models\ViewStockArticulosCantidadesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
-use yii\helpers\Json;
 
 /**
- * Stock_informatica_egreso_detalleController implements the CRUD actions for StockInformaticaEgresoDetalle model.
+ * View_stock_articulos_cantidadesController implements the CRUD actions for ViewStockArticulosCantidades model.
  */
-class Stock_informatica_egreso_detalleController extends Controller
+class View_stock_articulos_cantidadesController extends Controller
 {
     /**
      * @inheritdoc
@@ -37,12 +33,12 @@ class Stock_informatica_egreso_detalleController extends Controller
     }
 
     /**
-     * Lists all StockInformaticaEgresoDetalle models.
+     * Lists all ViewStockArticulosCantidades models.
      * @return mixed
      */
     public function actionIndex()
     {    
-        $searchModel = new StockInformaticaEgresoDetalleSearch();
+        $searchModel = new ViewStockArticulosCantidadesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -53,7 +49,7 @@ class Stock_informatica_egreso_detalleController extends Controller
 
 
     /**
-     * Displays a single StockInformaticaEgresoDetalle model.
+     * Displays a single ViewStockArticulosCantidades model.
      * @param integer $id
      * @return mixed
      */
@@ -63,7 +59,7 @@ class Stock_informatica_egreso_detalleController extends Controller
         if($request->isAjax){
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                    'title'=> "StockInformaticaEgresoDetalle #".$id,
+                    'title'=> "ViewStockArticulosCantidades #".$id,
                     'content'=>$this->renderAjax('view', [
                         'model' => $this->findModel($id),
                     ]),
@@ -78,7 +74,7 @@ class Stock_informatica_egreso_detalleController extends Controller
     }
 
     /**
-     * Creates a new StockInformaticaEgresoDetalle model.
+     * Creates a new ViewStockArticulosCantidades model.
      * For ajax request will return json object
      * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -86,7 +82,7 @@ class Stock_informatica_egreso_detalleController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->request;
-        $model = new StockInformaticaEgresoDetalle();  
+        $model = new ViewStockArticulosCantidades();  
 
         if($request->isAjax){
             /*
@@ -95,7 +91,7 @@ class Stock_informatica_egreso_detalleController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Create new StockInformaticaEgresoDetalle",
+                    'title'=> "Create new ViewStockArticulosCantidades",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
@@ -106,15 +102,15 @@ class Stock_informatica_egreso_detalleController extends Controller
             }else if($model->load($request->post()) && $model->save()){
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Create new StockInformaticaEgresoDetalle",
-                    'content'=>'<span class="text-success">Create StockInformaticaEgresoDetalle success</span>',
+                    'title'=> "Create new ViewStockArticulosCantidades",
+                    'content'=>'<span class="text-success">Create ViewStockArticulosCantidades success</span>',
                     'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
                             Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
         
                 ];         
             }else{           
                 return [
-                    'title'=> "Create new StockInformaticaEgresoDetalle",
+                    'title'=> "Create new ViewStockArticulosCantidades",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
@@ -128,7 +124,7 @@ class Stock_informatica_egreso_detalleController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->iddetalle]);
+                return $this->redirect(['view', 'id' => $model->idarticulo]);
             } else {
                 return $this->render('create', [
                     'model' => $model,
@@ -139,7 +135,7 @@ class Stock_informatica_egreso_detalleController extends Controller
     }
 
     /**
-     * Updates an existing StockInformaticaEgresoDetalle model.
+     * Updates an existing ViewStockArticulosCantidades model.
      * For ajax request will return json object
      * and for non-ajax request if update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
@@ -157,7 +153,7 @@ class Stock_informatica_egreso_detalleController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Update StockInformaticaEgresoDetalle #".$id,
+                    'title'=> "Update ViewStockArticulosCantidades #".$id,
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
@@ -167,7 +163,7 @@ class Stock_informatica_egreso_detalleController extends Controller
             }else if($model->load($request->post()) && $model->save()){
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "StockInformaticaEgresoDetalle #".$id,
+                    'title'=> "ViewStockArticulosCantidades #".$id,
                     'content'=>$this->renderAjax('view', [
                         'model' => $model,
                     ]),
@@ -176,7 +172,7 @@ class Stock_informatica_egreso_detalleController extends Controller
                 ];    
             }else{
                  return [
-                    'title'=> "Update StockInformaticaEgresoDetalle #".$id,
+                    'title'=> "Update ViewStockArticulosCantidades #".$id,
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
@@ -189,7 +185,7 @@ class Stock_informatica_egreso_detalleController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->iddetalle]);
+                return $this->redirect(['view', 'id' => $model->idarticulo]);
             } else {
                 return $this->render('update', [
                     'model' => $model,
@@ -198,9 +194,13 @@ class Stock_informatica_egreso_detalleController extends Controller
         }
     }
 
-    
-
-    
+    /**
+     * Delete an existing ViewStockArticulosCantidades model.
+     * For ajax request will return json object
+     * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     */
     public function actionDelete($id)
     {
         $request = Yii::$app->request;
@@ -222,100 +222,13 @@ class Stock_informatica_egreso_detalleController extends Controller
 
     }
 
-
-    public function actionGrilla_items()
-    {
-        $request = Yii::$app->request;
-        if (!$request->isAjax) {
-            return $this->redirect(['/']);
-        }
-
-        // Recibir el array desde la solicitud POST
-        $detallesJson = $request->post('detalles', '[]'); // Default vacío si no hay datos
-        $detallesArray = Json::decode($detallesJson);
-
-
-        // Crear un DataProvider basado en el array recibido
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => $detallesArray,
-            'pagination' => false,
-            'sort' => [
-                'attributes' => ['idarticulo', 'cantidad'],
-            ],
-        ]);
-
-
-        $aux_alta = Html::button('<i class="glyphicon glyphicon-plus"></i>', [
-            'class' => 'btn btn-primary',
-            'id' => 'btnItem',
-            'title' => "Nuevo Item",
-            'data-toggle' => 'tooltip',
-            'onclick' => "js:mostrar_abm_item();"
-        ]);
-
-
-        return GridView::widget([
-            'id' => 'grilla_items',
-            'dataProvider' => $dataProvider,
-            'summary' => '',
-            'columns' => [
-                [
-                    'attribute' => 'idarticulo',
-                    'headerOptions' => ['style' => 'width:65%'],
-                    'value' => function ($model) {
-                        $articulo = Articulo::get_articulo($model['idarticulo']);
-                        return "$articulo->descripcion";
-                    },
-                    'label' => 'Articulo',
-                ],
-                [
-                    'attribute' => 'cantidad',
-                    'headerOptions' => ['style' => 'width:15%'],
-                    'value' => function ($model) {
-                        $aux = truncate($model['cantidad'], 2);
-                        return "$aux";
-                    },
-                ],
-                [
-                    'header' =>  $aux_alta,
-                    'class' => 'yii\grid\ActionColumn',
-                    'headerOptions' => ['style' => 'width:5%'],
-                    'template' => '{eliminar}',  // the default buttons + your custom button
-                    'buttons' => [
-                        'eliminar' => function ($url, $model) {
-                            $idarticulo = $model['idarticulo'];
-                            return Html::button('<i class="glyphicon glyphicon-trash"></i>', [
-                                'title' => "Eliminar Item",
-                                'data-toggle' => 'tooltip',
-                                'class' => 'btn btn-link',
-                                'onclick' => "console.log('idarticulo:', {$idarticulo}); eliminar_item({$idarticulo});", // Log para verificar el valor
-                            ]);
-                        },
-
-                    ]
-                ]
-            ],
-        ]);
-    }
-
-    public function actionDisponible_articulo($idarticulo)
-    {
-        // Sumar cantidades de ingresos
-        $cantidadIngresos = \app\models\StockInformaticaIngresoDetalle::find()
-            ->where(['idarticulo' => $idarticulo])
-            ->sum('cantidad') ?? 0;
-    
-        // Restar cantidades de egresos
-        $cantidadEgresos = \app\models\StockInformaticaEgresoDetalle::find()
-            ->where(['idarticulo' => $idarticulo])
-            ->sum('cantidad') ?? 0;
-    
-        // Calcular la cantidad disponible
-        $cantidadDisponible = $cantidadIngresos - $cantidadEgresos;
-    
-        return $cantidadDisponible > 0 ? $cantidadDisponible : 0; // Evitar valores negativos
-    }
-    
+     /**
+     * Delete multiple existing ViewStockArticulosCantidades model.
+     * For ajax request will return json object
+     * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     */
     public function actionBulkDelete()
     {        
         $request = Yii::$app->request;
@@ -341,25 +254,18 @@ class Stock_informatica_egreso_detalleController extends Controller
     }
 
     /**
-     * Finds the StockInformaticaEgresoDetalle model based on its primary key value.
+     * Finds the ViewStockArticulosCantidades model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return StockInformaticaEgresoDetalle the loaded model
+     * @return ViewStockArticulosCantidades the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = StockInformaticaEgresoDetalle::findOne($id)) !== null) {
+        if (($model = ViewStockArticulosCantidades::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-}
-
-function truncate($number, $precision = 0)
-{
-    // warning: precision is limited by the size of the int type
-    $shift = pow(10, $precision);
-    return intval($number * $shift) / $shift;
 }

@@ -45,4 +45,9 @@ class StockInformaticaEgresoDetalle extends \yii\db\ActiveRecord
             'cantidad' => 'Cantidad',
         ];
     }
+
+    public function getEgreso()
+    {
+        return $this->hasOne(StockInformaticaEgreso::class, ['id' => 'idstock_informatica_egreso']);
+    } 
 }

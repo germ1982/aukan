@@ -60,6 +60,7 @@ $model->idusuario_edicion = $idUsuario;
             <?= $form->field($model, 'observacion')->textInput(['maxlength' => true]) ?>
         </div>
     </div>
+    
 
     <!-- LINEA GRILLA DE ITEMS ##################################################################################################################################################### -->
 
@@ -101,10 +102,10 @@ $model->idusuario_edicion = $idUsuario;
 <script>
     refrescar_grilla();
 
-
     function refrescar_grilla() {
         //console.log(detallesArray); // Verificar el contenido del array en la consola
         console.log('entro a refrescar grilla');
+        //console.log('detallesArray: ',detallesArray);
 
         $.post(
             "index.php?r=stock_informatica_ingreso_detalle/grilla_items", {
@@ -142,8 +143,8 @@ $model->idusuario_edicion = $idUsuario;
             alert("Debe completar todos los campos");
             return;
         }
-
-        const existe = detallesArray.some(item => item.idarticulo === idArticulo);
+        console.log('detallesArray en validacion de existencia: ',detallesArray);
+        const existe = detallesArray.some(item => Number(item.idarticulo) === Number(idArticulo));
 
         if (existe) {
             alert('El artículo ya está en la lista.');
