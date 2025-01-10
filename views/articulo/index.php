@@ -8,7 +8,7 @@ use yii\bootstrap\Modal;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset;
 
-$this->title = 'Articulo';
+$this->title = 'Articulos';
 $this->params['breadcrumbs'][] = $this->title;
 $clase = 'menu-index';
 
@@ -58,6 +58,7 @@ CrudAsset::register($this);
                             'id' => 'crud-datatable',
                             'dataProvider' => $dataProvider,
                             'filterModel' => $searchModel,
+                            'tableOptions' => ['class' => 'custom-grid'],
                             'pjax' => false,
                             'columns' => require(__DIR__ . '/_columns.php'),
                             'toolbar' => [

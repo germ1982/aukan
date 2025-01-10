@@ -259,7 +259,7 @@ class Stock_informatica_egresoController extends Controller
         }
     }
 
-    public function actionView_stock_articulos_cantidades()
+    /* public function actionView_stock_articulos_cantidades()
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
         $searchModel = new ViewStockArticulosCantidadesSearch();
@@ -273,7 +273,7 @@ class Stock_informatica_egresoController extends Controller
             ]),
             'footer' => '<div class="text-center">' . Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default text-center', 'data-dismiss' => "modal"]) . '</div>',
         ];
-    }
+    } */
     public function actionDelete($id)
     {
         $request = Yii::$app->request;
