@@ -19,27 +19,8 @@ use app\models\Sds_stk_orden_compra;
 use app\models\StockInformaticaEgreso;
 use app\models\Usuarios;
 
-$identrega = $_GET['identrega'];
-$model = StockInformaticaEgreso::findOne($identrega);
-
-
-
-
-//esto siguiente busca si imprime la fecha segun el organismo...
-$usuario = Yii::$app->user->identity;
-$idusuario = $usuario != null ? $usuario->idusuario : null;
-$usuario = Usuarios::findOne($idusuario);
-$id_organismo = $usuario ? $usuario->organismo_stock : 0;
-$imprime_fecha = $id_organismo ? Usuarios::findOne($id_organismo)->imprime_fecha_acta : 0;
-
-//esto siguiente por si tiene orden de compra
-$consulta = "SELECT oc.idordencompra, oc.numero as numero
-            FROM sds_stk_entrega_item ei
-            join sds_stk_recepcion_item ri on  ei.recepcion_item = ri.idrecepcionitem
-            join sds_stk_orden_compra_item oci on ri.idordencompraitem = oci.idordencompraitem
-            join sds_stk_orden_compra oc on oc.idordencompra = oci.idordencompra
-            where ei.identrega = $identrega";
-//$orden_compra = Sds_stk_orden_compra::findBySql($consulta)->one();
+$idegreso = $_GET['idegreso'];
+$model = StockInformaticaEgreso::findOne($idegreso);
 
 function crear_linea($label, $contenido)
 {
@@ -68,37 +49,28 @@ function crear_titulo_recuadro($label, $ancho)
 <html>
 <body>
 
-    <img src="img/membrete_nuevo_pri.png" width="100%" alt="Subsecretaría de Desarrollo Social">
+    <img src="img/membrete_subsecretaria_familia_2025.png" width="100%" alt="Subsecretaría de Desarrollo Social">
 
     <br><br>
     <div style="text-align: center;">
-        <h5><b>ENTREGA <?=$model->referente ? 'INTERMEDIA' : 'FINAL'?></b></h5>
+        <h5><b>ACTA ENTREGA DE INSUMOS INFORMATICOS</b></h5>
     </div>
+    <br><br>
 
-    <?php 
-        $imprime_fecha ? crear_linea('Fecha', date('d/m/Y')) : ''; 
-        $orden_compra ? crear_linea('Orden de Compra', $orden_compra->numero):"";
-        //crear_linea('Orden de Compra', $orden_compra->numero);
-    ?><br>
+    <?=crear_linea('Fecha', $model->fecha);?>
+
+        <br>
     <hr>
     <?php crear_titulo_recuadro('SOLICITANTE', 4); ?>
 
     <div class="row">
         <div class="col-xs-6" style='padding-left: 50px;'>
             <?php
-            $persona = Persona::findOne($model->idpersona);
+            $persona = Persona::findOne($model->idpersona_solicitante);
             $config = Configuracion::findOne($persona->documento_tipo);
             $aux = "$persona->apellido, $persona->nombre";
             crear_linea('Persona', $aux);
             
-            /* if(Yii::$app->user->identity->organismo_stock!=Usuarios::){
-                $aux = $persona->domicilio_calle ? $persona->domicilio_calle : "...................................";
-                $aux = $persona->domicilio_numero ? "$aux al $persona->domicilio_numero" : $aux;
-                crear_linea('Calle', $aux);
-
-                $aux = "...................................";
-                crear_linea('Telefono', $aux);
-            } */
             ?>
         </div>
 
@@ -107,11 +79,6 @@ function crear_titulo_recuadro($label, $ancho)
             $aux = "$config->descripcion $persona->documento";
             crear_linea('Documento', $aux);
 
-            /* if(Yii::$app->user->identity->organismo_stock!=Usuarios::ORG_STK_INFORMATICA){
-                $aux = $persona->idlocalidad ? Localidades::findOne($persona->idlocalidad)->descripcion : "...................................";
-                //$aux = Sds_com_localidad::findOne($persona->idlocalidad)->descripcion;
-                crear_linea('Localidad', $aux);
-            } */
             ?>
         </div>
     </div>
@@ -124,32 +91,31 @@ function crear_titulo_recuadro($label, $ancho)
     <div class="row">
 
         <?php
-        /* $consulta = "SELECT a.descripcion as articulo,  ei.cantidad as cantidad, c.descripcion as unidad_medida
-                                    FROM sds_stk_entrega_item ei 
-                                    INNER JOIN sds_stk_recepcion_item ri on ei.recepcion_item = ri.idrecepcionitem
-                                    INNER JOIN sds_stk_articulo a on ri.idarticulo = a.idarticulo
-                                    INNER JOIN sds_com_configuracion c on a.unidad_medida = c.idconfiguracion
-                                    WHERE ei.identrega = $model->identrega 
-                                    order by a.descripcion;"; */
-        
-        $consulta = "SELECT a.descripcion as articulo,  ei.cantidad as cantidad, c.descripcion as unidad_medida
-                                    FROM sds_stk_entrega_item ei 
-                                    INNER JOIN sds_stk_articulo a on ei.idarticulo = a.idarticulo
-                                    INNER JOIN sds_com_configuracion c on a.unidad_medida = c.idconfiguracion
-                                    WHERE ei.identrega = $model->identrega 
-                                    order by a.descripcion;";
+       
+        $consulta = "   SELECT e.iddetalle,
+                            a.idarticulo,
+                            concat( ct.descripcion ,' ', cm.descripcion ,' ' ,a.modelo ,' ' , cum.descripcion ,' ', a.descripcion) as descripcion,
+                            e.cantidad
+                        FROM stock_informatica_egreso_detalle e 
+                        JOIN articulo a on e.idarticulo = a.idarticulo
+                        join configuracion ct on ct.id_configuracion=a.idtipo
+                        join configuracion cm on cm.id_configuracion=a.idmarca
+                        join configuracion cum on cum.id_configuracion=a.id_unidad_medida
+                        WHERE e.idegreso = $model->idegreso 
+                        order by ct.descripcion,cm.descripcion,a.modelo,cum.descripcion,a.descripcion";
         $articulos = Articulo::findBySql($consulta)->all();
 
         $ban = 1;
         echo "<br>";
         echo "<div class='col-xs-12' style='padding: 0px;'>";
+
         foreach ($articulos as $a) {
-            crear_label_articulo($a->articulo, $a->cantidad, $a->unidad_medida);
+            crear_label_articulo($a->descripcion, '5', 'a');
         }
         echo "</div>";
         echo "<div class='col-xs-12' style='padding: 0px;'>";
-            ($model->observaciones!=''?
-                crear_label_articulo('Observaciones', $model->observaciones, '')
+            ($model->observacion!=''?
+                crear_label_articulo('Observaciones', $model->observacion, '')
                 :null
             );
         echo "</div>";
@@ -166,7 +132,7 @@ function crear_titulo_recuadro($label, $ancho)
         <br>
 
         <?php
-        $idpersona = Empleado::findOne($model->idcontacto)->idpersona;
+        $idpersona = Empleado::findOne($model->idempleado_autorizacion)->idpersona;
         $persona = Persona::findOne($idpersona);
         echo "<span style='font-size: 20px;'>$persona->apellido $persona->nombre</span>";
         ?><br><br>
@@ -187,8 +153,8 @@ function crear_titulo_recuadro($label, $ancho)
             <div class="row" style='text-align: justify; text-justify: inter-word;'>
                 <div class="col-xs-5" style='text-align: left;'>
                     RETIRA: <?php
-                            if ($model->persona_retira != null) {
-                                $persona = Persona::findOne($model->persona_retira);
+                            if ($model->idpersona_recibe != null) {
+                                $persona = Persona::findOne($model->idpersona_recibe);
                                 echo "<span style='font-size: 11px;'>$persona->apellido $persona->nombre</span>";
                                 echo "<br>DNI: <span style='font-size: 11px;'>$persona->documento</span><br>";
                             }
@@ -196,8 +162,8 @@ function crear_titulo_recuadro($label, $ancho)
                 </div>
                 <div class="col-xs-5" style='text-align: left;padding-left:50px;'>
                     ENTREGA: <?php
-                            if ($model->contacto_entrega != null) {
-                                $idpersona = Empleado::findOne($model->contacto_entrega)->idpersona;
+                            if ($model->idempleado_despacha != null) {
+                                $idpersona = Empleado::findOne($model->idempleado_despacha)->idpersona;
                                 $persona = Persona::findOne($idpersona);
                                 echo "<span style='font-size: 11px;'>$persona->apellido $persona->nombre</span>";
                                 echo "<br>DNI: <span style='font-size: 11px;'>$persona->documento</span><br>";

@@ -1,17 +1,17 @@
 <style>
     .text_titulo_fobal {
-        font-size: 18px;
+        font-size: 12px;
         color: #2b3e4c;
     }
 
     .text_descripcion_fobal {
         color: #2b3e4c;
         text-align: justify;
-        font-size: 16px;
+        font-size: 11px;
     }
 
     .panel_contenido {
-        background-color: #f4dfb9;
+        /* background-color: #f4dfb9; */
 
    }
 
@@ -53,7 +53,7 @@
         <div class="panel-actions">
             <!-- onclick="javascript:editarPerfil();" -->
         </div>
-        <h2 class="panel-title text-center neon" style="color: #f4dfb9;">Un equipo que nos llena de orgullo</h2>
+        <h2 class="panel-title text-center neon" style="color: #f4dfb9; font-size: 16px;">Un equipo que nos llena de orgullo</h2>
     </header>
     <div class="panel_contenido">
         <div class="row justify-content-between">
