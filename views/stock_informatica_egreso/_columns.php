@@ -3,6 +3,7 @@
 use app\models\Empleado;
 use app\models\Persona;
 use kartik\date\DatePicker;
+use yii\helpers\Html;
 use yii\helpers\Url;
 
 $layoutDate = <<< HTML
@@ -23,8 +24,8 @@ $columna_7 = '5%';
 
 return [
     [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'idegreso',
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'idegreso',
         'width' => $columna_1,
     ],
     [
@@ -108,19 +109,35 @@ return [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
         'width' => $columna_7,
-        'template' => '{view} {update} ',
-        'vAlign'=>'middle',
-        'urlCreator' => function($action, $model, $key, $index) { 
-                return Url::to([$action,'id'=>$key]);
+        'template' => '{view} {update} {imprimir_acta_entrega}',
+        'vAlign' => 'middle',
+        'urlCreator' => function ($action, $model, $key, $index) {
+            return Url::to([$action, 'id' => $key]);
         },
-        'viewOptions'=>['role'=>'modal-remote','title'=>'Ver','data-toggle'=>'tooltip'],
-        'updateOptions'=>['role'=>'modal-remote','title'=>'Editar', 'data-toggle'=>'tooltip'],
-        'deleteOptions'=>['role'=>'modal-remote','title'=>'Eliminar', 
-                          'data-confirm'=>false, 'data-method'=>false,// for overide yii data api
-                          'data-request-method'=>'post',
-                          'data-toggle'=>'tooltip',
-                          'data-confirm-title'=>'Are you sure?',
-                          'data-confirm-message'=>'Are you sure want to delete this item'], 
+        'viewOptions' => ['role' => 'modal-remote', 'title' => 'Ver', 'data-toggle' => 'tooltip'],
+        'updateOptions' => ['role' => 'modal-remote', 'title' => 'Editar', 'data-toggle' => 'tooltip'],
+        'deleteOptions' => [
+            'role' => 'modal-remote',
+            'title' => 'Eliminar',
+            'data-confirm' => false,
+            'data-method' => false, // for overide yii data api
+            'data-request-method' => 'post',
+            'data-toggle' => 'tooltip',
+            'data-confirm-title' => 'Are you sure?',
+            'data-confirm-message' => 'Are you sure want to delete this item'
+        ],
+        'buttons' => [
+            'imprimir_acta_entrega' => function ($url, $model) {
+                $url =  Url::to(['/stock_informatica_egreso/imprimir_acta_entrega', 'idegreso' => $model->idegreso]);
+                return Html::a('<span class= "fas fa-print"></span>', $url, [
+                    'title' => "Imprimir ",
+                    'role' => 'post',
+                    'data-pjax' => 0,
+                    'target' => '_blank',
+                    'data-toggle' => 'tooltip',
+                ]);
+            },
+        ],
     ],
 
-];   
+];

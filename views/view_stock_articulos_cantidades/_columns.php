@@ -1,54 +1,53 @@
 <?php
 use yii\helpers\Url;
-
+$columna_1 = '5%';
+$columna_2 = '20%';
+$columna_3 = '60%';
+$columna_4 = '5%';
+$columna_5 = '5%';
+$columna_6 = '5%';
 return [
     [
-        'class' => 'kartik\grid\CheckboxColumn',
-        'width' => '20px',
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'idarticulo',
+        'width' => $columna_1,
+        'label' => 'ID',
+        'filter' => false,  // Desactivar filtro
+        //'enableSorting' => false,  // Desactivar ordenamiento
     ],
     [
-        'class' => 'kartik\grid\SerialColumn',
-        'width' => '30px',
-    ],
-        [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'idarticulo',
-    ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'rubro',
-    ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'descripcion',
-    ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'ingresado',
-    ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'entregado',
-    ],
-    // [
-        // 'class'=>'\kartik\grid\DataColumn',
-        // 'attribute'=>'disponible',
-    // ],
-    [
-        'class' => 'kartik\grid\ActionColumn',
-        'dropdown' => false,
-        'vAlign'=>'middle',
-        'urlCreator' => function($action, $model, $key, $index) { 
-                return Url::to([$action,'id'=>$key]);
-        },
-        'viewOptions'=>['role'=>'modal-remote','title'=>'View','data-toggle'=>'tooltip'],
-        'updateOptions'=>['role'=>'modal-remote','title'=>'Update', 'data-toggle'=>'tooltip'],
-        'deleteOptions'=>['role'=>'modal-remote','title'=>'Delete', 
-                          'data-confirm'=>false, 'data-method'=>false,// for overide yii data api
-                          'data-request-method'=>'post',
-                          'data-toggle'=>'tooltip',
-                          'data-confirm-title'=>'Are you sure?',
-                          'data-confirm-message'=>'Are you sure want to delete this item'], 
-    ],
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'rubro',
+        'width' => $columna_2,
 
-];   
+    ],
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'descripcion',
+        'width' => $columna_3,
+
+    ],
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'ingresado',
+        'width' => $columna_4,
+        'filter' => false,  // Desactivar filtro
+        //'enableSorting' => false,  // Desactivar ordenamiento
+
+    ],
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'entregado',
+        'width' => $columna_5,
+        'filter' => false,  // Desactivar filtro
+        //'enableSorting' => false,  // Desactivar ordenamiento
+    ],
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'disponible',
+        'width' => $columna_6,
+        'filter' => false,  // Desactivar filtro
+        //'enableSorting' => false,  // Desactivar ordenamiento
+    ],
+]
+;   

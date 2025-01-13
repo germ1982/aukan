@@ -72,9 +72,15 @@ CrudAsset::register($this);
                                 ['content' =>
 
                                 Html::a(
-                                    'Articulos',
-                                    ['view_stock_articulos_cantidades'],
-                                    ['role' => 'modal-remote', 'title' => 'Articulos', 'class' => 'btn btn-default']
+                                    'Ingresos',
+                                    ['/stock_informatica_ingreso'],
+                                    ['title' => 'Ingresos', 'class' => 'btn btn-default']
+                                ) .
+
+                                Html::a(
+                                    'Saldos',
+                                    ['/view_stock_articulos_cantidades'],
+                                    ['title' => 'Saldos', 'class' => 'btn btn-default']
                                 ) .
 
                                 Html::a(

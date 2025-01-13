@@ -33,7 +33,7 @@ class Articulo extends \yii\db\ActiveRecord
         return [
             [['idtipo', 'idrubro', 'id_unidad_medida', 'activo'], 'required'],
             [['idtipo', 'idmarca', 'idrubro', 'id_unidad_medida', 'activo'], 'integer'],
-            [['descripcion'], 'string', 'max' => 45],
+            [['descripcion'], 'string', 'max' => 500],
             [['modelo'], 'string', 'max' => 30],
             [['imagen'], 'string', 'max' => 100],
         ];

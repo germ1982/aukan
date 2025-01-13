@@ -62,7 +62,21 @@ CrudAsset::register($this);
                             'columns' => require(__DIR__ . '/_columns.php'),
                             'toolbar' => [
                                 ['content' =>
-
+                                Html::a(
+                                    'Egresos',
+                                    ['/stock_informatica_egreso'],
+                                    ['title' => 'Egresos', 'class' => 'btn btn-default']
+                                ) .
+                                Html::a(
+                                    'Articulos',
+                                    ['/articulo'],
+                                    ['title' => 'Articulos', 'class' => 'btn btn-default']
+                                ) .
+                                Html::a(
+                                    'Saldos',
+                                    ['/view_stock_articulos_cantidades'],
+                                    ['title' => 'Saldos', 'class' => 'btn btn-default']
+                                ) .
                                 Html::a(
                                         '<i class="glyphicon glyphicon-plus"></i>',
                                         ['create'],
