@@ -26,7 +26,7 @@ CrudAsset::register($this);
 }
 
 .custom-modal .modal-dialog {
-    max-width: 85%; /* Personaliza el ancho */
+    max-width: 88%; /* Personaliza el ancho */
     width: auto;
 }
 

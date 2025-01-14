@@ -34,7 +34,7 @@ class StockInformaticaEgreso extends \yii\db\ActiveRecord
         return [
             [['fecha', 'idpersona_solicitante', 'idempleado_autorizacion', 'idempleado_despacha', 'idpersona_recibe','documento_solicitante','documento_receptor'], 'required'],
             [['fecha'], 'safe'],
-            [['idpersona_solicitante', 'idempleado_autorizacion', 'idempleado_despacha', 'idpersona_recibe', 'idusuario_carga','idusuario_edicion'], 'integer'],
+            [['idpersona_solicitante', 'idempleado_autorizacion', 'idempleado_despacha', 'idpersona_recibe', 'idusuario_carga','idusuario_edicion','id_dispositivo_destino'], 'integer'],
             [['observacion'], 'string'],
         ];
     }

@@ -16,6 +16,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use kartik\mpdf\Pdf;
+use yii\helpers\Url;
 
 /**
  * Stock_informatica_egresoController implements the CRUD actions for StockInformaticaEgreso model.
@@ -43,7 +44,7 @@ class Stock_informatica_egresoController extends Controller
      * @return mixed
      */
     public function actionIndex()
-    {    
+    {
         $searchModel = new StockInformaticaEgresoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -60,19 +61,19 @@ class Stock_informatica_egresoController extends Controller
      * @return mixed
      */
     public function actionView($id)
-    {   
+    {
         $request = Yii::$app->request;
-        if($request->isAjax){
+        if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                    'title'=> "StockInformaticaEgreso #".$id,
-                    'content'=>$this->renderAjax('view', [
-                        'model' => $this->findModel($id),
-                    ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
-        }else{
+                'title' => "StockInformaticaEgreso #" . $id,
+                'content' => $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+                ]),
+                'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+            ];
+        } else {
             return $this->render('view', [
                 'model' => $this->findModel($id),
             ]);
@@ -85,7 +86,7 @@ class Stock_informatica_egresoController extends Controller
      * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    
+
 
 
     public function actionCreate()
@@ -110,7 +111,7 @@ class Stock_informatica_egresoController extends Controller
                         Html::button('Guardar', [
                             'id' => 'btnGuardar',
                             'class' => 'btn btn-primary',
-                            'type' => 'submit',  
+                            'type' => 'submit',
                             'onclick' => 'guardarFormulario()',  // Llamada a la función JavaScript
                         ]),
                 ];
@@ -122,28 +123,41 @@ class Stock_informatica_egresoController extends Controller
                 $fecha = date_create($fecha);
                 $fecha = date_format($fecha, 'Y-m-d');
                 $model->fecha = $fecha;
-                
+
 
                 if ($guardado && $model->save()) {
-                    
+
                     // Aquí procesas el detallesArray recibido
+                    $boton_acta = Html::button(
+                        'Imprimir Acta de Entrega',
+                        [
+                            'title' => "Imprimir Acta de Entrega",
+                            'onclick' => "window.open('" . Url::to(['/stock_informatica_egreso/imprimir_acta_entrega', 'idegreso' => $model->idegreso]) . "', '_blank')",
+                            'data-toggle' => 'tooltip',
+                            'class' => 'btn btn-primary pull-left', // Clase opcional para estilizar como botón
+                        ]
+                    );
+                    
                     $detallesArray = [];
                     $detallesArray = Json::decode($request->post('detallesArray')); // Deserializas el array JSON
 
-                    foreach ($detallesArray as $detalle) {
-                            $detalleModel = new StockInformaticaEgresoDetalle();
-                            $detalleModel->idegreso = $model->idegreso;
-                            $detalleModel->idarticulo = $detalle['idarticulo'];
-                            $detalleModel->cantidad = $detalle['cantidad'];
-                            $detalleModel->save();
-                        }
                     
+                    foreach ($detallesArray as $detalle) {
+                        $detalleModel = new StockInformaticaEgresoDetalle();
+                        $detalleModel->idegreso = $model->idegreso;
+                        $detalleModel->idarticulo = $detalle['idarticulo'];
+                        $detalleModel->cantidad = $detalle['cantidad'];
+                        $detalleModel->save();
+                    }
+
                     $transaction->commit();
 
                     return [
                         'title' => "Nuevo Egreso",
                         'content' => '<span class="text-success">Egreso Creado Correctamente</span>',
-                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]).$boton_acta 
+
+                            
                     ];
                 }
             }
@@ -177,12 +191,12 @@ class Stock_informatica_egresoController extends Controller
                         'class' => 'btn btn-default pull-left',
                         'data-dismiss' => 'modal',
                     ]) .
-                    Html::button('Guardar', [
-                        'id' => 'btnGuardar',
-                        'class' => 'btn btn-primary',
-                        'type' => 'submit',  // Cambiar de 'submit' a 'button'
-                        'onclick' => 'guardarFormulario()',  // Llamada a la función JavaScript
-                    ]),
+                        Html::button('Guardar', [
+                            'id' => 'btnGuardar',
+                            'class' => 'btn btn-primary',
+                            'type' => 'submit',  // Cambiar de 'submit' a 'button'
+                            'onclick' => 'guardarFormulario()',  // Llamada a la función JavaScript
+                        ]),
                 ];
             } else if ($model->load($request->post())) {
                 $transaction = Yii::$app->db->beginTransaction();
@@ -200,6 +214,17 @@ class Stock_informatica_egresoController extends Controller
                 $detallesArray = Json::decode($request->post('detallesArray')); // Deserializas el array JSON
 
                 if ($guardado && $model->save()) {
+
+                    $boton_acta = Html::button(
+                        'Imprimir Acta de Entrega',
+                        [
+                            'title' => "Imprimir Acta de Entrega",
+                            'onclick' => "window.open('" . Url::to(['/stock_informatica_egreso/imprimir_acta_entrega', 'idegreso' => $model->idegreso]) . "', '_blank')",
+                            'data-toggle' => 'tooltip',
+                            'class' => 'btn btn-primary pull-left', // Clase opcional para estilizar como botón
+                        ]
+                    );
+                    
                     // Guardar los detalles relacionados (puedes iterar sobre $detallesArray y guardarlos en la base de datos)
                     // 1. Obtener los detalles existentes
                     $detallesExistentes = StockInformaticaEgresoDetalle::findAll(['idegreso' => $model->idegreso]);
@@ -245,7 +270,7 @@ class Stock_informatica_egresoController extends Controller
                     return [
                         'title' => "Editar Egreso",
                         'content' => '<span class="text-success">Egreso editado Correctamente</span>',
-                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]).$boton_acta,
                     ];
                 }
             }
@@ -306,23 +331,21 @@ class Stock_informatica_egresoController extends Controller
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
             /*
             *   Process for non-ajax request
             */
             return $this->redirect(['index']);
         }
-
-
     }
 
-     /**
+    /**
      * Delete multiple existing StockInformaticaEgreso model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
@@ -330,27 +353,26 @@ class Stock_informatica_egresoController extends Controller
      * @return mixed
      */
     public function actionBulkDelete()
-    {        
+    {
         $request = Yii::$app->request;
-        $pks = explode(',', $request->post( 'pks' )); // Array or selected records primary keys
-        foreach ( $pks as $pk ) {
+        $pks = explode(',', $request->post('pks')); // Array or selected records primary keys
+        foreach ($pks as $pk) {
             $model = $this->findModel($pk);
             $model->delete();
         }
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
             /*
             *   Process for non-ajax request
             */
             return $this->redirect(['index']);
         }
-       
     }
 
     /**

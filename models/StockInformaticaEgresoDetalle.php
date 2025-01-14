@@ -14,9 +14,8 @@ use Yii;
  */
 class StockInformaticaEgresoDetalle extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
+    public $descripcion;
+    public $unidad_medida;
     public static function tableName()
     {
         return 'stock_informatica_egreso_detalle';
