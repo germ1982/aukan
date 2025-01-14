@@ -48,7 +48,7 @@ function crear_titulo_recuadro($label, $ancho)
     </div>
 
     <div class="row" style='padding-left: 50px;'>
-        <?= crear_linea('Fecha', $model->fecha); ?>
+        <?= crear_linea('Fecha', date('d/m/Y', strtotime($model->fecha))); ?>
     </div>
     <hr>
 
