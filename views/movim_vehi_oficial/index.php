@@ -11,12 +11,49 @@ use johnitvn\ajaxcrud\BulkButtonWidget;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 
-$this->title = 'Movim Vehi Oficials';
+$this->title = 'Movimiento Vehiculo Oficial';
 $this->params['breadcrumbs'][] = $this->title;
 
 CrudAsset::register($this);
-
 ?>
+
+<style>
+    .custom-grid {
+    font-size: 12px; /* Cambia el tamaño según tus necesidades */
+}
+
+.kv-grid-toolbar .btn {
+    height: 30px;  /* Ajusta la altura de todos los botones */
+    line-height: 1.42857143;  /* Esto centra el contenido verticalmente */
+}
+
+.custom-modal .modal-dialog {
+    max-width: 85%; /* Personaliza el ancho */
+    width: auto;
+}
+
+/* .custom-modal .modal-content {
+    padding: 20px; 
+} */
+</style>
+
+<header class="page-header">
+    <h2><?= $this->title ?></h2>
+
+    <div class="right-wrapper pull-right">
+        <ol class="breadcrumbs">
+            <li>
+                <a href="index.html">
+                    <i class="neon fa fa-home"></i>
+                </a>
+            </li>
+            <li><span><?= $this->title ?></span></li>
+        </ol>
+
+        <div class="sidebar-right-toggle"></div>
+    </div>
+</header>
+
 <div class="movim-vehi-oficial-index">
     <div id="ajaxCrudDatatable">
         <?=GridView::widget([
@@ -28,7 +65,7 @@ CrudAsset::register($this);
             'toolbar'=> [
                 ['content'=>
                     Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'],
-                    ['role'=>'modal-remote','title'=> 'Create new Movim Vehi Oficials','class'=>'btn btn-default']).
+                    ['role'=>'modal-remote','title'=> 'Create new Movimiento Vehiculo Oficial','class'=>'btn btn-default']).
                     Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''],
                     ['data-pjax'=>1, 'class'=>'btn btn-default', 'title'=>'Reset Grid']).
                     '{toggleData}'.
@@ -38,10 +75,8 @@ CrudAsset::register($this);
             'striped' => true,
             'condensed' => true,
             'responsive' => true,          
-            'panel' => [
-                'type' => 'primary', 
-                'heading' => '<i class="glyphicon glyphicon-list"></i> Movim Vehi Oficials listing',
-                'before'=>'<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
+            'panel' => [             
+                               
                 'after'=>BulkButtonWidget::widget([
                             'buttons'=>Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Delete All',
                                 ["bulk-delete"] ,
