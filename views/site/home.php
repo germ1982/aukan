@@ -98,13 +98,6 @@ if (Yii::$app->session->hasFlash('error_modulo')) : ?>
     <!-- Accesos -->
 
     <div class="row" style="padding: 5px 0px 0px 10px; background: linear-gradient(to bottom, #a9a9a929, #ecedf3);">
-        <div class="col-md-9">
-            <?php
-            include 'tarjetas/tarjeta_futbol.php'
-            ?>
-
-
-        </div>
         <div class="col-md-3">
             <?php
             $titulo = "Web Informatica";
@@ -113,45 +106,60 @@ if (Yii::$app->session->hasFlash('error_modulo')) : ?>
             ?>
             <br>
             <?php
-            $titulo = "Cumpleaños";
-            $archivo_contenido_tarjeta = "cumpleaños.php";
-            include 'tarjetas/tarjeta_base.php'
-            ?>
-        </div>
-
-    </div>
-    <br>
-    <div class="row" style="padding: 5px 0px 0px 10px; background: linear-gradient(to bottom, #a9a9a929, #ecedf3);">
-        <div class="col-md-3">
-            <?php
             $titulo = "Registro Tecnico";
             $archivo_contenido_tarjeta = "indicadores_tecnicos.php";
             include 'tarjetas/tarjeta_base.php'
             ?>
         </div>
-
         <div class="col-md-3">
+
+            <?php
+            $titulo = "Cumpleaños";
+            $archivo_contenido_tarjeta = "cumpleaños.php";
+            include 'tarjetas/tarjeta_base.php'
+            ?>
+            <br>
             <?php
             $titulo = "Informacion Personal";
             $archivo_contenido_tarjeta = "sitio_en_construccion.php";
             include 'tarjetas/tarjeta_base.php'
             ?>
         </div>
-
         <div class="col-md-3">
-        <?php
+            <?php
             $titulo = "El Clima en Neuquen";
             $archivo_contenido_tarjeta = "eventos_del_dia.php";
             include 'tarjetas/tarjeta_base.php'
             ?>
-        </div>
-        <div class="col-md-3">
-
-            <?php
+            <br>
+                        <?php
             $titulo = "Efemerides";
             $archivo_contenido_tarjeta = "sitio_en_construccion.php";
             include 'tarjetas/tarjeta_base.php'
             ?>
+        </div>
+        <div class="col-md-3">
+            <?php
+            include 'tarjetas/tarjeta_futbol.php'
+            ?>
+        </div>
+
+
+    </div>
+    <br>
+    <div class="row" style="padding: 5px 0px 0px 10px; background: linear-gradient(to bottom, #a9a9a929, #ecedf3);">
+        <div class="col-md-3">
+            
+        </div>
+
+        <div class="col-md-3">
+            
+        </div>
+
+
+        <div class="col-md-3">
+
+
         </div>
 
 

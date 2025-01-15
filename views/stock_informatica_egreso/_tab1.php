@@ -2,6 +2,7 @@
 
 use app\controllers\SiteController;
 use app\models\Empleado;
+use app\models\OrganismoDispositivo;
 use app\models\Persona;
 use app\models\StockInformaticaEgresoDetalle;
 use yii\helpers\Json;
@@ -42,84 +43,88 @@ if (isset($model->idpersona_recibe)) {
 ?>
 
 <?= $form->field($model, 'idegreso')->hiddenInput(["id" => "hidden_input_id_model"])->label(false) ?>
-    <?= $form->field($model, 'idpersona_solicitante')->hiddenInput(['id' => 'input_idpersona_solicitante'])->label(false) ?>
-    <?= $form->field($model, 'idpersona_recibe')->hiddenInput(['id' => 'input_idpersona_recibe'])->label(false) ?>
+<?= $form->field($model, 'idpersona_solicitante')->hiddenInput(['id' => 'input_idpersona_solicitante'])->label(false) ?>
+<?= $form->field($model, 'idpersona_recibe')->hiddenInput(['id' => 'input_idpersona_recibe'])->label(false) ?>
 
-    <div class="row">
-        <div class="col-md-2">
-            <?= SiteController::actionGet_input_fecha($form, $model, 'fecha', 'fecha', 'Fecha') ?>
-        </div>
-        <div class="col-md-2">
-            <div class="input-group">
-                <?= $form->field($model, 'documento_solicitante')->textInput([
-                    'id' => 'input_dni_solicitante',
-                    'onkeyup' => 'ValidarIngresoDni(1);',
-                    'onblur' => 'datos_persona_solicitante();',
-                ])
-                    ->label($model->isNewRecord ? 'Buscar Solicitante' : 'DNI Solicitante') ?>
-                <span class="input-group-btn" style="padding-top:27px;">
-                    <?= SiteController::actionGet_boton_buscar_x_documento(
-                        'btn_dni_solicitante',
-                        'Buscar Dni',
-                        'datos_persona_solicitante();'
-                    ) ?>
-                </span>
-            </div>
-        </div>
-        
-        <div class="col-md-4">
-            <label for="txt_mensaje_solicitante" class="form-label">Solicitante</label>
-            <div class="form-control" id="txt_mensaje_solicitante">
-                <?= $persona_nombre_solicitante ?>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <?= SiteController::actionGet_input_select2($form, $model, 'idempleado_autorizacion', 'cmb_idempleado_autorizacion', Empleado::get_empleados(), 'idempleado', 'descripcion', 'Autorizacion') ?>
+<div class="row">
+    <div class="col-md-2">
+        <?= SiteController::actionGet_input_fecha($form, $model, 'fecha', 'fecha', 'Fecha') ?>
+    </div>
+    <div class="col-md-2">
+        <div class="input-group">
+            <?= $form->field($model, 'documento_solicitante')->textInput([
+                'id' => 'input_dni_solicitante',
+                'onkeyup' => 'ValidarIngresoDni(1);',
+                'onblur' => 'datos_persona_solicitante();',
+            ])
+                ->label($model->isNewRecord ? 'Buscar Solicitante' : 'DNI Solicitante') ?>
+            <span class="input-group-btn" style="padding-top:27px;">
+                <?= SiteController::actionGet_boton_buscar_x_documento(
+                    'btn_dni_solicitante',
+                    'Buscar Dni',
+                    'datos_persona_solicitante();'
+                ) ?>
+            </span>
         </div>
     </div>
 
-    <div class="row">
-
-        <div class="col-md-4">
-            <?= SiteController::actionGet_input_select2($form, $model, 'idempleado_despacha', 'cmb_idempleado_despacha', Empleado::get_empleados(), 'idempleado', 'descripcion', 'Despachante') ?>
+    <div class="col-md-3">
+        <label for="txt_mensaje_solicitante" class="form-label">Solicitante</label>
+        <div class="form-control" id="txt_mensaje_solicitante">
+            <?= $persona_nombre_solicitante ?>
         </div>
+    </div>
 
-        <div class="col-md-2">
-            <div class="input-group">
-                <?= $form->field($model, 'documento_receptor')->textInput([
-                    'id' => 'input_dni_receptor',
-                    'onkeyup' => 'ValidarIngresoDni(2);',
-                    'onblur' => 'datos_persona_receptor();',
-                ])
-                    ->label($model->isNewRecord ? 'Buscar Receptor' : 'DNI Receptor') ?>
-                <span class="input-group-btn" style="padding-top:27px;">
-                    <?= SiteController::actionGet_boton_buscar_x_documento(
-                        'btn_dni_receptor',
-                        'Buscar Dni',
-                        'datos_persona_receptor();'
-                    ) ?>
-                </span>
-            </div>
+    <div class="col-md-5">
+        <?= SiteController::actionGet_input_select2($form, $model, 'id_dispositivo_destino', 'cmb_id_dispositivo_destino', OrganismoDispositivo::get_dispositivos(), 'iddispositivo', 'descripcion', 'Destino') ?>
+    </div>
 
-        </div>
+</div>
 
-        <div class="col-md-4">
-            <label for="txt_mensaje_receptor" class="form-label">Receptor</label>
-            <div class="form-control" id="txt_mensaje_receptor">
-                <?= $persona_nombre_receptor ?>
-            </div>
+<div class="row">
+    <div class="col-md-3">
+        <?= SiteController::actionGet_input_select2($form, $model, 'idempleado_autorizacion', 'cmb_idempleado_autorizacion', Empleado::get_empleados(), 'idempleado', 'descripcion', 'Autorizacion') ?>
+    </div>
+    <div class="col-md-3">
+        <?= SiteController::actionGet_input_select2($form, $model, 'idempleado_despacha', 'cmb_idempleado_despacha', Empleado::get_empleados(), 'idempleado', 'descripcion', 'Despachante') ?>
+    </div>
+
+    <div class="col-md-2">
+        <div class="input-group">
+            <?= $form->field($model, 'documento_receptor')->textInput([
+                'id' => 'input_dni_receptor',
+                'onkeyup' => 'ValidarIngresoDni(2);',
+                'onblur' => 'datos_persona_receptor();',
+            ])
+                ->label($model->isNewRecord ? 'Buscar Receptor' : 'DNI Receptor') ?>
+            <span class="input-group-btn" style="padding-top:27px;">
+                <?= SiteController::actionGet_boton_buscar_x_documento(
+                    'btn_dni_receptor',
+                    'Buscar Dni',
+                    'datos_persona_receptor();'
+                ) ?>
+            </span>
         </div>
 
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <?= $form->field($model, 'observacion')->textarea(['rows' => 6]) ?>
+    <div class="col-md-3">
+        <label for="txt_mensaje_receptor" class="form-label">Receptor</label>
+        <div class="form-control" id="txt_mensaje_receptor">
+            <?= $persona_nombre_receptor ?>
         </div>
     </div>
 
+</div>
 
-    
+<div class="row">
+    <div class="col-md-12">
+        <?= $form->field($model, 'observacion')->textarea(['rows' => 6]) ?>
+    </div>
+</div>
+
+
+
 <?php
 $script = <<<JS
 

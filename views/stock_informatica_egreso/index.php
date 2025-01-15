@@ -17,20 +17,43 @@ CrudAsset::register($this);
 
 <style>
     .custom-grid {
-    font-size: 12px; /* Cambia el tamaño según tus necesidades */
-}
+        font-size: 12px;
+        /* Cambia el tamaño según tus necesidades */
+    }
 
-.kv-grid-toolbar .btn {
-    height: 30px;  /* Ajusta la altura de todos los botones */
-    line-height: 1.42857143;  /* Esto centra el contenido verticalmente */
-}
+    .kv-grid-toolbar {
+        background-color: red;
+    }
 
-.custom-modal .modal-dialog {
-    max-width: 85%; /* Personaliza el ancho */
-    width: auto;
-}
+    .btn-toolbar {
+        width: 100%;
 
-/* .custom-modal .modal-content {
+    }
+
+    .btn-group {
+        width: 100%;
+
+    }
+
+    .kv-panel-before {
+        padding: 0px;
+        padding-bottom: 5px;
+    }
+
+    .kv-grid-toolbar .btn {
+        height: 30px;
+        /* Ajusta la altura de todos los botones */
+        line-height: 1.42857143;
+        /* Esto centra el contenido verticalmente */
+    }
+
+    .custom-modal .modal-dialog {
+        max-width: 88%;
+        /* Personaliza el ancho */
+        width: auto;
+    }
+
+    /* .custom-modal .modal-content {
     padding: 20px; 
 } */
 </style>
@@ -69,35 +92,30 @@ CrudAsset::register($this);
                             'pjax' => false,
                             'columns' => require(__DIR__ . '/_columns.php'),
                             'toolbar' => [
-                                ['content' =>
+                                [
+                                    'content' =>
+                                    '<div class="row">'.
+                                        '<div class="col-md-6" style="display: flex; justify-content: flex-end; gap: 10px;">' .
+                                            Html::a(
+                                                'Ingresos',
+                                                ['/stock_informatica_ingreso'],
+                                                ['title' => 'Ingresos', 'class' => 'btn btn-primary neon']
+                                            ) .
+                                            Html::a(
+                                                'Saldos',
+                                                ['/view_stock_articulos_cantidades'],
+                                                ['title' => 'Saldos', 'class' => 'btn btn-primary neon']
+                                            ) .
+                                        '</div>'.
+                                        '<div class="col-md-6">' .
+                                            Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'], ['role' => 'modal-remote', 'title' => 'Nuevo', 'class' => 'btn btn-default']) .
+                                            Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''], ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Refrescar Grilla']) .
+                                            '{toggleData}' .
+                                            '{export}' .
+                                        '</div>'.
+                                    '</div>'
+                                ],
 
-                                Html::a(
-                                    'Ingresos',
-                                    ['/stock_informatica_ingreso'],
-                                    ['title' => 'Ingresos', 'class' => 'btn btn-default']
-                                ) .
-
-                                Html::a(
-                                    'Saldos',
-                                    ['/view_stock_articulos_cantidades'],
-                                    ['title' => 'Saldos', 'class' => 'btn btn-default']
-                                ) .
-
-                                Html::a(
-                                        '<i class="glyphicon glyphicon-plus"></i>',
-                                        ['create'],
-                                        ['role' => 'modal-remote', 'title' => 'Nuevo', 'class' => 'btn btn-default']
-                                    ) .
-
-
-
-                                Html::a(
-                                    '<i class="glyphicon glyphicon-repeat"></i>',
-                                    [''],
-                                    ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Refrescar Grilla']
-                                ) .
-                                '{toggleData}' .
-                                '{export}'],
                             ],
                             'striped' => true,
                             'condensed' => true,

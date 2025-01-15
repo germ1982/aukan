@@ -1,45 +1,16 @@
 <?php
 
+use app\controllers\Stock_informatica_egreso_detalleController;
 use app\models\Articulo;
 use app\models\Configuracion;
 use app\models\Empleado;
-use app\models\Localidades;
-use app\models\Mds_org_contacto;
-use app\models\Mds_org_organismo;
-use app\models\Sds_com_persona;
-use yii\helpers\Html;
-use app\models\Sds_com_barrio;
-use app\models\Sds_com_configuracion;
-use app\models\Sds_com_localidad;
-use app\models\Mds_seg_usuario;
+use app\models\OrganismoDispositivo;
 use app\models\Persona;
-use app\models\Sds_stk_entrega;
-use app\models\Sds_stk_entrega_item;
-use app\models\Sds_stk_orden_compra;
 use app\models\StockInformaticaEgreso;
-use app\models\Usuarios;
+use app\models\StockInformaticaEgresoDetalle;
 
-$identrega = $_GET['identrega'];
-$model = StockInformaticaEgreso::findOne($identrega);
-
-
-
-
-//esto siguiente busca si imprime la fecha segun el organismo...
-$usuario = Yii::$app->user->identity;
-$idusuario = $usuario != null ? $usuario->idusuario : null;
-$usuario = Usuarios::findOne($idusuario);
-$id_organismo = $usuario ? $usuario->organismo_stock : 0;
-$imprime_fecha = $id_organismo ? Usuarios::findOne($id_organismo)->imprime_fecha_acta : 0;
-
-//esto siguiente por si tiene orden de compra
-$consulta = "SELECT oc.idordencompra, oc.numero as numero
-            FROM sds_stk_entrega_item ei
-            join sds_stk_recepcion_item ri on  ei.recepcion_item = ri.idrecepcionitem
-            join sds_stk_orden_compra_item oci on ri.idordencompraitem = oci.idordencompraitem
-            join sds_stk_orden_compra oc on oc.idordencompra = oci.idordencompra
-            where ei.identrega = $identrega";
-//$orden_compra = Sds_stk_orden_compra::findBySql($consulta)->one();
+$idegreso = $_GET['idegreso'];
+$model = StockInformaticaEgreso::findOne($idegreso);
 
 function crear_linea($label, $contenido)
 {
@@ -63,42 +34,33 @@ function crear_titulo_recuadro($label, $ancho)
                 </div>
             </div>
         </div>";
-}?>
+} ?>
 
 <html>
+
 <body>
 
-    <img src="img/membrete_nuevo_pri.png" width="100%" alt="Subsecretaría de Desarrollo Social">
+    <img src="img/membrete_subsecretaria_familia_2025.png" width="100%" alt="Subsecretaría de Desarrollo Social">
 
     <br><br>
     <div style="text-align: center;">
-        <h5><b>ENTREGA <?=$model->referente ? 'INTERMEDIA' : 'FINAL'?></b></h5>
+        <h5><b>ACTA ENTREGA DE INSUMOS INFORMATICOS</b></h5>
     </div>
 
-    <?php 
-        $imprime_fecha ? crear_linea('Fecha', date('d/m/Y')) : ''; 
-        $orden_compra ? crear_linea('Orden de Compra', $orden_compra->numero):"";
-        //crear_linea('Orden de Compra', $orden_compra->numero);
-    ?><br>
+    <div class="row" style='padding-left: 50px;'>
+        <?= crear_linea('Fecha', date('d/m/Y', strtotime($model->fecha))); ?>
+    </div>
     <hr>
-    <?php crear_titulo_recuadro('SOLICITANTE', 4); ?>
 
-    <div class="row">
+
+    <div class="row" style="margin-top: -20px;">
         <div class="col-xs-6" style='padding-left: 50px;'>
             <?php
-            $persona = Persona::findOne($model->idpersona);
+            $persona = Persona::findOne($model->idpersona_solicitante);
             $config = Configuracion::findOne($persona->documento_tipo);
             $aux = "$persona->apellido, $persona->nombre";
-            crear_linea('Persona', $aux);
-            
-            /* if(Yii::$app->user->identity->organismo_stock!=Usuarios::){
-                $aux = $persona->domicilio_calle ? $persona->domicilio_calle : "...................................";
-                $aux = $persona->domicilio_numero ? "$aux al $persona->domicilio_numero" : $aux;
-                crear_linea('Calle', $aux);
+            crear_linea('Solicitante', $aux);
 
-                $aux = "...................................";
-                crear_linea('Telefono', $aux);
-            } */
             ?>
         </div>
 
@@ -107,112 +69,113 @@ function crear_titulo_recuadro($label, $ancho)
             $aux = "$config->descripcion $persona->documento";
             crear_linea('Documento', $aux);
 
-            /* if(Yii::$app->user->identity->organismo_stock!=Usuarios::ORG_STK_INFORMATICA){
-                $aux = $persona->idlocalidad ? Localidades::findOne($persona->idlocalidad)->descripcion : "...................................";
-                //$aux = Sds_com_localidad::findOne($persona->idlocalidad)->descripcion;
-                crear_linea('Localidad', $aux);
-            } */
             ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12" style='padding-left: 50px;'>
+            <?= $model->id_dispositivo_destino ? crear_linea('Destino',OrganismoDispositivo::get_dispositivo($model->id_dispositivo_destino)->descripcion):''?>
+        
         </div>
     </div>
 
 
 
-    <hr>
-    <?php crear_titulo_recuadro('Articulos', 4); ?>
+
+    <hr style='margin-bottom: 1px'>
+    <div style='padding-left: 35px;'>
+        <?php crear_linea('Articulos', ''); ?>
+    </div>
+
 
     <div class="row">
 
         <?php
-        /* $consulta = "SELECT a.descripcion as articulo,  ei.cantidad as cantidad, c.descripcion as unidad_medida
-                                    FROM sds_stk_entrega_item ei 
-                                    INNER JOIN sds_stk_recepcion_item ri on ei.recepcion_item = ri.idrecepcionitem
-                                    INNER JOIN sds_stk_articulo a on ri.idarticulo = a.idarticulo
-                                    INNER JOIN sds_com_configuracion c on a.unidad_medida = c.idconfiguracion
-                                    WHERE ei.identrega = $model->identrega 
-                                    order by a.descripcion;"; */
-        
-        $consulta = "SELECT a.descripcion as articulo,  ei.cantidad as cantidad, c.descripcion as unidad_medida
-                                    FROM sds_stk_entrega_item ei 
-                                    INNER JOIN sds_stk_articulo a on ei.idarticulo = a.idarticulo
-                                    INNER JOIN sds_com_configuracion c on a.unidad_medida = c.idconfiguracion
-                                    WHERE ei.identrega = $model->identrega 
-                                    order by a.descripcion;";
-        $articulos = Articulo::findBySql($consulta)->all();
+
+        $consulta = "   SELECT e.iddetalle,
+                            a.idarticulo,
+                            concat( ct.descripcion ,' ', cm.descripcion ,' ' ,a.modelo ,' ' , a.descripcion) as descripcion,
+                            e.cantidad,
+                            cum.descripcion as unidad_medida
+                        FROM stock_informatica_egreso_detalle e 
+                        JOIN articulo a on e.idarticulo = a.idarticulo
+                        join configuracion ct on ct.id_configuracion=a.idtipo
+                        join configuracion cm on cm.id_configuracion=a.idmarca
+                        join configuracion cum on cum.id_configuracion=a.id_unidad_medida
+                        WHERE e.idegreso = $model->idegreso 
+                        order by ct.descripcion,cm.descripcion,a.modelo,cum.descripcion,a.descripcion";
+
+        //$articulos = Articulo::findBySql($consulta)->all();
+
+        $articulos = StockInformaticaEgresoDetalle::findBySql($consulta)->all();
 
         $ban = 1;
         echo "<br>";
-        echo "<div class='col-xs-12' style='padding: 0px;'>";
+        echo "<div class='col-xs-12' style='padding-left: 25px;'>";
+
         foreach ($articulos as $a) {
-            crear_label_articulo($a->articulo, $a->cantidad, $a->unidad_medida);
+            crear_label_articulo("$a->descripcion por $a->unidad_medida", $a->cantidad, '');
         }
         echo "</div>";
-        echo "<div class='col-xs-12' style='padding: 0px;'>";
-            ($model->observaciones!=''?
-                crear_label_articulo('Observaciones', $model->observaciones, '')
-                :null
-            );
-        echo "</div>";
-
-
 
         ?>
 
+        <div style='padding-left: 50px;'>
+            <?php $model->observacion ? crear_linea('Observaciones', $model->observacion) : ''; ?>
+        </div>
+
     </div>
     <hr>
-    <br><br><br><br>
-    <div style='border:1px solid black;padding:10px;border-radius: 5px;text-align: center;'>
-        <strong>AUTORIZACION:</strong>
-        <br>
-
-        <?php
-        $idpersona = Empleado::findOne($model->idcontacto)->idpersona;
-        $persona = Persona::findOne($idpersona);
-        echo "<span style='font-size: 20px;'>$persona->apellido $persona->nombre</span>";
-        ?><br><br>
-
+    <div style="padding-left: 45px; padding-right: 45px;">
         <div class="row">
-            <div class="col-xs-5" style='text-align: center;'>
-                ....................................<br>FIRMA
+
+            <div class="col-xs-5" style='text-align: left;'>
+                <?php
+                $idpersona = Empleado::findOne($model->idempleado_autorizacion)->idpersona;
+                $persona = Persona::findOne($idpersona);
+                crear_linea('Autorización', "$persona->apellido $persona->nombre");
+                ?>
             </div>
-            <div class="col-xs-5" style='text-align: center;padding-left:60px;'>
-                ....................................<br>SELLO
+            <div class="col-xs-2" style='text-align: center; padding-top: 30px'>
+                ................<br>FIRMA
+            </div>
+            <div class="col-xs-2" style='text-align: center;padding-left:60px;padding-top: 30px'>
+                ................<br>SELLO
             </div>
         </div>
-    </div>
-    <br>
-    <div style='padding-left:0px;text-align: center;border:1px solid black;border-radius: 5px;'>
-        <strong>ENTREGA</strong><br>
-        <div style='padding-left:50px;text-align: center'>
-            <div class="row" style='text-align: justify; text-justify: inter-word;'>
-                <div class="col-xs-5" style='text-align: left;'>
-                    RETIRA: <?php
-                            if ($model->persona_retira != null) {
-                                $persona = Persona::findOne($model->persona_retira);
-                                echo "<span style='font-size: 11px;'>$persona->apellido $persona->nombre</span>";
-                                echo "<br>DNI: <span style='font-size: 11px;'>$persona->documento</span><br>";
-                            }
-                            ?>
-                </div>
-                <div class="col-xs-5" style='text-align: left;padding-left:50px;'>
-                    ENTREGA: <?php
-                            if ($model->contacto_entrega != null) {
-                                $idpersona = Empleado::findOne($model->contacto_entrega)->idpersona;
-                                $persona = Persona::findOne($idpersona);
-                                echo "<span style='font-size: 11px;'>$persona->apellido $persona->nombre</span>";
-                                echo "<br>DNI: <span style='font-size: 11px;'>$persona->documento</span><br>";
-                            }
-                                ?>
-                </div>
+        <hr>
+        <div class="row">
+
+            <div class="col-xs-5" style='text-align: left;'>
+                <?php
+                $idpersona = Empleado::findOne($model->idempleado_despacha)->idpersona;
+                $persona = Persona::findOne($idpersona);
+                crear_linea('Entrega', "$persona->apellido $persona->nombre");
+                ?>
             </div>
-        </div><br>
+            <div class="col-xs-2" style='text-align: center; padding-top: 30px'>
+                ................<br>FIRMA
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+
+            <div class="col-xs-5" style='text-align: left;'>
+                <?php
+                //$idpersona = Empleado::findOne($model->idempleado_despacha)->idpersona;
+                $persona = Persona::findOne($model->idpersona_recibe);
+                crear_linea('Retira', "$persona->apellido $persona->nombre");
+                ?>
+            </div>
+            <div class="col-xs-2" style='text-align: center; padding-top: 30px'>
+                ................<br>FIRMA
+            </div>
+
+        </div>
     </div>
-    <br><br><br>
-    <div style='border: 3px double black;padding:10px;text-align: center;'>
-        <span style='font-size: 11px;'>
-            Se informa que de acuerdo a lo reglamentado en el CAPITULO II, Art.81, de la Ley Administración financiera y Control N° 2141, Ud., dispone de 10 (diez) días para proceder a realizar la RENDICION, con fotocopoa de DNI legible y firma del beneficiario, de la mercaderia que le es entregada con la presente Acta.
-        </span>
-    </div>
+
+    <hr>
+
 
 </body>
 
