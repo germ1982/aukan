@@ -36,7 +36,7 @@ class ConfiguracionTipo extends \yii\db\ActiveRecord
     const STOCK_ORIGEN = 21 ;
     const MARCA_VEHICULO = 22 ;
     const MARCA_MOTO = 23 ;
-    const COFER = 24 ;
+    const CHOFER = 24 ;
     
 
   

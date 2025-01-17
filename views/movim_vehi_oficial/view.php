@@ -69,7 +69,7 @@ $choferInformacion = Empleado::get_empleado($model->chofer)->descripcion;
                     <?= campo('idvehiculo', "$vehiculo") ?>
                 </div>
                 <div class="col-md-12">
-                    <?= campo('chofer', "$choferInfo") ?>
+                    <?= campo('chofer', "$choferInformacion") ?>
                 </div>
             </div>
             <div class="row">

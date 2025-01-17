@@ -12,7 +12,29 @@ use app\models\Empleado;
 
 // No es necesario realizar la consulta de choferes aquí.
 // Los choferes deben ser pasados desde el controlador.
+// Obtener vehículos
+$vehiculos = ArrayHelper::map(
+    VehiculoOficial::find()->all(),
+    'idvehiculo', // El valor de la clave (ID del vehículo)
+    function ($model) {
+        // Obtener la descripción de la marca a través de la relación
+        $marca = $model->marca ? $model->marca->descripcion : 'Marca no disponible'; // 'marca' es la relación en el modelo
 
+        // Concatenar la información del vehículo (marca, modelo, dominio, año)
+        return $marca . ' - ' . $model->modelo . ' - ' . $model->dominio . ' - ' . $model->anio;
+    }
+);
+// Obtener choferes
+$choferes = ArrayHelper::map(
+    Empleado::find() 
+    ->where (['funcion'=>69])
+    ->all(),                  
+    'idempleado', // ID del chofer            
+    function ($model) {
+        $persona = $model->persona; // Relación con la tabla de personas
+        return $persona ? $persona->nombre . ' ' . $persona->apellido . ' - Legajo ' . $model->legajo : 'No disponible';
+    }
+);
 ?>
 
 <div class="movim-vehi-oficial-form">
