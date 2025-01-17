@@ -8,9 +8,9 @@ use yii\bootstrap\Modal;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset;
 
-$this->title = 'Saldos de Articulos de Stock';
+$this->title = 'Ingreso de Stock de Deposito';
 $this->params['breadcrumbs'][] = $this->title;
-$clase = 'view-stock-articulos-cantidades-index';
+$clase = 'stock-deposito-ingreso-index';
 
 CrudAsset::register($this);
 ?>
@@ -63,13 +63,8 @@ CrudAsset::register($this);
                             'toolbar' => [
                                 ['content' =>
                                 Html::a(
-                                    'Ingresos',
-                                    ['/stock_informatica_ingreso'],
-                                    ['title' => 'Egresos', 'class' => 'btn btn-default']
-                                ) .
-                                Html::a(
                                     'Egresos',
-                                    ['/stock_informatica_egreso'],
+                                    ['/stock_deposito_egreso'],
                                     ['title' => 'Egresos', 'class' => 'btn btn-default']
                                 ) .
                                 Html::a(
@@ -77,6 +72,16 @@ CrudAsset::register($this);
                                     ['/articulo'],
                                     ['title' => 'Articulos', 'class' => 'btn btn-default']
                                 ) .
+                                Html::a(
+                                    'Saldos',
+                                    ['/view_stock_articulos_cantidades'],
+                                    ['title' => 'Saldos', 'class' => 'btn btn-default']
+                                ) .
+                                Html::a(
+                                        '<i class="glyphicon glyphicon-plus"></i>',
+                                        ['create'],
+                                        ['role' => 'modal-remote', 'title' => 'Nuevo', 'class' => 'btn btn-default']
+                                    ) .
 
 
 

@@ -8,9 +8,9 @@ use yii\bootstrap\Modal;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset;
 
-$this->title = 'Egreso de Stock de Informatica';
+$this->title = 'Egreso de Stock de Deposito';
 $this->params['breadcrumbs'][] = $this->title;
-$clase = 'stock-informatica-egreso-index';
+$clase = 'stock-deposito-egreso-index';
 
 CrudAsset::register($this);
 ?>
@@ -22,10 +22,8 @@ CrudAsset::register($this);
     }
 
     .kv-grid-toolbar {
-
         display: flex;
         /* background-color: red; */
-
     }
 
     .btn-toolbar {
@@ -38,6 +36,12 @@ CrudAsset::register($this);
 
     }
 
+    .kv-panel-before {
+        padding: 0px;
+        padding-bottom: 10px;
+    }
+
+
     .botones_a {
         text-align: left;
         display: flex;
@@ -45,18 +49,10 @@ CrudAsset::register($this);
     }
 
     .botones_b {
-        justify-content: flex-end;
-        /* Alineación derecha */
-        display: flex;
-        width: 100%;
-        /* Asegura que el contenedor ocupe todo el ancho de la columna */
-    }
-
-    .kv-panel-before {
-        padding: 0px;
-        padding-bottom: 5px;
-    }
-
+    justify-content: flex-end; /* Alineación derecha */
+    display: flex;
+    width: 100%; /* Asegura que el contenedor ocupe todo el ancho de la columna */
+}
     .kv-grid-toolbar .btn {
         height: 30px;
         /* Ajusta la altura de todos los botones */
@@ -114,27 +110,27 @@ CrudAsset::register($this);
                                     '<div class="row">' .
                                         '<div class="col-md-9"> 
                                             <div class="botones_a">' .
-                                        Html::a(
-                                            'Ingresos',
-                                            ['/stock_informatica_ingreso'],
-                                            ['title' => 'Ingresos', 'class' => 'btn btn-primary neon']
-                                        ) .
-                                        Html::a(
-                                            'Saldos',
-                                            ['/view_stock_articulos_cantidades'],
-                                            ['title' => 'Saldos', 'class' => 'btn btn-primary neon']
-                                        ) .
-                                        '</div>
+                                                Html::a(
+                                                    'Ingresos',
+                                                    ['/stock_deposito_ingreso'],
+                                                    ['title' => 'Ingresos', 'class' => 'btn btn-primary neon']
+                                                ) .
+                                                Html::a(
+                                                    'Saldos',
+                                                    ['/view_stock_articulos_cantidades'],
+                                                    ['title' => 'Saldos', 'class' => 'btn btn-primary neon']
+                                                ) .
+                                            '</div>
                                         </div>' .
                                         '<div class="col-md-3"> 
                                             <div class="botones_b">' .
-                                        Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'], ['role' => 'modal-remote', 'title' => 'Nuevo', 'class' => 'btn btn-default']) .
-                                        Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''], ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Refrescar Grilla']) .
-                                        '{toggleData}' .
-                                        '{export}' .
-                                        '</div>
+                                                Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'], ['role' => 'modal-remote', 'title' => 'Nuevo', 'class' => 'btn btn-default']) .
+                                                Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''], ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Refrescar Grilla']) .
+                                                '{toggleData}' .
+                                                '{export}' .
+                                            '</div>
                                         </div>' .
-                                        '</div>'
+                                    '</div>'
                                 ],
 
                             ],

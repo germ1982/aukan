@@ -8,9 +8,9 @@ use yii\bootstrap\Modal;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset;
 
-$this->title = 'Saldos de Articulos de Stock';
+$this->title = 'Detalle Ingreso de Stock de Deposito';
 $this->params['breadcrumbs'][] = $this->title;
-$clase = 'view-stock-articulos-cantidades-index';
+$clase = 'stock-deposito-ingreso-detalle-index';
 
 CrudAsset::register($this);
 ?>
@@ -62,21 +62,12 @@ CrudAsset::register($this);
                             'columns' => require(__DIR__ . '/_columns.php'),
                             'toolbar' => [
                                 ['content' =>
+
                                 Html::a(
-                                    'Ingresos',
-                                    ['/stock_informatica_ingreso'],
-                                    ['title' => 'Egresos', 'class' => 'btn btn-default']
-                                ) .
-                                Html::a(
-                                    'Egresos',
-                                    ['/stock_informatica_egreso'],
-                                    ['title' => 'Egresos', 'class' => 'btn btn-default']
-                                ) .
-                                Html::a(
-                                    'Articulos',
-                                    ['/articulo'],
-                                    ['title' => 'Articulos', 'class' => 'btn btn-default']
-                                ) .
+                                        '<i class="glyphicon glyphicon-plus"></i>',
+                                        ['create'],
+                                        ['role' => 'modal-remote', 'title' => 'Nuevo', 'class' => 'btn btn-default']
+                                    ) .
 
 
 
