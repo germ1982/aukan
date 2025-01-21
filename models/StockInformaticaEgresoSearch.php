@@ -19,7 +19,7 @@ class StockInformaticaEgresoSearch extends StockInformaticaEgreso
     {
         return [
             [['idegreso', 'idpersona_solicitante', 'idempleado_autorizacion', 'idempleado_despacha', 'idpersona_recibe'], 'integer'],
-            [['fecha', 'observacion'], 'safe'],
+            [['fecha', 'observacion', 'fdesde', 'fhasta'], 'safe'],
         ];
     }
 
@@ -55,6 +55,17 @@ class StockInformaticaEgresoSearch extends StockInformaticaEgreso
             return $dataProvider;
         }
 
+        $sql_desde = '';
+        $sql_hasta = '';
+        if ($this->fdesde != null) {
+            $fecha_desde_aux = date_format(date_create(str_replace('/', '-', $this->fdesde)), 'Y-m-d');
+            $sql_desde = "DATEDIFF(fecha,'$fecha_desde_aux')>=0 ";
+        }
+        if ($this->fhasta != null) {
+            $fecha_hasta_aux = date_format(date_create(str_replace('/', '-', $this->fhasta)), 'Y-m-d');
+            $sql_hasta = "DATEDIFF(fecha,'$fecha_hasta_aux')<=0 ";
+        }
+
         $query->andFilterWhere([
             'idegreso' => $this->idegreso,
             'fecha' => $this->fecha,
@@ -64,8 +75,9 @@ class StockInformaticaEgresoSearch extends StockInformaticaEgreso
             'idpersona_recibe' => $this->idpersona_recibe,
         ]);
 
-        $query->andFilterWhere(['like', 'observacion', $this->observacion]);
-
+        $query->andFilterWhere(['like', 'observacion', $this->observacion])        
+        ->andWhere($sql_desde)
+        ->andWhere($sql_hasta);
         return $dataProvider;
     }
 }

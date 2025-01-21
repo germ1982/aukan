@@ -154,7 +154,7 @@ function crear_titulo_recuadro($label, $ancho)
                 ?>
             </div>
             <div class="col-xs-2" style='text-align: center; padding-top: 30px'>
-                ................<br>FIRMA
+                <!-- ................<br>FIRMA -->
             </div>
         </div>
         <hr>
