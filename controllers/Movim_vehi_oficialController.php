@@ -179,7 +179,7 @@ class Movim_vehi_oficialController extends Controller
             } else if ($model->load($request->post()) && $model->save()) {
                 return [
                     'forceReload' => '#crud-datatable-pjax',
-                    'title' => "Create new MovimVehiOficial",
+                    'title' => "Crear Nuevo Movimiento",
                     'content' => '<span class="text-success">Create MovimVehiOficial success</span>',
                     'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                         Html::a('Create More', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),

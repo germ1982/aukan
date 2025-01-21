@@ -15,7 +15,7 @@ function campo($titulo, $contenido)
 
 
 
-$vehiculos = ArrayHelper::map(
+/* $vehiculos = ArrayHelper::map(
     VehiculoOficial::find()->all(),
     'idvehiculo', // El valor de la clave (ID del vehículo)
     function($model) {
@@ -25,7 +25,7 @@ $vehiculos = ArrayHelper::map(
         // Concatenar la información del vehículo (marca, modelo, dominio, año)
         return $marca . ' - ' . $model->modelo . ' - ' . $model->dominio . ' - ' . $model->anio;
     }
-);
+); */
 
 $vehiculo = VehiculoOficial::getVehiculoOficial($model->idvehiculo);
 $choferInformacion = Empleado::get_empleado($model->chofer)->descripcion;
@@ -62,38 +62,41 @@ $choferInformacion = Empleado::get_empleado($model->chofer)->descripcion;
     <div class="row">
         <div class="col-md-12">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-2">
                     <?= campo('idmovimiento', "$model->idmovimiento") ?>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-4">
                     <?= campo('idvehiculo', "$vehiculo") ?>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-4">
                     <?= campo('chofer', "$choferInformacion") ?>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <?= campo('salida', "$model->salida") ?>
-                </div>
-                <div class="col-md-12">
-                    <?= campo('regreso', "$model->regreso") ?>
-                </div>
-                <div class="col-md-12">
-                    <?= campo('finalidad_viaje', "$model->finalidad_viaje") ?>
-                </div>
-                <div class="col-md-12">
+                <div class="col-md-2">
                     <?= campo('fecha', "$model->fecha") ?>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12">
-                    <?= campo('lugar', "$model->lugar") ?>
-                </div>
-                <div class="col-md-12">
+                <div class="col-md-4">
                     <?= campo('hora', "$model->hora") ?>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-4">
+                    <?= campo('lugar', "$model->lugar") ?>
+                </div>
+                <div class="col-md-4">
+                    <?= campo('finalidad_viaje', "$model->finalidad_viaje") ?>
+                </div>
+                
+
+
+            </div>
+            <div class="row">
+            <div class="col-md-4">
+                    <?= campo('salida', "$model->salida") ?>
+                </div>
+                <div class="col-md-4">
+                    <?= campo('regreso', "$model->regreso") ?>
+                </div>
+                <div class="col-md-4">
                     <?= campo('kilometraje', "$model->kilometraje") ?>
                 </div>
             </div>
@@ -101,19 +104,19 @@ $choferInformacion = Empleado::get_empleado($model->chofer)->descripcion;
 
     </div>
     <!-- <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'idmovimiento',
-            'idvehiculo',            
-            'chofer',
-            'salida',
-            'regreso',
-            'finalidad_viaje',
-            'fecha',
-            'lugar',
-            'hora',
-            'kilometraje',
-        ],
-    ]) ?>
+                'model' => $model,
+                'attributes' => [
+                    'idmovimiento',
+                    'idvehiculo',
+                    'chofer',
+                    'salida',
+                    'regreso',
+                    'finalidad_viaje',
+                    'fecha',
+                    'lugar',
+                    'hora',
+                    'kilometraje',
+                ],
+            ]) ?>
  -->
 </div>
