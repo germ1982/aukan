@@ -1,16 +1,16 @@
 <?php
 
-use app\controllers\Stock_informatica_egreso_detalleController;
+use app\controllers\Stock_deposito_egreso_detalleController;
 use app\models\Articulo;
 use app\models\Configuracion;
 use app\models\Empleado;
 use app\models\OrganismoDispositivo;
 use app\models\Persona;
-use app\models\StockInformaticaEgreso;
-use app\models\StockInformaticaEgresoDetalle;
+use app\models\StockDepositoEgreso;
+use app\models\StockDepositoEgresoDetalle;
 
 $idegreso = $_GET['idegreso'];
-$model = StockInformaticaEgreso::findOne($idegreso);
+$model = StockDepositoEgreso::findOne($idegreso);
 
 function crear_linea($label, $contenido)
 {
@@ -44,7 +44,7 @@ function crear_titulo_recuadro($label, $ancho)
 
     <br><br>
     <div style="text-align: center;">
-        <h5><b>ACTA ENTREGA DE INSUMOS INFORMATICOS</b></h5>
+        <h5><b>ACTA ENTREGA DE INSUMOS DE DEPOSITO</b></h5>
     </div>
 
     <div class="row" style='padding-left: 50px;'>
@@ -97,7 +97,7 @@ function crear_titulo_recuadro($label, $ancho)
                             concat( ct.descripcion ,' ', cm.descripcion ,' ' ,a.modelo ,' ' , a.descripcion) as descripcion,
                             e.cantidad,
                             cum.descripcion as unidad_medida
-                        FROM stock_informatica_egreso_detalle e 
+                        FROM stock_deposito_egreso_detalle e 
                         JOIN articulo a on e.idarticulo = a.idarticulo
                         join configuracion ct on ct.id_configuracion=a.idtipo
                         join configuracion cm on cm.id_configuracion=a.idmarca
@@ -107,7 +107,7 @@ function crear_titulo_recuadro($label, $ancho)
 
         //$articulos = Articulo::findBySql($consulta)->all();
 
-        $articulos = StockInformaticaEgresoDetalle::findBySql($consulta)->all();
+        $articulos = StockDepositoEgresoDetalle::findBySql($consulta)->all();
 
         $ban = 1;
         echo "<br>";
@@ -183,7 +183,7 @@ function crear_titulo_recuadro($label, $ancho)
     <div class="row">
         <div class="col-xs-12" style="text-align: center;">
             <p>
-                Direccion General de Informatica y Comunicaciones <br> Telefono: 449-8989
+                Direccion General de Deposito y Comunicaciones <br> Telefono: 449-8989
             </p>
         </div>
     </div>

@@ -121,7 +121,7 @@ CrudAsset::register($this);
                                         ) .
                                         Html::a(
                                             'Saldos',
-                                            ['/view_stock_articulos_cantidades'],
+                                            ['/view_stock_informatica_articulos_cantidades'],
                                             ['title' => 'Saldos', 'class' => 'btn btn-primary neon']
                                         ) .
                                         '</div>

@@ -86,18 +86,30 @@ class Articulo extends \yii\db\ActiveRecord
 
     public static function get_articulos_rubro_disponible($idrubro = null)
     {
-        $filtro = $idrubro ? " AND a.idrubro = $idrubro" : '';
+        switch ($idrubro) {
+            case 115:
+                $tabla_ingreso = "stock_informatica_ingreso_detalle";
+                $tabla_egreso = "stock_informatica_egreso_detalle";
+                break;
+
+            case 116:
+                $tabla_ingreso = "stock_deposito_ingreso_detalle";
+                $tabla_egreso = "stock_deposito_egreso_detalle";
+                break;
+        }
+
+
 
         $sql_disponible = "SELECT 
                             COALESCE(
                                 (SELECT SUM(sii.cantidad) 
-                                FROM stock_informatica_ingreso_detalle sii 
+                                FROM $tabla_ingreso sii 
                                 WHERE sii.idarticulo = a.idarticulo), 0
                             )
                             -
                             COALESCE(
                                 (SELECT SUM(sie.cantidad) 
-                                FROM stock_informatica_egreso_detalle sie 
+                                FROM $tabla_egreso sie 
                                 WHERE sie.idarticulo = a.idarticulo), 0
                             )";
 
@@ -118,7 +130,7 @@ class Articulo extends \yii\db\ActiveRecord
                 JOIN configuracion cm ON cm.id_configuracion = a.idmarca
                 JOIN configuracion cum ON cum.id_configuracion = a.id_unidad_medida
                 WHERE a.activo = 1
-                $filtro
+
                 AND ($sql_disponible) > 0
                 ORDER BY ct.descripcion, cm.descripcion, a.modelo, cum.descripcion, a.descripcion
             ";

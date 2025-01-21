@@ -23,8 +23,38 @@ CrudAsset::register($this);
 .kv-grid-toolbar .btn {
     height: 30px;  /* Ajusta la altura de todos los botones */
     line-height: 1.42857143;  /* Esto centra el contenido verticalmente */
+
+    
+}
+.kv-grid-toolbar {
+
+display: flex;
+/* background-color: red; */
+
 }
 
+.btn-toolbar {
+width: 100%;
+
+}
+
+.btn-group {
+width: 100%;
+
+}
+.botones_a {
+        text-align: left;
+        display: flex;
+        gap: 10px;
+    }
+
+    .botones_b {
+        justify-content: flex-end;
+        /* Alineación derecha */
+        display: flex;
+        width: 100%;
+        /* Asegura que el contenedor ocupe todo el ancho de la columna */
+    }
 </style>
 
 <header class="page-header">
@@ -62,21 +92,28 @@ CrudAsset::register($this);
                             'columns' => require(__DIR__ . '/_columns.php'),
                             'toolbar' => [
                                 ['content' =>
+                                '<div class="row">' .
+                                '<div class="col-md-9"> 
+                                    <div class="botones_a">' .
                                 Html::a(
                                     'Egresos',
                                     ['/stock_deposito_egreso'],
-                                    ['title' => 'Egresos', 'class' => 'btn btn-default']
+                                    ['title' => 'Egresos', 'class' => 'btn btn-primary neon']
                                 ) .
                                 Html::a(
                                     'Articulos',
                                     ['/articulo'],
-                                    ['title' => 'Articulos', 'class' => 'btn btn-default']
+                                    ['title' => 'Articulos', 'class' => 'btn btn-primary neon']
                                 ) .
                                 Html::a(
                                     'Saldos',
-                                    ['/view_stock_articulos_cantidades'],
-                                    ['title' => 'Saldos', 'class' => 'btn btn-default']
+                                    ['/view_stock_deposito_articulos_cantidades'],
+                                    ['title' => 'Saldos', 'class' => 'btn btn-primary neon']
                                 ) .
+                                '</div>
+                                </div>' .
+                                '<div class="col-md-3"> 
+                                    <div class="botones_b">' .
                                 Html::a(
                                         '<i class="glyphicon glyphicon-plus"></i>',
                                         ['create'],
@@ -91,7 +128,11 @@ CrudAsset::register($this);
                                     ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Refrescar Grilla']
                                 ) .
                                 '{toggleData}' .
-                                '{export}'],
+                                '{export}'.
+                                '</div>
+                                </div>' .
+                                '</div>'
+                            ],
                             ],
                             'striped' => true,
                             'condensed' => true,
