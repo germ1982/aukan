@@ -62,8 +62,14 @@ class VehiculoOficial extends \yii\db\ActiveRecord
             'anio' => 'Año'
         ];
     }
-    public function  getVehiculo()
+   /*  public function  getVehiculo()
     {
         return $this->hasOne(VehiculoOficial::class, ['id' => 'idvehiculo']);
+    } */
+
+    public static function getVehiculoOficial($id){
+        $vehiculo = VehiculoOficial::findOne($id);
+        $marca= Configuracion::findOne($vehiculo->idmarca)->descripcion;
+        return $marca . ' - ' . $vehiculo->modelo . ' - ' . $vehiculo->dominio . ' - ' . $vehiculo->anio;
     }
 }

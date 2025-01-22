@@ -3,7 +3,8 @@
 namespace app\controllers;
 
 use app\models\Configuracion;
-use app\models\ConfiguracionTipo;
+use app\models\Persona;
+use app\models\Empleado;
 use Yii;
 use app\models\MovimVehiOficial;
 use app\models\MovimVehiOficialSearch;
@@ -35,7 +36,7 @@ class Movim_vehi_oficialController extends Controller
         // Verificar si el vehículo existe
         if ($vehiculoOficial) {
             return [
-                
+
                 'dominio' => $vehiculoOficial->dominio,
                 'modelo' => $vehiculoOficial->modelo,
                 'anio' => $vehiculoOficial->anio,
@@ -91,15 +92,30 @@ class Movim_vehi_oficialController extends Controller
     public function actionView($id)
     {
         $request = Yii::$app->request;
+
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
+
+            // Obtener el empleado y chofer
+
+            $model = $this->findModel($id);
+
+            $empleado = Empleado::findOne($model->chofer);
+            if ($empleado) {
+                $chofer = Persona::findOne($empleado->idpersona);
+                $choferInfo = $chofer ? $chofer->nombre . ' - ' . $chofer->apellido . ' - ' . $empleado->legajo : 'No encontrado';
+            } else {
+                $choferInfo = 'Empleado no encontrado';
+            }
+
             return [
-                'title' => "MovimVehiOficial #" . $id,
+                'title' => "Movimiento Vehiculo Oficial" . $id,
                 'content' => $this->renderAjax('view', [
                     'model' => $this->findModel($id),
+                    'choferInfo' => $choferInfo,  // Aquí pasas la información del chofer
                 ]),
-                'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                    Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::a('Editar', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
             ];
         } else {
             return $this->render('view', [
@@ -108,81 +124,90 @@ class Movim_vehi_oficialController extends Controller
         }
     }
 
+
     /**
      * Creates a new MovimVehiOficial model.
      * For ajax request will return json object
      * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    
+
     public function actionCreate()
     {
         $request = Yii::$app->request;
         $model = new MovimVehiOficial();
 
+        // Obtener vehículos
         $vehiculos = ArrayHelper::map(
-            VehiculoOficial::find()->with('marca')->all(), // Aquí cargamos la relación 'marca'
-            'idvehiculo',
+            VehiculoOficial::find()->all(),
+            'idvehiculo', // El valor de la clave (ID del vehículo)
             function ($model) {
-                return $model->marca ? $model->marca->descripcion : 'Desconocida' . ' - ' . $model->modelo . ' - ' . $model->dominio . ' - ' . $model->anio;
+                // Obtener la descripción de la marca a través de la relación
+                $marca = $model->marca ? $model->marca->descripcion : 'Marca no disponible'; // 'marca' es la relación en el modelo
+
+                // Concatenar la información del vehículo (marca, modelo, dominio, año)
+                return $marca . ' - ' . $model->modelo . ' - ' . $model->dominio . ' - ' . $model->anio;
             }
         );
 
-
-
-        // Verificar si los vehículos están siendo cargados correctamente
-        if (empty($vehiculos)) {
-            Yii::$app->session->setFlash('error', 'No hay vehículos disponibles.');
-        }
+        // Obtener choferes
+        $choferes = ArrayHelper::map(
+            Empleado::find()
+                ->where(['funcion' => 69])
+                ->all(),
+            'idempleado', // ID del chofer            
+            function ($model) {
+                $persona = $model->persona; // Relación con la tabla de personas
+                return $persona ? $persona->nombre . ' ' . $persona->apellido . ' - Legajo ' . $model->legajo : 'No disponible';
+            }
+        );
 
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
 
             if ($request->isGet) {
                 return [
-                    'title' => "Create new MovimVehiOficial",
-                    'content' => $this->renderAjax('create', [
+                    'title' => "Crear Movimiento",
+                    'content' => $this->renderAjax('_form', [
                         'model' => $model,
                         'vehiculos' => $vehiculos, // Pasamos los vehículos a la vista
+                        'choferes' => $choferes,   // Pasamos los choferes
                     ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"]),
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"]),
                 ];
             } else if ($model->load($request->post()) && $model->save()) {
                 return [
                     'forceReload' => '#crud-datatable-pjax',
-                    'title' => "Create new MovimVehiOficial",
+                    'title' => "Crear Nuevo Movimiento",
                     'content' => '<span class="text-success">Create MovimVehiOficial success</span>',
                     'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                         Html::a('Create More', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
                 ];
             } else {
                 return [
-                    'title' => "Create new MovimVehiOficial",
-                    'content' => $this->renderAjax('create', [
+                    'title' => "Crear Movimiento",
+                    'content' => $this->renderAjax('_form', [
                         'model' => $model,
-                        'vehiculos' => $vehiculos, // Asegúrate de pasar los vehículos aquí también
+                        'vehiculos' => $vehiculos,
+                        'choferes' => $choferes, // Pasamos los choferes
                     ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"]),
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"]),
                 ];
             }
         } else {
-            // Si no es AJAX
             if ($model->load($request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->idmovimiento]);
             } else {
                 return $this->render('create', [
                     'model' => $model,
-                    'vehiculos' => $vehiculos, // Pasamos los vehículos aquí también
+                    'vehiculos' => $vehiculos,
+                    'choferes' => $choferes, // Pasamos los choferes a la vista
                 ]);
             }
         }
     }
-
-
-
-
 
     /**
      * Updates an existing MovimVehiOficial model.
@@ -197,52 +222,53 @@ class Movim_vehi_oficialController extends Controller
         $model = $this->findModel($id);
 
         if ($request->isAjax) {
-            /*
-            *   Process for ajax request
-            */
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
                 return [
-                    'title' => "Update MovimVehiOficial #" . $id,
+                    'title' => 'Editar Movimiento',
                     'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                    'footer' =>
+                    Html::button('Cerrar', [
+                        'id' => 'btnCerrar',
+                        'class' => 'btn btn-default pull-left',
+                        'data-dismiss' => 'modal',
+                    ]) .
+                        Html::button('Guardar', [
+                            'id' => 'btnGuardar',
+                            'class' => 'btn btn-primary',
+                            'type' => 'submit',
+                        ]),
                 ];
-            } else if ($model->load($request->post()) && $model->save()) {
-                return [
-                    'forceReload' => '#crud-datatable-pjax',
-                    'title' => "MovimVehiOficial #" . $id,
-                    'content' => $this->renderAjax('view', [
-                        'model' => $model,
-                    ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
-                ];
-            } else {
-                return [
-                    'title' => "Update MovimVehiOficial #" . $id,
-                    'content' => $this->renderAjax('update', [
-                        'model' => $model,
-                    ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
-                ];
+            } else if ($model->load($request->post())) {
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
+
+
+                if ($guardado && $model->save()) {
+                    $transaction->commit();
+
+                    return [
+                        'title' => "Editar Movimiento",
+                        'content' => '<span class="text-success">Movimiento Editado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                    ];
+                }
             }
-        } else {
-            /*
-            *   Process for non-ajax request
-            */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->idmovimiento]);
-            } else {
-                return $this->render('update', [
+            return [
+                'title' => "Editar Movimiento Faltan datos!!! Complete Los datos Faltantes!!!",
+                'content' => $this->renderAjax('create', [
                     'model' => $model,
-                ]);
-            }
+                ]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+
+            ];
         }
     }
+
+
 
     /**
      * Delete an existing MovimVehiOficial model.

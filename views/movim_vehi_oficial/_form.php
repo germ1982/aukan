@@ -3,17 +3,20 @@
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use app\models\VehiculoOficial; // Asegúrate de incluir el modelo
+use app\models\VehiculoOficial;
+use app\models\Empleado;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\MovimVehiOficial */
 /* @var $form yii\widgets\ActiveForm */
 
-// Recuperar vehículos con los atributos concatenados
+// No es necesario realizar la consulta de choferes aquí.
+// Los choferes deben ser pasados desde el controlador.
+// Obtener vehículos
 $vehiculos = ArrayHelper::map(
     VehiculoOficial::find()->all(),
     'idvehiculo', // El valor de la clave (ID del vehículo)
-    function($model) {
+    function ($model) {
         // Obtener la descripción de la marca a través de la relación
         $marca = $model->marca ? $model->marca->descripcion : 'Marca no disponible'; // 'marca' es la relación en el modelo
 
@@ -21,7 +24,17 @@ $vehiculos = ArrayHelper::map(
         return $marca . ' - ' . $model->modelo . ' - ' . $model->dominio . ' - ' . $model->anio;
     }
 );
-
+// Obtener choferes
+$choferes = ArrayHelper::map(
+    Empleado::find() 
+    ->where (['funcion'=>69])
+    ->all(),                  
+    'idempleado', // ID del chofer            
+    function ($model) {
+        $persona = $model->persona; // Relación con la tabla de personas
+        return $persona ? $persona->nombre . ' ' . $persona->apellido . ' - Legajo ' . $model->legajo : 'No disponible';
+    }
+);
 ?>
 
 <div class="movim-vehi-oficial-form">
@@ -31,19 +44,26 @@ $vehiculos = ArrayHelper::map(
     <div class="row">
         <div class="col-md-12">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <?= $form->field($model, 'idvehiculo')->dropDownList(
-                        $vehiculos, 
+                        $vehiculos,
                         [
                             'prompt' => 'Selecciona un vehículo',
                             'onchange' => 'actualizarDatosVehiculo(this.value)', // Llamar a la función cuando cambie el vehículo
                             'class' => 'form-control'
                         ]
                     ) ?>
-                </div>                
-                <div class="col-md-3">
-                    <?= $form->field($model, 'chofer')->textInput() ?>
                 </div>
+                <div class="col-md-3">
+                    <?= $form->field($model, 'chofer')->dropDownList(
+                        $choferes, // Aquí usas la lista de choferes que fue pasada desde el controlador
+                        [
+                            'prompt' => 'Selecciona un chofer', // Texto por defecto
+                            'class' => 'form-control',          // Estilo
+                        ]
+                    ) ?>
+                </div>
+
                 <div class="col-md-3">
                     <?= $form->field($model, 'salida')->textInput() ?>
                 </div>
@@ -83,7 +103,7 @@ $vehiculos = ArrayHelper::map(
     <?php } ?>
 
     <?php ActiveForm::end(); ?>
-    
+
 </div>
 
 <?php

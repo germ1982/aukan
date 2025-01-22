@@ -46,10 +46,10 @@ class Empleado extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['idpersona', 'iddispositivo', 'legajo', 'activo','foto'], 'required'],
+            [['idpersona', 'iddispositivo', 'legajo', 'activo', 'foto'], 'required'],
             [['idpersona', 'iddispositivo', 'legajo', 'activo', 'categoria', 'antiguedad_legal', 'antiguedad_total', 'contratacion', 'cuil', 'funcion', 'fichado', 'afiliacion'], 'integer'],
             [['ingreso_real', 'ingreso_administrativo'], 'safe'],
-            [['email', 'foto','descripcion'], 'string', 'max' => 100],
+            [['email', 'foto', 'descripcion'], 'string', 'max' => 100],
             [['telefono'], 'string', 'max' => 50],
             [['imageFile'], 'file', 'extensions' => 'jpg, jpeg, gif, png', 'maxSize' => 1000000],
         ];
@@ -86,17 +86,22 @@ class Empleado extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Persona::className(), ['idpersona' => 'idpersona']);
     }
-
-    public static function get_empleados($modulo='')
+    public function getConfiguracion()
     {
-        $filtro = $modulo ? " and idempleado in (SELECT idempleado from $modulo)" :'';
+        return $this->hasOne(Configuracion::className(), ['id_configuracion' => 'id_configuracion']);
+    }
+
+
+    public static function get_empleados($modulo = '')
+    {
+        $filtro = $modulo ? " and idempleado in (SELECT idempleado from $modulo)" : '';
         $sql = "SELECT  e.idempleado,concat( p.apellido ,' ', p.nombre) as descripcion
                 from empleado e 
                 join personas p on p.idpersona = e.idpersona
                 where e.activo=1 $filtro
                 order by p.apellido ,p.nombre";
         $empleados = Empleado::findBySql($sql)->all();
-        
+
         return $empleados;
     }
 
@@ -119,7 +124,9 @@ class Empleado extends \yii\db\ActiveRecord
                 where e.activo=1 and d.idorganismo = $idorganismo
                 order by p.apellido ,p.nombre";
         $empleados = Empleado::findBySql($sql)->all();
-        
+
         return $empleados;
     }
+
+    
 }
