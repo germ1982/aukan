@@ -8,7 +8,7 @@ use yii\bootstrap\Modal;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset;
 
-$this->title = 'Vehiculos Oficiales';
+$this->title = 'Novimientos de Vehiculos Oficiales';
 $this->params['breadcrumbs'][] = $this->title;
 $clase = 'vehiculo-oficial-index';
 
@@ -32,18 +32,7 @@ CrudAsset::register($this);
 <header class="page-header">
     <h2><?= $this->title ?></h2>
 
-    <div class="right-wrapper pull-right">
-        <ol class="breadcrumbs">
-            <li>
-                <a href="index.html">
-                    <i class="neon fa fa-home"></i>
-                </a>
-            </li>
-            <li><span><?= $this->title ?></span></li>
-        </ol>
 
-        <div class="sidebar-right-toggle"></div>
-    </div>
 </header>
 
 

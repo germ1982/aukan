@@ -128,5 +128,19 @@ class Empleado extends \yii\db\ActiveRecord
         return $empleados;
     }
 
+    public static function get_empleado_choferes(){
+        $choferes =  Empleado::find()
+        ->select([
+            'idempleado',
+            "CONCAT(personas.nombre, ' ', personas.apellido, ' legajo ', empleado.legajo) AS descripcion"
+        ])
+        ->innerJoin('personas', 'personas.idpersona = empleado.idpersona')
+        ->where(['empleado.funcion' => 69])
+        ->asArray()
+        ->all();
+        return $choferes;
+    
+    }
+
     
 }

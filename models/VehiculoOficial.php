@@ -72,4 +72,16 @@ class VehiculoOficial extends \yii\db\ActiveRecord
         $marca= Configuracion::findOne($vehiculo->idmarca)->descripcion;
         return $marca . ' - ' . $vehiculo->modelo . ' - ' . $vehiculo->dominio . ' - ' . $vehiculo->anio;
     }
+
+    public static function getVehiculosOficiales(){
+        $vehiculos = VehiculoOficial::find()
+        ->select([
+            'idvehiculo',
+            "CONCAT(c.descripcion, ' ', vehiculo_oficial.modelo, ' dominio ', vehiculo_oficial.dominio, ' año ', vehiculo_oficial.anio) AS descripcion"
+        ])
+        ->innerJoin('configuracion c', 'c.id_configuracion = vehiculo_oficial.idmarca')
+        ->asArray()
+        ->all();
+            return $vehiculos;
+    }
 }

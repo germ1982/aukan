@@ -80,10 +80,7 @@ $choferInformacion = Empleado::get_empleado($model->chofer)->descripcion;
                     <?= campo('hora', "$model->hora") ?>
                 </div>
                 <div class="col-md-4">
-                    <?= campo('lugar', "$model->lugar") ?>
-                </div>
-                <div class="col-md-4">
-                    <?= campo('finalidad_viaje', "$model->finalidad_viaje") ?>
+                    <?= campo('Motivo de viaje', "$model->finalidad_viaje") ?>
                 </div>
                 
 
@@ -91,10 +88,10 @@ $choferInformacion = Empleado::get_empleado($model->chofer)->descripcion;
             </div>
             <div class="row">
             <div class="col-md-4">
-                    <?= campo('salida', "$model->salida") ?>
+                    <?= campo('salida', "$model->lugar_salida") ?>
                 </div>
                 <div class="col-md-4">
-                    <?= campo('regreso', "$model->regreso") ?>
+                    <?= campo('destino', "$model->lugar_destino") ?>
                 </div>
                 <div class="col-md-4">
                     <?= campo('kilometraje', "$model->kilometraje") ?>
@@ -103,20 +100,6 @@ $choferInformacion = Empleado::get_empleado($model->chofer)->descripcion;
         </div>
 
     </div>
-    <!-- <?= DetailView::widget([
-                'model' => $model,
-                'attributes' => [
-                    'idmovimiento',
-                    'idvehiculo',
-                    'chofer',
-                    'salida',
-                    'regreso',
-                    'finalidad_viaje',
-                    'fecha',
-                    'lugar',
-                    'hora',
-                    'kilometraje',
-                ],
-            ]) ?>
- -->
+
+
 </div>

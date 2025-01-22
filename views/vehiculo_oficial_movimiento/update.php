@@ -2,13 +2,13 @@
 
 use yii\helpers\Html;
 
-
 /* @var $this yii\web\View */
-/* @var $model app\models\MovimVehiOficial */
-
+/* @var $model app\models\VehiculoOficialMovimiento */
 ?>
-<div class="movim-vehi-oficial-create">
+<div class="vehiculo-oficial-movimiento-update">
+
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>
+
 </div>
