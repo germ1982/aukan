@@ -1,9 +1,43 @@
 <style>
     .contenedor_web {
+        background-color: black;
         padding: 5px;
 
 
     }
+
+
+.neon_container {
+  display: inline-block;
+  padding: 5px;
+  background-color: black;
+  border-radius: 25px;
+  box-shadow: 10 0 20px lime, 0 0 40px lime;
+  animation: neonGlow 2.5s infinite alternate;
+margin: 10px;
+
+/* animation: neonRGB 2s infinite alternate; */
+}
+
+.neon_container:hover {
+  box-shadow: 0 0 20px blue, 0 0 60px blue, 0 0 100px blue;
+}
+
+@keyframes neonRGB {
+  0% { filter: drop-shadow(0 0 10px red); }
+  33% { filter: drop-shadow(0 0 10px lime); }
+  66% { filter: drop-shadow(0 0 10px blue); }
+  100% { filter: drop-shadow(0 0 10px red); }
+}
+
+@keyframes neonGlow {
+  from {
+    box-shadow: 0 0 5px lime, 0 0 20px lime;
+  }
+  to {
+    box-shadow: 0 0 20px greenyellow, 0 0 60px greenyellow;
+  }
+}
 
     /* Scrollbar general */
     ::-webkit-scrollbar {
@@ -39,9 +73,9 @@
 
 
 
-<div class="contenedor_web">
+<div class="contenedor_web neon_container">
     <a href="web_informatica/informatica.php" target="_blank">
-        <img src="img\tarjetas\web_informatica.jpg" alt="Descripción de la imagen">
+        <img src="img\tarjetas\escudo_informatica_1.png" alt="Descripción de la imagen" class="img_info">
     </a>
 </div>
 
