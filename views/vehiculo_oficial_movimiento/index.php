@@ -8,7 +8,7 @@ use yii\bootstrap\Modal;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset;
 
-$this->title = 'Novimientos de Vehiculos Oficiales';
+$this->title = 'Movimientos de Vehiculos Oficiales';
 $this->params['breadcrumbs'][] = $this->title;
 $clase = 'vehiculo-oficial-index';
 
