@@ -12,9 +12,9 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * RunneuLegajoController implements the CRUD actions for RunneuLegajo model.
+ * Runneu_legajoController implements the CRUD actions for RunneuLegajo model.
  */
-class RunneuLegajoController extends Controller
+class Runneu_legajoController extends Controller
 {
     /**
      * @inheritdoc
