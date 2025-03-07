@@ -87,15 +87,18 @@ class OrganismoDispositivoSearch extends OrganismoDispositivo
             'idcapaitem' => $this->idcapaitem,
         ]);
 
-        $query->andFilterWhere(['like', 'descripcion', $this->descripcion])
-                ->andFilterWhere(['like', 'es_oficial', $this->es_oficial])
-                ->andFilterWhere(['like', 'es_organismo', $this->es_organismo])
-                ->andFilterWhere(['like', 'activo', $this->activo])
-                ->andFilterWhere(['like', 'direccion', $this->direccion])
-                ->andFilterWhere(['like', 'alias', $this->alias])
-                ->andFilterWhere(['like', 'telefono', $this->telefono])
-                ->andFilterWhere(['like', 'organismo.descripcion', $this->organismo]);
+        $query->andFilterWhere(['like', 'organismo_dispositivo.descripcion', $this->descripcion])
+        ->andFilterWhere(['like', 'es_oficial', $this->es_oficial])
+        ->andFilterWhere(['like', 'es_organismo', $this->es_organismo])
+        ->andFilterWhere(['like', 'activo', $this->activo])
+        ->andFilterWhere(['like', 'direccion', $this->direccion])
+        ->andFilterWhere(['like', 'alias', $this->alias])
+        ->andFilterWhere(['like', 'telefono', $this->telefono]);
 
-        return $dataProvider;
+  // Aquí se ha especificado que 'organismo.descripcion' pertenece a la tabla 'organismo'
+  $query->andFilterWhere(['like', 'organismo.descripcion', $this->organismo]);
+
+  return $dataProvider;
+
     }
 }
