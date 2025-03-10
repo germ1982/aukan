@@ -16,6 +16,36 @@ $this->params['breadcrumbs'][] = $this->title;
 CrudAsset::register($this);
 
 ?>
+<style>
+    .custom-grid {
+    font-size: 13px; /* Cambia el tamaño según tus necesidades */
+}
+
+.kv-grid-toolbar .btn {
+    height: 30px;  /* Ajusta la altura de todos los botones */
+    line-height: 1.42857143;  /* Esto centra el contenido verticalmente */
+}
+
+</style>
+
+<header class="page-header">
+    <h2><?= $this->title ?></h2>
+
+    <div class="right-wrapper pull-right">
+        <ol class="breadcrumbs">
+            <li>
+                <a href="index.html">
+                    <i class="neon fa fa-home"></i>
+                </a>
+            </li>
+            <li><span><?= $this->title ?></span></li>
+        </ol>
+
+        <div class="sidebar-right-toggle"></div>
+    </div>
+</header>
+
+
 <div class="runneu-legajo-index">
     <div id="ajaxCrudDatatable">
         <?=GridView::widget([
@@ -39,21 +69,9 @@ CrudAsset::register($this);
             'responsive' => true,          
             'panel' => [
                 'type' => 'primary', 
-                'heading' => '<i class="glyphicon glyphicon-list"></i> Runneu Legajos listing',
-                'before'=>'<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
-                'after'=>BulkButtonWidget::widget([
-                            'buttons'=>Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Delete All',
-                                ["bulk-delete"] ,
-                                [
-                                    "class"=>"btn btn-danger btn-xs",
-                                    'role'=>'modal-remote-bulk',
-                                    'data-confirm'=>false, 'data-method'=>false,// for overide yii data api
-                                    'data-request-method'=>'post',
-                                    'data-confirm-title'=>'Are you sure?',
-                                    'data-confirm-message'=>'Are you sure want to delete this item'
-                                ]),
-                        ]).                        
-                        '<div class="clearfix"></div>',
+                'heading' =>false,
+                
+                
             ]
         ])?>
     </div>
@@ -61,5 +79,6 @@ CrudAsset::register($this);
 <?php Modal::begin([
     "id"=>"ajaxCrudModal",
     "footer"=>"",// always need it for jquery plugin
+    'size' => Modal::SIZE_LARGE,
 ])?>
 <?php Modal::end(); ?>

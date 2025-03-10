@@ -9,13 +9,16 @@ use yii\widgets\ActiveForm;
 
 <div class="runneu-legajo-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(); ([
+        'options' => ['enctype' => 'multipart/form-data']
+    ]);?>
+    
 
-    <?= $form->field($model, 'nº_legajo')->textInput() ?>
+    <?= $form->field($model, 'num_legajo')->textInput() ?>
 
     <?= $form->field($model, 'dni')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'archivo_adjunto')->textInput() ?>
+    <?= $form->field($model, 'archivo_adjunto')->fileInput() ?>
 
   
 	<?php if (!Yii::$app->request->isAjax){ ?>

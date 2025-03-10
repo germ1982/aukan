@@ -18,7 +18,7 @@ class RunneuLegajoSearch extends RunneuLegajo
     public function rules()
     {
         return [
-            [['nº_legajo'], 'integer'],
+            [['num_legajo'], 'integer'],
             [['dni', 'archivo_adjunto'], 'safe'],
         ];
     }
@@ -56,7 +56,7 @@ class RunneuLegajoSearch extends RunneuLegajo
         }
 
         $query->andFilterWhere([
-            'nº_legajo' => $this->nº_legajo,
+            'num_legajo' => $this->num_legajo,
         ]);
 
         $query->andFilterWhere(['like', 'dni', $this->dni])

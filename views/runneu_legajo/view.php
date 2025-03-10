@@ -10,7 +10,7 @@ use yii\widgets\DetailView;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'nº_legajo',
+            'num_legajo',
             'dni',
             'archivo_adjunto',
         ],
