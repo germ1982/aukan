@@ -8,19 +8,16 @@ use yii\web\UploadedFile;
 /**
  * This is the model class for table "runneu_legajo".
  *
- * @property int $nº_legajo
+ * @property int $num_legajo
  * @property string $dni
- * @property resource|null $archivo_adjunto
+ * @property string $archivo_adjunto
  */
 class RunneuLegajo extends \yii\db\ActiveRecord
 {
-    /**
-     * @var UploadedFile|null $archivo_adjunto
-     */
     public $archivo_adjunto;
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public static function tableName()
     {
@@ -28,17 +25,39 @@ class RunneuLegajo extends \yii\db\ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['num_legajo', 'dni'], 'required'],
-            [['num_legajo'], 'integer'],
-            [['archivo_adjunto'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, pdf', 'maxSize' => 10485760], // Validación del archivo (extensiones y tamaño)
-            [['dni'], 'string', 'max' => 20],
-            [['num_legajo'], 'unique'],
+            [['dni'], 'required'],
+            [['archivo_adjunto'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, pdf', 'maxSize' => 10485760], // 10MB max
         ];
+    }
+
+    /**
+     * Carga el archivo a la carpeta correspondiente
+     */
+    public function upload()
+    {
+        if ($this->validate() && $this->archivo_adjunto) {
+            $baseName = $this->archivo_adjunto->getBaseName();
+            $fileName = 'legajo_runneu_' . $this->dni . '_' . $baseName . '.' . $this->archivo_adjunto->extension;
+
+            // Directorio donde se guardarán los archivos subidos
+            $uploadPath = Yii::getAlias('@webroot/uploads/legajo_runneu/');
+
+            // Verifica que el directorio exista, si no, lo crea
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0775, true);
+            }
+
+            // Guarda el archivo
+            if ($this->archivo_adjunto->saveAs($uploadPath . $fileName)) {
+                return $fileName; // Retorna el nombre del archivo guardado
+            }
+        }
+        return false; // Retorna false si la validación o la carga falla
     }
 
     /**
@@ -47,34 +66,9 @@ class RunneuLegajo extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'num_legajo' => 'Nº Legajo',
-            'dni' => 'Dni',
+            'num_legajo' => 'Num Legajo',
+            'dni' => 'DNI',
             'archivo_adjunto' => 'Archivo Adjunto',
         ];
-    }
-
-    /**
-     * Método para subir el archivo al servidor.
-     * 
-     * @return string|false El nombre del archivo si se sube correctamente, o false si hay un error.
-     */
-    public function upload()
-    {
-        if ($this->validate()) {
-            // Definir el directorio de destino
-            $path = Yii::getAlias('@webroot/uploads/') . $this->archivo_adjunto->baseName . '.' . $this->archivo_adjunto->extension;
-
-            // Guardar el archivo físicamente
-            if ($this->archivo_adjunto->saveAs($path)) {
-                // Guardar solo la ruta en la base de datos
-                $this->archivo_adjunto = $path;
-
-                if ($this->save()) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 }

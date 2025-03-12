@@ -11,10 +11,10 @@ return [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'dni',
     ],
-   /*  [
+    [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'archivo_adjunto',
-    ], */
+    ],
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,

@@ -12,14 +12,8 @@ use \yii\web\Response;
 use yii\helpers\Html;
 use yii\web\UploadedFile;
 
-/**
- * Runneu_legajoController implements the CRUD actions for RunneuLegajo model.
- */
 class Runneu_legajoController extends Controller
 {
-    /**
-     * @inheritdoc
-     */
     public function behaviors()
     {
         return [
@@ -33,10 +27,6 @@ class Runneu_legajoController extends Controller
         ];
     }
 
-    /**
-     * Lists all RunneuLegajo models.
-     * @return mixed
-     */
     public function actionIndex()
     {
         $searchModel = new RunneuLegajoSearch();
@@ -48,38 +38,39 @@ class Runneu_legajoController extends Controller
         ]);
     }
 
-
-    /**
-     * Displays a single RunneuLegajo model.
-     * @param integer $id
-     * @return mixed
-     */
     public function actionView($id)
     {
         $request = Yii::$app->request;
+        $model = $this->findModel($id);
+
+        // Si el archivo no está disponible, asigna un valor predeterminado
+        $num_legajo = $model->num_legajo;
+        $dni = $model->dni;
+        $archivo_adjunto = $model->archivo_adjunto ?: 'No disponible';
+
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                'title' => "RunneuLegajo" ,
+                'title' => "RunneuLegajo",
                 'content' => $this->renderAjax('view', [
-                    'model' => $this->findModel($id),
+                    'model' => $model,
+                    'num_legajo' => $num_legajo,
+                    'dni' => $dni,
+                    'archivo_adjunto' => $archivo_adjunto,
                 ]),
                 'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                    Html::a('Editar', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                    Html::a('Editar', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
             ];
         } else {
             return $this->render('view', [
-                'model' => $this->findModel($id),
+                'model' => $model,
+                'num_legajo' => $num_legajo,
+                'dni' => $dni,
+                'archivo_adjunto' => $archivo_adjunto,
             ]);
         }
     }
 
-    /**
-     * Creates a new RunneuLegajo model.
-     * For ajax request will return json object
-     * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
     public function actionCreate()
     {
         $request = Yii::$app->request;
@@ -90,75 +81,53 @@ class Runneu_legajoController extends Controller
             if ($request->isGet) {
                 return [
                     'title' => "Crear nuevo Legajo",
-                    'content' => $this->renderAjax('create', [
-                        'model' => $model,
-                    ]),
+                    'content' => $this->renderAjax('create', ['model' => $model]),
                     'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"]),
                 ];
             } else if ($model->load($request->post())) {
-                // Obtener el archivo subido
                 $model->archivo_adjunto = UploadedFile::getInstance($model, 'archivo_adjunto');
 
-                // Subir el archivo
+                // Validar si el archivo se ha subido correctamente
                 $filePath = $model->upload();
 
-                // Si el archivo se sube correctamente, guardar el modelo
                 if ($filePath && $model->save()) {
                     return [
                         'forceReload' => '#crud-datatable-pjax',
-                        'title' => "Create new RunneuLegajo",
+                        'title' => "RunneuLegajo",
                         'content' => '<span class="text-success">Create RunneuLegajo success</span>',
                         'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                            Html::a('Create More', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                            Html::a('Create More', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
                     ];
                 } else {
                     return [
                         'title' => "Crear nuevo Legajo",
-                        'content' => $this->renderAjax('create', [
-                            'model' => $model,
-                        ]),
+                        'content' => $this->renderAjax('create', ['model' => $model]),
                         'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                            Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                            Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"]),
                     ];
                 }
             } else {
                 return [
                     'title' => "Crear nuevo Legajo",
-                    'content' => $this->renderAjax('create', [
-                        'model' => $model,
-                    ]),
+                    'content' => $this->renderAjax('create', ['model' => $model]),
                     'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"]),
                 ];
             }
         } else {
             if ($model->load($request->post())) {
-                // Obtener el archivo subido
                 $model->archivo_adjunto = UploadedFile::getInstance($model, 'archivo_adjunto');
-
-                // Subir el archivo
                 $filePath = $model->upload();
 
-                // Si el archivo se sube correctamente, guardar el modelo
                 if ($filePath && $model->save()) {
                     return $this->redirect(['view', 'id' => $model->num_legajo]);
                 }
             }
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            return $this->render('create', ['model' => $model]);
         }
     }
-    /*  */
 
-    /**
-     * Updates an existing RunneuLegajo model.
-     * For ajax request will return json object
-     * and for non-ajax request if update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
@@ -169,130 +138,38 @@ class Runneu_legajoController extends Controller
             if ($request->isGet) {
                 return [
                     'title' => "Actualizar Legajo " . $id,
-                    'content' => $this->renderAjax('update', [
-                        'model' => $model,
-                    ]),
+                    'content' => $this->renderAjax('update', ['model' => $model]),
                     'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"]),
                 ];
             } else if ($model->load($request->post())) {
-                // Obtener el archivo subido
                 $model->archivo_adjunto = UploadedFile::getInstance($model, 'archivo_adjunto');
-
-                // Subir el archivo
                 $filePath = $model->upload();
 
-                // Si el archivo se sube correctamente, guardar el modelo
                 if ($filePath && $model->save()) {
                     return [
                         'forceReload' => '#crud-datatable-pjax',
                         'title' => "RunneuLegajo #" . $id,
-                        'content' => $this->renderAjax('view', [
-                            'model' => $model,
-                        ]),
+                        'content' => $this->renderAjax('view', ['model' => $model]),
                         'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                            Html::a('Editar', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                            Html::a('Editar', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
                     ];
                 }
-            } else {
-                return [
-                    'title' => "Actualizar Legajo" . $id,
-                    'content' => $this->renderAjax('update', [
-                        'model' => $model,
-                    ]),
-                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
-                ];
             }
-        } else {
-            if ($model->load($request->post())) {
-                // Obtener el archivo subido
-                $model->archivo_adjunto = UploadedFile::getInstance($model, 'archivo_adjunto');
-
-                // Subir el archivo
-                $filePath = $model->upload();
-
-                // Si el archivo se sube correctamente, guardar el modelo
-                if ($filePath && $model->save()) {
-                    return $this->redirect(['view', 'id' => $model->num_legajo]);
-                }
-            }
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            return [
+                'title' => "Actualizar Legajo",
+                'content' => $this->renderAjax('update', ['model' => $model]),
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"]),
+            ];
         }
     }
 
-
-    /**
-     * Delete an existing RunneuLegajo model.
-     * For ajax request will return json object
-     * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        $request = Yii::$app->request;
-        $this->findModel($id)->delete();
-
-        if ($request->isAjax) {
-            /*
-            *   Process for ajax request
-            */
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
-        } else {
-            /*
-            *   Process for non-ajax request
-            */
-            return $this->redirect(['index']);
-        }
-    }
-
-    /**
-     * Delete multiple existing RunneuLegajo model.
-     * For ajax request will return json object
-     * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionBulkDelete()
-    {
-        $request = Yii::$app->request;
-        $pks = explode(',', $request->post('pks')); // Array or selected records primary keys
-        foreach ($pks as $pk) {
-            $model = $this->findModel($pk);
-            $model->delete();
-        }
-
-        if ($request->isAjax) {
-            /*
-            *   Process for ajax request
-            */
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
-        } else {
-            /*
-            *   Process for non-ajax request
-            */
-            return $this->redirect(['index']);
-        }
-    }
-
-    /**
-     * Finds the RunneuLegajo model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return RunneuLegajo the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
+    public function findModel($id)
     {
         if (($model = RunneuLegajo::findOne($id)) !== null) {
             return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
         }
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
