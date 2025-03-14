@@ -8,7 +8,7 @@ use app\models\RunneuLegajoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use \yii\web\Response;
+use yii\web\Response;
 use yii\helpers\Html;
 use yii\web\UploadedFile;
 
@@ -86,12 +86,18 @@ class Runneu_legajoController extends Controller
                         Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"]),
                 ];
             } else if ($model->load($request->post())) {
+                // Cargar el archivo si se ha seleccionado
                 $model->archivo_adjunto = UploadedFile::getInstance($model, 'archivo_adjunto');
 
-                // Validar si el archivo se ha subido correctamente
-                $filePath = $model->upload();
+                // Si se ha seleccionado un archivo, procesarlo
+                if ($model->archivo_adjunto) {
+                    $filePath = $model->upload(); // Asumiendo que la función `upload()` devuelve el nombre del archivo
+                    if ($filePath) {
+                        $model->archivo_adjunto = $filePath;
+                    }
+                }
 
-                if ($filePath && $model->save()) {
+                if ($model->save()) {
                     return [
                         'forceReload' => '#crud-datatable-pjax',
                         'title' => "RunneuLegajo",
@@ -99,28 +105,18 @@ class Runneu_legajoController extends Controller
                         'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                             Html::a('Create More', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
                     ];
-                } else {
-                    return [
-                        'title' => "Crear nuevo Legajo",
-                        'content' => $this->renderAjax('create', ['model' => $model]),
-                        'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                            Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"]),
-                    ];
                 }
-            } else {
-                return [
-                    'title' => "Crear nuevo Legajo",
-                    'content' => $this->renderAjax('create', ['model' => $model]),
-                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"]),
-                ];
             }
         } else {
             if ($model->load($request->post())) {
+                // Cargar archivo si se ha seleccionado
                 $model->archivo_adjunto = UploadedFile::getInstance($model, 'archivo_adjunto');
-                $filePath = $model->upload();
+                if ($model->archivo_adjunto) {
+                    $filePath = $model->upload();
+                    $model->archivo_adjunto = $filePath;
+                }
 
-                if ($filePath && $model->save()) {
+                if ($model->save()) {
                     return $this->redirect(['view', 'id' => $model->num_legajo]);
                 }
             }
@@ -128,10 +124,11 @@ class Runneu_legajoController extends Controller
         }
     }
 
+
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
-        $model = $this->findModel($id);
+        $model = $this->findModel($id); // Suponiendo que ya tienes el método `findModel()`
 
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -143,10 +140,18 @@ class Runneu_legajoController extends Controller
                         Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"]),
                 ];
             } else if ($model->load($request->post())) {
+                // Cargar el archivo si se ha seleccionado
                 $model->archivo_adjunto = UploadedFile::getInstance($model, 'archivo_adjunto');
-                $filePath = $model->upload();
 
-                if ($filePath && $model->save()) {
+                // Si se ha seleccionado un archivo, procesarlo
+                if ($model->archivo_adjunto) {
+                    $filePath = $model->upload(); // Procesar el nuevo archivo
+                    if ($filePath) {
+                        $model->archivo_adjunto = $filePath; // Asigna el nombre del archivo
+                    }
+                }
+
+                if ($model->save()) {
                     return [
                         'forceReload' => '#crud-datatable-pjax',
                         'title' => "RunneuLegajo #" . $id,
@@ -161,6 +166,21 @@ class Runneu_legajoController extends Controller
                 'content' => $this->renderAjax('update', ['model' => $model]),
                 'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                     Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"]),
+            ];
+        }
+    }
+
+
+
+
+    public function actionDelete($id)
+    {
+        if ($this->findModel($id)->delete()) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return [
+                'title' => "Eliminado",
+                'content' => '<span class="text-success">Legajo Eliminado Correctamente</span>',
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'center btn btn-default pull-left', 'data-dismiss' => "modal"])
             ];
         }
     }

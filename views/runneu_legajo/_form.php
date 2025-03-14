@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\web\UploadedFile;
+use kartik\file\FileInput;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\RunneuLegajo */
@@ -15,25 +16,26 @@ use yii\web\UploadedFile;
         'options' => ['enctype' => 'multipart/form-data'], // Esto permite cargar archivos
     ]); ?>
 
-    <?= $form->field($model, 'num_legajo')->textInput() ?>
+    <?= $form->field($model, 'num_legajo')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'dni')->textInput() ?>
+    <?= $form->field($model, 'dni')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'archivo_adjunto')->fileInput() ?>
-
-    <?php if (!empty($model->archivo_adjunto) && file_exists(Yii::getAlias('@webroot/uploads/legajo_runneu/' . basename($model->archivo_adjunto)))): ?>
-        <h3>Previsualización del archivo:</h3>
-        <?php
-        // Verificar si es una imagen
-        if (in_array(pathinfo($model->archivo_adjunto, PATHINFO_EXTENSION), ['png', 'jpg', 'jpeg'])) {
-            echo Html::img(Yii::getAlias('@webroot/uploads/legajo_runneu/' . basename($model->archivo_adjunto), ['width' => '300']));
-        }
-        // Verificar si es un PDF
-        elseif (pathinfo($model->archivo_adjunto, PATHINFO_EXTENSION) === 'pdf') {
-            echo '<iframe src="' . Yii::getAlias('@webroot/uploads/legajo_runneu/' . basename($model->archivo_adjunto) . '" width="100%" height="600px"></iframe>');
-        }
-        ?>
-    <?php endif; ?>
+    <!-- Aquí se gestiona la carga de archivo -->
+    <div class="col-md-4">
+        <?= $form->field($model, 'archivo_adjunto')->widget(FileInput::classname(), [
+            'options' => ['accept' => 'image/*, .pdf, .docx'], // Se pueden cargar imágenes y archivos PDF, DOCX
+            'pluginOptions' => [
+                'initialPreview' => $model->archivo_adjunto ? [Yii::$app->request->baseUrl . '/uploads/legajo_runneu/' . $model->archivo_adjunto] : [],
+                'initialPreviewAsData' => true,
+                'allowedFileExtensions' => ['jpg', 'jpeg', 'gif', 'png', 'pdf', 'docx'],
+                'showPreview' => true,
+                'showCaption' => false,
+                'showRemove' => true,
+                'showUpload' => false,
+                'maxFileSize' => 2000, // Limitar el tamaño del archivo a 2 MB
+            ],
+        ]); ?>
+    </div>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
