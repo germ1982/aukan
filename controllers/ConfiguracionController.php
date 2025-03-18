@@ -117,7 +117,8 @@ class ConfiguracionController extends Controller
                       return [
                           'title' => 'Nuevo Dato',
                           'content' => '<span class="text-success">Dato Creado Correctamente</span>',
-                          'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                          'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]).
+                          Html::a('Crear Otro', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
                       ];
                   }
               }
@@ -176,7 +177,8 @@ class ConfiguracionController extends Controller
                       return [
                           'title' => 'Editar Dato Id: '.$id,
                           'content' => '<span class="text-success">Dato Editado Correctamente</span>',
-                          'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                          'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]).
+                          Html::a('Crear Otro', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
                       ];
                   }
               }

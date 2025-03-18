@@ -51,7 +51,7 @@ class Runneu_legajoController extends Controller
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                'title' => "RunneuLegajo",
+                'title' => "Runneu Legajo",
                 'content' => $this->renderAjax('view', [
                     'model' => $model,
                     'num_legajo' => $num_legajo,
@@ -86,41 +86,41 @@ class Runneu_legajoController extends Controller
                         Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"]),
                 ];
             } else if ($model->load($request->post())) {
-                // Cargar el archivo si se ha seleccionado
-                $model->archivo_adjunto = UploadedFile::getInstance($model, 'archivo_adjunto');
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
 
-                // Si se ha seleccionado un archivo, procesarlo
-                if ($model->archivo_adjunto) {
-                    $filePath = $model->upload(); // Asumiendo que la función `upload()` devuelve el nombre del archivo
-                    if ($filePath) {
-                        $model->archivo_adjunto = $filePath;
+                $model->archivo_adjunto = "legajo_runneu_0.jpg";
+
+                if ($guardado && $model->save()) {
+
+                    $transaction->commit();
+                    $tmpfile = UploadedFile::getInstance($model, 'archivo_adjunto_file');
+
+                    if (isset($tmpfile)) {
+                        $extension = $tmpfile->extension;
+
+                        $nuevo_nombre = "legajo_runneu_$model->dni.$extension";
+                        $model->archivo_adjunto = $nuevo_nombre;
+                        $tmpfile->saveAs('uploads/legajo_runneu/' . $nuevo_nombre);
+                        $model->save();
                     }
-                }
-
-                if ($model->save()) {
                     return [
                         'forceReload' => '#crud-datatable-pjax',
-                        'title' => "RunneuLegajo",
-                        'content' => '<span class="text-success">Create RunneuLegajo success</span>',
-                        'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                            Html::a('Create More', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
+                        'title' => "Runneu Legajo",
+                        'content' => '<span class="text-success">Legajo Creado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
+                        //Html::a('Create More', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
                     ];
                 }
             }
-        } else {
-            if ($model->load($request->post())) {
-                // Cargar archivo si se ha seleccionado
-                $model->archivo_adjunto = UploadedFile::getInstance($model, 'archivo_adjunto');
-                if ($model->archivo_adjunto) {
-                    $filePath = $model->upload();
-                    $model->archivo_adjunto = $filePath;
-                }
-
-                if ($model->save()) {
-                    return $this->redirect(['view', 'id' => $model->num_legajo]);
-                }
-            }
-            return $this->render('create', ['model' => $model]);
+            return [
+                'title' => "Nuevo Legajo, Faltan datos!!! Complete Los datos Faltantes!!!",
+                'content' => $this->renderAjax('create', [
+                    'model' => $model,
+                ]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+            ];
         }
     }
 
@@ -128,7 +128,7 @@ class Runneu_legajoController extends Controller
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
-        $model = $this->findModel($id); // Suponiendo que ya tienes el método `findModel()`
+        $model = $this->findModel($id);
 
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -140,32 +140,36 @@ class Runneu_legajoController extends Controller
                         Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"]),
                 ];
             } else if ($model->load($request->post())) {
-                // Cargar el archivo si se ha seleccionado
-                $model->archivo_adjunto = UploadedFile::getInstance($model, 'archivo_adjunto');
 
-                // Si se ha seleccionado un archivo, procesarlo
-                if ($model->archivo_adjunto) {
-                    $filePath = $model->upload(); // Procesar el nuevo archivo
-                    if ($filePath) {
-                        $model->archivo_adjunto = $filePath; // Asigna el nombre del archivo
-                    }
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
+
+                $tmpfile = UploadedFile::getInstance($model, 'archivo_adjunto_file');
+
+                if (isset($tmpfile)) {
+                    $extension = $tmpfile->extension;
+
+                    $nuevo_nombre = "legajo_runneu_$model->dni.$extension";
+                    $model->archivo_adjunto = $nuevo_nombre;
+                    $tmpfile->saveAs('uploads/legajo_runneu/' . $nuevo_nombre);
                 }
 
-                if ($model->save()) {
+                if ($guardado && $model->save()) {
+
+                    $transaction->commit();
                     return [
                         'forceReload' => '#crud-datatable-pjax',
-                        'title' => "RunneuLegajo #" . $id,
-                        'content' => $this->renderAjax('view', ['model' => $model]),
-                        'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                            Html::a('Editar', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
+                        'title' => "Editar Legajo Dni " . $id,
+                        'content' => '<span class="text-success">Articulo Editado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
                     ];
                 }
             }
             return [
-                'title' => "Actualizar Legajo",
-                'content' => $this->renderAjax('update', ['model' => $model]),
-                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                    Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"]),
+                'title' => "Editar Articulo, Faltan datos!!! Complete Los datos Faltantes!!!",
+                'content' => $this->renderAjax('create', ['model' => $model,]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
             ];
         }
     }

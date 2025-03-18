@@ -129,14 +129,11 @@ class ArticuloController extends Controller
                 }
                     
                 
-                    
-
-                    
-
                     return [
                         'title' => "Nuevo Articulo",
                         'content' => '<span class="text-success">Articulo Creado Correctamente</span>',
-                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]).
+                        Html::a('Crear Otro', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
                     ];
                 }
             }
@@ -200,16 +197,11 @@ class ArticuloController extends Controller
                     
                     $transaction->commit();
                 
-                    
-                
-                    
-
-                    
-
-                    return [
+                                        return [
                         'title' => "Editar Articulo",
-                        'content' => '<span class="text-success">Articulo Creado Correctamente</span>',
-                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
+                        'content' => '<span class="text-success">Articulo Editado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]).
+                        Html::a('Crear Otro', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
                     ];
                 }
             }
