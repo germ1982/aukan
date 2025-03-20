@@ -26,6 +26,18 @@ CrudAsset::register($this);
     line-height: 1.42857143;  /* Esto centra el contenido verticalmente */
 }
 
+#ajaxCrudModal .modal-dialog {
+    width: 90vw; /* 90% del ancho de la ventana */
+    max-width: 90vw; /* Asegura que no exceda el 90% */
+    margin: auto; /* Centra el modal horizontalmente */
+    padding-top: 40px;
+    padding-left: 30px;
+}
+
+#ajaxCrudModal .modal-content {
+    height: 90%; /* Ajusta la altura según el contenido */
+    max-height: auto; /* Opcional: limita la altura al 90% de la pantalla */
+}
 </style>
 
 <header class="page-header">
