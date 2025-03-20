@@ -42,19 +42,19 @@ function campo($titulo, $contenido, $esArchivo = false)
 <div class="runneu-legajo-view">
 
     <div class="row">
-        <div class="col-md-4">
-            <div class="row">
-                <div class="col-md-6">
-                    <?= campo('num_legajo', $model->num_legajo) ?>
-                </div>
+        <div class="col-md-12">
+
+            <div class="col-md-6">
+                <?= campo('num_legajo', $model->num_legajo) ?>
             </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <?= campo('dni', $model->dni) ?>
-                </div>
+
+            <div class="col-md-6">
+                <?= campo('dni', $model->dni) ?>
             </div>
         </div>
-        <div class="col-md-8">
+    </div>
+    <div class="row">
+        <div class="col-md-12">
             <?= campo('archivo_adjunto', $model->archivo_adjunto, true) ?> <!-- Aquí pasamos 'true' para indicar que es un archivo -->
         </div>
     </div>
