@@ -55,7 +55,7 @@ function campo($titulo, $contenido, $esArchivo = false)
     </div>
     <div class="row">
         <div class="col-md-12">
-            <?= campo('archivo_adjunto', $model->archivo_adjunto, true) ?> <!-- Aquí pasamos 'true' para indicar que es un archivo -->
+            <?= campo('archivo_adjunto', $model->archivo_adjunto, true) ?> 
         </div>
     </div>
 </div>
