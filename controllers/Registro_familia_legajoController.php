@@ -1,0 +1,261 @@
+<?php
+
+namespace app\controllers;
+
+use app\models\Configuracion;
+use Yii;
+use app\models\RegistroFamiliaLegajo;
+use app\models\RegistroFamiliaLegajoSearch;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
+use \yii\web\Response;
+use yii\helpers\Html;
+use yii\web\UploadedFile;
+
+/**
+ * Registro_familia_legajoController implements the CRUD actions for RegistroFamiliaLegajo model.
+ */
+class Registro_familia_legajoController extends Controller
+{
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['post'],
+                    'bulk-delete' => ['post'],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Lists all RegistroFamiliaLegajo models.
+     * @return mixed
+     */
+    public function actionIndex()
+    {    
+        $searchModel = new RegistroFamiliaLegajoSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+    /**
+     * Displays a single RegistroFamiliaLegajo model.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionView($id)
+    {   
+        $request = Yii::$app->request;
+        $model = $this->findModel($id);
+
+        $tipo = $model->tipo_legajo ? Configuracion::findOne($model->tipo_legajo)->descripcion : "";
+        $numero = $model->num_legajo ? "Numero $model->num_legajo" : "";
+        $documento  = $model->dni ? " DNI $model->dni":"";
+
+        $titulo = "Legajo $tipo $numero Perteneciente A $model->apellido $model->nombre $documento";
+
+        if($request->isAjax){
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return [
+                    'title'=> $titulo,
+                    'content'=>$this->renderAjax('view', [
+                        'model' => $this->findModel($id),
+                    ]),
+                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                            Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                ];    
+        }else{
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+        }
+    }
+
+    /**
+     * Creates a new RegistroFamiliaLegajo model.
+     * For ajax request will return json object
+     * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreate()
+    {
+        $request = Yii::$app->request;
+        $model = new RegistroFamiliaLegajo();  
+
+        if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            if ($request->isGet) {
+                return [
+                    'title' => "Crear nuevo Legajo",
+                    'content' => $this->renderAjax('create', ['model' => $model]),
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"]),
+                ];
+            } else if ($model->load($request->post())) {
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
+
+                $model->archivo_adjunto = "legajo_0.pdf";
+
+                if ($guardado && $model->save()) {
+
+                    $transaction->commit();
+                    $tmpfile = UploadedFile::getInstance($model, 'archivo_adjunto_file');
+
+                    if (isset($tmpfile)) {
+                        $extension = $tmpfile->extension;
+
+                        $nuevo_nombre = "reg_flia_legajo_$model->id.$extension";
+                        $model->archivo_adjunto = $nuevo_nombre;
+                        $tmpfile->saveAs('uploads/registro_familia_legajos/' . $nuevo_nombre);
+                        $model->save();
+                    }
+                    return [
+                        'forceReload' => '#crud-datatable-pjax',
+                        'title' => "Crear nuevo Legajo",
+                        'content' => '<span class="text-success">Legajo Creado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
+                        Html::a('Crear Otro', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
+                    ];
+                }
+            }
+            return [
+                'title' => "Nuevo Legajo, Faltan datos!!! Complete Los datos Faltantes!!!",
+                'content' => $this->renderAjax('create', [
+                    'model' => $model,
+                ]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+            ];
+        }
+    }
+
+    public function actionUpdate($id)
+    {
+        $request = Yii::$app->request;
+        $model = $this->findModel($id);
+
+        if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            if ($request->isGet) {
+                return [
+                    'title' => "Actualizar Id: " . $id,
+                    'content' => $this->renderAjax('update', ['model' => $model]),
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"]),
+                ];
+            } else if ($model->load($request->post())) {
+
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
+
+                $tmpfile = UploadedFile::getInstance($model, 'archivo_adjunto_file');
+
+                if (isset($tmpfile)) {
+                    $extension = $tmpfile->extension;
+
+                    $nuevo_nombre = "reg_flia_legajo_$model->id.$extension";
+                    $model->archivo_adjunto = $nuevo_nombre;
+                    $tmpfile->saveAs('uploads/registro_familia_legajos/' . $nuevo_nombre);
+                }
+
+                if ($guardado && $model->save()) {
+
+                    $transaction->commit();
+                    return [
+                        'forceReload' => '#crud-datatable-pjax',
+                        'title' => "Editar Legajo Id: " . $id,
+                        'content' => '<span class="text-success">Legajo Editado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
+                    ];
+                }
+            }
+            return [
+                'title' => "Editar Legajo, Faltan datos!!! Complete Los datos Faltantes!!!",
+                'content' => $this->renderAjax('create', ['model' => $model,]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+            ];
+        }
+    }
+    
+    public function actionDelete($id)
+    {
+        $request = Yii::$app->request;
+        $this->findModel($id)->delete();
+
+        if($request->isAjax){
+            /*
+            *   Process for ajax request
+            */
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
+        }else{
+            /*
+            *   Process for non-ajax request
+            */
+            return $this->redirect(['index']);
+        }
+
+
+    }
+
+     /**
+     * Delete multiple existing RegistroFamiliaLegajo model.
+     * For ajax request will return json object
+     * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionBulkDelete()
+    {        
+        $request = Yii::$app->request;
+        $pks = explode(',', $request->post( 'pks' )); // Array or selected records primary keys
+        foreach ( $pks as $pk ) {
+            $model = $this->findModel($pk);
+            $model->delete();
+        }
+
+        if($request->isAjax){
+            /*
+            *   Process for ajax request
+            */
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
+        }else{
+            /*
+            *   Process for non-ajax request
+            */
+            return $this->redirect(['index']);
+        }
+       
+    }
+
+    /**
+     * Finds the RegistroFamiliaLegajo model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return RegistroFamiliaLegajo the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = RegistroFamiliaLegajo::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+}

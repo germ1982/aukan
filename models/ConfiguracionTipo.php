@@ -37,7 +37,7 @@ class ConfiguracionTipo extends \yii\db\ActiveRecord
     const MARCA_VEHICULO = 22 ;
     const MARCA_MOTO = 23 ;
     const CHOFER = 24 ;
-    
+    const TIPO_LEGAJO = 25 ;
 
   
     public static function tableName()
