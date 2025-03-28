@@ -145,13 +145,14 @@ $this->registerJs($script);
                         <?= $form->field($model, 'dni')->textInput([
                             'id' => 'input_dni_persona',
                             'onkeyup' => 'ValidarIngresoDni();',
+                            'onblur' => 'datos_persona();',
                         ])
                             ->label($model->isNewRecord ? 'Buscar Por DNI' : 'DNI Persona') ?>
                         <span class="input-group-btn" style="padding-top:27px;">
                             <?= SiteController::actionGet_boton_buscar_x_documento(
                                 'btn_dni',
                                 'Buscar Dni',
-                                'datos_persona(0);'
+                                'datos_persona();'
                             ) ?>
                         </span>
                     </div>
