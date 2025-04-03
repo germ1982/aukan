@@ -4,6 +4,7 @@ use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
 use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use yii\helpers\Url;
 
 $columna_1 = '8%';
@@ -16,8 +17,8 @@ $columna_7 = '7%';
 
 return [
     [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'num_legajo',
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'num_legajo',
         'width' => $columna_1,
     ],
     [
@@ -41,44 +42,60 @@ return [
         'width' => $columna_2,
     ],
     [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'dni',
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'dni',
         'width' => $columna_3,
     ],
 
     [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'apellido',
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'apellido',
         'width' => $columna_4,
     ],
     [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'nombre',
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'nombre',
         'width' => $columna_5,
     ],
     [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'archivo_adjunto',
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'archivo_adjunto',
         'width' => $columna_6,
     ],
 
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
-        'template' => '{view} {update} ',
+        'template' => '{view} {update} {descargar_pdf}',
         'width' => $columna_7,
-        'vAlign'=>'middle',
-        'urlCreator' => function($action, $model, $key, $index) { 
-                return Url::to([$action,'id'=>$key]);
+        'vAlign' => 'middle',
+        'urlCreator' => function ($action, $model, $key, $index) {
+            return Url::to([$action, 'id' => $key]);
         },
-        'viewOptions'=>['role'=>'modal-remote','title'=>'Ver','data-toggle'=>'tooltip'],
-        'updateOptions'=>['role'=>'modal-remote','title'=>'Editar', 'data-toggle'=>'tooltip'],
-        'deleteOptions'=>['role'=>'modal-remote','title'=>'Eliminar', 
-                          'data-confirm'=>false, 'data-method'=>false,// for overide yii data api
-                          'data-request-method'=>'post',
-                          'data-toggle'=>'tooltip',
-                          'data-confirm-title'=>'Esta Seguro?',
-                          'data-confirm-message'=>'Esta seguro de eliminar este item?'], 
+        'viewOptions' => ['role' => 'modal-remote', 'title' => 'Ver', 'data-toggle' => 'tooltip'],
+        'updateOptions' => ['role' => 'modal-remote', 'title' => 'Editar', 'data-toggle' => 'tooltip'],
+        'deleteOptions' => [
+            'role' => 'modal-remote',
+            'title' => 'Eliminar',
+            'data-confirm' => false,
+            'data-method' => false, // for overide yii data api
+            'data-request-method' => 'post',
+            'data-toggle' => 'tooltip',
+            'data-confirm-title' => 'Esta Seguro?',
+            'data-confirm-message' => 'Esta seguro de eliminar este item?'
+        ],
+        'buttons' => [
+            'descargar_pdf' => function ($url, $model) {
+                $url =  Url::to(['/registro_familia_legajo/imprimir_acta_entrega', 'archivo' => $model->archivo_adjunto]);
+                return Html::a('<span class= "fas fa-file-download">', '', [
+                    'title' => "Descargar Pdf",
+                    'data-pjax' => 0,
+                    'data-toggle' => 'tooltip',
+                    'id' => 'btn_descargar_pdf',
+                ]);
+
+            },
+        ],
     ],
 
-];   
+];

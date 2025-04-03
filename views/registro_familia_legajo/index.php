@@ -78,12 +78,12 @@ CrudAsset::register($this);
             'toolbar' => [
                 [
                     'content' =>
-                        
-                        Html::a(
-                            '<i class="glyphicon glyphicon-plus"></i>',
-                            ['create'],
-                            ['role' => 'modal-remote', 'title' => 'Nuevo Legajo', 'class' => 'btn btn-default']
-                        ) .
+
+                    Html::a(
+                        '<i class="glyphicon glyphicon-plus"></i>',
+                        ['create'],
+                        ['role' => 'modal-remote', 'title' => 'Nuevo Legajo', 'class' => 'btn btn-default']
+                    ) .
                         Html::a(
                             '<i class="glyphicon glyphicon-repeat"></i>',
                             [''],
@@ -115,3 +115,49 @@ CrudAsset::register($this);
     'size' => Modal::SIZE_LARGE,
 ]) ?>
 <?php Modal::end(); ?>
+
+
+<?php
+$script = <<<JS
+$(document).on('click', '#exportar-pdf-button', function () {
+    let ids = [];
+
+    $('#crud-datatable tbody tr').each(function() {
+        let id = $(this).data('key');
+        if (id) {
+            ids.push(id);
+        }
+    });
+
+    $.ajax({
+        url: 'index.php?r=registro_familia_legajo/exportar_pdf',
+        type: 'POST',
+        data: { ids: ids },
+        success: function(response, status, xhr) {
+            // Crear un Blob a partir de la respuesta
+            let blob = new Blob([response], { type: 'application/pdf' });
+
+            // Crear una URL para el Blob
+            let url = window.URL.createObjectURL(blob);
+
+            // Crear un enlace temporal
+            let a = document.createElement('a');
+            a.href = url;
+            a.target = '_blank'; // Abrir en una nueva pestaña
+
+            // Simular un clic en el enlace para abrir el PDF
+            a.click();
+        },
+        error: function(xhr, status, error) {
+            console.error('Error al generar el PDF:', error);
+        },
+        xhrFields: {
+            responseType: 'blob' // Indicar que la respuesta es un Blob
+        }
+    });
+});
+JS;
+
+$this->registerJs($script, \yii\web\View::POS_READY);
+?>
+

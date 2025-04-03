@@ -6,6 +6,7 @@ use app\models\Configuracion;
 use Yii;
 use app\models\RegistroFamiliaLegajo;
 use app\models\RegistroFamiliaLegajoSearch;
+use Mpdf\Mpdf;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -39,7 +40,7 @@ class Registro_familia_legajoController extends Controller
      * @return mixed
      */
     public function actionIndex()
-    {    
+    {
         $searchModel = new RegistroFamiliaLegajoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -56,27 +57,27 @@ class Registro_familia_legajoController extends Controller
      * @return mixed
      */
     public function actionView($id)
-    {   
+    {
         $request = Yii::$app->request;
         $model = $this->findModel($id);
 
         $tipo = $model->tipo_legajo ? Configuracion::findOne($model->tipo_legajo)->descripcion : "";
         $numero = $model->num_legajo ? "Numero $model->num_legajo" : "";
-        $documento  = $model->dni ? " DNI $model->dni":"";
+        $documento  = $model->dni ? " DNI $model->dni" : "";
 
         $titulo = "Legajo $tipo $numero Perteneciente A $model->apellido $model->nombre $documento";
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                    'title'=> $titulo,
-                    'content'=>$this->renderAjax('view', [
-                        'model' => $this->findModel($id),
-                    ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
-        }else{
+                'title' => $titulo,
+                'content' => $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+                ]),
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::a('Editar', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+            ];
+        } else {
             return $this->render('view', [
                 'model' => $this->findModel($id),
             ]);
@@ -92,7 +93,7 @@ class Registro_familia_legajoController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->request;
-        $model = new RegistroFamiliaLegajo();  
+        $model = new RegistroFamiliaLegajo();
 
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -190,29 +191,27 @@ class Registro_familia_legajoController extends Controller
             ];
         }
     }
-    
+
     public function actionDelete($id)
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
             /*
             *   Process for non-ajax request
             */
             return $this->redirect(['index']);
         }
-
-
     }
 
-     /**
+    /**
      * Delete multiple existing RegistroFamiliaLegajo model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
@@ -220,27 +219,26 @@ class Registro_familia_legajoController extends Controller
      * @return mixed
      */
     public function actionBulkDelete()
-    {        
+    {
         $request = Yii::$app->request;
-        $pks = explode(',', $request->post( 'pks' )); // Array or selected records primary keys
-        foreach ( $pks as $pk ) {
+        $pks = explode(',', $request->post('pks')); // Array or selected records primary keys
+        foreach ($pks as $pk) {
             $model = $this->findModel($pk);
             $model->delete();
         }
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
             /*
             *   Process for non-ajax request
             */
             return $this->redirect(['index']);
         }
-       
     }
 
     /**
@@ -257,5 +255,49 @@ class Registro_familia_legajoController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionExportar_pdf()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_RAW; // Formato RAW para PDF
+        // Set the correct content-type header for PDF
+        \Yii::$app->response->headers->set('Content-Type', 'application/pdf');
+        \Yii::$app->response->headers->set('Content-Disposition', 'inline; filename="archivo_unido.pdf"'); // 'inline' para abrir en una nueva pestaña
+
+        $ids = Yii::$app->request->post('ids'); // Recibir IDs del POST
+
+        if (!$ids) {
+            return ['error' => 'No se recibieron IDs'];
+        }
+
+        $archivos = RegistroFamiliaLegajo::find()->where(['id' => $ids])->all();
+
+        // Ruta a la carpeta donde se almacenan los archivos PDF
+        $ruta_base = Yii::getAlias('@webroot') . '/uploads/registro_familia_legajos/';
+
+        // Inicializar mPDF
+        $mpdf = new \Mpdf\Mpdf();
+
+        foreach ($archivos as $archivo) {
+            $ruta_completa = $ruta_base . $archivo->archivo_adjunto;
+
+            if (file_exists($ruta_completa)) {
+                // Importar la primera página del archivo PDF
+                $mpdf->SetSourceFile($ruta_completa);
+                $tplIdx = $mpdf->ImportPage(1);
+                $mpdf->UseTemplate($tplIdx);
+                $mpdf->AddPage();
+            } else {
+                error_log("Archivo no encontrado: " . $ruta_completa);
+            }
+        }
+
+        // Generar el PDF y enviarlo al navegador
+        $mpdf->Output('archivo_unido.pdf', 'I'); // 'I' para mostrar en una pestaña
+        // Liberar el buffer de salida para evitar problemas
+        ob_clean(); // Limpia cualquier buffer de salida previo
+        flush(); // Envia la salida al navegador
+        // Finalizamos la ejecución para evitar que Yii haga más salidas
+        Yii::$app->end(); // Asegura que no haya ninguna otra salida después de la generación del PDF
     }
 }
