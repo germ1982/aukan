@@ -86,15 +86,14 @@ return [
         ],
         'buttons' => [
             'descargar_pdf' => function ($url, $model) {
-                $url =  Url::to(['/registro_familia_legajo/imprimir_acta_entrega', 'archivo' => $model->archivo_adjunto]);
-                return Html::a('<span class= "fas fa-file-download">', '', [
-                    'title' => "Descargar Pdf",
+                $url = Url::to(['/registro_familia_legajo/descargar_archivo', 'archivo' => $model->archivo_adjunto]);
+                return Html::a('<span class="fas fa-file-download"></span>', $url, [
+                    'title' => "Descargar PDF",
                     'data-pjax' => 0,
                     'data-toggle' => 'tooltip',
-                    'id' => 'btn_descargar_pdf',
+                    'download' => true // sugerencia al navegador de descargar
                 ]);
-
-            },
+            }
         ],
     ],
 

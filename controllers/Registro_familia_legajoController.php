@@ -257,6 +257,22 @@ class Registro_familia_legajoController extends Controller
         }
     }
 
+
+    public function actionDescargar_archivo($archivo)
+    {
+        $ruta = Yii::getAlias('@webroot') . '/uploads/registro_familia_legajos/' . $archivo;
+        if (file_exists($ruta)) {
+            return Yii::$app->response->sendFile($ruta, $archivo, [
+                'inline' => false // Forzar descarga directa
+            ]);
+        } else {
+            throw new \yii\web\NotFoundHttpException("El archivo no existe.");
+        }
+    }
+    
+
+
+
     public function actionExportar_pdf()
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_RAW; // Formato RAW para PDF
