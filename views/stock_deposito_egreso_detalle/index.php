@@ -49,7 +49,7 @@ CrudAsset::register($this);
                                     'role'=>'modal-remote-bulk',
                                     'data-confirm'=>false, 'data-method'=>false,// for overide yii data api
                                     'data-request-method'=>'post',
-                                    'data-confirm-title'=>'Are you sure?',
+                                    'data-confirm-title'=>'Esta Seguro?',
                                     'data-confirm-message'=>'Are you sure want to delete this item'
                                 ]),
                         ]).                        

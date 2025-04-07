@@ -189,6 +189,23 @@ class SiteController extends Controller
             return $this->render('about');
       }
 
+      public static function actionGet_input_select($form, $model, $atributo, $id_input, $datos, $iddatos, $descripciondatos, $label = null, $placeholder = null, $onchange = null)
+      {
+          $options = ['id' => $id_input];
+      
+          if ($placeholder) {
+              $options['prompt'] = $placeholder;
+          }
+          if ($onchange) {
+              $options['onchange'] = $onchange;
+          }
+      
+          return $form->field($model, $atributo)
+              ->dropDownList(ArrayHelper::map($datos, $iddatos, $descripciondatos), $options)
+              ->label($label);
+      }
+      
+
       public static function actionGet_input_select2($form, $model, $atributo, $id_input, $datos, $iddatos, $descripciondatos, $label = null, $placeholder = null, $where = null, $onchange = null, $readonly = null, $disabled = null, $html = false)
       {
             $label = $label ? $label : '';
