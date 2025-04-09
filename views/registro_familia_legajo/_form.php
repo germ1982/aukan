@@ -4,6 +4,7 @@ use app\controllers\SiteController;
 use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
 use app\models\Persona;
+use app\models\RegistroFamiliaLegajo;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\file\FileInput;
@@ -17,9 +18,8 @@ if (isset($model->idpersona)) {
 }
 
 if (isset($model->archivo_adjunto)) {
-    $imagePath = Url::to('uploads/registro_familia_legajos/' . $model->archivo_adjunto);
+    $imagePath = Url::to('uploads_datafam/registro_familia_legajos/' . $model->archivo_adjunto);
 
-    // Agrega la imagen a la vista previa inicial
     $initialPreview = [
         Html::img($imagePath, ['class' => 'file-preview-image', 'alt' => 'Imagen', 'title' => $model->archivo_adjunto, 'width' => '100%', 'height' => 'auto']),
     ];
@@ -161,40 +161,55 @@ $this->registerJs($script);
             </div>
             <div class="row">
                 <div class=" col-md-5">
-                    <?= $form->field($model, 'apellido')->textInput(['maxlength' => true,'id' => 'input_apellido']) ?>
+                    <?= $form->field($model, 'apellido')->textInput(['maxlength' => true, 'id' => 'input_apellido']) ?>
                 </div>
                 <div class=" col-md-7">
-                    <?= $form->field($model, 'nombre')->textInput(['maxlength' => true,'id' => 'input_nombre']) ?>
+                    <?= $form->field($model, 'nombre')->textInput(['maxlength' => true, 'id' => 'input_nombre']) ?>
                 </div>
             </div>
             <div class="row">
                 <div class=" col-md-6">
-                    <?= SiteController::actionGet_input_select($form, $model, 'tipo_legajo', 'cmb_tipo_legajo', $tipos_legajos, 'id_configuracion', 'descripcion', 'Tipo de Legajo', 'Seleccione un Tipo...')?>
+                    <?= SiteController::actionGet_input_select($form, $model, 'tipo_legajo', 'cmb_tipo_legajo', $tipos_legajos, 'id_configuracion', 'descripcion', 'Tipo de Legajo', 'Seleccione un Tipo...') ?>
                 </div>
             </div>
 
 
         </div>
         <div class=" col-md-7">
+            <?php
+            $archivo = Yii::getAlias('@webroot') . '/uploads_datafam/registro_familia_legajos/' . $model->archivo_adjunto;
+            if (!file_exists($archivo)) {
+                echo "<p style='color:red;'>El archivo no existe en el servidor: $archivo</p>";
+            } else {
+                echo "<p style='color:green;'>Archivo encontrado: $archivo</p>";
+            }
+            ?>
+            <?php
+            $urlArchivo = Yii::$app->request->baseUrl . '/uploads_datafam/registro_familia_legajos/' . $model->archivo_adjunto;
+            echo "<p>URL generada: <a href='$urlArchivo' target='_blank'>$urlArchivo</a></p>";
+            ?>
             <?= $form->field($model, 'archivo_adjunto_file')->widget(FileInput::classname(), [
                 'options' => ['accept' => '.pdf'],
                 'pluginOptions' => [
-                    'initialPreview' => $model->archivo_adjunto ? [Yii::$app->request->baseUrl . '/uploads/registro_familia_legajos/' . $model->archivo_adjunto] : [],
-                    'initialPreviewAsData' => true,
-                    'initialPreviewFileType' => 'any', // Permite mostrar distintos tipos de archivos
-                    //'allowedFileExtensions' => ['jpg', 'jpeg', 'gif', 'png', 'pdf', 'docx'],
+                    'initialPreviewAsData' => true, // esto le dice al plugin que es una URL o path al archivo
+                    'initialPreview' => $model->archivo_adjunto
+                        ? [Yii::$app->request->baseUrl . "/uploads_datafam/registro_familia_legajos/{$model->archivo_adjunto}"]
+                        : [],
+                    'initialPreviewFileType' => 'pdf',
                     'allowedFileExtensions' => ['pdf'],
                     'showPreview' => true,
                     'showCaption' => false,
                     'showRemove' => true,
                     'showUpload' => false,
                     'initialPreviewConfig' => $model->archivo_adjunto ? [[
-                        'type' => pathinfo($model->archivo_adjunto, PATHINFO_EXTENSION) === 'pdf' ? 'pdf' : 'image',
+                        'type' => 'pdf',
                         'caption' => $model->archivo_adjunto,
-                        'downloadUrl' => Yii::$app->request->baseUrl . '/uploads/registro_familia_legajos/' . $model->archivo_adjunto
+                        'downloadUrl' => Yii::$app->request->baseUrl . '/uploads_datafam/registro_familia_legajos/' . $model->archivo_adjunto
                     ]] : [],
                 ],
             ]); ?>
+
+
 
         </div>
     </div>

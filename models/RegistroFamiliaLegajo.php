@@ -18,6 +18,7 @@ use Yii;
 class RegistroFamiliaLegajo extends \yii\db\ActiveRecord
 {
     public $archivo_adjunto_file;  // Para manejar la carga del archivo
+
     public static function tableName()
     {
         return 'registro_familia_legajo';
@@ -51,5 +52,17 @@ class RegistroFamiliaLegajo extends \yii\db\ActiveRecord
             'apellido' => 'Apellido',
             'tipo_legajo' => 'Tipo Legajo',
         ];
+    }
+
+    /* public function getRutaUploads()
+    {
+        return Yii::$app->params['rutaUploads'] . 'registro_familia_legajos/';
+    } */
+    public static function getRutaUploads()
+    {
+        return Yii::$app->params['rutaUploads'] . 'registro_familia_legajos/';
+    }
+    public static function getUrlUploads() {
+        return Yii::getAlias('@web') . '/uploads_datafam/registro_familia_legajos/';
     }
 }

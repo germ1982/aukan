@@ -14,14 +14,15 @@ use \yii\web\Response;
 use yii\helpers\Html;
 use yii\web\UploadedFile;
 
+
+
 /**
  * Registro_familia_legajoController implements the CRUD actions for RegistroFamiliaLegajo model.
  */
 class Registro_familia_legajoController extends Controller
 {
-    /**
-     * @inheritdoc
-     */
+
+
     public function behaviors()
     {
         return [
@@ -120,7 +121,7 @@ class Registro_familia_legajoController extends Controller
 
                         $nuevo_nombre = "reg_flia_legajo_$model->id.$extension";
                         $model->archivo_adjunto = $nuevo_nombre;
-                        $tmpfile->saveAs('uploads/registro_familia_legajos/' . $nuevo_nombre);
+                        $tmpfile->saveAs(RegistroFamiliaLegajo::getRutaUploads() . $nuevo_nombre);
                         $model->save();
                     }
                     return [
@@ -166,10 +167,25 @@ class Registro_familia_legajoController extends Controller
 
                 if (isset($tmpfile)) {
                     $extension = $tmpfile->extension;
-
                     $nuevo_nombre = "reg_flia_legajo_$model->id.$extension";
+
+                    //$rutaFisica = $model->getRutaUploads();
+                    $rutaFisica = RegistroFamiliaLegajo::getRutaUploads();
+                    // Si hay un archivo anterior, lo borra
+                    if (!empty($model->archivo_adjunto) && file_exists($rutaFisica . $model->archivo_adjunto)) {
+                        unlink($rutaFisica . $model->archivo_adjunto);
+                    }
+
+                    // Asigna nuevo nombre al modelo
                     $model->archivo_adjunto = $nuevo_nombre;
-                    $tmpfile->saveAs('uploads/registro_familia_legajos/' . $nuevo_nombre);
+
+                    // Asegura que la carpeta exista
+                    if (!is_dir($rutaFisica)) {
+                        mkdir($rutaFisica, 0777, true);
+                    }
+
+                    // Guarda el nuevo archivo
+                    $tmpfile->saveAs($rutaFisica . $nuevo_nombre);
                 }
 
                 if ($guardado && $model->save()) {
@@ -260,7 +276,9 @@ class Registro_familia_legajoController extends Controller
 
     public function actionDescargar_archivo($archivo)
     {
-        $ruta = Yii::getAlias('@webroot') . '/uploads/registro_familia_legajos/' . $archivo;
+        //$ruta = Yii::getAlias('@webroot') . '/uploads_datafam/registro_familia_legajos/' . $archivo;
+        $ruta = RegistroFamiliaLegajo::getRutaUploads() . $archivo;
+
         if (file_exists($ruta)) {
             return Yii::$app->response->sendFile($ruta, $archivo, [
                 'inline' => false // Forzar descarga directa
@@ -269,7 +287,7 @@ class Registro_familia_legajoController extends Controller
             throw new \yii\web\NotFoundHttpException("El archivo no existe.");
         }
     }
-    
+
 
 
 
@@ -289,8 +307,8 @@ class Registro_familia_legajoController extends Controller
         $archivos = RegistroFamiliaLegajo::find()->where(['id' => $ids])->all();
 
         // Ruta a la carpeta donde se almacenan los archivos PDF
-        $ruta_base = Yii::getAlias('@webroot') . '/uploads/registro_familia_legajos/';
-
+        //$ruta_base = Yii::getAlias('@webroot') . '/uploads_datafam/registro_familia_legajos/';
+        $ruta_base = RegistroFamiliaLegajo::getRutaUploads();
         // Inicializar mPDF
         $mpdf = new \Mpdf\Mpdf();
 

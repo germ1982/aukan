@@ -9,7 +9,7 @@ function campo($titulo, $contenido, $esArchivo = false)
     if ($esArchivo) {
         // Verificamos si existe un archivo adjunto
         if ($contenido) {
-            $imagePath = Url::to('uploads/legajo_runneu/' . $contenido);
+            $imagePath = Url::to('uploads_datafam/legajo_runneu/' . $contenido);
 
             // Determinamos el tipo de archivo (imagen o PDF)
             $fileExtension = pathinfo($contenido, PATHINFO_EXTENSION);
