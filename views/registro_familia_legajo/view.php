@@ -9,9 +9,9 @@ function campo($contenido, $esArchivo = false)
     if ($esArchivo) {
         // Verificamos si existe un archivo adjunto
         if ($contenido) {
-            $imagePath = Url::to('uploads_datafam/registro_familia_legajos/' . $contenido);
-            $imagePath = Yii::$app->request->hostInfo . '/uploads_datafam/registro_familia_legajos/' . $contenido;
-
+            $ts = time();
+            $imagePath = Yii::$app->request->hostInfo . '/uploads_datafam/registro_familia_legajos/' . $contenido . '?t=' . $ts;
+            
                 $contenido = Html::tag('object', '', ['data' => $imagePath, 'type' => 'application/pdf', 'width' => '100%', 'height' => '470px']);
             } 
         else {

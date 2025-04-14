@@ -178,8 +178,11 @@ $this->registerJs($script);
         <div class=" col-md-7">
 
             <?php
-            $urlArchivo = Yii::$app->request->hostInfo . '/uploads_datafam/registro_familia_legajos/' . $model->archivo_adjunto;
-
+            $ts = time();
+            $urlArchivo = Yii::$app->request->hostInfo . '/uploads_datafam/registro_familia_legajos/' . $model->archivo_adjunto . '?t=' . $ts;
+            
+            //$urlArchivo = Yii::$app->request->hostInfo . '/uploads_datafam/registro_familia_legajos/' . $model->archivo_adjunto;
+            $urlArchivoConTimestamp = $urlArchivo . '?v=' . time(); // 👈 fuerza refresco
             //echo "<p>URL generada: <a href='$urlArchivo' target='_blank'>$urlArchivo</a></p>";
             ?>
             <?= $form->field($model, 'archivo_adjunto_file')->widget(FileInput::classname(), [

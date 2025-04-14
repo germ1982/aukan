@@ -62,7 +62,7 @@ class RegistroFamiliaLegajo extends \yii\db\ActiveRecord
     {
         return Yii::$app->params['rutaUploads'] . 'registro_familia_legajos/';
     }
-    public static function getUrlUploads() {
+    /* public static function getUrlUploads() {
         return Yii::getAlias('@web') . '/uploads_datafam/registro_familia_legajos/';
-    }
+    } */
 }

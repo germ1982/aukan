@@ -163,6 +163,12 @@ class Registro_familia_legajoController extends Controller
                 $transaction = Yii::$app->db->beginTransaction();
                 $guardado = true;
 
+                /* $rutaArchivoAnterior = Yii::getAlias('@uploads_datafam') . '/registro_familia_legajos/' . $model->getOldAttribute('archivo_adjunto');
+                if (file_exists($rutaArchivoAnterior)) {
+                    unlink($rutaArchivoAnterior);
+                } */
+
+
                 $tmpfile = UploadedFile::getInstance($model, 'archivo_adjunto_file');
 
                 if (isset($tmpfile)) {
