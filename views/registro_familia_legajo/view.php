@@ -25,6 +25,11 @@ function campo($contenido, $esArchivo = false)
 ?>
 
 <div class="runneu-legajo-view">
+<div class="row">
+<div class="col-md-12">
+    <?=$model->observacion?>
+</div>
+</div>
 
     <div class="row">
         <div class="col-md-12">

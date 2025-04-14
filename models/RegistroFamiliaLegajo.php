@@ -30,9 +30,11 @@ class RegistroFamiliaLegajo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['num_legajo', 'tipo_legajo','idpersona'], 'integer'],
+            [['tipo_legajo','idpersona'], 'integer'],
             [['archivo_adjunto'], 'required'],
             [['dni'], 'string', 'max' => 20],
+            [['num_legajo'], 'string', 'max' => 20],
+            
             [['archivo_adjunto', 'nombre'], 'string', 'max' => 255],
             [['apellido'], 'string', 'max' => 100],
             [['observacion'], 'string'],

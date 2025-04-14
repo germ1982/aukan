@@ -47,6 +47,8 @@ function datos_persona() {
             console.log("console.log('funcion datos_persona'); // POST a index.php?r=persona/validar_dni&dni=" + dni_persona);
             if (data.length === 0) {
                 $('#txt_mensaje').html("No cargado");
+                aux = $('#input_observacion').val();
+                $('#input_observacion').val('Falta Persona En Base de Datos con dni ' + dni_persona + ' - ' + aux);
                 //buscar_en_renaper(dni_persona,tipo_persona);
             } else {
                 $('#input_idpersona').val(data[0]['idpersona']);
@@ -176,7 +178,7 @@ $this->registerJs($script);
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <?= $form->field($model, 'observacion')->textarea(['rows' => 3]) ?>
+                    <?= $form->field($model, 'observacion')->textarea(['rows' => 3, 'id' => 'input_observacion']) ?>
                 </div>
             </div>
 
