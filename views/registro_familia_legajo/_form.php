@@ -176,24 +176,18 @@ $this->registerJs($script);
 
         </div>
         <div class=" col-md-7">
+
             <?php
-            $archivo = Yii::getAlias('@webroot') . '/uploads_datafam/registro_familia_legajos/' . $model->archivo_adjunto;
-            if (!file_exists($archivo)) {
-                echo "<p style='color:red;'>El archivo no existe en el servidor: $archivo</p>";
-            } else {
-                echo "<p style='color:green;'>Archivo encontrado: $archivo</p>";
-            }
-            ?>
-            <?php
-            $urlArchivo = Yii::$app->request->baseUrl . '/uploads_datafam/registro_familia_legajos/' . $model->archivo_adjunto;
-            echo "<p>URL generada: <a href='$urlArchivo' target='_blank'>$urlArchivo</a></p>";
+            $urlArchivo = Yii::$app->request->hostInfo . '/uploads_datafam/registro_familia_legajos/' . $model->archivo_adjunto;
+
+            //echo "<p>URL generada: <a href='$urlArchivo' target='_blank'>$urlArchivo</a></p>";
             ?>
             <?= $form->field($model, 'archivo_adjunto_file')->widget(FileInput::classname(), [
                 'options' => ['accept' => '.pdf'],
                 'pluginOptions' => [
                     'initialPreviewAsData' => true, // esto le dice al plugin que es una URL o path al archivo
                     'initialPreview' => $model->archivo_adjunto
-                        ? [Yii::$app->request->baseUrl . "/uploads_datafam/registro_familia_legajos/{$model->archivo_adjunto}"]
+                        ? [$urlArchivo]
                         : [],
                     'initialPreviewFileType' => 'pdf',
                     'allowedFileExtensions' => ['pdf'],
@@ -204,7 +198,7 @@ $this->registerJs($script);
                     'initialPreviewConfig' => $model->archivo_adjunto ? [[
                         'type' => 'pdf',
                         'caption' => $model->archivo_adjunto,
-                        'downloadUrl' => Yii::$app->request->baseUrl . '/uploads_datafam/registro_familia_legajos/' . $model->archivo_adjunto
+                        'downloadUrl' => $urlArchivo
                     ]] : [],
                 ],
             ]); ?>
