@@ -12,9 +12,11 @@ use yii\helpers\Url;
 
 if (isset($model->idpersona)) {
     $persona = Persona::findOne($model->idpersona);
-    $model->dni = $persona->documento;
-    $model->apellido = "$persona->apellido";
-    $model->nombre = "$persona->nombre";
+    if ($persona !== null) {
+        $model->dni = $persona->documento;
+        $model->apellido = $persona->apellido;
+        $model->nombre = $persona->nombre;
+    }
 }
 
 if (isset($model->archivo_adjunto)) {
@@ -172,6 +174,11 @@ $this->registerJs($script);
                     <?= SiteController::actionGet_input_select($form, $model, 'tipo_legajo', 'cmb_tipo_legajo', $tipos_legajos, 'id_configuracion', 'descripcion', 'Tipo de Legajo', 'Seleccione un Tipo...') ?>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <?= $form->field($model, 'observacion')->textarea(['rows' => 3]) ?>
+                </div>
+            </div>
 
 
         </div>
@@ -180,7 +187,7 @@ $this->registerJs($script);
             <?php
             $ts = time();
             $urlArchivo = Yii::$app->request->hostInfo . '/uploads_datafam/registro_familia_legajos/' . $model->archivo_adjunto . '?t=' . $ts;
-            
+
             //$urlArchivo = Yii::$app->request->hostInfo . '/uploads_datafam/registro_familia_legajos/' . $model->archivo_adjunto;
             $urlArchivoConTimestamp = $urlArchivo . '?v=' . time(); // 👈 fuerza refresco
             //echo "<p>URL generada: <a href='$urlArchivo' target='_blank'>$urlArchivo</a></p>";
