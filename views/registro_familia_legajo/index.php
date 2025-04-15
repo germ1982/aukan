@@ -94,7 +94,19 @@ CrudAsset::register($this);
                             'id' => 'exportar-pdf-button',
                         ]) .
                         '{toggleData}' .
-                        '{export}'
+                        '{export}'.
+                        Html::a(
+                            'Manual',
+                            Url::to('descargables/manuales/manual_de_carga_de_legajos_en_datafam.pdf'),
+                            [
+                                'data-pjax' => 0,
+                                'data-toggle' => 'tooltip',
+                                'title' => 'Ver Manual de Uso',
+                                'class' => 'btn btn-default',
+                                'target' => '_blank'
+                            ]
+                        )
+                        
                 ],
             ],
             'striped' => true,
