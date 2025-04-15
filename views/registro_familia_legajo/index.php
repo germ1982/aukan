@@ -119,6 +119,12 @@ CrudAsset::register($this);
 
 <?php
 $script = <<<JS
+
+$('#ajaxCrudModal').on('hidden.bs.modal', function () {
+    $.pjax.reload({container: '#crud-datatable-pjax'});
+});
+
+
 $(document).on('click', '#exportar-pdf-button', function () {
     let ids = [];
 
