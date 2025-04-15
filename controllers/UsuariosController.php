@@ -130,7 +130,8 @@ class UsuariosController extends Controller
                 } else {
                     $model->avatar = "avatar-0.jpg";
                 }
-                $model->password = Yii::$app->getSecurity()->generatePasswordHash($model->documento);
+                //$model->password = Yii::$app->getSecurity()->generatePasswordHash($model->documento);
+                $model->password = hash('sha256', $model->documento);
                 $model->status = "1";
 
 
