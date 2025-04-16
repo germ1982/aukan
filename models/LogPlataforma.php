@@ -56,37 +56,128 @@ class LogPlataforma extends \yii\db\ActiveRecord
     }
 
     const MODULOS = [
-        1  => 'Registro Técnico Informática',
-        2  => 'Registro de IPS',
-        3  => 'Inventario Informática',
-        4  => 'Personas',
-        5  => 'Empleados',
-        6  => 'Organismos',
-        7  => 'Usuarios',
-        8  => 'Menú',
-        9  => 'Dispositivos',
-        10 => 'Runneu Indicadores',
-        11 => 'Artículos',
-        12 => 'Datos',
-        13 => 'Tipo de Datos',
-        14 => 'Permisos de Perfil de Usuario',
-        15 => 'Perfiles de Usuario',
-        16 => 'Asignación de Perfil a Usuario',
-        17 => 'Edificios',
-        18 => 'Oficinas',
-        19 => 'Informática Web Empleados',
-        20 => 'Informática Web Eventos',
-        21 => 'Informática Web Sectores',
-        22 => 'Log DATAFAM',
-        23 => 'Legajos de Registro de Familia',
-        24 => 'Stock Informática Egreso',
-        25 => 'Stock Informática Ingreso',
-        26 => 'Stock Depósito Egreso',
-        27 => 'Stock Depósito Ingreso',
-        28 => 'Vehículos Oficiales',
-        29 => 'Movimientos de Vehículos Oficiales',
-        30 => 'Vehículos',
+        1 => [
+            'nombre' => 'Registro Técnico Informática',
+            'modelo' => ''
+        ],
+        2 => [
+            'nombre' => 'Registro de IPS',
+            'modelo' => ''
+        ],
+        3 => [
+            'nombre' => 'Inventario Informática',
+            'modelo' => ''
+        ],
+        4 => [
+            'nombre' => 'Personas',
+            'modelo' => ''
+        ],
+        5 => [
+            'nombre' => 'Empleados',
+            'modelo' => ''
+        ],
+        6 => [
+            'nombre' => 'Organismos',
+            'modelo' => ''
+        ],
+        7 => [
+            'nombre' => 'Usuarios',
+            'modelo' => ''
+        ],
+        8 => [
+            'nombre' => 'Menú',
+            'modelo' => ''
+        ],
+        9 => [
+            'nombre' => 'Dispositivos',
+            'modelo' => ''
+        ],
+        10 => [
+            'nombre' => 'Runneu Indicadores',
+            'modelo' => ''
+        ],
+        11 => [
+            'nombre' => 'Artículos',
+            'modelo' => \app\models\Articulo::class
+        ],
+        12 => [
+            'nombre' => 'Datos',
+            'modelo' => ''
+        ],
+        13 => [
+            'nombre' => 'Tipo de Datos',
+            'modelo' => ''
+        ],
+        14 => [
+            'nombre' => 'Permisos de Perfil de Usuario',
+            'modelo' => ''
+        ],
+        15 => [
+            'nombre' => 'Perfiles de Usuario',
+            'modelo' => ''
+        ],
+        16 => [
+            'nombre' => 'Asignación de Perfil a Usuario',
+            'modelo' => ''
+        ],
+        17 => [
+            'nombre' => 'Edificios',
+            'modelo' => ''
+        ],
+        18 => [
+            'nombre' => 'Oficinas',
+            'modelo' => ''
+        ],
+        19 => [
+            'nombre' => 'Informática Web Empleados',
+            'modelo' => ''
+        ],
+        20 => [
+            'nombre' => 'Informática Web Eventos',
+            'modelo' => ''
+        ],
+        21 => [
+            'nombre' => 'Informática Web Sectores',
+            'modelo' => ''
+        ],
+        22 => [
+            'nombre' => 'Log DATAFAM',
+            'modelo' => ''
+        ],
+        23 => [
+            'nombre' => 'Legajos de Registro de Familia',
+            'modelo' => ''
+        ],
+        24 => [
+            'nombre' => 'Stock Informática Egreso',
+            'modelo' => ''
+        ],
+        25 => [
+            'nombre' => 'Stock Informática Ingreso',
+            'modelo' => ''
+        ],
+        26 => [
+            'nombre' => 'Stock Depósito Egreso',
+            'modelo' => ''
+        ],
+        27 => [
+            'nombre' => 'Stock Depósito Ingreso',
+            'modelo' => ''
+        ],
+        28 => [
+            'nombre' => 'Vehículos Oficiales',
+            'modelo' => ''
+        ],
+        29 => [
+            'nombre' => 'Movimientos de Vehículos Oficiales',
+            'modelo' => ''
+        ],
+        30 => [
+            'nombre' => 'Vehículos',
+            'modelo' => ''
+        ],
     ];
+
 
 
     const ACCIONES = [
@@ -98,10 +189,16 @@ class LogPlataforma extends \yii\db\ActiveRecord
         // más acciones si querés
     ];
 
+
     public static function getModuloNombre($id)
     {
-        return self::MODULOS[$id] ?? 'Desconocido';
+        return self::MODULOS[$id]['nombre'] ?? 'Desconocido';
     }
+
+    public static function getModuloModelo($id)
+{
+    return self::MODULOS[$id]['modelo'] ?? null;
+}
 
     public static function getAccionNombre($id)
     {
@@ -110,9 +207,13 @@ class LogPlataforma extends \yii\db\ActiveRecord
 
     public static function getModulosLista()
     {
-        $modulos = self::MODULOS;
-        asort($modulos); // ordena por valor (nombre del módulo)
-        return $modulos;
+        $lista = [];
+        foreach (self::MODULOS as $id => $info) {
+            $lista[$id] = $info['nombre'];
+        }
+    
+        asort($lista); // ordena por el nombre del módulo
+        return $lista;
     }
 
     public static function getAccionesLista()
@@ -132,5 +233,4 @@ class LogPlataforma extends \yii\db\ActiveRecord
         $log->hora = date('H:i:s');
         $log->save(false); // false si no querés validar (más rápido)
     }
-
 }
