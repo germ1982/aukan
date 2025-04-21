@@ -101,6 +101,7 @@ class LocalidadesController extends Controller
 
                 ];
             } else if ($model->load($request->post()) && $model->save()) {
+                
                 return [
                     'forceReload' => '#crud-datatable-pjax',
                     'title' => "Create new Localidades",

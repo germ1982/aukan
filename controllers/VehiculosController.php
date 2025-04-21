@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
+use app\models\LogPlataforma;
 use Yii;
 use app\models\Vehiculos;
 use app\models\VehiculosSearch;
@@ -130,7 +131,7 @@ class VehiculosController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-
+                      LogPlataforma::registrar(30,1,$model->idvehiculo); 
                       return [
                           'title' => "Nuevo Vehiculo",
                           'content' => '<span class="text-success">Vehiculo Creado Correctamente</span>',
@@ -183,7 +184,7 @@ class VehiculosController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-
+                      LogPlataforma::registrar(30,2,$model->idvehiculo); 
                       return [
                           'title' => "Editar Vehiculo",
                           'content' => '<span class="text-success">Vehiculo Editado Correctamente</span>',
@@ -213,7 +214,7 @@ class VehiculosController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        LogPlataforma::registrar(30,3,$id); 
         return $this->redirect(['index']);
     }
 

@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\LogPlataforma;
 use Yii;
 use app\models\VehiculoOficial;
 use app\models\VehiculoOficialSearch;
@@ -100,6 +101,7 @@ class Vehiculo_oficialController extends Controller
         
                 ];         
             }else if($model->load($request->post()) && $model->save()){
+                LogPlataforma::registrar(28,1,$model->idvehiculo); 
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
                     'title'=> "Create new VehiculoOficial",
@@ -174,7 +176,7 @@ class Vehiculo_oficialController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-
+                      LogPlataforma::registrar(28,2,$model->idvehiculo); 
                       return [
                           'title' => "Editar Vehiculo",
                           'content' => '<span class="text-success">Vehiculo Editado Correctamente</span>',
@@ -205,7 +207,7 @@ class Vehiculo_oficialController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-
+        LogPlataforma::registrar(28,3,$id); 
         if($request->isAjax){
             /*
             *   Process for ajax request

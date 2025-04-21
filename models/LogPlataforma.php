@@ -58,43 +58,43 @@ class LogPlataforma extends \yii\db\ActiveRecord
     const MODULOS = [
         1 => [
             'nombre' => 'Registro Técnico Informática',
-            'modelo' => ''
+            'modelo' => '\app\models\MODELO::class'
         ],
         2 => [
             'nombre' => 'Registro de IPS',
-            'modelo' => ''
+            'modelo' => \app\models\InfIps::class
         ],
         3 => [
             'nombre' => 'Inventario Informática',
-            'modelo' => ''
+            'modelo' => \app\models\Inventario::class
         ],
         4 => [
             'nombre' => 'Personas',
-            'modelo' => ''
+            'modelo' => \app\models\Persona::class
         ],
         5 => [
             'nombre' => 'Empleados',
-            'modelo' => ''
+            'modelo' => \app\models\Empleado::class
         ],
         6 => [
             'nombre' => 'Organismos',
-            'modelo' => ''
+            'modelo' => \app\models\Organismo::class
         ],
         7 => [
             'nombre' => 'Usuarios',
-            'modelo' => ''
+            'modelo' => \app\models\Usuarios::class
         ],
         8 => [
             'nombre' => 'Menú',
-            'modelo' => ''
+            'modelo' => \app\models\Menu::class
         ],
         9 => [
             'nombre' => 'Dispositivos',
-            'modelo' => ''
+            'modelo' => \app\models\OrganismoDispositivo::class
         ],
         10 => [
             'nombre' => 'Runneu Indicadores',
-            'modelo' => ''
+            'modelo' => '\app\models\RunneuIndicadores::class'
         ],
         11 => [
             'nombre' => 'Artículos',
@@ -102,79 +102,79 @@ class LogPlataforma extends \yii\db\ActiveRecord
         ],
         12 => [
             'nombre' => 'Datos',
-            'modelo' => ''
+            'modelo' => \app\models\Configuracion::class
         ],
         13 => [
             'nombre' => 'Tipo de Datos',
-            'modelo' => ''
+            'modelo' => \app\models\ConfiguracionTipo::class
         ],
         14 => [
             'nombre' => 'Permisos de Perfil de Usuario',
-            'modelo' => ''
+            'modelo' => \app\models\UsuarioPerfilPermiso::class
         ],
         15 => [
             'nombre' => 'Perfiles de Usuario',
-            'modelo' => ''
+            'modelo' => \app\models\UsuarioPerfil::class
         ],
         16 => [
             'nombre' => 'Asignación de Perfil a Usuario',
-            'modelo' => ''
+            'modelo' => \app\models\UsuarioAsignacionPerfil::class
         ],
         17 => [
             'nombre' => 'Edificios',
-            'modelo' => ''
+            'modelo' => \app\models\Edificio::class
         ],
         18 => [
             'nombre' => 'Oficinas',
-            'modelo' => ''
+            'modelo' => \app\models\EdificioOficina::class
         ],
         19 => [
             'nombre' => 'Informática Web Empleados',
-            'modelo' => ''
+            'modelo' => \app\models\InformaticaWebEmpleados::class
         ],
         20 => [
             'nombre' => 'Informática Web Eventos',
-            'modelo' => ''
+            'modelo' => \app\models\InformaticaWebEventos::class
         ],
         21 => [
             'nombre' => 'Informática Web Sectores',
-            'modelo' => ''
+            'modelo' => \app\models\InformaticaWebSectores::class
         ],
         22 => [
             'nombre' => 'Log DATAFAM',
-            'modelo' => ''
+            'modelo' => \app\models\LogPlataforma::class
         ],
         23 => [
             'nombre' => 'Legajos de Registro de Familia',
-            'modelo' => ''
+            'modelo' => \app\models\RegistroFamiliaLegajo::class
         ],
         24 => [
             'nombre' => 'Stock Informática Egreso',
-            'modelo' => ''
+            'modelo' => \app\models\StockInformaticaEgreso::class
         ],
         25 => [
             'nombre' => 'Stock Informática Ingreso',
-            'modelo' => ''
+            'modelo' => \app\models\StockInformaticaIngreso::class
         ],
         26 => [
             'nombre' => 'Stock Depósito Egreso',
-            'modelo' => ''
+            'modelo' => \app\models\StockDepositoEgreso::class
         ],
         27 => [
             'nombre' => 'Stock Depósito Ingreso',
-            'modelo' => ''
+            'modelo' => \app\models\StockDepositoIngreso::class
         ],
         28 => [
             'nombre' => 'Vehículos Oficiales',
-            'modelo' => ''
+            'modelo' => \app\models\VehiculoOficial::class
         ],
         29 => [
             'nombre' => 'Movimientos de Vehículos Oficiales',
-            'modelo' => ''
+            'modelo' => \app\models\VehiculoOficialMovimiento::class
         ],
         30 => [
             'nombre' => 'Vehículos',
-            'modelo' => ''
+            'modelo' => \app\models\Vehiculos::class
         ],
     ];
 
@@ -186,6 +186,7 @@ class LogPlataforma extends \yii\db\ActiveRecord
         3 => 'Eliminación',
         4 => 'Visualización',
         5 => 'Exportación',
+        6 => 'Reseteo Password',
         // más acciones si querés
     ];
 

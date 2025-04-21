@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\InformaticaWebEventos;
 use app\models\InformaticaWebEventosSearch;
+use app\models\LogPlataforma;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -117,7 +118,7 @@ class Informatica_web_eventosController extends Controller
 
                         if ($guardado && $model->save()) {
                               $transaction->commit();
-
+                              LogPlataforma::registrar(20,1,$model->idevento); 
                               $imageFiles = UploadedFile::getInstances($model, 'imageFile');
                               $imageNames = [];
 
@@ -138,6 +139,7 @@ class Informatica_web_eventosController extends Controller
                               }
                               //echo "<script>console.log('$model->fotos')</script>";
                               $model->save();
+                              
 
                               return [
                                     'title' => "Nuevo Evento",
@@ -213,7 +215,7 @@ class Informatica_web_eventosController extends Controller
                         $model->save();
                         if ($guardado && $model->save()) {
                               $transaction->commit();
-
+                              LogPlataforma::registrar(20,2,$model->idevento); 
 
                               return [
                                     'title' => "Editar Evento",
@@ -237,7 +239,7 @@ class Informatica_web_eventosController extends Controller
       {
             $request = Yii::$app->request;
             $this->findModel($id)->delete();
-
+            LogPlataforma::registrar(20,3,$id); 
             if ($request->isAjax) {
                   /*
             *   Process for ajax request

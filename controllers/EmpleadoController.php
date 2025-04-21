@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Empleado;
 use app\models\EmpleadoSearch;
+use app\models\LogPlataforma;
 use yii\web\UploadedFile;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -133,7 +134,7 @@ class EmpleadoController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
-
+                    LogPlataforma::registrar(5,1,$model->idempleado); 
                     return [
                         'title' => "Nuevo Empleado",
                         'content' => '<span class="text-success">Empleado Creado Correctamente</span>',
@@ -212,7 +213,7 @@ class EmpleadoController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
-
+                    LogPlataforma::registrar(5,2,$model->idempleado); 
                     return [
                         'title' => "Editar Empleado",
                         'content' => '<span class="text-success">Empleado Editado Correctamente</span>',
@@ -242,7 +243,7 @@ class EmpleadoController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-
+        LogPlataforma::registrar(5,3,$id); 
         if ($request->isAjax) {
             /*
             *   Process for ajax request

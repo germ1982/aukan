@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\LogPlataforma;
 use app\models\Persona;
 use app\models\UsuarioAsignacionPerfil;
 use app\models\Usuarios;
@@ -137,6 +138,7 @@ class UsuariosController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
+                    LogPlataforma::registrar(7,1,$model->id); 
 
                     if ($model->perfil) {
                         foreach ($model->perfil as $p) {
@@ -216,7 +218,7 @@ class UsuariosController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
-
+                    LogPlataforma::registrar(7,2,$model->id); 
                     UsuarioAsignacionPerfil::deleteAll(['idusuario' => $model->id]);
                     if ($model->perfil) {
                         foreach ($model->perfil as $p) {
@@ -255,7 +257,7 @@ class UsuariosController extends Controller
         //$model->password = Yii::$app->getSecurity()->generatePasswordHash($model_persona->documento);
         $model->password = hash('sha256', $model_persona->documento);
         $contenido = $model->save() ? "Se ah reseteado la contraseña" : "Hubo un error al resetear la contraseña";
-
+        LogPlataforma::registrar(7,6,$id); 
 
         Yii::$app->response->format = Response::FORMAT_JSON;
         return [
@@ -274,6 +276,7 @@ class UsuariosController extends Controller
     {
 
         if ($this->findModel($id)->delete()) {
+            LogPlataforma::registrar(7,3,$id); 
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
                 'title' => "Eliminado",

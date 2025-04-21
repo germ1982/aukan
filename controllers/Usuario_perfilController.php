@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\ConfiguracionTipo;
+use app\models\LogPlataforma;
 use Yii;
 use app\models\UsuarioPerfil;
 use app\models\UsuarioPerfilSearch;
@@ -104,6 +105,7 @@ class Usuario_perfilController extends Controller
                   $model->id_configuracion_tipo = ConfiguracionTipo::PERFIL_DE_USUARIO;
 
                       if ($model->save()) {
+                        LogPlataforma::registrar(15,1,$model->id_configuracion); 
                             return [
                                   'title' => "Nuevo Perfil",
                                   'content' => '<span class="text-success">Perfil creado Correctamente</span>',
@@ -154,6 +156,7 @@ class Usuario_perfilController extends Controller
                       ];
                 } else if ($model->load($request->post())) {
                       if ($model->save()) {
+                        LogPlataforma::registrar(15,2,$model->id_configuracion); 
                             return [
                                   'title' => "Nuevo Perfil",
                                   'content' => '<span class="text-success">Perfil creado Correctamente</span>',
@@ -177,6 +180,7 @@ class Usuario_perfilController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
+        LogPlataforma::registrar(15,1,$id); 
 
         if($request->isAjax){
             /*

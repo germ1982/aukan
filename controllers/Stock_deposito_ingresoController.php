@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\LogPlataforma;
 use Yii;
 use app\models\StockDepositoIngreso;
 use app\models\StockDepositoIngresoDetalle;
@@ -112,7 +113,7 @@ class Stock_deposito_ingresoController extends Controller
                         }
                     
                     $transaction->commit();
-
+                    LogPlataforma::registrar(27,1,$model->idingreso); 
                     return [
                         'title' => "Nuevo Ingreso",
                         'content' => '<span class="text-success">Ingreso Creado Correctamente</span>',
@@ -214,7 +215,7 @@ class Stock_deposito_ingresoController extends Controller
                         }
                     }
                     $transaction->commit();
-
+                    LogPlataforma::registrar(27,2,$model->idingreso); 
                     return [
                         'title' => "Editar Ingreso",
                         'content' => '<span class="text-success">Ingreso Editado Correctamente</span>',
@@ -237,7 +238,7 @@ class Stock_deposito_ingresoController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-
+        LogPlataforma::registrar(27,3,$id); 
         if ($request->isAjax) {
 
             Yii::$app->response->format = Response::FORMAT_JSON;

@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\LogPlataforma;
 use app\models\Menu;
 use app\models\MenuSearch;
 use phpDocumentor\Reflection\Types\This;
@@ -122,6 +123,7 @@ class MenuController extends Controller
 
                         if ($guardado && $model->save()) {
                               $transaction->commit();
+                              LogPlataforma::registrar(8,1,$model->id); 
 
                               $this->actionReacomodar_orden($model->id, true);
 
@@ -185,6 +187,7 @@ class MenuController extends Controller
 
                         if ($guardado && $model->save()) {
                               $transaction->commit();
+                              LogPlataforma::registrar(8,2,$model->id); 
                               $this->actionReacomodar_orden($model->id, true);
                               return [
                                     'title' => "Editar Nodo de Menu",
@@ -216,6 +219,7 @@ class MenuController extends Controller
       {
 
             if ($this->findModel($id)->delete()) {
+                  LogPlataforma::registrar(8,3,$id); 
                   Yii::$app->response->format = Response::FORMAT_JSON;
                   return [
                         'title' => "Eliminado",

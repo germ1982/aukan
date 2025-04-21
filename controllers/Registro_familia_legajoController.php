@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Configuracion;
+use app\models\LogPlataforma;
 use Yii;
 use app\models\RegistroFamiliaLegajo;
 use app\models\RegistroFamiliaLegajoSearch;
@@ -114,6 +115,8 @@ class Registro_familia_legajoController extends Controller
                 if ($guardado && $model->save()) {
 
                     $transaction->commit();
+                    LogPlataforma::registrar(23,1,$model->id); 
+
                     $tmpfile = UploadedFile::getInstance($model, 'archivo_adjunto_file');
 
                     if (isset($tmpfile)) {
@@ -197,6 +200,7 @@ class Registro_familia_legajoController extends Controller
                 if ($guardado && $model->save()) {
 
                     $transaction->commit();
+                    LogPlataforma::registrar(23,2,$model->id); 
                     return [
                         'forceReload' => '#crud-datatable-pjax',
                         'title' => "Editar Legajo Id: " . $id,
@@ -218,7 +222,7 @@ class Registro_familia_legajoController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-
+        LogPlataforma::registrar(23,3,$id); 
         if ($request->isAjax) {
             /*
             *   Process for ajax request
