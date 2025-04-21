@@ -38,6 +38,6 @@ function mostrar_eventos($eventos)
             $fotos = $e['fotos'];
 
       
-            include 'evento_tarjeta.php';
+            include 'evento_tarjeta_independiente.php';
       }
 }

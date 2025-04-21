@@ -147,10 +147,10 @@
 </div>
 
 <div id="Trabajos" class="tabcontent" style="padding-left: 75px;">
-      <?php //include 'eventos.php' ?>
-      <span class="heder_titulo_texto" style="color: #2B3E4C;">Sitio en desarrollo:</span><br>
+      <?php include 'eventos.php' ?>
+      <!-- <span class="heder_titulo_texto" style="color: #2B3E4C;">Sitio en desarrollo:</span><br>
       <span class="heder_titulo_texto" style="color: #2B3E4C;">Paciencia... Mira al horizonte y pienza en todo lo maravilloso que esta por llegar...</span>
-      <img src='..\img\tarjetas\en_desarrollo.gif'>
+      <img src='..\img\tarjetas\en_desarrollo.gif'> -->
 </div>
 
 <script>
