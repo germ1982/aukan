@@ -10,6 +10,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
+use yii\web\UploadedFile;
+use app\models\Edificio;
 
 /**
  * Edificio_accesoController implements the CRUD actions for EdificioAcceso model.
@@ -37,7 +39,7 @@ class Edificio_accesoController extends Controller
      * @return mixed
      */
     public function actionIndex()
-    {    
+    {
         $searchModel = new EdificioAccesoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -54,19 +56,19 @@ class Edificio_accesoController extends Controller
      * @return mixed
      */
     public function actionView($id)
-    {   
+    {
         $request = Yii::$app->request;
-        if($request->isAjax){
+        if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                    'title'=> "EdificioAcceso #".$id,
-                    'content'=>$this->renderAjax('view', [
-                        'model' => $this->findModel($id),
-                    ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
-        }else{
+                'title' => "EdificioAcceso #" . $id,
+                'content' => $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+                ]),
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::a('Editar', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+            ];
+        } else {
             return $this->render('view', [
                 'model' => $this->findModel($id),
             ]);
@@ -82,56 +84,48 @@ class Edificio_accesoController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->request;
-        $model = new EdificioAcceso();  
+        $model = new EdificioAcceso();
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            if($request->isGet){
+            if ($request->isGet) {
                 return [
-                    'title'=> "Create new EdificioAcceso",
-                    'content'=>$this->renderAjax('create', [
+                    'title' => "Crear Nuevo Acceso",
+                    'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-        
-                ];         
-            }else if($model->load($request->post()) && $model->save()){
-                return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Create new EdificioAcceso",
-                    'content'=>'<span class="text-success">Create EdificioAcceso success</span>',
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
-        
-                ];         
-            }else{           
-                return [
-                    'title'=> "Create new EdificioAcceso",
-                    'content'=>$this->renderAjax('create', [
-                        'model' => $model,
-                    ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-        
-                ];         
-            }
-        }else{
-            /*
-            *   Process for non-ajax request
-            */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id_edificio_acceso]);
-            } else {
-                return $this->render('create', [
-                    'model' => $model,
-                ]);
-            }
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+
+                ];
+            } else if ($model->load($request->post())) {
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
+
+                if ($guardado && $model->save()) {
+                    $transaction->commit();
+
+                    return [
+                        'title' => 'Nuevo Accesso',
+                        'content' => '<span class="text-success">Acceso Creado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                            Html::a('Crear Otro', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
+                    ];
+                }
+                
+        } return [
+            'title' => "Nuevo Acceso, Faltan datos!!! Complete Los datos Faltantes!!!",
+            'content' => $this->renderAjax('create', [
+                'model' => $model,
+            ]),
+            'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+
+        ];
         }
-       
     }
 
     /**
@@ -144,54 +138,47 @@ class Edificio_accesoController extends Controller
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
-        $model = $this->findModel($id);       
+        $model = $this->findModel($id);
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            if($request->isGet){
+            if ($request->isGet) {
                 return [
-                    'title'=> "Update EdificioAcceso #".$id,
-                    'content'=>$this->renderAjax('update', [
+                    'title' => "Actualizar Acceso" . $id,
+                    'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-                ];         
-            }else if($model->load($request->post()) && $model->save()){
-                return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "EdificioAcceso #".$id,
-                    'content'=>$this->renderAjax('view', [
-                        'model' => $model,
-                    ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
-            }else{
-                 return [
-                    'title'=> "Update EdificioAcceso #".$id,
-                    'content'=>$this->renderAjax('update', [
-                        'model' => $model,
-                    ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-                ];        
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                ];
+            } else if ($model->load($request->post())) {
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
+
+                if ($guardado && $model->save()) {
+                    $transaction->commit();
+
+                    return [
+                        'title' => 'Editar Acceso Id: ' . $id,
+                        'content' => '<span class="text-success">Acceso Editado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                            Html::a('Crear Otro', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
+                    ];
+                }
+                
             }
-        }else{
-            /*
-            *   Process for non-ajax request
-            */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id_edificio_acceso]);
-            } else {
-                return $this->render('update', [
-                    'model' => $model,
-                ]);
-            }
-        }
+        } return [
+            'title' => "Editar Dato Id $id, Faltan datos!!! Complete Los datos Faltantes!!!",
+            'content' => $this->renderAjax('create', [
+                'model' => $model,
+            ]),
+            'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+
+        ];
     }
 
     /**
@@ -206,23 +193,21 @@ class Edificio_accesoController extends Controller
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
             /*
             *   Process for non-ajax request
             */
             return $this->redirect(['index']);
         }
-
-
     }
 
-     /**
+    /**
      * Delete multiple existing EdificioAcceso model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
@@ -230,27 +215,26 @@ class Edificio_accesoController extends Controller
      * @return mixed
      */
     public function actionBulkDelete()
-    {        
+    {
         $request = Yii::$app->request;
-        $pks = explode(',', $request->post( 'pks' )); // Array or selected records primary keys
-        foreach ( $pks as $pk ) {
+        $pks = explode(',', $request->post('pks')); // Array or selected records primary keys
+        foreach ($pks as $pk) {
             $model = $this->findModel($pk);
             $model->delete();
         }
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
             /*
             *   Process for non-ajax request
             */
             return $this->redirect(['index']);
         }
-       
     }
 
     /**

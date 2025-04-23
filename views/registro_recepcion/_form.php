@@ -60,7 +60,11 @@ $model->hora = $model->isNewRecord ? date('H:i') : date('H:i', strtotime($model-
             <?= $form->field($model, 'motivo')->textarea() ?>
         </div>
         <div class=" col-md-4">
-            <?= $form->field($model, 'acceso')->textInput() ?>
+            <?= $form->field($model, 'acceso')->dropDownList(
+                \app\models\EdificioAcceso::getListaAccesos(),
+                ['prompt' => 'Seleccione tipo de acceso...']
+            ) ?>
+
         </div>
         <div class=" col-md-4">
             <?= SiteController::actionGet_input_select2($form, $model, 'id_dispositivo_derivacion', 'cmb_id_dispositivo_derivacion', OrganismoDispositivo::get_dispositivos(), 'iddispositivo', 'descripcion', 'Dispositivo Derivacion', 'seleccione dispositivo...') ?>

@@ -58,4 +58,12 @@ class EdificioAcceso extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Edificio::className(), ['idedificio' => 'idedificio']);
     }
+    public static function getListaAccesos($idedificio = 1)
+    {
+        return self::find()
+            ->where(['idedificio' => $idedificio])
+            ->select(['descripcion', 'id_edificio_acceso'])
+            ->indexBy('id_edificio_acceso')
+            ->column();
+    }
 }

@@ -58,4 +58,8 @@ class RegistroRecepcion extends \yii\db\ActiveRecord
             'observacion' => 'Observacion',
         ];
     }
+    public function getEdificioAcceso()
+    {
+        return $this->hasOne(EdificioAcceso::class, ['id_edificio_acceso' => 'acceso']);
+    }
 }
