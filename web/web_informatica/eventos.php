@@ -24,20 +24,22 @@ if ($db->Iniciar()) {
 
 function mostrar_eventos($eventos)
 {
-      /* echo '<div class="row titulo_seccion" style="width: 90%; margin: 0 auto;" ;>
-    <u>Staff</u>
-    </div>
-    <br>'; */
+    echo '<div class="container py-4">';
+    echo '<div class="row">';
 
-      foreach ($eventos as $e) {
-            $fecha = $e['fecha'];
-            $titulo = $e['titulo'];
-            $organismo = $e['organismo'];
-            $dispositivo = $e['dispositivo'];
-            $descripcion = $e['descripcion'];
-            $fotos = $e['fotos'];
+    $contador = 0;
+    foreach ($eventos as $e) {
+        $contador++;
+        $fecha = $e['fecha'];
+        $titulo = $e['titulo'];
+        $organismo = $e['organismo'];
+        $dispositivo = $e['dispositivo'];
+        $descripcion = $e['descripcion'];
+        $fotos = $e['fotos'];
 
-      
-            include 'evento_tarjeta_independiente.php';
-      }
+        include 'evento_tarjeta_independiente.php';
+    }
+
+    echo '</div>'; // cierre de row
+    echo '</div>'; // cierre de container
 }

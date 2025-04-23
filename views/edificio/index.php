@@ -64,12 +64,18 @@ CrudAsset::register($this);
                                 ['content' =>
 
                                 Html::a(
-                                        '<i class="glyphicon glyphicon-plus"></i>',
+                                    'Accesos',
+                                    ['/edificio_acceso'],
+                                    ['title' => 'accesos', 'class' => 'btn btn-primary neon']
+                                ) .
+
+                                Html::a(
+                                        '<i class="glyphicon glyphicon-plus">lalalala</i>',
                                         ['create'],
                                         ['role' => 'modal-remote', 'title' => 'Nuevo', 'class' => 'btn btn-default']
                                     ) .
 
-
+                                   
 
                                 Html::a(
                                     '<i class="glyphicon glyphicon-repeat"></i>',

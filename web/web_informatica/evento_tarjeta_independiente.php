@@ -25,63 +25,48 @@
 <body>
 
 
-    <?php
-    $imageNames = explode(',', $fotos); // Convertir el string de fotos a un array
-    $items = [];
-    $cont_carrusel = 1;
+<?php
+$imageNames = explode(',', $fotos);
+$carouselId = "carousel_" . $contador;
+?>
 
-
-    ?>
-
-    <div class="container py-4">
-        <div class="card">
-            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+<div class="card mb-4">
+    <div class="row" style="width: 92%; margin: 0 auto;">
+        <div class="col-md-4">
+            <div id="<?= $carouselId ?>" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></button>
+                    <?php foreach ($imageNames as $index => $img): ?>
+                        <button type="button" data-bs-target="#<?= $carouselId ?>" data-bs-slide-to="<?= $index ?>" class="<?= $index == 0 ? 'active' : '' ?>"></button>
+                    <?php endforeach; ?>
                 </div>
 
                 <div class="carousel-inner">
-
-
-                    <?php
-                    echo ""
-                    foreach ($imageNames as $imageName) {
-                        $items[] = [
-                            'content' => '<img src="../img/evento-fotos/' . $imageName . '" class="d-block w-100">',
-                            'route' => 'src="../img/evento-fotos/' . $imageName . '"',
-                            'caption' => $imageName,
-                            'index' => $cont_carrusel,
-                        ];
-                        $cont_carrusel++;
-                    }
-                    ?>
-                    <div class="carousel-item active">
-                        <img src="img/foto1.jpg" class="d-block w-100" alt="Foto 1">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="img/foto2.jpg" class="d-block w-100" alt="Foto 2">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="img/foto3.jpg" class="d-block w-100" alt="Foto 3">
-                    </div>
+                    <?php foreach ($imageNames as $index => $imageName): ?>
+                        <div class="carousel-item <?= $index == 0 ? 'active' : '' ?>">
+                            <img src="../img/evento-fotos/<?= trim($imageName) ?>" class="d-block w-100" alt="Foto <?= $index + 1 ?>">
+                        </div>
+                    <?php endforeach; ?>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#<?= $carouselId ?>" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon"></span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <button class="carousel-control-next" type="button" data-bs-target="#<?= $carouselId ?>" data-bs-slide="next">
                     <span class="carousel-control-next-icon"></span>
                 </button>
             </div>
+        </div>
 
+        <div class="col-md-8">
             <div class="card-body">
-                <h5 class="card-title">Título de la Tarjeta</h5>
-                <p class="card-text">Este es un resumen del contenido o descripción que acompaña la tarjeta. Puede incluir info del modelo o cualquier dato.</p>
+                <h5 class="card-title"><?= $titulo ?></h5>
+                <p class="card-text"><?= $descripcion ?></p>
                 <a href="#" class="btn btn-primary">Ver más</a>
             </div>
         </div>
     </div>
+</div>
+
 
 </body>
 

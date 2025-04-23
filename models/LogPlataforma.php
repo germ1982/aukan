@@ -187,6 +187,7 @@ class LogPlataforma extends \yii\db\ActiveRecord
         4 => 'Visualización',
         5 => 'Exportación',
         6 => 'Reseteo Password',
+        7 => 'Cambio Password',
         // más acciones si querés
     ];
 
