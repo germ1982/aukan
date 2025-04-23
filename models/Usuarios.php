@@ -20,6 +20,7 @@ use yii\web\IdentityInterface;
 class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
 {
     public $documento;
+    public $nombre;
     public $imageFile;
     public $perfil;
     public $password_actual;

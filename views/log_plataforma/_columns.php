@@ -26,13 +26,11 @@ $columna_6 = '10%';//accion
 $columna_7 = '7%';//id registro
 $columna_8 = '5%';//accion
 
-$mysql_personas = "SELECT p.idpersona, concat(p.apellido,' ', p.nombre) as nombre
-                    from personas p 
-                    where p.idpersona in (
-                    select u.idpersona
-                    from usuarios u join
-                    log_plataforma l on l.idusuario = u.id
-                    )";
+$mysql_personas = "SELECT DISTINCT l.idusuario as id, CONCAT(p.apellido, ' ', p.nombre) AS nombre
+                    FROM log_plataforma l
+                    JOIN usuarios u ON l.idusuario = u.id
+                    JOIN personas p ON p.idpersona = u.idpersona
+                    order by p.apellido,p.nombre;";
 
 
 return [
@@ -108,7 +106,7 @@ return [
               return "";
         },
         'filterType' => GridView::FILTER_SELECT2,
-        'filter' => ArrayHelper::map(Persona::findBySql($mysql_personas)->all(), 'idpersona', 'nombre'),
+        'filter' => ArrayHelper::map(Usuarios::findBySql($mysql_personas)->all(), 'id', 'nombre'),
         'filterWidgetOptions' => [
               'pluginOptions' => ['allowClear' => true],
         ],

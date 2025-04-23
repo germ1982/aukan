@@ -6,6 +6,7 @@ use app\models\Articulo;
 use app\models\Usuarios;
 use kartik\helpers\Html;
 use yii\widgets\DetailView;
+use yii\helpers\Inflector;
 
 
 
@@ -17,7 +18,8 @@ $moduloInfo = LogPlataforma::MODULOS[$model->modulo];
 $modeloClase = $moduloInfo['modelo'];
 $registro = $modeloClase::findOne($model->idregistro);
 $detalle = '';
-$rutaVistaParcial = "@app/views/" . strtolower((new \ReflectionClass($registro))->getShortName()) . "/view";
+//$rutaVistaParcial = "@app/views/" . strtolower((new \ReflectionClass($registro))->getShortName()) . "/view";
+$rutaVistaParcial = "@app/views/" . Inflector::underscore((new \ReflectionClass($registro))->getShortName()) . "/view";
 if (is_file(Yii::getAlias($rutaVistaParcial) . ".php")) {
     $detalle = $this->render($rutaVistaParcial, ['model' => $registro]);
 }
@@ -64,8 +66,6 @@ padding: 20px;
 
     }
 </style>
-
-
 
 <div class="usuarios-view">
 

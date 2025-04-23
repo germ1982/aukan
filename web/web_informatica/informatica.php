@@ -146,7 +146,7 @@
       <?php include 'staff.php' ?>
 </div>
 
-<div id="Trabajos" class="tabcontent" style="padding-left: 75px;">
+<div id="Trabajos" class="tabcontent px-4" >
       <?php include 'eventos.php' ?>
       <!-- <span class="heder_titulo_texto" style="color: #2B3E4C;">Sitio en desarrollo:</span><br>
       <span class="heder_titulo_texto" style="color: #2B3E4C;">Paciencia... Mira al horizonte y pienza en todo lo maravilloso que esta por llegar...</span>
