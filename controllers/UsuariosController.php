@@ -322,12 +322,12 @@ class UsuariosController extends Controller
                         'id' => 'btnCerrar',
                         'class' => 'btn btn-default pull-left',
                         'data-dismiss' => 'modal',
-                    ]) .
+                    ]) /* .
                         Html::button('Guardareeeeeeeee', [
                             'id' => 'btnGuardar',
                             'class' => 'btn btn-primary',
                             'type' => 'submit',
-                        ]),
+                        ]), */
                 ];
             } else if ($model->load($request->post())) {
 
