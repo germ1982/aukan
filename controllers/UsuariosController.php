@@ -351,7 +351,7 @@ class UsuariosController extends Controller
                     $model->password = hash('sha256', $model->password_nueva);
                     if ($model->save()) {
 
-                    //LogPlataforma::registrar(7, 8, $model->id);
+                    LogPlataforma::registrar(7, 8, $model->id);
                     return [
                         'title' => 'Cambiar Contraseña',
                         'content' => '<span class="text-success">Contraseña cambiada correctamente.</span>',
