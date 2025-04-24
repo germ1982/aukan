@@ -70,7 +70,7 @@ CrudAsset::register($this);
                 'type' => 'primary', 
                 'heading' => false,
                 
-                'after'=>BulkButtonWidget::widget([
+                /* 'after'=>BulkButtonWidget::widget([
                             'buttons'=>Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Delete All',
                                 ["bulk-delete"] ,
                                 [
@@ -82,7 +82,7 @@ CrudAsset::register($this);
                                     'data-confirm-message'=>'Are you sure want to delete this item'
                                 ]),
                         ]).                        
-                        '<div class="clearfix"></div>',
+                        '<div class="clearfix"></div>', */
             ]
         ])?>
     </div>
