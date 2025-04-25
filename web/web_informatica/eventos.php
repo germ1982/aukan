@@ -1,5 +1,6 @@
 <?php
 require_once '../config/db.php'; // Ajusta la ruta según sea necesario
+include 'evento_modal.php';
 
 $db = new BaseDatos();
 if ($db->Iniciar()) {
@@ -45,3 +46,7 @@ function mostrar_eventos($eventos)
       echo '</div>'; // cierre de row
 
 }
+
+
+?>
+
