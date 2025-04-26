@@ -29,10 +29,11 @@
       }
 
       .heder_titulo_texto {
+            font-family: 'Roboto', sans-serif!important;
             text-align: center;
             padding: 10px;
             color: #f4dfb9;
-
+            font-size: 20px !important;
             font-size: 25px;
             font-family: Arial;
 
@@ -100,20 +101,31 @@
             -webkit-animation: fadeEffect 2s;
             animation: fadeEffect 2s;
       }
+
       /* Fade in tabs */
-@-webkit-keyframes fadeEffect {
-  from {opacity: 0;}
-  to {opacity: 1;}
-}
+      @-webkit-keyframes fadeEffect {
+            from {
+                  opacity: 0;
+            }
 
-@keyframes fadeEffect {
-  from {opacity: 0;}
-  to {opacity: 1;}
-}
+            to {
+                  opacity: 1;
+            }
+      }
 
-.tabcontent.active {
+      @keyframes fadeEffect {
+            from {
+                  opacity: 0;
+            }
+
+            to {
+                  opacity: 1;
+            }
+      }
+
+      .tabcontent.active {
             display: block;
-        }
+      }
 </style>
 
 <div class="row linea"></div>
@@ -146,7 +158,7 @@
       <?php include 'staff.php' ?>
 </div>
 
-<div id="Trabajos" class="tabcontent px-4" >
+<div id="Trabajos" class="tabcontent px-4">
       <?php include 'eventos.php' ?>
 
 </div>
