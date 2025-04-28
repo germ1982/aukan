@@ -20,12 +20,8 @@ use yii\web\IdentityInterface;
 class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
 {
     public $documento;
-    public $nombre;
     public $imageFile;
     public $perfil;
-    public $password_actual;
-    public $password_nueva;
-    public $password_nueva_confirmacion;
     public static function tableName()
     {
         return 'usuarios';
@@ -37,16 +33,11 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['email', 'avatar', 'status', 'password', 'activo', 'idpersona', 'documento'], 'required'],
+            [['email', 'avatar', 'status', 'password', 'activo', 'idpersona','documento'], 'required'],
             [['perfil'], 'safe'],
             [['status', 'activo', 'idpersona'], 'integer'],
             [['email', 'avatar', 'password'], 'string', 'max' => 100],
             [['imageFile'], 'file', 'extensions' => 'jpg, jpeg, gif, png', 'maxSize' => 1000000],
-            ['password_actual', 'required', 'on' => 'cambiar_clave'],
-            ['password_nueva', 'required', 'on' => 'cambiar_clave'],
-            ['password_nueva_confirmacion', 'required', 'on' => 'cambiar_clave'],
-            ['password_nueva_confirmacion', 'compare', 'compareAttribute' => 'password_nueva', 'message' => 'La confirmación no coincide', 'on' => 'cambiar_clave'],
-
 
         ];
     }
@@ -112,10 +103,4 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
         return $this->hasOne(Persona::className(), ['idpersona' => 'idpersona']);
     }
 
-    public function scenarios()
-    {
-        $scenarios = parent::scenarios();
-        $scenarios['cambiar_clave'] = ['password_actual', 'password_nueva', 'password_nueva_confirmacion'];
-        return $scenarios;
-    }
 }

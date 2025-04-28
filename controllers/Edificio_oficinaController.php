@@ -6,7 +6,6 @@ use app\models\Edificio;
 use Yii;
 use app\models\EdificioOficina;
 use app\models\EdificioOficinaSearch;
-use app\models\LogPlataforma;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -124,7 +123,7 @@ class Edificio_oficinaController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
-                    LogPlataforma::registrar(18,1,$model->idoficina);  
+
                     return [
                         'title' => "Nueva Oficina",
                         'content' => '<span class="text-success">Oficina Creada Correctamente</span>',
@@ -192,7 +191,7 @@ class Edificio_oficinaController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
-                    LogPlataforma::registrar(18,2,$model->idoficina);  
+
                     return [
                         'title' => "Editar Oficina",
                         'content' => '<span class="text-success">Oficina Editada Correctamente</span>',
@@ -222,7 +221,6 @@ class Edificio_oficinaController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(18,3,$id);  
 
         if($request->isAjax){
             /*

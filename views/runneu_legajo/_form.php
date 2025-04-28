@@ -6,7 +6,7 @@ use kartik\file\FileInput;
 use yii\helpers\Url;
 
 if (isset($model->archivo_adjunto)) {
-    $imagePath = Url::to('uploads_datafam/legajo_runneu/' . $model->archivo_adjunto);
+    $imagePath = Url::to('uploads/legajo_runneu/' . $model->archivo_adjunto);
 
     // Agrega la imagen a la vista previa inicial
     $initialPreview = [
@@ -82,7 +82,7 @@ if (isset($model->archivo_adjunto)) {
             <?= $form->field($model, 'archivo_adjunto_file')->widget(FileInput::classname(), [
                 'options' => ['accept' => 'image/*, .pdf, .docx'],
                 'pluginOptions' => [
-                    'initialPreview' => $model->archivo_adjunto ? [Yii::$app->request->baseUrl . '/uploads_datafam/legajo_runneu/' . $model->archivo_adjunto] : [],
+                    'initialPreview' => $model->archivo_adjunto ? [Yii::$app->request->baseUrl . '/uploads/legajo_runneu/' . $model->archivo_adjunto] : [],
                     'initialPreviewAsData' => true,
                     'initialPreviewFileType' => 'any', // Permite mostrar distintos tipos de archivos
                     'allowedFileExtensions' => ['jpg', 'jpeg', 'gif', 'png', 'pdf', 'docx'],
@@ -93,7 +93,7 @@ if (isset($model->archivo_adjunto)) {
                     'initialPreviewConfig' => $model->archivo_adjunto ? [[
                         'type' => pathinfo($model->archivo_adjunto, PATHINFO_EXTENSION) === 'pdf' ? 'pdf' : 'image',
                         'caption' => $model->archivo_adjunto,
-                        'downloadUrl' => Yii::$app->request->baseUrl . '/uploads_datafam/legajo_runneu/' . $model->archivo_adjunto
+                        'downloadUrl' => Yii::$app->request->baseUrl . '/uploads/legajo_runneu/' . $model->archivo_adjunto
                     ]] : [],
                 ],
             ]); ?>

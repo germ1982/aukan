@@ -94,19 +94,7 @@ CrudAsset::register($this);
                             'id' => 'exportar-pdf-button',
                         ]) .
                         '{toggleData}' .
-                        '{export}'.
-                        Html::a(
-                            'Manual',
-                            Url::to('descargables/manuales/manual_de_carga_de_legajos_en_datafam.pdf'),
-                            [
-                                'data-pjax' => 0,
-                                'data-toggle' => 'tooltip',
-                                'title' => 'Ver Manual de Uso',
-                                'class' => 'btn btn-default',
-                                'target' => '_blank'
-                            ]
-                        )
-                        
+                        '{export}'
                 ],
             ],
             'striped' => true,
@@ -131,12 +119,6 @@ CrudAsset::register($this);
 
 <?php
 $script = <<<JS
-
-$('#ajaxCrudModal').on('hidden.bs.modal', function () {
-    $.pjax.reload({container: '#crud-datatable-pjax'});
-});
-
-
 $(document).on('click', '#exportar-pdf-button', function () {
     let ids = [];
 

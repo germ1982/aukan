@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use app\models\LogPlataforma;
 use Yii;
 use app\models\Organismo;
 use app\models\OrganismoSearch;
@@ -101,7 +100,6 @@ class OrganismoController extends Controller
         
                 ];         
             }else if($model->load($request->post()) && $model->save()){
-                LogPlataforma::registrar(6,1,$model->idorganismo); 
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
                     'title'=> "Nuevo Organismo",
@@ -163,7 +161,6 @@ class OrganismoController extends Controller
                                 Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
                 ];         
             }else if($model->load($request->post()) && $model->save()){
-                LogPlataforma::registrar(6,2,$model->idorganismo); 
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
                     'title'=> "Organismo ".$id,
@@ -208,7 +205,7 @@ class OrganismoController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(6,3,$id); 
+
         if($request->isAjax){
             /*
             *   Process for ajax request

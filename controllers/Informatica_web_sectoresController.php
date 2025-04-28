@@ -5,7 +5,6 @@ namespace app\controllers;
 use Yii;
 use app\models\InformaticaWebSectores;
 use app\models\InformaticaWebSectoresSearch;
-use app\models\LogPlataforma;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -107,7 +106,7 @@ class Informatica_web_sectoresController extends Controller
                         
                         if ($guardado && $model->save()) {
                             $transaction->commit();
-                            LogPlataforma::registrar(21,1,$model->idsector); 
+      
                             return [
                                 'title' => "Nevo Sector",
                                 'content' => '<span class="text-success">Sector Creado Correctamente</span>',
@@ -161,7 +160,7 @@ class Informatica_web_sectoresController extends Controller
                         
                         if ($guardado && $model->save()) {
                             $transaction->commit();
-                            LogPlataforma::registrar(21,2,$model->idsector); 
+      
                             return [
                                 'title' => "Nevo Sector",
                                 'content' => '<span class="text-success">Sector Creado Correctamente</span>',
@@ -192,7 +191,7 @@ class Informatica_web_sectoresController extends Controller
       {
             $request = Yii::$app->request;
             $this->findModel($id)->delete();
-            LogPlataforma::registrar(21,3,$id); 
+
             if ($request->isAjax) {
                   /*
             *   Process for ajax request
