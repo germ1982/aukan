@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="icon" href="favicon.ico" type="image/x-icon">
 <style>
       .linea {
 
@@ -13,13 +14,14 @@
             background: url('../img/web_informatica/logo_rolo.png') no-repeat;
             display: block;
             height: 85px;
-            width: 90%;
+            /* width: 90%; */
       }
 
       .heder_titulo {
             width: 60%;
             height: 85px;
-            background-color: #2B3E4C;
+            background-color: 
+            #1a3c4b;
 
             margin: 0 auto;
             border-radius: 40px 0 0 0;
@@ -29,13 +31,13 @@
       }
 
       .heder_titulo_texto {
+            font-family: 'Roboto', sans-serif!important;
             text-align: center;
             padding: 10px;
+            /* color: #f4dfb9; */
             color: #f4dfb9;
-
-            font-size: 25px;
-            font-family: Arial;
-
+            font-size: 20px;
+            font-family: Arial, Helvetica, sans-serif;
             font-weight: bold;
       }
 
@@ -100,20 +102,31 @@
             -webkit-animation: fadeEffect 2s;
             animation: fadeEffect 2s;
       }
+
       /* Fade in tabs */
-@-webkit-keyframes fadeEffect {
-  from {opacity: 0;}
-  to {opacity: 1;}
-}
+      @-webkit-keyframes fadeEffect {
+            from {
+                  opacity: 0;
+            }
 
-@keyframes fadeEffect {
-  from {opacity: 0;}
-  to {opacity: 1;}
-}
+            to {
+                  opacity: 1;
+            }
+      }
 
-.tabcontent.active {
+      @keyframes fadeEffect {
+            from {
+                  opacity: 0;
+            }
+
+            to {
+                  opacity: 1;
+            }
+      }
+
+      .tabcontent.active {
             display: block;
-        }
+      }
 </style>
 
 <div class="row linea"></div>
@@ -146,12 +159,19 @@
       <?php include 'staff.php' ?>
 </div>
 
+<<<<<<< HEAD
 <div id="Trabajos" class="tabcontent" style="padding-left: 75px;">
       <?php //include 'eventos.php' ?>
       <span class="heder_titulo_texto" style="color: #2B3E4C;">Sitio en desarrollo:</span><br>
       <span class="heder_titulo_texto" style="color: #2B3E4C;">Paciencia... Mira al horizonte y pienza en todo lo maravilloso que esta por llegar...</span>
       <img src='..\img\tarjetas\en_desarrollo.gif'>
+=======
+<div id="Trabajos" class="tabcontent px-4">
+      <?php include 'eventos.php' ?>
+
+>>>>>>> fdc6f831cf1de5f3c17314cdb2f36441e51d2b6a
 </div>
+
 
 <script>
       function openCity(evt, cityName) {

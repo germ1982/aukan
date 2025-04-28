@@ -1,5 +1,6 @@
 <?php
 require_once '../config/db.php'; // Ajusta la ruta según sea necesario
+include 'evento_modal.php';
 
 $db = new BaseDatos();
 if ($db->Iniciar()) {
@@ -11,7 +12,7 @@ if ($db->Iniciar()) {
                   JOIN organismo_dispositivo d on e.iddispositivo = d.iddispositivo 
                   JOIN organismo o on o.idorganismo = d.idorganismo
                   WHERE e.activo = 1
-                  ORDER BY fecha DESC;";
+                  ORDER BY e.fecha DESC;";
       $result = $db->Select($consulta);
       if ($result) {
             mostrar_eventos($result);
@@ -41,3 +42,7 @@ function mostrar_eventos($eventos)
             include 'evento_tarjeta.php';
       }
 }
+
+
+?>
+
