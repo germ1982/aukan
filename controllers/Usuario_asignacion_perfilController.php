@@ -13,7 +13,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * Usuario_asignacion_perfilController implements the CRUD actions for UsuarioAsignacionPerfil model.
+ * Usuario_asignacion_perfilController  UsuarioAsignacionPerfil model.
  */
 class Usuario_asignacion_perfilController extends Controller
 {

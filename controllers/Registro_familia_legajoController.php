@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Configuracion;
 use app\models\LogPlataforma;
+
 use Yii;
 use app\models\RegistroFamiliaLegajo;
 use app\models\RegistroFamiliaLegajoSearch;
@@ -18,7 +19,7 @@ use yii\web\UploadedFile;
 
 
 /**
- * Registro_familia_legajoController implements the CRUD actions for RegistroFamiliaLegajo model.
+ * Registro_familia_legajoController  RegistroFamiliaLegajo model.
  */
 class Registro_familia_legajoController extends Controller
 {

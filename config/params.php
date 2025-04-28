@@ -5,4 +5,5 @@ return [
     'senderEmail' => 'noreply@example.com',
     'senderName' => 'Example.com mailer',
     'rutaUploads' => 'E:/uploads_datafam/',
+    
 ];

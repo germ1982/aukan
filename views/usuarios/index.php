@@ -8,6 +8,7 @@ use yii\bootstrap\Modal;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset;
 
+
 $this->title = 'Usuario';
 $this->params['breadcrumbs'][] = $this->title;
 $clase = 'usuarios-index';

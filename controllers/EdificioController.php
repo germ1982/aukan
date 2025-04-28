@@ -6,6 +6,7 @@ use Yii;
 use app\models\Edificio;
 use app\models\EdificioSearch;
 use app\models\LogPlataforma;
+
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -13,7 +14,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * EdificioController implements the CRUD actions for Edificio model.
+ * EdificioController  Edificio model.
  */
 class EdificioController extends Controller
 {

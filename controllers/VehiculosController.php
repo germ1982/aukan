@@ -17,7 +17,7 @@ use yii\helpers\Html;
 
 
 /**
- * VehiculosController implements the CRUD actions for Vehiculos model.
+ * VehiculosController  Vehiculos model.
  */
 class VehiculosController extends Controller
 {

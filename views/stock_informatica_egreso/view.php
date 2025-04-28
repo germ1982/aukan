@@ -4,6 +4,7 @@ use app\models\Empleado;
 use app\models\Persona;
 use app\models\StockInformaticaEgresoDetalle;
 
+
 function campo($titulo, $contenido)
 {
       echo "<h5><b>$titulo: </b></h5>

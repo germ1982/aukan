@@ -6,6 +6,7 @@ use Yii;
 use app\models\Empleado;
 use app\models\EmpleadoSearch;
 use app\models\LogPlataforma;
+
 use yii\web\UploadedFile;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -15,7 +16,7 @@ use yii\helpers\Html;
 
 
 /**
- * EmpleadoController implements the CRUD actions for Empleado model.
+ * EmpleadoController  Empleado model.
  */
 class EmpleadoController extends Controller
 {

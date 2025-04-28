@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\LogPlataforma;
+
 use Yii;
 use app\models\Persona;
 use app\models\PersonaSearch;
@@ -13,7 +14,7 @@ use yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * PersonaController implements the CRUD actions for Persona model.
+ * PersonaController  Persona model.
  */
 class PersonaController extends Controller
 {

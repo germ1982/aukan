@@ -6,6 +6,7 @@ use Yii;
 use app\models\Inventario;
 use app\models\InventarioSearch;
 use app\models\LogPlataforma;
+
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -13,7 +14,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * InventarioController implements the CRUD actions for Inventario model.
+ * InventarioController  Inventario model.
  */
 class InventarioController extends Controller
 {

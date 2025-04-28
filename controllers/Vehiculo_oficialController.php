@@ -13,7 +13,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * Vehiculo_oficialController implements the CRUD actions for VehiculoOficial model.
+ * Vehiculo_oficialController  VehiculoOficial model.
  */
 class Vehiculo_oficialController extends Controller
 {

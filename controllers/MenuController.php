@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\LogPlataforma;
+
 use app\models\Menu;
 use app\models\MenuSearch;
 use phpDocumentor\Reflection\Types\This;
@@ -14,7 +15,7 @@ use yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * MenuController implements the CRUD actions for Menu model.
+ * MenuController  Menu model.
  */
 class MenuController extends Controller
 {

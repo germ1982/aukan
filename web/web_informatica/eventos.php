@@ -1,4 +1,5 @@
 <?php
+
 require_once '../config/db.php'; // Ajusta la ruta según sea necesario
 include 'evento_modal.php';
 

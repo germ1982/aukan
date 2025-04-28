@@ -20,7 +20,7 @@ use kartik\mpdf\Pdf;
 use yii\helpers\Url;
 
 /**
- * Stock_deposito_egresoController implements the CRUD actions for StockDepositoEgreso model.
+ * Stock_deposito_egresoController  StockDepositoEgreso model.
  */
 class Stock_deposito_egresoController extends Controller
 {

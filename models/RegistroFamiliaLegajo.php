@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "registro_familia_legajo".
+
  *
  * @property int|null $num_legajo
  * @property string|null $dni

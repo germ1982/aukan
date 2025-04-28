@@ -6,6 +6,7 @@ use Yii;
 use app\models\InfIps;
 use app\models\InfIpsSearch;
 use app\models\LogPlataforma;
+
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -13,7 +14,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * Inf_ipsController implements the CRUD actions for InfIps model.
+ * Inf_ipsController  InfIps model.
  */
 class Inf_ipsController extends Controller
 {

@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Configuracion;
 use app\models\ConfiguracionSearch;
+
 use app\models\LogPlataforma;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -13,7 +14,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * ConfiguracionController implements the CRUD actions for Configuracion model.
+ * ConfiguracionController  Configuracion model.
  */
 class ConfiguracionController extends Controller
 {

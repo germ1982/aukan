@@ -13,7 +13,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * Usuario_perfil_permisoController implements the CRUD actions for UsuarioPerfilPermiso model.
+ * Usuario_perfil_permisoController  UsuarioPerfilPermiso model.
  */
 class Usuario_perfil_permisoController extends Controller
 {

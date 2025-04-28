@@ -7,6 +7,7 @@ use Yii;
 use app\models\InformaticaWebEmpleados;
 use app\models\InformaticaWebEmpleadosSearch;
 use app\models\LogPlataforma;
+
 use PhpParser\Node\Stmt\TryCatch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -15,7 +16,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * Informatica_web_empleadosController implements the CRUD actions for InformaticaWebEmpleados model.
+ * Informatica_web_empleadosController  InformaticaWebEmpleados model.
  */
 class Informatica_web_empleadosController extends Controller
 {

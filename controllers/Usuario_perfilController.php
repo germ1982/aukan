@@ -14,7 +14,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * Usuario_perfilController implements the CRUD actions for UsuarioPerfil model.
+ * Usuario_perfilController  UsuarioPerfil model.
  */
 class Usuario_perfilController extends Controller
 {

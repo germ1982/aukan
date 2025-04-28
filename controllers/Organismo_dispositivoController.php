@@ -3,7 +3,9 @@
 namespace app\controllers;
 
 use app\models\LogPlataforma;
+
 use Yii;
+
 use app\models\OrganismoDispositivo;
 use app\models\OrganismoDispositivoSearch;
 use yii\web\Controller;
@@ -13,7 +15,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * Organismo_dispositivoController implements the CRUD actions for OrganismoDispositivo model.
+ * Organismo_dispositivoController  OrganismoDispositivo model.
  */
 class Organismo_dispositivoController extends Controller
 {

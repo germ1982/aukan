@@ -13,7 +13,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * Configuracion_tipoController implements the CRUD actions for ConfiguracionTipo model.
+ * Configuracion_tipoController  ConfiguracionTipo model.
  */
 class Configuracion_tipoController extends Controller
 {

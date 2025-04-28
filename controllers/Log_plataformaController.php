@@ -12,7 +12,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * Log_plataformaController implements the CRUD actions for LogPlataforma model.
+ * Log_plataformaController  LogPlataforma model.
  */
 class Log_plataformaController extends Controller
 {

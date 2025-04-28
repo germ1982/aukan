@@ -7,6 +7,7 @@ use Yii;
 use app\models\EdificioOficina;
 use app\models\EdificioOficinaSearch;
 use app\models\LogPlataforma;
+
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -15,7 +16,7 @@ use yii\helpers\Html;
 use yii\web\UploadedFile;
 
 /**
- * Edificio_oficinaController implements the CRUD actions for EdificioOficina model.
+ * Edificio_oficinaController  EdificioOficina model.
  */
 class Edificio_oficinaController extends Controller
 {

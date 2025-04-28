@@ -9,6 +9,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
+
 $model->fecha = date('d/m/Y', strtotime($model->fecha));
 
 $initialPreview = [];

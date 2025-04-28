@@ -15,6 +15,7 @@ $columna_5 = '25%';
 $columna_6 = '20%';
 $columna_7 = '7%';
 
+
 return [
     [
         'class' => '\kartik\grid\DataColumn',

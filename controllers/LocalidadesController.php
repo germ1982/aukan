@@ -13,7 +13,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * LocalidadesController implements the CRUD actions for Localidades model.
+ * LocalidadesController  Localidades model.
  */
 class LocalidadesController extends Controller
 {

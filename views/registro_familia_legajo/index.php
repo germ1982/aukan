@@ -7,10 +7,6 @@ use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset;
 use johnitvn\ajaxcrud\BulkButtonWidget;
 
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\RunneuLegajoSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
 $this->title = 'Legajos';
 $this->params['breadcrumbs'][] = $this->title;
 

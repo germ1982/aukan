@@ -16,7 +16,6 @@ $layoutDate = <<< HTML
         <i class="glyphicon glyphicon-remove"></i>
     </span>
 HTML;
-
 $columna_1 = '5%';//id
 $columna_2 = '25%';//usuario
 $columna_3 = '10%';//fecha

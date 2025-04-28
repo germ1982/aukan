@@ -166,9 +166,6 @@ if (!isset($id) || $id == null) {
                                           </li>
                                           <li class="divider"></li>
 
-
-                                          
-
                                           <li>
                                                 <?=
                                                 Yii::$app->user->isGuest ?

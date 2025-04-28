@@ -9,7 +9,6 @@ use yii\widgets\DetailView;
 use yii\helpers\Inflector;
 
 
-
 $usuario = Usuarios::findOne($model->idusuario);
 $persona = Persona::findOne($usuario->idpersona);
 

@@ -5,8 +5,7 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "informatica_web_eventos".
- *
+
  * @property int $idevento
  * @property string|null $fecha
  * @property string|null $titulo

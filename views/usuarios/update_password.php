@@ -2,6 +2,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+
 $form = ActiveForm::begin([
     'id' => 'form-cambiar-pass',
     'enableClientValidation' => true,

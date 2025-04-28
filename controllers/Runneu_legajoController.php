@@ -1,7 +1,6 @@
 <?php
 
 namespace app\controllers;
-
 use Yii;
 use app\models\RunneuLegajo;
 use app\models\RunneuLegajoSearch;

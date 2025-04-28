@@ -22,6 +22,7 @@ function campo($contenido, $esArchivo = false)
     echo "$contenido";
 }
 
+
 ?>
 
 <div class="runneu-legajo-view">

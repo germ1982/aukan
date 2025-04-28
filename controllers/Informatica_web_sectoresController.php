@@ -6,6 +6,7 @@ use Yii;
 use app\models\InformaticaWebSectores;
 use app\models\InformaticaWebSectoresSearch;
 use app\models\LogPlataforma;
+
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -13,7 +14,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * Informatica_web_sectoresController implements the CRUD actions for InformaticaWebSectores model.
+ * Informatica_web_sectoresController  InformaticaWebSectores model.
  */
 class Informatica_web_sectoresController extends Controller
 {

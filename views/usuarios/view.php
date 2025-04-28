@@ -13,6 +13,7 @@ function campo($titulo, $contenido)
       </p>";
 }
 
+
 $model_persona = Persona::findOne($model->idpersona);
 $mysql = "  SELECT GROUP_CONCAT(c.descripcion SEPARATOR ', ') AS descripcion
             FROM usuario_asignacion_perfil p

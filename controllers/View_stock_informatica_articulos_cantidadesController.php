@@ -12,7 +12,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * View_stock_informatica_articulos_cantidadesController implements the CRUD actions for ViewStockInformaticaArticulosCantidades model.
+ * View_stock_informatica_articulos_cantidadesController  ViewStockInformaticaArticulosCantidades model.
  */
 class View_stock_informatica_articulos_cantidadesController extends Controller
 {

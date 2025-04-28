@@ -16,7 +16,7 @@ use yii\helpers\Html;
 use yii\web\UploadedFile;
 
 /**
- * UsuariosController implements the CRUD actions for Usuarios model.
+ * UsuariosController  Usuarios model.
  */
 class UsuariosController extends Controller
 {

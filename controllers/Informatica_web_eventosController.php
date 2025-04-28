@@ -6,6 +6,7 @@ use Yii;
 use app\models\InformaticaWebEventos;
 use app\models\InformaticaWebEventosSearch;
 use app\models\LogPlataforma;
+
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -14,7 +15,7 @@ use yii\helpers\Html;
 use yii\web\UploadedFile;
 
 /**
- * Informatica_web_eventosController implements the CRUD actions for InformaticaWebEventos model.
+ * Informatica_web_eventosController  InformaticaWebEventos model.
  */
 class Informatica_web_eventosController extends Controller
 {

@@ -7,9 +7,7 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\RegistroFamiliaLegajo;
 
-/**
- * RegistroFamiliaLegajoSearch represents the model behind the search form about `app\models\RegistroFamiliaLegajo`.
- */
+
 class RegistroFamiliaLegajoSearch extends RegistroFamiliaLegajo
 {
     /**
