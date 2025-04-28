@@ -13,7 +13,7 @@ if ($db->Iniciar()) {
                   JOIN organismo o on o.idorganismo = d.idorganismo
                   join configuracion tec on tec.id_configuracion = e.tipo_evento
                   WHERE e.activo = 1
-                  ORDER BY fecha DESC;";
+                  ORDER BY e.fecha DESC;";
       $result = $db->Select($consulta);
       if ($result) {
             mostrar_eventos($result);

@@ -31,13 +31,21 @@
       }
 
       .heder_titulo_texto {
+            font-family: 'Roboto', sans-serif!important;
             text-align: center;
             padding: 10px;
+<<<<<<< HEAD
             /* color: #f4dfb9; */
             color:#fff2ce;
 
             font-size: 20px;
             font-family: Arial, Helvetica, sans-serif;
+=======
+            color: #f4dfb9;
+            font-size: 20px !important;
+            font-size: 25px;
+            font-family: Arial;
+>>>>>>> 1ddc30f7b5c7f466d64e56af08552cc293bea1c8
 
             font-weight: bold;
       }
@@ -103,20 +111,31 @@
             -webkit-animation: fadeEffect 2s;
             animation: fadeEffect 2s;
       }
+
       /* Fade in tabs */
-@-webkit-keyframes fadeEffect {
-  from {opacity: 0;}
-  to {opacity: 1;}
-}
+      @-webkit-keyframes fadeEffect {
+            from {
+                  opacity: 0;
+            }
 
-@keyframes fadeEffect {
-  from {opacity: 0;}
-  to {opacity: 1;}
-}
+            to {
+                  opacity: 1;
+            }
+      }
 
-.tabcontent.active {
+      @keyframes fadeEffect {
+            from {
+                  opacity: 0;
+            }
+
+            to {
+                  opacity: 1;
+            }
+      }
+
+      .tabcontent.active {
             display: block;
-        }
+      }
 </style>
 
 <div class="row linea"></div>
@@ -149,7 +168,7 @@
       <?php include 'staff.php' ?>
 </div>
 
-<div id="Trabajos" class="tabcontent px-4" >
+<div id="Trabajos" class="tabcontent px-4">
       <?php include 'eventos.php' ?>
 
 </div>
