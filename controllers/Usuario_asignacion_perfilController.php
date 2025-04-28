@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use app\models\LogPlataforma;
 use Yii;
 use app\models\UsuarioAsignacionPerfil;
 use app\models\UsuarioAsignacionPerfilSearch;
@@ -102,7 +101,6 @@ class Usuario_asignacion_perfilController extends Controller
         
                 ];         
             }else if($model->load($request->post()) && $model->save()){
-                LogPlataforma::registrar(16,1,$model->idingreso); 
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
                     'title'=> "Create new UsuarioAsignacionPerfil",
@@ -165,7 +163,6 @@ class Usuario_asignacion_perfilController extends Controller
                                 Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
                 ];         
             }else if($model->load($request->post()) && $model->save()){
-                LogPlataforma::registrar(16,2,$model->idingreso); 
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
                     'title'=> "UsuarioAsignacionPerfil #".$idusuario, $idperfil,
@@ -211,7 +208,7 @@ class Usuario_asignacion_perfilController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($idusuario, $idperfil)->delete();
-        LogPlataforma::registrar(16,3,$idperfil); 
+
         if($request->isAjax){
             /*
             *   Process for ajax request

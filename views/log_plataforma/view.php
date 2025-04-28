@@ -1,4 +1,4 @@
-<?php
+º<?php
 
 use app\models\LogPlataforma;
 use app\models\Persona;

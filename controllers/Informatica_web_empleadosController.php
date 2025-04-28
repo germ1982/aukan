@@ -109,7 +109,7 @@ class Informatica_web_empleadosController extends Controller
                         try {
                               if ($guardado && $model->save()) {
                                     $transaction->commit();
-                                    LogPlataforma::registrar(19,1,$model->idwebempleado); 
+
                                     return [
                                           'title' => "Nueva Reseña de Empleado",
                                           'content' => '<span class="text-success">Nueva Reseña de Empleado Creada Correctamente</span>',
@@ -171,7 +171,6 @@ class Informatica_web_empleadosController extends Controller
 
                         if ($guardado && $model->save()) {
                               $transaction->commit();
-                              LogPlataforma::registrar(19,2,$model->idwebempleado); 
                               return [
                                     'title' => "Editar Reseña de Empleado",
                                     'content' => '<span class="text-success">Reseña de Empleado Editada Correctamente</span>',
@@ -194,7 +193,7 @@ class Informatica_web_empleadosController extends Controller
       {
             $request = Yii::$app->request;
             $this->findModel($id)->delete();
-            LogPlataforma::registrar(19,3,$id); 
+
             if ($request->isAjax) {
                   /*
             *   Process for ajax request

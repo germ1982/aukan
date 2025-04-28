@@ -108,7 +108,7 @@ class Inf_ipsController extends Controller
 
                         if ($guardado && $model->save()) {
                               $transaction->commit();
-                              LogPlataforma::registrar(2,1,$model->idip); 
+
                               return [
                                     'title' => "Nueva Ip",
                                     'content' => '<span class="text-success">Nueva Ip Creada Correctamente</span>',
@@ -162,7 +162,6 @@ class Inf_ipsController extends Controller
 
                         if ($guardado && $model->save()) {
                               $transaction->commit();
-                              LogPlataforma::registrar(2,2,$model->idip); 
                               return [
                                     'title' => "Editar Ip",
                                     'content' => '<span class="text-success">Ip Editada Correctamente</span>',
@@ -187,7 +186,7 @@ class Inf_ipsController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(2,3,$id); 
+
         if($request->isAjax){
             /*
             *   Process for ajax request
@@ -259,7 +258,7 @@ class Inf_ipsController extends Controller
         $model->idoficina = null;
         $model->observacion = null;
         $model->save();
-        LogPlataforma::registrar(2,2,$model->idip); 
+
         Yii::$app->response->format = Response::FORMAT_JSON;
         return [
             //'forceReload'=>'#crud-datatable-pjax',

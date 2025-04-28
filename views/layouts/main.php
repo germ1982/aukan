@@ -4,7 +4,6 @@ use yii\helpers\Html;
 use app\assets\AppAsset;
 use app\models\Empleado;
 use yii\bootstrap\Modal;
-use yii\helpers\Url;
 
 AppAsset::register($this);
 //$this->registerCssFile("@web/css/datafam.css", ['depends' => [\yii\web\YiiAsset::className(), \yii\bootstrap\BootstrapAsset::className()]]);
@@ -144,33 +143,21 @@ if (!isset($id) || $id == null) {
                               <div class="dropdown-menu">
                                     <ul class="list-unstyled">
                                           <li class="divider"></li>
-
-                                          <!-- <li>
-                                                <a href="#" onclick="$('#modal-cambiar-pass').modal('show'); return false;">
-                                                      <i class="fa fa-lock"></i> Cambiar Contraseña
-                                                </a>
-                                          </li>
-                                          <li class="divider"></li> -->
-
                                           <li>
-                                                <?php 
 
-                                                            $url = Url::to(['/usuarios/update_password']);
-                                                            echo Html::a('<i class="fa fa-lock"></i> Cambiar Contraseña', $url, [
-                                                            'role' => 'modal-remote', 'title' => 'Cambiar Contraseña',
-                                                            'data-confirm' => false, 'data-method' => false,
-                                                            'data-request-method' => 'post',
-                                                            'data-toggle' => 'tooltip',
-                                                            ]);
-                                                ?>
                                           </li>
                                           <li class="divider"></li>
+                                          <li>
+
+                                          </li>
+                                          <li class="divider"></li>
+                                          <li>
 
                                           <li>
                                                 <?=
                                                 Yii::$app->user->isGuest ?
                                                       Html::a('Ingresar', ['site/login'], ['class' => 'btn btn-success']) :
-                                                      Html::a('<i class="fa fa-power-off"></i> Cerrar Sesion', ['/site/logout'], ['role' => "menuitem"])
+                                                      Html::a('<i class="fa fa-power-off"></i> Logout', ['/site/logout'], ['role' => "menuitem"])
                                                 ?>
                                           </li>
                                     </ul>
@@ -220,7 +207,7 @@ if (!isset($id) || $id == null) {
                               'options' => [
                                     'tabindex' => false // important for Select2 to work properly
                               ],
-                              'size' => Modal::SIZE_DEFAULT,
+                              'size' => Modal::SIZE_SMALL,
                               'clientOptions' => [
                                     'backdrop' => 'static'
                               ],
@@ -229,26 +216,15 @@ if (!isset($id) || $id == null) {
                         echo "<div id='content_abm'></div>";
                         ?>
                         <?php Modal::end(); ?>
-
-                        
-
                         <?php
-
                         $this->registerJs(
                               "$('#modal_main').on('hidden.bs.modal', function() {
-                                    if(!$(\"#modal_abm\").hasClass('fade modal in'))
-                                    location.reload();
-                              });
-                              $(window).on(\"beforeunload\", function () {
-                                    $('#loading').show();
-                              });
-                              
-                              $('#modal-cambiar-pass').on('shown.bs.modal', function() {
-                                    $('.mostrar-checkbox').off('change').on('change', function() {
-                                          const target = $(this).data('target');
-                                          $(target).attr('type', this.checked ? 'text' : 'password');
-                                    });
-                              });"
+                        if(!$(\"#modal_abm\").hasClass('fade modal in'))
+                            location.reload();
+                    });
+                    $(window).on(\"beforeunload\", function () {
+                        $('#loading').show();
+                    });"
                         );
                         ?>
                   </section>

@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use app\models\LogPlataforma;
 use Yii;
 use app\models\StockDepositoEgreso;
 use app\models\StockDepositoEgresoDetalle;
@@ -152,7 +151,7 @@ class Stock_deposito_egresoController extends Controller
                     }
 
                     $transaction->commit();
-                    LogPlataforma::registrar(26,1,$model->idegreso); 
+
                     return [
                         'title' => "Nuevo Egreso",
                         'content' => '<span class="text-success">Egreso Creado Correctamente</span>',
@@ -267,7 +266,7 @@ class Stock_deposito_egresoController extends Controller
                         }
                     }
                     $transaction->commit();
-                    LogPlataforma::registrar(26,2,$model->idegreso); 
+
                     return [
                         'title' => "Editar Egreso",
                         'content' => '<span class="text-success">Egreso editado Correctamente</span>',
@@ -331,7 +330,7 @@ class Stock_deposito_egresoController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(26,3,$id); 
+
         if ($request->isAjax) {
             /*
             *   Process for ajax request

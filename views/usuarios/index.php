@@ -56,7 +56,6 @@ CrudAsset::register($this);
 
                         <?= GridView::widget([
                             'id' => 'crud-datatable',
-                            'tableOptions' => ['class' => 'custom-grid'],
                             'dataProvider' => $dataProvider,
                             'filterModel' => $searchModel,
                             'pjax' => false,

@@ -5,7 +5,6 @@ namespace app\controllers;
 use Yii;
 use app\models\Articulo;
 use app\models\ArticuloSearch;
-use app\models\LogPlataforma;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -126,8 +125,7 @@ class ArticuloController extends Controller
                     $tmpfile->saveAs('img/articulos/' . $nuevo_nombre);
                     $model->save();
                 }
-
-                LogPlataforma::registrar(11,1,$model->idarticulo);                   
+                    
                 
                     return [
                         'title' => "Nuevo Articulo",
@@ -196,7 +194,6 @@ class ArticuloController extends Controller
                 if ($guardado && $model->save()) {
                     
                     $transaction->commit();
-                    LogPlataforma::registrar(11,2,$model->idarticulo);   
                 
                                         return [
                         'title' => "Editar Articulo",
@@ -224,7 +221,6 @@ class ArticuloController extends Controller
 
         if ($this->findModel($id)->delete()) {
             Yii::$app->response->format = Response::FORMAT_JSON;
-            LogPlataforma::registrar(11,3,$id);   
             return [
                 'title' => "Eliminado",
                 'content' => '<span class="text-success">Usuario Eliminado Correctamente</span>',

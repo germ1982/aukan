@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use app\models\LogPlataforma;
 use Yii;
 use app\models\VehiculoOficialMovimiento;
 use app\models\VehiculoOficialMovimientoSearch;
@@ -117,7 +116,7 @@ class Vehiculo_oficial_movimientoController extends Controller
 
                   if ($guardado && $model->save()) {
                         $transaction->commit();
-                        LogPlataforma::registrar(29,1,$model->idmovimiento); 
+
 
                         return [
                               'title' => "Nuevo Movimiento",
@@ -181,7 +180,7 @@ class Vehiculo_oficial_movimientoController extends Controller
 
                   if ($guardado && $model->save()) {
                         $transaction->commit();
-                        LogPlataforma::registrar(29,2,$model->idmovimiento); 
+
 
                         return [
                               'title' => "Editar Movimiento",
@@ -212,7 +211,7 @@ class Vehiculo_oficial_movimientoController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(29,3,$id); 
+
         if ($request->isAjax) {
             /*
             *   Process for ajax request

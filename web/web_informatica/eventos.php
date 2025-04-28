@@ -5,14 +5,13 @@ include 'evento_modal.php';
 
 $db = new BaseDatos();
 if ($db->Iniciar()) {
-      $consulta = "SELECT e.idevento, e.descripcion, e.activo, e.fotos, e.titulo, tec.descripcion as tipo_evento,
+      $consulta = "SELECT e.idevento, e.descripcion, e.activo, e.fotos, e.titulo,
                   DATE_FORMAT(e.fecha, '%d/%m/%Y') AS fecha,
                   o.descripcion as organismo,
                   d.descripcion as dispositivo
                   FROM informatica_web_eventos e 
                   JOIN organismo_dispositivo d on e.iddispositivo = d.iddispositivo 
                   JOIN organismo o on o.idorganismo = d.idorganismo
-                  join configuracion tec on tec.id_configuracion = e.tipo_evento
                   WHERE e.activo = 1
                   ORDER BY e.fecha DESC;";
       $result = $db->Select($consulta);
@@ -27,25 +26,22 @@ if ($db->Iniciar()) {
 
 function mostrar_eventos($eventos)
 {
+      /* echo '<div class="row titulo_seccion" style="width: 90%; margin: 0 auto;" ;>
+    <u>Staff</u>
+    </div>
+    <br>'; */
 
-      echo '<div class="row" style="padding-left:10%;padding-right:10%">';
-
-      $contador = 0;
       foreach ($eventos as $e) {
-            $contador++;
             $fecha = $e['fecha'];
             $titulo = $e['titulo'];
             $organismo = $e['organismo'];
             $dispositivo = $e['dispositivo'];
             $descripcion = $e['descripcion'];
             $fotos = $e['fotos'];
-            $tipo_evento = $e['tipo_evento'];
 
-            include 'evento_tarjeta_independiente.php';
+      
+            include 'evento_tarjeta.php';
       }
-
-      echo '</div>'; // cierre de row
-
 }
 
 

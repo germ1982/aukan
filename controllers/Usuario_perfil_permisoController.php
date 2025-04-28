@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use app\models\LogPlataforma;
 use Yii;
 use app\models\UsuarioPerfilPermiso;
 use app\models\UsuarioPerfilPermisoSearch;
@@ -109,7 +108,6 @@ class Usuario_perfil_permisoController extends Controller
                   } else if ($model->load($request->post())) {
 
                         if ($model->save()) {
-                              LogPlataforma::registrar(14,1,$model->idpermiso); 
                               return [
                                     'title' => "Nuevo Permiso de Perfil",
                                     'content' => '<span class="text-success">Permiso De Perfil creado Correctamente</span>',
@@ -160,7 +158,6 @@ class Usuario_perfil_permisoController extends Controller
                         ];
                   } else if ($model->load($request->post())) {
                         if ($model->save()) {
-                              LogPlataforma::registrar(14,2,$model->idpermiso); 
                               return [
                                     'title' => "Nuevo Permiso de Perfil",
                                     'content' => '<span class="text-success">Permiso De Perfil creado Correctamente</span>',
@@ -192,7 +189,7 @@ class Usuario_perfil_permisoController extends Controller
       {
             $request = Yii::$app->request;
             $this->findModel($id)->delete();
-            LogPlataforma::registrar(14,3,$id); 
+
             if ($request->isAjax) {
                   /*
             *   Process for ajax request

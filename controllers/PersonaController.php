@@ -114,7 +114,7 @@ class PersonaController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-                      LogPlataforma::registrar(4,1,$model->idpersona); 
+
                       return [
                           'title' => "Nueva Persona",
                           'content' => '<span class="text-success">Nodo Creada Correctamente</span>',
@@ -167,7 +167,7 @@ class PersonaController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-                      LogPlataforma::registrar(4,2,$model->idpersona); 
+
                       return [
                           'title' => "Editar Persona",
                           'content' => '<span class="text-success">Persona Editada Correctamente</span>',
@@ -197,7 +197,6 @@ class PersonaController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(4,3,$id); 
 
         return $this->redirect(['index']);
     }

@@ -102,7 +102,6 @@ class EdificioController extends Controller
         
                 ];         
             }else if($model->load($request->post()) && $model->save()){
-                LogPlataforma::registrar(17,1,$model->idedificio); 
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
                     'title'=> "Create new Edificio",
@@ -164,7 +163,6 @@ class EdificioController extends Controller
                                 Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
                 ];         
             }else if($model->load($request->post()) && $model->save()){
-                LogPlataforma::registrar(17,2,$model->idedificio); 
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
                     'title'=> "Edificio #".$id,
@@ -209,7 +207,7 @@ class EdificioController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(17,3,$id); 
+
         if($request->isAjax){
             /*
             *   Process for ajax request

@@ -16,8 +16,8 @@ class RegistroFamiliaLegajoSearch extends RegistroFamiliaLegajo
     public function rules()
     {
         return [
-            [['id', 'tipo_legajo'], 'integer'],
-            [['num_legajo','dni', 'archivo_adjunto', 'nombre', 'apellido'], 'safe'],
+            [['num_legajo', 'id', 'tipo_legajo'], 'integer'],
+            [['dni', 'archivo_adjunto', 'nombre', 'apellido'], 'safe'],
         ];
     }
 
@@ -54,12 +54,12 @@ class RegistroFamiliaLegajoSearch extends RegistroFamiliaLegajo
         }
 
         $query->andFilterWhere([
+            'num_legajo' => $this->num_legajo,
             'id' => $this->id,
             'tipo_legajo' => $this->tipo_legajo,
         ]);
 
         $query->andFilterWhere(['like', 'dni', $this->dni])
-        ->andFilterWhere(['like', 'num_legajo', $this->num_legajo])
             ->andFilterWhere(['like', 'archivo_adjunto', $this->archivo_adjunto])
             ->andFilterWhere(['like', 'nombre', $this->nombre])
             ->andFilterWhere(['like', 'apellido', $this->apellido]);

@@ -115,7 +115,7 @@ class ConfiguracionController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-                      LogPlataforma::registrar(12,1,$model->id_configuracion);  
+
                       return [
                           'title' => 'Nuevo Dato',
                           'content' => '<span class="text-success">Dato Creado Correctamente</span>',
@@ -175,7 +175,7 @@ class ConfiguracionController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-                      LogPlataforma::registrar(12,2,$model->id_configuracion);  
+
                       return [
                           'title' => 'Editar Dato Id: '.$id,
                           'content' => '<span class="text-success">Dato Editado Correctamente</span>',
@@ -207,7 +207,7 @@ class ConfiguracionController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(12,3,$id);  
+
         if($request->isAjax){
             /*
             *   Process for ajax request
