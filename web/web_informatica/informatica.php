@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="icon" href="favicon.ico" type="image/x-icon">
 <style>
       .linea {
 
@@ -13,13 +14,14 @@
             background: url('../img/web_informatica/logo_rolo.png') no-repeat;
             display: block;
             height: 85px;
-            width: 90%;
+            /* width: 90%; */
       }
 
       .heder_titulo {
             width: 60%;
             height: 85px;
-            background-color: #2B3E4C;
+            background-color: 
+            #1a3c4b;
 
             margin: 0 auto;
             border-radius: 40px 0 0 0;
@@ -31,10 +33,11 @@
       .heder_titulo_texto {
             text-align: center;
             padding: 10px;
-            color: #f4dfb9;
+            /* color: #f4dfb9; */
+            color:#fff2ce;
 
-            font-size: 25px;
-            font-family: Arial;
+            font-size: 20px;
+            font-family: Arial, Helvetica, sans-serif;
 
             font-weight: bold;
       }
