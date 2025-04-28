@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\LogPlataforma;
 use Yii;
 use app\models\StockInformaticaEgreso;
 use app\models\StockInformaticaEgresoDetalle;
@@ -19,7 +20,7 @@ use kartik\mpdf\Pdf;
 use yii\helpers\Url;
 
 /**
- * Stock_informatica_egresoController  StockInformaticaEgreso model.
+ * Stock_informatica_egresoController implements the CRUD actions for StockInformaticaEgreso model.
  */
 class Stock_informatica_egresoController extends Controller
 {
@@ -151,7 +152,7 @@ class Stock_informatica_egresoController extends Controller
                     }
 
                     $transaction->commit();
-
+                    LogPlataforma::registrar(24,1,$model->idegreso); 
                     return [
                         'title' => "Nuevo Egreso",
                         'content' => '<span class="text-success">Egreso Creado Correctamente</span>',
@@ -266,7 +267,7 @@ class Stock_informatica_egresoController extends Controller
                         }
                     }
                     $transaction->commit();
-
+                    LogPlataforma::registrar(24,2,$model->idegreso); 
                     return [
                         'title' => "Editar Egreso",
                         'content' => '<span class="text-success">Egreso editado Correctamente</span>',
@@ -330,7 +331,7 @@ class Stock_informatica_egresoController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-
+        LogPlataforma::registrar(24,3,$id); 
         if ($request->isAjax) {
             /*
             *   Process for ajax request

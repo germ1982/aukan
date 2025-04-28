@@ -1,6 +1,7 @@
 <?php
 
 namespace app\controllers;
+
 use Yii;
 use app\models\RunneuLegajo;
 use app\models\RunneuLegajoSearch;
@@ -50,7 +51,7 @@ class Runneu_legajoController extends Controller
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                'title' => "Runneu Legajo",
+                'title' => "Runneu - Legajo - $num_legajo - DNI: $dni",
                 'content' => $this->renderAjax('view', [
                     'model' => $model,
                     'num_legajo' => $num_legajo,

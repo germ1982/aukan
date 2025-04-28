@@ -16,7 +16,7 @@ use yii\helpers\Html;
 use yii\helpers\Json;
 
 /**
- * Stock_informatica_egreso_detalleController  StockInformaticaEgresoDetalle model.
+ * Stock_informatica_egreso_detalleController implements the CRUD actions for StockInformaticaEgresoDetalle model.
  */
 class Stock_informatica_egreso_detalleController extends Controller
 {

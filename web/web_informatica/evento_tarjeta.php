@@ -1,4 +1,5 @@
 <?php
+
 use yii\bootstrap\Carousel;
 
 $imageNames = explode(',', $fotos); // Convertir el string de fotos a un array

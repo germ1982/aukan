@@ -1,4 +1,4 @@
-º<?php
+<?php
 
 use app\models\LogPlataforma;
 use app\models\Persona;
@@ -7,6 +7,7 @@ use app\models\Usuarios;
 use kartik\helpers\Html;
 use yii\widgets\DetailView;
 use yii\helpers\Inflector;
+
 
 
 $usuario = Usuarios::findOne($model->idusuario);

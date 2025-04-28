@@ -2,10 +2,9 @@
 
 namespace app\controllers;
 
-use app\models\LogPlataforma;
 use Yii;
-use app\models\VehiculoOficial;
-use app\models\VehiculoOficialSearch;
+use app\models\LogPlataforma;
+use app\models\LogPlataformaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -13,9 +12,9 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * Vehiculo_oficialController implements the CRUD actions for VehiculoOficial model.
+ * Log_plataformaController implements the CRUD actions for LogPlataforma model.
  */
-class Vehiculo_oficialController extends Controller
+class Log_plataformaController extends Controller
 {
     /**
      * @inheritdoc
@@ -34,12 +33,12 @@ class Vehiculo_oficialController extends Controller
     }
 
     /**
-     * Lists all VehiculoOficial models.
+     * Lists all LogPlataforma models.
      * @return mixed
      */
     public function actionIndex()
     {    
-        $searchModel = new VehiculoOficialSearch();
+        $searchModel = new LogPlataformaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -50,7 +49,7 @@ class Vehiculo_oficialController extends Controller
 
 
     /**
-     * Displays a single VehiculoOficial model.
+     * Displays a single LogPlataforma model.
      * @param integer $id
      * @return mixed
      */
@@ -60,12 +59,11 @@ class Vehiculo_oficialController extends Controller
         if($request->isAjax){
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                    'title'=> "Vehiculos Oficiales".$id,
+                    'title'=> "Log Numero ".$id,
                     'content'=>$this->renderAjax('view', [
                         'model' => $this->findModel($id),
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"])
                 ];    
         }else{
             return $this->render('view', [
@@ -75,7 +73,7 @@ class Vehiculo_oficialController extends Controller
     }
 
     /**
-     * Creates a new VehiculoOficial model.
+     * Creates a new LogPlataforma model.
      * For ajax request will return json object
      * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -83,7 +81,7 @@ class Vehiculo_oficialController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->request;
-        $model = new VehiculoOficial();  
+        $model = new LogPlataforma();  
 
         if($request->isAjax){
             /*
@@ -92,32 +90,31 @@ class Vehiculo_oficialController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Nuevo Vehiculo Oficial",
+                    'title'=> "Create new LogPlataforma",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
         
                 ];         
             }else if($model->load($request->post()) && $model->save()){
-                LogPlataforma::registrar(28,1,$model->idvehiculo); 
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Create new VehiculoOficial",
-                    'content'=>'<span class="text-success">Create VehiculoOficial success</span>',
+                    'title'=> "Create new LogPlataforma",
+                    'content'=>'<span class="text-success">Create LogPlataforma success</span>',
                     'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
                             Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
         
                 ];         
             }else{           
                 return [
-                    'title'=> "Nuevo Vehiculo Oficial",
+                    'title'=> "Create new LogPlataforma",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
         
                 ];         
             }
@@ -126,7 +123,7 @@ class Vehiculo_oficialController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->idvehiculo]);
+                return $this->redirect(['view', 'id' => $model->idlog]);
             } else {
                 return $this->render('create', [
                     'model' => $model,
@@ -137,7 +134,7 @@ class Vehiculo_oficialController extends Controller
     }
 
     /**
-     * Updates an existing VehiculoOficial model.
+     * Updates an existing LogPlataforma model.
      * For ajax request will return json object
      * and for non-ajax request if update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
@@ -146,58 +143,58 @@ class Vehiculo_oficialController extends Controller
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
-        $model = $this->findModel($id);
+        $model = $this->findModel($id);       
 
-        if ($request->isAjax) {
+        if($request->isAjax){
+            /*
+            *   Process for ajax request
+            */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            if ($request->isGet) {
+            if($request->isGet){
                 return [
-                    'title' => 'Editar Vehiculo',
-                    'content' => $this->renderAjax('update', [
+                    'title'=> "Update LogPlataforma #".$id,
+                    'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer' =>
-                    Html::button('Cerrar', [
-                        'id' => 'btnCerrar',
-                        'class' => 'btn btn-default pull-left',
-                        'data-dismiss' => 'modal',
-                    ]) .
-                        Html::button('Guardar', [
-                            'id' => 'btnGuardar',
-                            'class' => 'btn btn-primary',
-                            'type' => 'submit',
-                        ]),
-                ];
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
+                ];         
+            }else if($model->load($request->post()) && $model->save()){
+                return [
+                    'forceReload'=>'#crud-datatable-pjax',
+                    'title'=> "LogPlataforma #".$id,
+                    'content'=>$this->renderAjax('view', [
+                        'model' => $model,
+                    ]),
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                ];    
+            }else{
+                 return [
+                    'title'=> "Update LogPlataforma #".$id,
+                    'content'=>$this->renderAjax('update', [
+                        'model' => $model,
+                    ]),
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
+                ];        
             }
-            else if ($model->load($request->post())) {
-                  $transaction = Yii::$app->db->beginTransaction();
-                  $guardado = true;
-
-                  
-                  if ($guardado && $model->save()) {
-                      $transaction->commit();
-                      LogPlataforma::registrar(28,2,$model->idvehiculo); 
-                      return [
-                          'title' => "Editar Vehiculo",
-                          'content' => '<span class="text-success">Vehiculo Editado Correctamente</span>',
-                          'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
-                      ];
-                  }
-              }
-              return [
-                  'title' => "Editar Vehiculo Faltan datos!!! Complete Los datos Faltantes!!!",
-                  'content' => $this->renderAjax('create', [
-                      'model' => $model,
-                  ]),
-                  'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                      Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
-  
-              ];
-          }
+        }else{
+            /*
+            *   Process for non-ajax request
+            */
+            if ($model->load($request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->idlog]);
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
+        }
     }
 
     /**
-     * Delete an existing VehiculoOficial model.
+     * Delete an existing LogPlataforma model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -207,7 +204,7 @@ class Vehiculo_oficialController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(28,3,$id); 
+
         if($request->isAjax){
             /*
             *   Process for ajax request
@@ -225,7 +222,7 @@ class Vehiculo_oficialController extends Controller
     }
 
      /**
-     * Delete multiple existing VehiculoOficial model.
+     * Delete multiple existing LogPlataforma model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
@@ -256,15 +253,15 @@ class Vehiculo_oficialController extends Controller
     }
 
     /**
-     * Finds the VehiculoOficial model based on its primary key value.
+     * Finds the LogPlataforma model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return VehiculoOficial the loaded model
+     * @return LogPlataforma the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = VehiculoOficial::findOne($id)) !== null) {
+        if (($model = LogPlataforma::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

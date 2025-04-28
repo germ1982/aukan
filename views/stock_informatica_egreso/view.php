@@ -4,7 +4,6 @@ use app\models\Empleado;
 use app\models\Persona;
 use app\models\StockInformaticaEgresoDetalle;
 
-
 function campo($titulo, $contenido)
 {
       echo "<h5><b>$titulo: </b></h5>
@@ -75,3 +74,39 @@ function crear_label_articulo($articulo, $cantidad, $unidad)
 
     </div>
 </div>
+
+<div class="row">
+
+        <?php
+
+        $consulta = "   SELECT e.iddetalle,
+                            a.idarticulo,
+                            concat( ct.descripcion ,' ', cm.descripcion ,' ' ,a.modelo ,' ' , a.descripcion) as descripcion,
+                            e.cantidad,
+                            cum.descripcion as unidad_medida
+                        FROM stock_informatica_egreso_detalle e 
+                        JOIN articulo a on e.idarticulo = a.idarticulo
+                        join configuracion ct on ct.id_configuracion=a.idtipo
+                        join configuracion cm on cm.id_configuracion=a.idmarca
+                        join configuracion cum on cum.id_configuracion=a.id_unidad_medida
+                        WHERE e.idegreso = $model->idegreso 
+                        order by ct.descripcion,cm.descripcion,a.modelo,cum.descripcion,a.descripcion";
+
+        //$articulos = Articulo::findBySql($consulta)->all();
+
+        $articulos = StockInformaticaEgresoDetalle::findBySql($consulta)->all();
+
+        $ban = 1;
+        echo "<br>";
+        echo "<div class='col-xs-12 ' style='padding-left: 25px;'>";
+        echo '<h5><b>Detalle: </b></h5>';
+        echo "<div class='row campo'>";
+        foreach ($articulos as $a) {
+            crear_label_articulo("$a->descripcion por $a->unidad_medida", $a->cantidad, '');
+        };
+
+        echo "</div>";
+        echo "</div>";
+
+        ?>
+

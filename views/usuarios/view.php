@@ -13,7 +13,6 @@ function campo($titulo, $contenido)
       </p>";
 }
 
-
 $model_persona = Persona::findOne($model->idpersona);
 $mysql = "  SELECT GROUP_CONCAT(c.descripcion SEPARATOR ', ') AS descripcion
             FROM usuario_asignacion_perfil p
@@ -37,7 +36,7 @@ $perfiles = Yii::$app->db->createCommand($mysql)
 
       .campo {
             padding: 6px 12px;
-            font-size: 14px;
+            font-size: 12px;
             line-height: 1.42857143;
             color: #555555;
             background-color: #fff;

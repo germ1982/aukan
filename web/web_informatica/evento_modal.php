@@ -1,5 +1,4 @@
 <style>
-      
       /* Fondo oscuro del modal: ocupa toda la pantalla y se muestra al activar la clase "show" */
       .modal-backdrop {
             position: fixed !important;

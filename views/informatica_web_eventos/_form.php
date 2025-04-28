@@ -1,12 +1,13 @@
 <?php
 
 use app\controllers\SiteController;
+use app\models\Configuracion;
+use app\models\ConfiguracionTipo;
 use app\models\OrganismoDispositivo;
 use kartik\file\FileInput;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
-
 
 $model->fecha = date('d/m/Y', strtotime($model->fecha));
 
@@ -101,6 +102,14 @@ if (isset($model->fotos) && !empty($model->fotos)) {
                         <div class="col-md-2" style="padding-top:30px;">
                               <?= $form->field($model, 'activo')->checkbox(['checked' => $model->isNewRecord ? true : (bool)$model->activo]) ?>
                         </div>
+                  </div>
+
+                  <div class="row">
+                        <div class="col-md-10">
+                              <?= SiteController::actionGet_input_select2($form, $model, 'tipo_evento', 'cmb_tipo_evento', Configuracion::get_configuraciones(ConfiguracionTipo::TIPO_EVENTO_INFORMATICO), 'id_configuracion', 'descripcion', 'Tipo Evento', 'Seleccione Tipo...') ?>
+                              
+                        </div>
+
                   </div>
 
                   <div class="row">

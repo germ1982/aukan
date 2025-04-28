@@ -17,49 +17,14 @@ CrudAsset::register($this);
 
 <style>
     .custom-grid {
-        font-size: 13px;
-        /* Cambia el tamaño según tus necesidades */
-    }
+    font-size: 13px; /* Cambia el tamaño según tus necesidades */
+}
 
-    .kv-grid-toolbar .btn {
-        height: 30px;
-        /* Ajusta la altura de todos los botones */
-        line-height: 1.42857143;
-        /* Esto centra el contenido verticalmente */
+.kv-grid-toolbar .btn {
+    height: 30px;  /* Ajusta la altura de todos los botones */
+    line-height: 1.42857143;  /* Esto centra el contenido verticalmente */
+}
 
-
-    }
-
-    .kv-grid-toolbar {
-
-        display: flex;
-        /* background-color: red; */
-
-    }
-
-    .btn-toolbar {
-        width: 100%;
-
-    }
-
-    .btn-group {
-        width: 100%;
-
-    }
-
-    .botones_a {
-        text-align: left;
-        display: flex;
-        gap: 10px;
-    }
-
-    .botones_b {
-        justify-content: flex-end;
-        /* Alineación derecha */
-        display: flex;
-        width: 100%;
-        /* Asegura que el contenedor ocupe todo el ancho de la columna */
-    }
 </style>
 
 <header class="page-header">
@@ -96,41 +61,29 @@ CrudAsset::register($this);
                             'pjax' => false,
                             'columns' => require(__DIR__ . '/_columns.php'),
                             'toolbar' => [
-                                [
-                                    'content' =>
-                                    '<div class="row">' .
-                                        '<div class="col-md-9"> 
-                                    <div class="botones_a">' .
-                                        Html::a(
-                                            'Acceso',
-                                            ['/edificio_acceso'],
-                                            ['title' => 'Acceso', 'class' => 'btn btn-primary neon']
-                                        ) .
+                                ['content' =>
 
-                                        '</div>
-                                </div>' .
-                                        '<div class="col-md-3"> 
-                                    <div class="botones_b">' .
+                                Html::a(
+                                    'Accesos',
+                                    ['/edificio_acceso'],
+                                    ['title' => 'accesos', 'class' => 'btn btn-primary neon']
+                                ) .
 
-                                        Html::a(
-                                            '<i class="glyphicon glyphicon-plus"></i>',
-                                            ['create'],
-                                            ['role' => 'modal-remote', 'title' => 'Nuevo', 'class' => 'btn btn-default']
-                                        ) .
+                                Html::a(
+                                        '<i class="glyphicon glyphicon-plus">lalalala</i>',
+                                        ['create'],
+                                        ['role' => 'modal-remote', 'title' => 'Nuevo', 'class' => 'btn btn-default']
+                                    ) .
 
+                                   
 
-
-                                        Html::a(
-                                            '<i class="glyphicon glyphicon-repeat"></i>',
-                                            [''],
-                                            ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Refrescar Grilla']
-                                        ) .
-                                        '{toggleData}' .
-                                        '{export}' .
-                                        '</div>
-                                </div>' .
-                                        '</div>'
-                                ],
+                                Html::a(
+                                    '<i class="glyphicon glyphicon-repeat"></i>',
+                                    [''],
+                                    ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Refrescar Grilla']
+                                ) .
+                                '{toggleData}' .
+                                '{export}'],
                             ],
                             'striped' => true,
                             'condensed' => true,

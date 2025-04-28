@@ -7,6 +7,10 @@ use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset;
 use johnitvn\ajaxcrud\BulkButtonWidget;
 
+/* @var $this yii\web\View */
+/* @var $searchModel app\models\RunneuLegajoSearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
+
 $this->title = 'Legajos';
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -90,7 +94,19 @@ CrudAsset::register($this);
                             'id' => 'exportar-pdf-button',
                         ]) .
                         '{toggleData}' .
-                        '{export}'
+                        '{export}'.
+                        Html::a(
+                            'Manual',
+                            Url::to('descargables/manuales/manual_de_carga_de_legajos_en_datafam.pdf'),
+                            [
+                                'data-pjax' => 0,
+                                'data-toggle' => 'tooltip',
+                                'title' => 'Ver Manual de Uso',
+                                'class' => 'btn btn-default',
+                                'target' => '_blank'
+                            ]
+                        )
+                        
                 ],
             ],
             'striped' => true,
@@ -115,6 +131,12 @@ CrudAsset::register($this);
 
 <?php
 $script = <<<JS
+
+$('#ajaxCrudModal').on('hidden.bs.modal', function () {
+    $.pjax.reload({container: '#crud-datatable-pjax'});
+});
+
+
 $(document).on('click', '#exportar-pdf-button', function () {
     let ids = [];
 

@@ -5,7 +5,6 @@ namespace app\controllers;
 use Yii;
 use app\models\Configuracion;
 use app\models\ConfiguracionSearch;
-
 use app\models\LogPlataforma;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -14,7 +13,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * ConfiguracionController  Configuracion model.
+ * ConfiguracionController implements the CRUD actions for Configuracion model.
  */
 class ConfiguracionController extends Controller
 {
@@ -115,7 +114,7 @@ class ConfiguracionController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-
+                      LogPlataforma::registrar(12,1,$model->id_configuracion);  
                       return [
                           'title' => 'Nuevo Dato',
                           'content' => '<span class="text-success">Dato Creado Correctamente</span>',
@@ -175,7 +174,7 @@ class ConfiguracionController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-
+                      LogPlataforma::registrar(12,2,$model->id_configuracion);  
                       return [
                           'title' => 'Editar Dato Id: '.$id,
                           'content' => '<span class="text-success">Dato Editado Correctamente</span>',
@@ -207,7 +206,7 @@ class ConfiguracionController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-
+        LogPlataforma::registrar(12,3,$id);  
         if($request->isAjax){
             /*
             *   Process for ajax request

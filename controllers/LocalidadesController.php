@@ -13,7 +13,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * LocalidadesController  Localidades model.
+ * LocalidadesController implements the CRUD actions for Localidades model.
  */
 class LocalidadesController extends Controller
 {
@@ -101,6 +101,7 @@ class LocalidadesController extends Controller
 
                 ];
             } else if ($model->load($request->post()) && $model->save()) {
+                
                 return [
                     'forceReload' => '#crud-datatable-pjax',
                     'title' => "Create new Localidades",

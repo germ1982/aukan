@@ -1,6 +1,7 @@
 <?php
 
 namespace app\controllers;
+
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -93,7 +94,7 @@ class SiteController extends Controller
        */
       public function actionIndex()
       {
-            echo "<script>console.log('entro al actionIndex');</script>";
+            //echo "<script>console.log('entro al actionIndex');</script>";
             return $this->render('home');
       }
 

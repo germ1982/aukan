@@ -5,7 +5,8 @@ namespace app\models;
 use Yii;
 
 /**
-
+ * This is the model class for table "log_plataforma".
+ *
  * @property int $idlog
  * @property int|null $idusuario
  * @property string|null $fecha

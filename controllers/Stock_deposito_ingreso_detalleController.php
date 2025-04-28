@@ -17,7 +17,7 @@ use yii\helpers\Html;
 use yii\helpers\Json;
 
 /**
- * Stock_deposito_ingreso_detalleController  StockDepositoIngresoDetalle model.
+ * Stock_deposito_ingreso_detalleController implements the CRUD actions for StockDepositoIngresoDetalle model.
  */
 class Stock_deposito_ingreso_detalleController extends Controller
 {

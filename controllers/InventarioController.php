@@ -6,7 +6,6 @@ use Yii;
 use app\models\Inventario;
 use app\models\InventarioSearch;
 use app\models\LogPlataforma;
-
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -14,7 +13,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * InventarioController  Inventario model.
+ * InventarioController implements the CRUD actions for Inventario model.
  */
 class InventarioController extends Controller
 {
@@ -114,7 +113,7 @@ class InventarioController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-
+                      LogPlataforma::registrar(3,1,$model->idInventario); 
                       return [
                           'title' => "Nuevo Item",
                           'content' => '<span class="text-success">Inventario Creado Correctamente</span>',
@@ -167,7 +166,7 @@ class InventarioController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-
+                      LogPlataforma::registrar(3,2,$model->idInventario); 
                       return [
                           'title' => "Editar Item",
                           'content' => '<span class="text-success">Item Editado Correctamente</span>',
@@ -198,7 +197,7 @@ class InventarioController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-
+        LogPlataforma::registrar(3,3,$id); 
         if($request->isAjax){
             /*
             *   Process for ajax request

@@ -2,7 +2,9 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-
+/* @var $this yii\web\View */
+/* @var $model app\models\LogPlataforma */
+/* @var $form yii\widgets\ActiveForm */
 ?>
 
 <div class="log-plataforma-form">

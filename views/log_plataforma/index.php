@@ -11,6 +11,7 @@ use johnitvn\ajaxcrud\CrudAsset;
 $this->title = 'Logs de DATAFAM';
 $this->params['breadcrumbs'][] = $this->title;
 $clase = 'log-plataforma-index';
+
 CrudAsset::register($this);
 ?>
 

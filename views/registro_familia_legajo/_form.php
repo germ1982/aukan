@@ -4,6 +4,7 @@ use app\controllers\SiteController;
 use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
 use app\models\Persona;
+use app\models\RegistroFamiliaLegajo;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\file\FileInput;
@@ -11,15 +12,16 @@ use yii\helpers\Url;
 
 if (isset($model->idpersona)) {
     $persona = Persona::findOne($model->idpersona);
-    $model->dni = $persona->documento;
-    $model->apellido = "$persona->apellido";
-    $model->nombre = "$persona->nombre";
+    if ($persona !== null) {
+        $model->dni = $persona->documento;
+        $model->apellido = $persona->apellido;
+        $model->nombre = $persona->nombre;
+    }
 }
 
 if (isset($model->archivo_adjunto)) {
-    $imagePath = Url::to('uploads/registro_familia_legajos/' . $model->archivo_adjunto);
+    $imagePath = Url::to('uploads_datafam/registro_familia_legajos/' . $model->archivo_adjunto);
 
-    // Agrega la imagen a la vista previa inicial
     $initialPreview = [
         Html::img($imagePath, ['class' => 'file-preview-image', 'alt' => 'Imagen', 'title' => $model->archivo_adjunto, 'width' => '100%', 'height' => 'auto']),
     ];
@@ -45,6 +47,8 @@ function datos_persona() {
             console.log("console.log('funcion datos_persona'); // POST a index.php?r=persona/validar_dni&dni=" + dni_persona);
             if (data.length === 0) {
                 $('#txt_mensaje').html("No cargado");
+                aux = $('#input_observacion').val();
+                $('#input_observacion').val('Falta Persona En Base de Datos con dni ' + dni_persona + ' - ' + aux);
                 //buscar_en_renaper(dni_persona,tipo_persona);
             } else {
                 $('#input_idpersona').val(data[0]['idpersona']);
@@ -161,39 +165,57 @@ $this->registerJs($script);
             </div>
             <div class="row">
                 <div class=" col-md-5">
-                    <?= $form->field($model, 'apellido')->textInput(['maxlength' => true,'id' => 'input_apellido']) ?>
+                    <?= $form->field($model, 'apellido')->textInput(['maxlength' => true, 'id' => 'input_apellido']) ?>
                 </div>
                 <div class=" col-md-7">
-                    <?= $form->field($model, 'nombre')->textInput(['maxlength' => true,'id' => 'input_nombre']) ?>
+                    <?= $form->field($model, 'nombre')->textInput(['maxlength' => true, 'id' => 'input_nombre']) ?>
                 </div>
             </div>
             <div class="row">
                 <div class=" col-md-6">
-                    <?= SiteController::actionGet_input_select($form, $model, 'tipo_legajo', 'cmb_tipo_legajo', $tipos_legajos, 'id_configuracion', 'descripcion', 'Tipo de Legajo', 'Seleccione un Tipo...')?>
+                    <?= SiteController::actionGet_input_select($form, $model, 'tipo_legajo', 'cmb_tipo_legajo', $tipos_legajos, 'id_configuracion', 'descripcion', 'Tipo de Legajo', 'Seleccione un Tipo...') ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <?= $form->field($model, 'observacion')->textarea(['rows' => 3, 'id' => 'input_observacion']) ?>
                 </div>
             </div>
 
+
         </div>
         <div class=" col-md-7">
+
+            <?php
+            $ts = time();
+            $urlArchivo = Yii::$app->request->hostInfo . '/uploads_datafam/registro_familia_legajos/' . $model->archivo_adjunto . '?t=' . $ts;
+
+            //$urlArchivo = Yii::$app->request->hostInfo . '/uploads_datafam/registro_familia_legajos/' . $model->archivo_adjunto;
+            $urlArchivoConTimestamp = $urlArchivo . '?v=' . time(); // 👈 fuerza refresco
+            //echo "<p>URL generada: <a href='$urlArchivo' target='_blank'>$urlArchivo</a></p>";
+            ?>
             <?= $form->field($model, 'archivo_adjunto_file')->widget(FileInput::classname(), [
                 'options' => ['accept' => '.pdf'],
                 'pluginOptions' => [
-                    'initialPreview' => $model->archivo_adjunto ? [Yii::$app->request->baseUrl . '/uploads/registro_familia_legajos/' . $model->archivo_adjunto] : [],
-                    'initialPreviewAsData' => true,
-                    'initialPreviewFileType' => 'any', // Permite mostrar distintos tipos de archivos
-                    //'allowedFileExtensions' => ['jpg', 'jpeg', 'gif', 'png', 'pdf', 'docx'],
+                    'initialPreviewAsData' => true, // esto le dice al plugin que es una URL o path al archivo
+                    'initialPreview' => $model->archivo_adjunto
+                        ? [$urlArchivo]
+                        : [],
+                    'initialPreviewFileType' => 'pdf',
                     'allowedFileExtensions' => ['pdf'],
                     'showPreview' => true,
                     'showCaption' => false,
                     'showRemove' => true,
                     'showUpload' => false,
                     'initialPreviewConfig' => $model->archivo_adjunto ? [[
-                        'type' => pathinfo($model->archivo_adjunto, PATHINFO_EXTENSION) === 'pdf' ? 'pdf' : 'image',
+                        'type' => 'pdf',
                         'caption' => $model->archivo_adjunto,
-                        'downloadUrl' => Yii::$app->request->baseUrl . '/uploads/registro_familia_legajos/' . $model->archivo_adjunto
+                        'downloadUrl' => $urlArchivo
                     ]] : [],
                 ],
             ]); ?>
+
+
 
         </div>
     </div>

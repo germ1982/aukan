@@ -3,7 +3,6 @@ use yii\helpers\Html;
 use yii\bootstrap\Modal;
 ?>
 
-
 <!-- Formulario de cambio de contraseña -->
 <div id="modal_cambio_contraseña" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal_cambio_contraseña_label">
     <div class="modal-dialog" role="document">

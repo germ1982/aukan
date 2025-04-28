@@ -3,7 +3,6 @@
 namespace app\controllers;
 
 use app\models\LogPlataforma;
-
 use Yii;
 use app\models\Organismo;
 use app\models\OrganismoSearch;
@@ -13,7 +12,9 @@ use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
 
-
+/**
+ * OrganismoController implements the CRUD actions for Organismo model.
+ */
 class OrganismoController extends Controller
 {
     /**

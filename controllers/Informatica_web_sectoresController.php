@@ -6,7 +6,6 @@ use Yii;
 use app\models\InformaticaWebSectores;
 use app\models\InformaticaWebSectoresSearch;
 use app\models\LogPlataforma;
-
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -14,7 +13,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * Informatica_web_sectoresController  InformaticaWebSectores model.
+ * Informatica_web_sectoresController implements the CRUD actions for InformaticaWebSectores model.
  */
 class Informatica_web_sectoresController extends Controller
 {
@@ -108,7 +107,7 @@ class Informatica_web_sectoresController extends Controller
                         
                         if ($guardado && $model->save()) {
                             $transaction->commit();
-      
+                            LogPlataforma::registrar(21,1,$model->idsector); 
                             return [
                                 'title' => "Nevo Sector",
                                 'content' => '<span class="text-success">Sector Creado Correctamente</span>',
@@ -162,7 +161,7 @@ class Informatica_web_sectoresController extends Controller
                         
                         if ($guardado && $model->save()) {
                             $transaction->commit();
-      
+                            LogPlataforma::registrar(21,2,$model->idsector); 
                             return [
                                 'title' => "Nevo Sector",
                                 'content' => '<span class="text-success">Sector Creado Correctamente</span>',
@@ -193,7 +192,7 @@ class Informatica_web_sectoresController extends Controller
       {
             $request = Yii::$app->request;
             $this->findModel($id)->delete();
-
+            LogPlataforma::registrar(21,3,$id); 
             if ($request->isAjax) {
                   /*
             *   Process for ajax request

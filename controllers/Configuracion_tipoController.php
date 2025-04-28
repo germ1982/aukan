@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\ConfiguracionTipo;
 use app\models\ConfiguracionTipoSearch;
+use app\models\LogPlataforma;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -12,7 +13,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 
 /**
- * Configuracion_tipoController  ConfiguracionTipo model.
+ * Configuracion_tipoController implements the CRUD actions for ConfiguracionTipo model.
  */
 class Configuracion_tipoController extends Controller
 {
@@ -114,6 +115,7 @@ class Configuracion_tipoController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
+                      LogPlataforma::registrar(13,1,$model->id_configuracion_tipo);  
 
                       return [
                           'title' => 'Nuevo Tipo De Dato',
@@ -174,7 +176,7 @@ class Configuracion_tipoController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-
+                      LogPlataforma::registrar(13,2,$model->id_configuracion_tipo);  
                       return [
                           'title' => 'Editar Tipo De Dato Id: '.$id,
                           'content' => '<span class="text-success">Tipo de Dato Editado Correctamente</span>',
