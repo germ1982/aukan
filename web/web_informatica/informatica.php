@@ -34,19 +34,10 @@
             font-family: 'Roboto', sans-serif!important;
             text-align: center;
             padding: 10px;
-<<<<<<< HEAD
             /* color: #f4dfb9; */
-            color:#fff2ce;
-
+            color: #f4dfb9;
             font-size: 20px;
             font-family: Arial, Helvetica, sans-serif;
-=======
-            color: #f4dfb9;
-            font-size: 20px !important;
-            font-size: 25px;
-            font-family: Arial;
->>>>>>> 1ddc30f7b5c7f466d64e56af08552cc293bea1c8
-
             font-weight: bold;
       }
 
