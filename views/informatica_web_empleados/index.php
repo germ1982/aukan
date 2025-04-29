@@ -1,6 +1,6 @@
 <?php
 
-use app\models\InformaticaWebSectores;
+use app\models\Persona;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
@@ -8,13 +8,12 @@ use yii\bootstrap\Modal;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset;
 
-$this->title = 'Edicion de Empleados de la Web de Informatica';
+$this->title = 'Web Informatica Staff';
 $this->params['breadcrumbs'][] = $this->title;
-$clase = 'informatica_web_empleados-index';
+$clase = 'informatica-web-empleados-index';
 
 CrudAsset::register($this);
 ?>
-
 
 <style>
     .custom-grid {
@@ -24,10 +23,39 @@ CrudAsset::register($this);
 .kv-grid-toolbar .btn {
     height: 30px;  /* Ajusta la altura de todos los botones */
     line-height: 1.42857143;  /* Esto centra el contenido verticalmente */
+
+    
+}
+.kv-grid-toolbar {
+
+display: flex;
+/* background-color: red; */
+
 }
 
-</style>
+.btn-toolbar {
+width: 100%;
 
+}
+
+.btn-group {
+width: 100%;
+
+}
+.botones_a {
+        text-align: left;
+        display: flex;
+        gap: 10px;
+    }
+
+    .botones_b {
+        justify-content: flex-end;
+        /* Alineación derecha */
+        display: flex;
+        width: 100%;
+        /* Asegura que el contenedor ocupe todo el ancho de la columna */
+    }
+</style>
 
 <header class="page-header">
     <h2><?= $this->title ?></h2>
@@ -58,12 +86,29 @@ CrudAsset::register($this);
                         <?= GridView::widget([
                             'id' => 'crud-datatable',
                             'dataProvider' => $dataProvider,
+                            'tableOptions' => ['class' => 'custom-grid'],
                             'filterModel' => $searchModel,
                             'pjax' => false,
                             'columns' => require(__DIR__ . '/_columns.php'),
                             'toolbar' => [
                                 ['content' =>
-
+                                '<div class="row">' .
+                                '<div class="col-md-9"> 
+                                    <div class="botones_a">' .
+                                    Html::a(
+                                        'Eventos',
+                                        ['/informatica_web_eventos'],
+                                        ['title' => 'Eventos', 'class' => 'btn btn-primary neon']
+                                    ) .
+                                    Html::a(
+                                        'Sectores',
+                                        ['/informatica_web_sectores'],
+                                        ['title' => 'Sectores', 'class' => 'btn btn-primary neon']
+                                    ) .
+                                '</div>
+                                </div>' .
+                                '<div class="col-md-3"> 
+                                    <div class="botones_b">' .
                                 Html::a(
                                         '<i class="glyphicon glyphicon-plus"></i>',
                                         ['create'],
@@ -78,7 +123,11 @@ CrudAsset::register($this);
                                     ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Refrescar Grilla']
                                 ) .
                                 '{toggleData}' .
-                                '{export}'],
+                                '{export}'.
+                                '</div>
+                                </div>' .
+                                '</div>'
+                            ],
                             ],
                             'striped' => true,
                             'condensed' => true,

@@ -1,6 +1,6 @@
 <?php
 
-use app\models\InformaticaWebSectores;
+use app\models\Persona;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
@@ -8,10 +8,9 @@ use yii\bootstrap\Modal;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset;
 
-
-$this->title = 'Edicion de Eventos de la Web de Informatica';
+$this->title = 'Web Informatica - Eventos';
 $this->params['breadcrumbs'][] = $this->title;
-$clase = 'informatica_web_eventos-index';
+$clase = 'informatica-web-eventos-index';
 
 CrudAsset::register($this);
 ?>
@@ -24,11 +23,39 @@ CrudAsset::register($this);
 .kv-grid-toolbar .btn {
     height: 30px;  /* Ajusta la altura de todos los botones */
     line-height: 1.42857143;  /* Esto centra el contenido verticalmente */
+
+    
+}
+.kv-grid-toolbar {
+
+display: flex;
+/* background-color: red; */
+
 }
 
+.btn-toolbar {
+width: 100%;
+
+}
+
+.btn-group {
+width: 100%;
+
+}
+.botones_a {
+        text-align: left;
+        display: flex;
+        gap: 10px;
+    }
+
+    .botones_b {
+        justify-content: flex-end;
+        /* Alineación derecha */
+        display: flex;
+        width: 100%;
+        /* Asegura que el contenedor ocupe todo el ancho de la columna */
+    }
 </style>
-
-
 
 <header class="page-header">
     <h2><?= $this->title ?></h2>
@@ -59,12 +86,29 @@ CrudAsset::register($this);
                         <?= GridView::widget([
                             'id' => 'crud-datatable',
                             'dataProvider' => $dataProvider,
+                            'tableOptions' => ['class' => 'custom-grid'],
                             'filterModel' => $searchModel,
                             'pjax' => false,
                             'columns' => require(__DIR__ . '/_columns.php'),
                             'toolbar' => [
                                 ['content' =>
-
+                                '<div class="row">' .
+                                '<div class="col-md-9"> 
+                                    <div class="botones_a">' .
+                                Html::a(
+                                    'Sectores',
+                                    ['/informatica_web_sectores'],
+                                    ['title' => 'Sectores', 'class' => 'btn btn-primary neon']
+                                ) .
+                                Html::a(
+                                    'Staff',
+                                    ['/informatica_web_empleados'],
+                                    ['title' => 'Staff', 'class' => 'btn btn-primary neon']
+                                ) .
+                                '</div>
+                                </div>' .
+                                '<div class="col-md-3"> 
+                                    <div class="botones_b">' .
                                 Html::a(
                                         '<i class="glyphicon glyphicon-plus"></i>',
                                         ['create'],
@@ -79,7 +123,11 @@ CrudAsset::register($this);
                                     ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Refrescar Grilla']
                                 ) .
                                 '{toggleData}' .
-                                '{export}'],
+                                '{export}'.
+                                '</div>
+                                </div>' .
+                                '</div>'
+                            ],
                             ],
                             'striped' => true,
                             'condensed' => true,
@@ -117,19 +165,3 @@ $this->registerJs(
     "footer" => "", // always need it for jquery plugin
 ]) ?>
 <?php Modal::end(); ?>
-
-
-<style>
-#ajaxCrudModal .modal-dialog {
-    width: 90vw; /* 90% del ancho de la ventana */
-    max-width: 90vw; /* Asegura que no exceda el 90% */
-    margin: auto; /* Centra el modal horizontalmente */
-    padding-top: 40px;
-    padding-left: 30px;
-}
-
-#ajaxCrudModal .modal-content {
-    height: auto; /* Ajusta la altura según el contenido */
-    max-height: auto; /* Opcional: limita la altura al 90% de la pantalla */
-}
-</style>
