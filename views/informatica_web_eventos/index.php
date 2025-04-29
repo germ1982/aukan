@@ -55,6 +55,10 @@ width: 100%;
         width: 100%;
         /* Asegura que el contenedor ocupe todo el ancho de la columna */
     }
+
+    .boton_menu{
+        line-height: 0.6!important;
+    }
 </style>
 
 <header class="page-header">
@@ -98,12 +102,12 @@ width: 100%;
                                 Html::a(
                                     'Sectores',
                                     ['/informatica_web_sectores'],
-                                    ['title' => 'Sectores', 'class' => 'btn btn-primary neon']
+                                    ['title' => 'Sectores', 'class' => 'btn btn-primary boton_menu neon']
                                 ) .
                                 Html::a(
                                     'Staff',
                                     ['/informatica_web_empleados'],
-                                    ['title' => 'Staff', 'class' => 'btn btn-primary neon']
+                                    ['title' => 'Staff', 'class' => 'btn btn-primary boton_menu neon']
                                 ) .
                                 '</div>
                                 </div>' .
