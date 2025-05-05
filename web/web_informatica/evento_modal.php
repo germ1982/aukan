@@ -45,11 +45,11 @@
             /* Espacio interno */
             border-radius: 10px !important;
             /* Bordes redondeados */
-            max-width: 600px !important;
+            max-width: 100%!important;
             /* Ancho máximo de 600px */
             width: 90% !important;
             /* 90% del ancho disponible */
-            max-height: 90% !important;
+            max-height: 100% !important;
             /* Altura máxima del 90% */
             overflow-y: auto !important;
             /* Si el contenido es alto, se activa scroll vertical */
@@ -138,11 +138,12 @@
       }
 
       .carousel_modal {
-            width: 80%;
-            left: 10%;
+            width: 70%;
+            left: 15%;
       }
       .carousel-inner-modal img {
-            height: 250px !important;
+            width: 100%!important;
+            height: 100%!important;
             object-fit: contain;
             border-radius: 1px;
             position: relative;
