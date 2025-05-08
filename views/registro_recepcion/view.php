@@ -1,11 +1,12 @@
 <?php
 
+use app\models\Configuracion;
 use app\models\Edificio;
 use app\models\EdificioAcceso;
+use app\models\Empleado;
+use app\models\OrganismoDispositivo;
 use yii\widgets\DetailView;
 
-$model->fecha = $model->isNewRecord ? date('d/m/Y') : date('d/m/Y', strtotime($model->fecha));
-$model->hora = $model->isNewRecord ? date('H:i') : date('H:i', strtotime($model->hora));
 
 
 
@@ -48,16 +49,16 @@ function campo($titulo, $contenido)
     <div class="row">
         <div class=" col-md-12">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <?= campo('id_registro_recepcion', "$model->id_registro_recepcion") ?>
                 </div>
-                <div class="col-md-4">
-                    <?= campo('fecha', "$model->fecha") ?>
+                <div class="col-md-3">
+                    <?= campo('fecha', $model->fechaFormateada) ?>
                 </div>
-                <div class="col-md-4">
-                    <?= campo('hora', "$model->hora") ?>
+                <div class="col-md-3">
+                    <?= campo('hora', $model->horaFormateada) ?>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <?= campo('dni', "$model->dni") ?>
                 </div>
             </div>
@@ -66,40 +67,41 @@ function campo($titulo, $contenido)
         <div class=" col-md-12">
             <div class="row">
                 <div class="col-md-4">
-                    <?= campo('motivo', "$model->motivo") ?>
+                    <?= campo('id_responsable_derivacion', Empleado::get_empleado($model->id_responsable_derivacion)->descripcion) ?>
                 </div>
                 <div class="col-md-4">
                     <?= campo('acceso', EdificioAcceso::get_acceso_descripcion($model->acceso)) ?>
                 </div>
                 <div class="col-md-4">
-                    <?= campo('id_dispositivo_derivacion', "$model->id_dispositivo_derivacion") ?>
+                    <?= campo('id_dispositivo_derivacion', OrganismoDispositivo::get_dispositivo($model->id_dispositivo_derivacion)->descripcion) ?>
                 </div>
                 <div class="col-md-4">
-                    <?= campo('id_responsable_derivacion', "$model->id_responsable_derivacion") ?>
+                    <?= campo('motivo', "$model->motivo") ?>
                 </div>
                 <div class="col-md-4">
-                    <?= campo('id_tipo_recepcion', "$model->id_tipo_recepcion") ?>
+                    <?= campo('id_tipo_recepcion', Configuracion::findOne($model->id_tipo_recepcion)->descripcion) ?>
                 </div>
                 <div class="col-md-4">
-                    <?= campo('observacion', "$model->observacion") ?>
+                    <?= campo('observacion', $model->observacion ?: 'Sin observaciones') ?>
+
                 </div>
             </div>
         </div>
     </div>
 
     <!-- <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id_registro_recepcion',
-            'fecha',
-            'hora',
-            'dni',
-            'motivo:ntext',
-            'acceso',
-            'id_dispositivo_derivacion',
-            'id_responsable_derivacion',
-            'id_tipo_recepcion',
-            'observacion:ntext',
-        ],
-    ]) ?> -->
+                'model' => $model,
+                'attributes' => [
+                    'id_registro_recepcion',
+                    'fecha',
+                    'hora',
+                    'dni',
+                    'motivo:ntext',
+                    'acceso',
+                    'id_dispositivo_derivacion',
+                    'id_responsable_derivacion',
+                    'id_tipo_recepcion',
+                    'observacion:ntext',
+                ],
+            ]) ?> -->
 </div>

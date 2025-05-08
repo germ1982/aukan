@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\LogPlataforma;
 use Yii;
 use app\models\RegistroRecepcion;
 use app\models\RegistroRecepcionlSearch;
@@ -40,6 +41,7 @@ class Registro_recepcionController extends Controller
     {    
         $searchModel = new RegistroRecepcionlSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -100,6 +102,7 @@ class Registro_recepcionController extends Controller
         
                 ];         
             }else if($model->load($request->post()) && $model->save()){
+                LogPlataforma::registrar(31,1,$model->id_registro_recepcion);                   
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
                     'title'=> "Crear Nuevo Registro ",
@@ -161,6 +164,7 @@ class Registro_recepcionController extends Controller
                                 Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
                 ];         
             }else if($model->load($request->post()) && $model->save()){
+                LogPlataforma::registrar(31,2,$model->id_registro_recepcion);
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
                     'title'=> "Registro Recepcion".$id,

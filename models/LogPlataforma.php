@@ -176,6 +176,11 @@ class LogPlataforma extends \yii\db\ActiveRecord
             'nombre' => 'Vehículos',
             'modelo' => \app\models\Vehiculos::class
         ],
+        31 => [
+            'nombre' => 'Recepcion',
+            'modelo' => \app\models\RegistroRecepcion::class
+        ],
+        
     ];
 
 

@@ -3,11 +3,14 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use app\controllers\SiteController;
+use app\models\Configuracion;
+use app\models\ConfiguracionSearch;
+use app\models\ConfiguracionTipo;
 use app\models\OrganismoDispositivo;
 use app\models\Empleado;
 
-$model->fecha = $model->isNewRecord ? date('d/m/Y') : date('d/m/Y', strtotime($model->fecha));
-$model->hora = $model->isNewRecord ? date('H:i') : date('H:i', strtotime($model->hora));
+/* $model->fecha = $model->isNewRecord ? date('d/m/Y') : date('d/m/Y', strtotime($model->fecha));
+$model->hora = $model->isNewRecord ? date('H:i') : date('H:i', strtotime($model->hora)); */
 
 /* @var $this yii\web\View */
 /* @var $model app\models\RegistroRecepcion */
@@ -75,11 +78,13 @@ $model->hora = $model->isNewRecord ? date('H:i') : date('H:i', strtotime($model-
             <?= SiteController::actionGet_input_select2($form, $model, 'id_responsable_derivacion', 'cmb_id_responsable_derivacion', Empleado::get_empleados(), 'idempleado', 'descripcion', 'Responsable Derivacion', 'seleccione empleado...') ?>
         </div>
         <div class=" col-md-4">
-            <?= $form->field($model, 'id_tipo_recepcion')->textInput() ?>
+            <?= SiteController::actionGet_input_select2($form, $model, 'id_tipo_recepcion', 'cmb_id_tipo_recepcion', Configuracion::get_configuraciones(ConfiguracionTipo::TIPO_RECEPCION), 'id_configuracion', 'descripcion', 'Tipo Recepcion', 'seleccione tipo recepcion...') ?>
         </div>
         <div class=" col-md-4">
-            <?= $form->field($model, 'observacion')->textarea(['rows' => 6]) ?>
+            <?= $form->field($model, 'observacion')->textarea(['rows' => 6, 'placeholder' => 'Ingrese una observación (opcional)']) ?>
+
         </div>
+
 
     </div>
 
