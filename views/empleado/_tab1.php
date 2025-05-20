@@ -71,7 +71,7 @@ $this->registerJs($script);
 ?>
 
 <style>
-    .linea_busqueda{
+    .linea_busqueda {
         margin-top: -20px;
     }
 </style>
@@ -82,7 +82,7 @@ $this->registerJs($script);
 
 <div class="row linea_busqueda">
     <!-- Linea de busqueda -->
-    <div class="col-md-4">
+    <div class="col-md-5">
         <div class="input-group">
             <?= $form->field($model, 'documento')->textInput([
                 'id' => 'input_dni_persona',
@@ -99,38 +99,42 @@ $this->registerJs($script);
             </span>
         </div>
     </div>
-    <div class="col-md-8" style="padding-top:30px;" id="txt_mensaje"><?= $persona_nombre ?></div>
+    <div class="col-md-7" style="padding-top:30px;" id="txt_mensaje"><?= $persona_nombre ?></div>
 </div>
 <br>
 <div class="row">
 
-    <div class="col-md-2">
+    <div class="col-md-3">
         <?= $form->field($model, 'legajo')->textInput() ?>
     </div>
 
-    <div class="col-md-2">
+    <div class="col-md-3">
         <?= $form->field($model, 'cuil')->textInput() ?>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-6">
         <?= $form->field($model, 'telefono')->textInput() ?>
     </div>
 
-    <div class="col-md-5">
+</div>
+
+<div class="row">
+    <div class="col-md-12">
         <?= $form->field($model, 'email')->textInput() ?>
     </div>
 </div>
 
 <div class="row">
-    <div class="col-md-7">
+    <div class="col-md-12">
         <?= SiteController::actionGet_input_select2($form, $model, 'iddispositivo', 'cmb_dispositivos', OrganismoDispositivo::get_dispositivos(), 'iddispositivo', 'descripcion', 'Sector', 'Seleccione Sector...') ?>
     </div>
-
-    <div class="col-md-3">
+</div>
+<div class="row">
+    <div class="col-md-8">
         <?= SiteController::actionGet_input_select2($form, $model, 'funcion', 'cmb_funcion', Configuracion::get_configuraciones(ConfiguracionTipo::FUNCION_LABORAL), 'id_configuracion', 'descripcion', 'Funcion', 'Seleccione Funcion...') ?>
     </div>
 
-    <div class="col-md-2" style="padding-top:30px;">
+    <div class="col-md-4" style="padding-top:30px;">
         <?= $form->field($model, 'activo')->checkbox(['checked' => $model->isNewRecord ? true : (bool)$model->activo]) ?>
     </div>
 </div>

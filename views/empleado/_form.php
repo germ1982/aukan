@@ -90,11 +90,26 @@ if (isset($model->foto)) {
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-    
+    <div class="row">
+        <div class="col-md-8">
+            <?=$this->render('_tab1', ['form' => $form, 'model' => $model, 'persona_nombre' => $persona_nombre]);?>
+        </div>
+        <div class="col-md-4">
+            <?= $this->render('_tab3', ['form' => $form, 'model' => $model, 'initialPreview' => $initialPreview, 'initialPreviewConfig' => $initialPreviewConfig]); ?>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <?= $this->render('_tab2', ['form' => $form, 'model' => $model]); ?>
+        </div>
+    </div>
 
 
-    <?=
-    Tabs::widget([
+    <?php
+
+    /* Tabs::widget([
         'items' => [
             [
                 'label' => 'Información Básica',
@@ -113,7 +128,7 @@ if (isset($model->foto)) {
             ],
             // Agrega más pestañas según necesites
         ],
-    ]);
+    ]); */
     ?>
 
 

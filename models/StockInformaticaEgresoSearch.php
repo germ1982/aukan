@@ -45,6 +45,15 @@ class StockInformaticaEgresoSearch extends StockInformaticaEgreso
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => ['pageSize' => 50],// <-- ¡Aquí cambias la cantidad de registros por página!
+            'sort' => [
+                'defaultOrder' => [
+                    'fecha' => SORT_DESC,
+                    'idegreso' => SORT_DESC,   
+                ]
+
+            ],
+
         ]);
 
         $this->load($params);

@@ -1,0 +1,85 @@
+
+    .custom-grid {
+        font-size: 12px; /* Ajusta el tamaño de fuente de la grilla para mayor compacidad */
+    }
+
+    .kv-panel-before {
+        padding: 0px;
+        padding-bottom: 5px;
+    }
+
+    .kv-grid-toolbar .btn {
+        height: 30px; /* Fija la altura de los botones en la barra de herramientas */
+        line-height: 1.42857143; /* Centra verticalmente el contenido del botón */
+    }
+
+    .kv-grid-toolbar {
+        display: flex; /* Usa Flexbox para alinear los elementos de la toolbar */
+        /* background-color: red; */ /* Comentado: útil para depurar visualmente el contenedor */
+    }
+
+    .kv-grid-toolbar .btn {
+        height: 30px;
+        /* Ajusta la altura de todos los botones */
+        line-height: 1.42857143;
+        /* Esto centra el contenido verticalmente */
+    }
+
+    .btn-toolbar {
+        width: 100%; /* Hace que el grupo de botones ocupe todo el ancho del contenedor */
+    }
+
+    .btn-group {
+        width: 100%; /* Cada grupo de botones también ocupa todo el ancho disponible */
+    }
+
+    .botones_a {
+        text-align: left; /* Alinea el contenido a la izquierda */
+        display: flex; /* Usa Flexbox para distribuir los botones */
+        gap: 10px; /* Espacio horizontal entre los botones */
+    }
+
+    .botones_b {
+        justify-content: flex-end; /* Alinea los botones a la derecha */
+        display: flex; /* Flexbox para alineación horizontal */
+        width: 100%; /* El contenedor ocupa todo el ancho disponible */
+    }
+
+    .boton_menu {
+        line-height: 0.6 !important; /* Reduce la altura de línea del texto del botón (forzado) */
+    }
+
+    .modal-lg{
+        width: 90%!important;
+        padding-left: 25px!important;
+    }
+
+    .modal-content {
+        max-height: calc(100vh - 60px); /* Limita la altura del modal al alto de la pantalla menos 60px */
+        max-width: 100%!important; /* Opcional: limita también el ancho (aunque no siempre necesario) */
+        font-size: 12px!important;
+        display: flex; /* Convierte el contenido del modal en un contenedor flex */
+        flex-direction: column; /* Los hijos se colocan en columna: header, body y footer */
+    }
+
+    .modal-header {
+        position: sticky; /* Hace que el header quede "pegado" al top al hacer scroll */
+        top: 0; /* Lo fija en la parte superior del modal */
+        z-index: 1055; /* Se asegura de que esté por encima del contenido scrollable */
+        background-color: #fff; /* Fondo blanco para cubrir contenido que pase por detrás */
+        border-bottom: 1px solid #ddd; /* Línea divisoria con el cuerpo */
+        font-size: 12px!important;
+    }
+
+    .modal-body-footer-wrapper {
+        overflow-y: auto; /* Permite el scroll vertical dentro del cuerpo del modal */
+        flex: 1; /* El cuerpo se expande para ocupar el espacio restante entre header y footer */
+        display: flex; /* Flexbox para estructuras internas */
+        flex-direction: column; /* Elementos internos en columna (opcional, por si hay formularios) */
+    }
+
+    .modal-footer {
+        border-top: 1px solid #ddd; /* Línea superior divisoria con el cuerpo */
+        background-color: #fff; /* Fondo blanco para el footer */
+        /* Por defecto, el footer quedará debajo del body y se moverá con el scroll */
+    }

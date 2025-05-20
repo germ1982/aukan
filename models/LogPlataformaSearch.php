@@ -45,6 +45,15 @@ class LogPlataformaSearch extends LogPlataforma
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => ['pageSize' => 50],// <-- ¡Aquí cambias la cantidad de registros por página!
+            'sort' => [
+                'defaultOrder' => [
+                    'fecha' => SORT_DESC,
+                    'idlog' => SORT_DESC,   
+                    
+                ]
+
+            ],
         ]);
 
         $this->load($params);

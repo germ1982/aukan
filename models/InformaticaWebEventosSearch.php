@@ -43,8 +43,12 @@ class InformaticaWebEventosSearch extends InformaticaWebEventos
     {
         $query = InformaticaWebEventos::find();
 
+        
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => ['pageSize' => 50],// <-- ¡Aquí cambias la cantidad de registros por página!
+            
         ]);
 
         $this->load($params);

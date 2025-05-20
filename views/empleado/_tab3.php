@@ -30,8 +30,6 @@ use kartik\file\FileInput;
     }
 </style>
 
-<div class="row">
-    <div class="col-md-4">
         <?= $form->field($model, 'imageFile')->widget(FileInput::className(), [
             'options' => ['accept' => 'image/*'],
             'pluginOptions' => [
@@ -61,6 +59,3 @@ use kartik\file\FileInput;
                 ]
             ]
         ]); ?>
-    </div>
-
-</div>
