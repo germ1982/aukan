@@ -31,6 +31,7 @@ class Configuracion extends \yii\db\ActiveRecord
             [['id_configuracion_tipo', 'descripcion'], 'required'],
             [['id_configuracion_tipo', 'activo'], 'integer'],
             [['descripcion'], 'string', 'max' => 50],
+            [['descripcion'], 'unique', 'targetAttribute' => ['id_configuracion_tipo', 'descripcion'], 'message' => 'Ya existe esta descripción para el tipo de dato seleccionado. Por favor, ingrese una diferente.'],
         ];
     }
 

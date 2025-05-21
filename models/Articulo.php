@@ -36,6 +36,11 @@ class Articulo extends \yii\db\ActiveRecord
             [['descripcion'], 'string', 'max' => 500],
             [['modelo'], 'string', 'max' => 30],
             [['imagen'], 'string', 'max' => 100],
+            [['idtipo'], 'unique', 'targetAttribute' => ['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'], 'message' => 'Ya existe un artículo con la misma combinación de Tipo, Marca, Modelo, Rubro y Unidad de Medida.'],
+            [['idmarca'], 'unique', 'targetAttribute' => ['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'], 'message' => 'Ya existe un artículo con la misma combinación de Tipo, Marca, Modelo, Rubro y Unidad de Medida.'],
+            [['modelo'], 'unique', 'targetAttribute' => ['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'], 'message' => 'Ya existe un artículo con la misma combinación de Tipo, Marca, Modelo, Rubro y Unidad de Medida.'],
+            [['idrubro'], 'unique', 'targetAttribute' => ['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'], 'message' => 'Ya existe un artículo con la misma combinación de Tipo, Marca, Modelo, Rubro y Unidad de Medida.'],
+            [['id_unidad_medida'], 'unique', 'targetAttribute' => ['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'], 'message' => 'Ya existe un artículo con la misma combinación de Tipo, Marca, Modelo, Rubro y Unidad de Medida.'],
         ];
     }
 

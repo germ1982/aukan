@@ -27,18 +27,6 @@ $array_tipos = ConfiguracionTipo::find()->where(['activo' => 1])->orderBy('descr
     </div>
 
 
-
-
-
-
-
-
-    <?php if (!Yii::$app->request->isAjax) { ?>
-        <div class="form-group">
-            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-        </div>
-    <?php } ?>
-
     <?php ActiveForm::end(); ?>
 
 </div>

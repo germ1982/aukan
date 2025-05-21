@@ -56,6 +56,7 @@ class ConfiguracionTipo extends \yii\db\ActiveRecord
             [['descripcion', 'activo'], 'required'],
             [['activo'], 'integer'],
             [['descripcion'], 'string', 'max' => 50],
+            [['descripcion'], 'unique', 'message' => 'Esta descripción ya está en uso.'],
         ];
     }
 
