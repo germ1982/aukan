@@ -85,9 +85,9 @@ function datos_persona() {
 
         $('#registrorecepcion-nombre').val(data[0]['nombre']);
         $('#registrorecepcion-apellido').val(data[0]['apellido'])
-        $('#cmb_documento_tipo').val(data[0]['documento_tipo']);
-        $('#cmb_nacionalidad').val(data[0]['nacionalidad']);
-        $('#cmb_genero').val(data[0]['genero']);
+        $('#cmb_documento_tipo').val(data[0]['documento_tipo']).trigger('change');;
+        $('#cmb_nacionalidad').val(data[0]['nacionalidad']).trigger('change');;
+        $('#cmb_genero').val(data[0]['genero']).trigger('change');;
         $('#input_fecha_nacimiento').val(data[0]['fecha_nacimiento']);
 
     }
