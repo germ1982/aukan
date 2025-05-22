@@ -2,7 +2,12 @@
 
 use yii\helpers\Url;
 
-
+$columna_1 = '8%';
+$columna_2 = '8%';
+$columna_3 = '8%';
+$columna_4 = '8%';
+$columna_5 = '58%';
+$columna_6 = '10%';
 
 return [
     /* [
@@ -16,10 +21,12 @@ return [
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'id_registro_recepcion',
+        'width' => $columna_1,
     ],
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'fecha',
+        'width' => $columna_2,
         'format' => 'raw',  // Especificamos que será raw para que el formateo se aplique a la fecha
         'value' => function ($model) {
             return Yii::$app->formatter->asDate($model->fecha, 'php:d/m/Y');
@@ -28,10 +35,12 @@ return [
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'hora',
+        'width' => $columna_3,
     ],
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'dni',
+        'width' => $columna_4,
     ],
     /* [
         'class' => '\kartik\grid\DataColumn',
@@ -44,6 +53,7 @@ return [
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'id_dispositivo_derivacion',
+        'width' => $columna_5,
         'label' => 'Dispositivo Derivacion',
         'value' => function ($model) {
             return $model->dispositivoDerivacion ? $model->dispositivoDerivacion->descripcion : '(No asignado)';

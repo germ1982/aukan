@@ -11,6 +11,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
+use app\models\Persona;
+use app\models\PersonasNoHomologadas;
 
 /**
  * Registro_recepcionController implements the CRUD actions for RegistroRecepcion model.
@@ -38,10 +40,10 @@ class Registro_recepcionController extends Controller
      * @return mixed
      */
     public function actionIndex()
-    {    
+    {
         $searchModel = new RegistroRecepcionlSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        
+
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -56,19 +58,19 @@ class Registro_recepcionController extends Controller
      * @return mixed
      */
     public function actionView($id)
-    {   
+    {
         $request = Yii::$app->request;
-        if($request->isAjax){
+        if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                    'title'=> "Registro Recepcion ".$id,
-                    'content'=>$this->renderAjax('view', [
-                        'model' => $this->findModel($id),
-                    ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
-        }else{
+                'title' => "Registro Recepcion " . $id,
+                'content' => $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+                ]),
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::a('Editar', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+            ];
+        } else {
             return $this->render('view', [
                 'model' => $this->findModel($id),
             ]);
@@ -84,45 +86,45 @@ class Registro_recepcionController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->request;
-        $model = new RegistroRecepcion();  
+        $model = new RegistroRecepcion();
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            if($request->isGet){
+            if ($request->isGet) {
                 return [
-                    'title'=> "Crear Nuevo Registro",
-                    'content'=>$this->renderAjax('create', [
+                    'title' => "Crear Nuevo Registro",
+                    'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
-        
-                ];         
-            }else if($model->load($request->post()) && $model->save()){
-                LogPlataforma::registrar(31,1,$model->id_registro_recepcion);                   
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+
+                ];
+            } else if ($model->load($request->post()) && $model->save()) {
+                LogPlataforma::registrar(31, 1, $model->id_registro_recepcion);
                 return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Crear Nuevo Registro ",
-                    'content'=>'<span class="text-success">Create RegistroRecepcion success</span>',
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
-        
-                ];         
-            }else{           
+                    'forceReload' => '#crud-datatable-pjax',
+                    'title' => "Crear Nuevo Registro ",
+                    'content' => '<span class="text-success">Registro Creado Correctamente</span>',
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::a('Create More', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+
+                ];
+            } else {
                 return [
-                    'title'=> "Crear Nuevo Registro",
-                    'content'=>$this->renderAjax('create', [
+                    'title' => "Crear Nuevo Registro",
+                    'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
-        
-                ];         
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+
+                ];
             }
-        }else{
+        } else {
             /*
             *   Process for non-ajax request
             */
@@ -134,7 +136,6 @@ class Registro_recepcionController extends Controller
                 ]);
             }
         }
-       
     }
 
     /**
@@ -147,44 +148,44 @@ class Registro_recepcionController extends Controller
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
-        $model = $this->findModel($id);       
+        $model = $this->findModel($id);
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            if($request->isGet){
+            if ($request->isGet) {
                 return [
-                    'title'=> "Actualizar Registro".$id,
-                    'content'=>$this->renderAjax('update', [
+                    'title' => "Actualizar Registro" . $id,
+                    'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
-                ];         
-            }else if($model->load($request->post()) && $model->save()){
-                LogPlataforma::registrar(31,2,$model->id_registro_recepcion);
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                ];
+            } else if ($model->load($request->post()) && $model->save()) {
+                LogPlataforma::registrar(31, 2, $model->id_registro_recepcion);
                 return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Registro Recepcion".$id,
-                    'content'=>$this->renderAjax('view', [
+                    'forceReload' => '#crud-datatable-pjax',
+                    'title' => "Registro Recepcion" . $id,
+                    'content' => $this->renderAjax('view', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
-            }else{
-                 return [
-                    'title'=> "Actualizar Registro".$id,
-                    'content'=>$this->renderAjax('update', [
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::a('Editar', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                ];
+            } else {
+                return [
+                    'title' => "Actualizar Registro" . $id,
+                    'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
-                ];        
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                ];
             }
-        }else{
+        } else {
             /*
             *   Process for non-ajax request
             */
@@ -210,23 +211,21 @@ class Registro_recepcionController extends Controller
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
             /*
             *   Process for non-ajax request
             */
             return $this->redirect(['index']);
         }
-
-
     }
 
-     /**
+    /**
      * Delete multiple existing RegistroRecepcion model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
@@ -234,28 +233,75 @@ class Registro_recepcionController extends Controller
      * @return mixed
      */
     public function actionBulkDelete()
-    {        
+    {
         $request = Yii::$app->request;
-        $pks = explode(',', $request->post( 'pks' )); // Array or selected records primary keys
-        foreach ( $pks as $pk ) {
+        $pks = explode(',', $request->post('pks')); // Array or selected records primary keys
+        foreach ($pks as $pk) {
             $model = $this->findModel($pk);
             $model->delete();
         }
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
             /*
             *   Process for non-ajax request
             */
             return $this->redirect(['index']);
         }
-       
     }
+
+    public function actionBuscarPersonaPorDni()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $dni = Yii::$app->request->get('dni');
+
+        $persona = \app\models\Persona::findOne(['documento' => $dni]);
+
+        if (!$persona) {
+            $persona = \app\models\PersonasNoHomologadas::findOne(['documento' => $dni]);
+        }
+
+        if (!$persona) {
+            $persona = new \app\models\PersonasNoHomologadas();
+            $persona->documento = $dni;
+            $persona->nombre = '';
+            $persona->apellido = '';
+            $persona->documento_tipo = '';
+            $persona->nacionalidad = '';
+            $persona->genero = '';
+            $persona->fecha_nacimiento = '';
+            $persona->save(false);
+            return [
+                'existe' => false,
+                'mensaje' => 'Persona no encontrada. Se cargó como no homologada.'
+            ];
+        }
+
+        return [
+            'existe' => true,
+            'nombre' => $persona->nombre,
+            'apellido' => $persona->apellido,            
+            'documento_tipo'=>$persona->documento_tipo,
+            'nacionalidad'=>$persona->nacionalidad,
+            'genero'=>$persona->genero,
+            'fecha_nacimiento'=>$persona->fecha_nacimiento,
+
+
+        ];
+    }
+
+
+
+
+
+
+
+
 
     /**
      * Finds the RegistroRecepcion model based on its primary key value.

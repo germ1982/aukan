@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 
+
 /**
  * This is the model class for table "registro_recepcion".
  *
@@ -20,6 +21,12 @@ use Yii;
  */
 class RegistroRecepcion extends \yii\db\ActiveRecord
 {
+    public $nombre;
+    public $apellido;
+    public $documento_tipo;
+    public $nacionalidad;
+    public $genero;
+    public $fecha_nacimiento;
     /**
      * {@inheritdoc}
      */
@@ -37,6 +44,7 @@ class RegistroRecepcion extends \yii\db\ActiveRecord
             [['fecha', 'hora'], 'safe'],
             [['dni', 'acceso', 'id_dispositivo_derivacion', 'id_responsable_derivacion', 'id_tipo_recepcion'], 'integer'],
             [['motivo', 'observacion'], 'string'],
+            [['nombre', 'apellido','documento_tipo','nacionalidad','genero','fecha_nacimiento',], 'safe'],
         ];
     }
 
@@ -46,10 +54,16 @@ class RegistroRecepcion extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_registro_recepcion' => 'Id Registro Recepcion',
+            'id_registro_recepcion' => 'Nº Registro',
             'fecha' => 'Fecha',
             'hora' => 'Hora',
             'dni' => 'Dni',
+            'nombre' => 'Nombre',
+            'apellido' => 'Apellido',
+            'documento_tipo' => 'Documento Tipo',
+            'nacionalidad' => 'Nacionalidad',
+            'genero' => 'Genero',
+            'fecha_nacimiento' => 'Fecha Nacimiento',
             'motivo' => 'Motivo',
             'acceso' => 'Acceso',
             'id_dispositivo_derivacion' => 'Id Dispositivo Derivacion',
@@ -57,6 +71,10 @@ class RegistroRecepcion extends \yii\db\ActiveRecord
             'id_tipo_recepcion' => 'Id Tipo Recepcion',
             'observacion' => 'Observacion',
         ];
+    }
+    public static function getRutaUploads()
+    {
+        return Yii::$app->params['rutaUploads'] . 'registro_recepcion/';
     }
     public function getEdificioAcceso()
     {
@@ -100,13 +118,32 @@ class RegistroRecepcion extends \yii\db\ActiveRecord
                 }
             }
 
+            // ✅ Nueva validación para evitar duplicados por DNI y fecha
+            if ($this->dni) {
+                $existe = self::find()
+                    ->where(['dni' => $this->dni, 'fecha' => $this->fecha])
+                    ->andFilterWhere(['<>', 'id_registro_recepcion', $this->id_registro_recepcion])
+                    ->exists();
+
+                if ($existe) {
+                    $this->addError('dni', 'Ya existe un registro para esta persona en la fecha seleccionada.');
+                    return false;
+                }
+            }
+
             return true;
         }
 
         return false;
     }
+
     public function getDispositivoDerivacion()
     {
         return $this->hasOne(OrganismoDispositivo::class, ['iddispositivo' => 'id_dispositivo_derivacion']);
     }
+    public function getPersona()
+    {
+        return $this->hasOne(\app\models\Persona::class, ['documento' => 'dni']);
+    }
+    
 }
