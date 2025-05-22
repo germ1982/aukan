@@ -1,7 +1,7 @@
 <?php
 
 namespace app\models;
-
+use app\models\Configuracion; 
 use Yii;
 
 /**
@@ -20,6 +20,10 @@ use Yii;
 class Articulo extends \yii\db\ActiveRecord
 {
     public $imageFile;
+
+    // Agregamos una propiedad pública para el campo de búsqueda global
+    public $busquedaGlobal; 
+
     public static function tableName()
     {
         return 'articulo';
@@ -36,11 +40,17 @@ class Articulo extends \yii\db\ActiveRecord
             [['descripcion'], 'string', 'max' => 500],
             [['modelo'], 'string', 'max' => 30],
             [['imagen'], 'string', 'max' => 100],
-            [['idtipo'], 'unique', 'targetAttribute' => ['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'], 'message' => 'Ya existe un artículo con la misma combinación de Tipo, Marca, Modelo, Rubro y Unidad de Medida.'],
+            // Agregamos la regla 'safe' para la nueva propiedad de búsqueda
+            [['busquedaGlobal'], 'safe'],
+            [['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'], 'unique', 
+                'targetAttribute' => ['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'], 
+                'message' => 'Ya existe un artículo con la misma combinación de Tipo, Marca, Modelo, Rubro y Unidad de Medida.'],
+            
+            /* [['idtipo'], 'unique', 'targetAttribute' => ['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'], 'message' => 'Ya existe un artículo con la misma combinación de Tipo, Marca, Modelo, Rubro y Unidad de Medida.'],
             [['idmarca'], 'unique', 'targetAttribute' => ['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'], 'message' => 'Ya existe un artículo con la misma combinación de Tipo, Marca, Modelo, Rubro y Unidad de Medida.'],
             [['modelo'], 'unique', 'targetAttribute' => ['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'], 'message' => 'Ya existe un artículo con la misma combinación de Tipo, Marca, Modelo, Rubro y Unidad de Medida.'],
             [['idrubro'], 'unique', 'targetAttribute' => ['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'], 'message' => 'Ya existe un artículo con la misma combinación de Tipo, Marca, Modelo, Rubro y Unidad de Medida.'],
-            [['id_unidad_medida'], 'unique', 'targetAttribute' => ['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'], 'message' => 'Ya existe un artículo con la misma combinación de Tipo, Marca, Modelo, Rubro y Unidad de Medida.'],
+            [['id_unidad_medida'], 'unique', 'targetAttribute' => ['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'], 'message' => 'Ya existe un artículo con la misma combinación de Tipo, Marca, Modelo, Rubro y Unidad de Medida.'], */
         ];
     }
 
@@ -59,6 +69,7 @@ class Articulo extends \yii\db\ActiveRecord
             'id_unidad_medida' => 'Unidad Medida',
             'activo' => 'Activo',
             'imagen' => 'Imagen',
+            'busquedaGlobal' => 'Buscar', // Etiqueta para el nuevo campo
         ];
     }
     public static function get_articulos($modulo = '')
@@ -158,4 +169,26 @@ class Articulo extends \yii\db\ActiveRecord
         $articulo = Articulo::findBySql($sql)->one();
         return $articulo;
     }
+
+
+     // Relaciones:
+     public function getIdtipo0() // Este nombre es común si Gii lo autogenera. Puedes cambiarlo a getTipo()
+     {
+         return $this->hasOne(Configuracion::class, ['id_configuracion' => 'idtipo']);
+     }
+ 
+     public function getIdmarca0() // O getMarca()
+     {
+         return $this->hasOne(Configuracion::class, ['id_configuracion' => 'idmarca']);
+     }
+ 
+     public function getIdrubro0() // O getRubro()
+     {
+         return $this->hasOne(Configuracion::class, ['id_configuracion' => 'idrubro']);
+     }
+ 
+     public function getIdUnidadMedida() // O getUnidadMedida()
+     {
+         return $this->hasOne(Configuracion::class, ['id_configuracion' => 'id_unidad_medida']);
+     }
 }

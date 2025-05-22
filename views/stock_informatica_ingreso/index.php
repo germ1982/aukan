@@ -13,49 +13,11 @@ $this->params['breadcrumbs'][] = $this->title;
 $clase = 'stock-informatica-ingreso-index';
 
 CrudAsset::register($this);
+
+use app\assets\CommonIndexAsset; // Importa tu nuevo Asset Bundle
+CommonIndexAsset::register($this);
+
 ?>
-
-<style>
-    .custom-grid {
-    font-size: 13px; /* Cambia el tamaño según tus necesidades */
-}
-
-.kv-grid-toolbar .btn {
-    height: 30px;  /* Ajusta la altura de todos los botones */
-    line-height: 1.42857143;  /* Esto centra el contenido verticalmente */
-
-    
-}
-.kv-grid-toolbar {
-
-display: flex;
-/* background-color: red; */
-
-}
-
-.btn-toolbar {
-width: 100%;
-
-}
-
-.btn-group {
-width: 100%;
-
-}
-.botones_a {
-        text-align: left;
-        display: flex;
-        gap: 10px;
-    }
-
-    .botones_b {
-        justify-content: flex-end;
-        /* Alineación derecha */
-        display: flex;
-        width: 100%;
-        /* Asegura que el contenedor ocupe todo el ancho de la columna */
-    }
-</style>
 
 <header class="page-header">
     <h2><?= $this->title ?></h2>
@@ -150,13 +112,7 @@ width: 100%;
         </section>
     </div>
 </div>
-<?php
-$this->registerJs(
-    "$('#ajaxCrudModal').on('hidden.bs.modal', function() {
-            location.reload();
-        })"
-);
-?>
+
 
 <?php Modal::begin([
     "id" => "ajaxCrudModal",

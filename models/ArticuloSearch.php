@@ -19,7 +19,7 @@ class ArticuloSearch extends Articulo
     {
         return [
             [['idarticulo', 'idtipo', 'idmarca', 'idrubro', 'id_unidad_medida'], 'integer'],
-            [['descripcion', 'modelo', 'activo', 'imagen'], 'safe'],
+            [['descripcion', 'modelo', 'activo', 'imagen','busquedaGlobal'], 'safe'],
         ];
     }
 
@@ -42,6 +42,15 @@ class ArticuloSearch extends Articulo
     public function search($params)
     {
         $query = Articulo::find();
+
+                // *** CAMBIO CLAVE AQUI: Definir alias explícitos para los JOINs ***
+        // Usamos los nombres de las relaciones como alias, para que coincidan con los LIKEs
+        $query->joinWith([
+            'idtipo0 idtipo_alias',        // 'idtipo0' es el nombre de la relación, 'idtipo_alias' es el alias en la consulta SQL
+            'idmarca0 idmarca_alias',      // 'idmarca0' es el nombre de la relación, 'idmarca_alias' es el alias en la consulta SQL
+            'idrubro0 idrubro_alias',      // 'idrubro0' es el nombre de la relación, 'idrubro_alias' es el alias en la consulta SQL
+            'idUnidadMedida idunidad_alias' // 'idUnidadMedida' es el nombre de la relación, 'idunidad_alias' es el alias en la consulta SQL
+        ]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -68,6 +77,18 @@ class ArticuloSearch extends Articulo
             ->andFilterWhere(['like', 'activo', $this->activo])
             ->andFilterWhere(['like', 'imagen', $this->imagen]);
 
+
+        // *** ESTE ES EL CAMBIO MÁS IMPORTANTE AHORA: USAR LOS ALIAS CORRECTOS ***
+        if (!empty($this->busquedaGlobal)) {
+            $query->andFilterWhere(['or',
+                ['like', 'articulo.descripcion', $this->busquedaGlobal],
+                ['like', 'articulo.modelo', $this->busquedaGlobal],
+                ['like', 'idtipo_alias.descripcion', $this->busquedaGlobal],      // ¡CAMBIADO!
+                ['like', 'idmarca_alias.descripcion', $this->busquedaGlobal],     // ¡CAMBIADO!
+                ['like', 'idrubro_alias.descripcion', $this->busquedaGlobal],     // ¡CAMBIADO!
+                ['like', 'idunidad_alias.descripcion', $this->busquedaGlobal],    // ¡CAMBIADO!
+            ]);
+        }
         return $dataProvider;
     }
 }

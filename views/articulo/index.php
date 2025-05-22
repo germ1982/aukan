@@ -7,6 +7,10 @@ use yii\grid\ActionColumn;
 use yii\bootstrap\Modal;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset;
+use yii\widgets\ActiveForm; // Necesario para el formulario de búsqueda
+
+use app\assets\CommonIndexAsset; // Importa tu nuevo Asset Bundle
+CommonIndexAsset::register($this);
 
 $this->title = 'Articulos';
 $this->params['breadcrumbs'][] = $this->title;
@@ -15,17 +19,7 @@ $clase = 'menu-index';
 CrudAsset::register($this);
 ?>
 
-<style>
-    .custom-grid {
-    font-size: 13px; /* Cambia el tamaño según tus necesidades */
-}
 
-.kv-grid-toolbar .btn {
-    height: 30px;  /* Ajusta la altura de todos los botones */
-    line-height: 1.42857143;  /* Esto centra el contenido verticalmente */
-}
-
-</style>
 
 
 <header class="page-header">
@@ -52,6 +46,34 @@ CrudAsset::register($this);
         <section class="panel">
             <div class="panel-body">
                 <div class="<?= $clase ?>">
+
+                    <div class="global-search-container">
+                        <?php $form = ActiveForm::begin([
+                            'action' => ['index'],
+                            'method' => 'get',
+                            'options' => ['data-pjax' => 0], // Para que la búsqueda no se cargue por AJAX Pjax
+                        ]); ?>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <?= $form->field($searchModel, 'busquedaGlobal')->textInput([
+                                    'placeholder' => 'Buscar en todos los campos...',
+                                    'class' => 'form-control',
+                                    'autocomplete' => 'off',
+                                ])->label(false) ?>
+                            </div>
+                            <div class="col-md-2">
+                                <?= Html::submitButton('<i class="glyphicon glyphicon-search"></i> Buscar', ['class' => 'btn btn-primary']) ?>
+                            </div>
+                        </div>
+
+
+
+
+                        <?php ActiveForm::end(); ?>
+                    </div>
+
+
+
                     <div id="ajaxCrudDatatable">
 
                         <?= GridView::widget([
@@ -62,23 +84,32 @@ CrudAsset::register($this);
                             'pjax' => false,
                             'columns' => require(__DIR__ . '/_columns.php'),
                             'toolbar' => [
-                                ['content' =>
+                                [
+                                    'content' =>
+                                    '<div class="row">' .
+                                        '<div class="col-md-9"> 
+                                        <div class="botones_a">' .
 
-                                Html::a(
-                                        '<i class="glyphicon glyphicon-plus"></i>',
-                                        ['create'],
-                                        ['role' => 'modal-remote', 'title' => 'Nuevo', 'class' => 'btn btn-default']
-                                    ) .
-
-
-
-                                Html::a(
-                                    '<i class="glyphicon glyphicon-repeat"></i>',
-                                    [''],
-                                    ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Refrescar Grilla']
-                                ) .
-                                '{toggleData}' .
-                                '{export}'],
+                                        '</div>
+                                    </div>' .
+                                        '<div class="col-md-3"> 
+                                        <div class="botones_b">' .
+                                        Html::a(
+                                            '<i class="glyphicon glyphicon-plus"></i>',
+                                            ['create'],
+                                            ['role' => 'modal-remote', 'title' => 'Nuevo', 'class' => 'btn btn-default']
+                                        ) .
+                                        Html::a(
+                                            '<i class="glyphicon glyphicon-repeat"></i>',
+                                            [''],
+                                            ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Refrescar Grilla']
+                                        ) .
+                                        '{toggleData}' .
+                                        '{export}' .
+                                        '</div>
+                                    </div>' .
+                                        '</div>'
+                                ],
                             ],
                             'striped' => true,
                             'condensed' => true,
@@ -96,13 +127,7 @@ CrudAsset::register($this);
         </section>
     </div>
 </div>
-<?php
-$this->registerJs(
-    "$('#ajaxCrudModal').on('hidden.bs.modal', function() {
-            location.reload();
-        })"
-);
-?>
+
 
 <?php Modal::begin([
     "id" => "ajaxCrudModal",
