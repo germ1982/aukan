@@ -52,13 +52,14 @@ return [
     // ],
     [
         'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'id_dispositivo_derivacion',
+        'attribute' => 'dispositivoDescripcion',
         'width' => $columna_5,
         'label' => 'Dispositivo Derivacion',
         'value' => function ($model) {
             return $model->dispositivoDerivacion ? $model->dispositivoDerivacion->descripcion : '(No asignado)';
         },
     ],
+
 
 
     /* [
@@ -76,6 +77,7 @@ return [
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
+        'template' => '{view} {update} ',
         'vAlign' => 'middle',
         'urlCreator' => function ($action, $model, $key, $index) {
             return Url::to([$action, 'id' => $key]);

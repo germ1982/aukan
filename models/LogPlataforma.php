@@ -180,6 +180,10 @@ class LogPlataforma extends \yii\db\ActiveRecord
             'nombre' => 'Recepcion',
             'modelo' => \app\models\RegistroRecepcion::class
         ],
+        32 => [
+            'nombre' => 'Personas No Homologadas',
+            'modelo' => \app\models\PersonasNoHomologadas::class
+        ],
         
     ];
 

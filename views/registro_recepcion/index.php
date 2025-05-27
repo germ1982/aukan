@@ -11,7 +11,7 @@ use johnitvn\ajaxcrud\CrudAsset;
 
 $this->title = 'Registro Recepcion';
 $this->params['breadcrumbs'][] = $this->title;
-$clase = 'empleado-index';
+$clase = 'registro-recepcion-index';
 
 CrudAsset::register($this);
 
@@ -59,44 +59,46 @@ $this->registerCssFile('@web/css/css_index_views.css', [
                             'tableOptions' => ['class' => 'custom-grid'],
                             'dataProvider' => $dataProvider,
                             'filterModel' => $searchModel,
-                            'pjax' => false,
+                            'pjax' => true,
+
                             'columns' => require(__DIR__ . '/_columns.php'),
+
                             'toolbar' => [
-                                ['content' =>
-                                '<div class="row">' .
-                                    '<div class="col-md-9"> 
-
-                                        </div>' .
-                                    '<div class="col-md-3"> ' .
-                                    '<div class="botones_b">' .
-                                    Html::a(
-                                        '<i class="glyphicon glyphicon-plus"></i>',
-                                        ['create'],
-                                        ['role' => 'modal-remote', 'title' => 'Nuevo', 'class' => 'btn btn-default']
-                                    ) .
-
-
-
-                                    Html::a(
-                                        '<i class="glyphicon glyphicon-repeat"></i>',
-                                        [''],
-                                        ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Refrescar Grilla']
-                                    ) .
-                                    '{toggleData}' .
-                                    '{export}' .
-                                    '</div>' .
-                                    '</div>' .
-                                    '</div>'],
+                                [
+                                    'content' =>
+                                    '<div style="display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 15px;">' .
+                                        Html::a('<i class="glyphicon glyphicon-stats"></i> Estadísticas', ['registro_recepcion/estadisticas'], [
+                                            'class' => 'btn btn-default',
+                                            'title' => 'Ver estadísticas',
+                                        ]) .
+                                        Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'], [
+                                            'role' => 'modal-remote',
+                                            'title' => 'Nuevo',
+                                            'class' => 'btn btn-default',
+                                        ]) .
+                                        Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''], [
+                                            'data-pjax' => 1,
+                                            'class' => 'btn btn-default',
+                                            'title' => 'Refrescar Grilla',
+                                        ]) .
+                                        '<div>{toggleData}</div>' .
+                                        '<div>{export}</div>' .
+                                        '</div>',
+                                ],
                             ],
+
                             'striped' => true,
                             'condensed' => true,
                             'responsive' => false,
+
                             'panel' => [
                                 'type' => 'primary',
                                 'heading' => false,
                                 'after' => '<div class="clearfix"></div>',
                             ]
                         ]); ?>
+
+
 
                     </div>
                 </div>
@@ -141,6 +143,12 @@ $this->registerJs(
         ",
     \yii\web\View::POS_READY // indica que el script se ejecute cuando el DOM esté listo
 );
+
+
+
+
+
+
 ?>
 
 <?php Modal::begin([

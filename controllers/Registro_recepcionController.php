@@ -13,6 +13,10 @@ use \yii\web\Response;
 use yii\helpers\Html;
 use app\models\Persona;
 use app\models\PersonasNoHomologadas;
+use yii\db\Expression;
+use app\models\OrganismoDispositivo;
+use DateTime;
+use Mpdf\Mpdf;
 
 /**
  * Registro_recepcionController implements the CRUD actions for RegistroRecepcion model.
@@ -77,22 +81,16 @@ class Registro_recepcionController extends Controller
         }
     }
 
-    /**
-     * Creates a new RegistroRecepcion model.
-     * For ajax request will return json object
-     * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
     public function actionCreate()
     {
         $request = Yii::$app->request;
         $model = new RegistroRecepcion();
 
+        // Si la petición es AJAX
         if ($request->isAjax) {
-            /*
-            *   Process for ajax request
-            */
             Yii::$app->response->format = Response::FORMAT_JSON;
+
+            // Si la petición es GET, muestra el formulario
             if ($request->isGet) {
                 return [
                     'title' => "Crear Nuevo Registro",
@@ -100,104 +98,134 @@ class Registro_recepcionController extends Controller
                         'model' => $model,
                     ]),
                     'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => 'submit', 'role' => 'modal-remote-submit'])
+
 
                 ];
-            } else if ($model->load($request->post()) && $model->save()) {
+            }
+
+            // Si los datos son cargados y guardados correctamente
+            else if ($model->load($request->post()) && $model->save()) {
+                // Verificamos si la persona no está ni en Persona ni en PersonasNoHomologadas
+                $existePersona = \app\models\Persona::findOne(['documento' => $model->dni]);
+                $existeNoHomo = \app\models\PersonasNoHomologadas::findOne(['documento' => $model->dni]);
+
+                // Si no existe la persona en ninguna de las tablas
+                if (!$existePersona && !$existeNoHomo) {
+                    $noHomo = new \app\models\PersonasNoHomologadas();
+                    $noHomo->documento = $model->dni;
+                    $noHomo->nombre = $model->nombre;
+                    $noHomo->apellido = $model->apellido;
+                    $noHomo->documento_tipo = $model->documento_tipo;
+                    $noHomo->nacionalidad = $model->nacionalidad;
+                    $noHomo->genero = $model->genero;
+                    $noHomo->fecha_nacimiento = $model->fecha_nacimiento;
+
+                    // Si no se puede guardar la persona no homologada, logueamos el error
+                    if (!$noHomo->save()) {
+                        Yii::error($noHomo->getErrors(), 'app'); // logueamos errores si ocurren
+                    } else {
+                        LogPlataforma::registrar(32, 1, $noHomo->idpersona_no_homologada);
+                    }
+                }
+
+                // Registrar la acción
                 LogPlataforma::registrar(31, 1, $model->id_registro_recepcion);
+
+                // Responder en formato JSON para que el modal se cierre
                 return [
                     'forceReload' => '#crud-datatable-pjax',
-                    'title' => "Crear Nuevo Registro ",
+                    'title' => "Crear Nuevo Registro",
                     'content' => '<span class="text-success">Registro Creado Correctamente</span>',
                     'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::a('Create More', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
-
-                ];
-            } else {
-                return [
-                    'title' => "Crear Nuevo Registro",
-                    'content' => $this->renderAjax('create', [
-                        'model' => $model,
-                    ]),
-                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
-
+                        Html::a('Crear Otro', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
                 ];
             }
+        }
+
+        // Si la petición no es AJAX
+        if ($model->load($request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id_registro_recepcion]);
         } else {
-            /*
-            *   Process for non-ajax request
-            */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id_registro_recepcion]);
-            } else {
-                return $this->render('create', [
-                    'model' => $model,
-                ]);
-            }
+            return $this->render('create', [
+                'model' => $model,
+            ]);
         }
     }
 
-    /**
-     * Updates an existing RegistroRecepcion model.
-     * For ajax request will return json object
-     * and for non-ajax request if update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
+
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
         $model = $this->findModel($id);
 
+        // Si la petición es AJAX
         if ($request->isAjax) {
-            /*
-            *   Process for ajax request
-            */
             Yii::$app->response->format = Response::FORMAT_JSON;
+
+            // Si la petición es GET, muestra el formulario
             if ($request->isGet) {
                 return [
-                    'title' => "Actualizar Registro" . $id,
+                    'title' => "Actualizar Registro " . $id,
                     'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),
                     'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                         Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
-            } else if ($model->load($request->post()) && $model->save()) {
+            }
+
+            // Si los datos son cargados y guardados correctamente
+            else if ($model->load($request->post()) && $model->save()) {
+                // Verificamos si la persona no está ni en Persona ni en PersonasNoHomologadas
+                $existePersona = \app\models\Persona::findOne(['documento' => $model->dni]);
+                $existeNoHomo = \app\models\PersonasNoHomologadas::findOne(['documento' => $model->dni]);
+
+                // Si no existe la persona en ninguna de las tablas
+                if (!$existePersona && !$existeNoHomo) {
+                    $noHomo = new \app\models\PersonasNoHomologadas();
+                    $noHomo->documento = $model->dni;
+                    $noHomo->nombre = $model->nombre;
+                    $noHomo->apellido = $model->apellido;
+                    $noHomo->documento_tipo = $model->documento_tipo;
+                    $noHomo->nacionalidad = $model->nacionalidad;
+                    $noHomo->genero = $model->genero;
+                    $noHomo->fecha_nacimiento = $model->fecha_nacimiento;
+
+                    // Si no se puede guardar la persona no homologada, logueamos el error
+                    if (!$noHomo->save()) {
+                        Yii::error($noHomo->getErrors(), 'app');
+                    } else {
+                        LogPlataforma::registrar(32, 1, $noHomo->idpersona_no_homologada);
+                    }
+                }
+
+                // Registrar la acción
                 LogPlataforma::registrar(31, 2, $model->id_registro_recepcion);
+
+                // Responder en formato JSON para que el modal se cierre
                 return [
                     'forceReload' => '#crud-datatable-pjax',
-                    'title' => "Registro Recepcion" . $id,
+                    'title' => "Actualizar Registro " . $id,
                     'content' => $this->renderAjax('view', [
                         'model' => $model,
                     ]),
                     'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                         Html::a('Editar', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
                 ];
-            } else {
-                return [
-                    'title' => "Actualizar Registro" . $id,
-                    'content' => $this->renderAjax('update', [
-                        'model' => $model,
-                    ]),
-                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
-                ];
-            }
-        } else {
-            /*
-            *   Process for non-ajax request
-            */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id_registro_recepcion]);
-            } else {
-                return $this->render('update', [
-                    'model' => $model,
-                ]);
             }
         }
+
+        // Si la petición no es AJAX
+        if ($model->load($request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id_registro_recepcion]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
     }
+
 
     /**
      * Delete an existing RegistroRecepcion model.
@@ -285,15 +313,161 @@ class Registro_recepcionController extends Controller
         return [
             'existe' => true,
             'nombre' => $persona->nombre,
-            'apellido' => $persona->apellido,            
-            'documento_tipo'=>$persona->documento_tipo,
-            'nacionalidad'=>$persona->nacionalidad,
-            'genero'=>$persona->genero,
-            'fecha_nacimiento'=>$persona->fecha_nacimiento,
+            'apellido' => $persona->apellido,
+            'documento_tipo' => $persona->documento_tipo,
+            'nacionalidad' => $persona->nacionalidad,
+            'genero' => $persona->genero,
+            'fecha_nacimiento' => $persona->fecha_nacimiento,
 
 
         ];
     }
+
+
+    public function actionEstadisticas($fecha_inicio = null, $fecha_final = null)
+    {
+
+        if ($fecha_inicio !== null) {
+            $fecha_inicio = DateTime::createFromFormat('d/m/Y', $fecha_inicio)->format('Y-m-d');
+        } else {
+            $fecha_inicio = date('Y-m-d');
+        }
+
+        if ($fecha_final !== null) {
+            $fecha_final = DateTime::createFromFormat('d/m/Y', $fecha_final)->format('Y-m-d');
+        } else {
+            $fecha_final = date('Y-m-d');
+        }
+
+        $mysql = "  SELECT concat(o.abreviatura,' - ',  od.descripcion) as descripcion , count(*) as visitas
+                    from registro_recepcion r
+                    join organismo_dispositivo od on od.iddispositivo=r.id_dispositivo_derivacion
+                    join organismo o on o.idorganismo=od.idorganismo
+                    WHERE r.fecha BETWEEN '$fecha_inicio' AND '$fecha_final'
+                    group by r.id_dispositivo_derivacion";
+
+        //return $mysql;
+
+        $registros = Yii::$app->db->createCommand($mysql)->queryAll();
+
+
+        return $this->render('estadisticas', [
+            'registros' => $registros,
+            'fecha_inicio' => $fecha_inicio,
+            'fecha_final' => $fecha_final,
+        ]);
+    }
+
+
+    private function crearGraficoTorta($labels, $values, $rutaImagen)
+    {
+        $width = 500;
+        $height = 450; // más alto para dejar espacio a la leyenda arriba
+        $image = imagecreatetruecolor($width, $height);
+
+        $white = imagecolorallocate($image, 255, 255, 255);
+        imagefill($image, 0, 0, $white);
+
+        $colors = [
+            imagecolorallocate($image, 255, 99, 132),
+            imagecolorallocate($image, 54, 162, 235),
+            imagecolorallocate($image, 255, 206, 86),
+            imagecolorallocate($image, 75, 192, 192),
+            imagecolorallocate($image, 153, 102, 255),
+            imagecolorallocate($image, 255, 159, 64),
+        ];
+
+        // Dibuja la leyenda arriba
+        $startX = 20;
+        $startY = 10;
+        $boxSize = 15;
+        $spacing = 10;
+        $textOffsetY = 12;
+        $grisOscuro = imagecolorallocate($image, 80, 80, 80);
+
+        foreach ($labels as $i => $label) {
+            $color = $colors[$i % count($colors)];
+
+            // Dibujar caja de color
+            imagefilledrectangle($image, $startX, $startY, $startX + $boxSize, $startY + $boxSize, $color);
+
+
+
+            // Cambiamos imagestring(3, ...) por imagestring(2, ...) para letra más pequeña
+            //imagestring($image, 2, $label_x - 40, $label_y - 7, $etiqueta, );
+            imagestring($image, 2, $startX + $boxSize + 5, $startY, $label, $grisOscuro);
+
+            $startY += $boxSize + $spacing;
+        }
+
+        // Ahora dibujar la torta debajo de la leyenda
+        $total = array_sum($values);
+        $start_angle = 0;
+        $cx = $width / 2;
+        $cy = $height - 200; // bajar el centro para dejar espacio a la leyenda arriba
+        $radius = 150;
+
+        foreach ($values as $i => $val) {
+            $percentage = $val / $total;
+            $angle = $percentage * 360;
+            $end_angle = $start_angle + $angle;
+            $color = $colors[$i % count($colors)];
+
+            imagefilledarc($image, $cx, $cy, $radius * 2, $radius * 2, $start_angle, $end_angle, $color, IMG_ARC_PIE);
+
+            $start_angle = $end_angle;
+        }
+
+        imagepng($image, $rutaImagen);
+        imagedestroy($image);
+    }
+
+
+
+
+
+
+    public function actionExportar($fecha_inicio, $fecha_final)
+    {
+        $this->layout = false;
+
+        $mysql = "SELECT concat(o.abreviatura,' - ', od.descripcion) as descripcion, count(*) as visitas
+              FROM registro_recepcion r
+              JOIN organismo_dispositivo od ON od.iddispositivo = r.id_dispositivo_derivacion
+              JOIN organismo o ON o.idorganismo = od.idorganismo
+              WHERE r.fecha BETWEEN :fecha_inicio AND :fecha_final
+              GROUP BY r.id_dispositivo_derivacion";
+
+        $registros = Yii::$app->db->createCommand($mysql)
+            ->bindValue(':fecha_inicio', $fecha_inicio)
+            ->bindValue(':fecha_final', $fecha_final)
+            ->queryAll();
+
+        $labels = [];
+        $data = [];
+        foreach ($registros as $registro) {
+            $labels[] = $registro['descripcion'];
+            $data[] = $registro['visitas'];
+        }
+
+        $rutaImagen = Yii::getAlias('@runtime') . '/grafico_torta.png';
+        $this->crearGraficoTorta($labels, $data, $rutaImagen);
+
+        $html = $this->renderPartial('pdf_estadisticas', [
+            'registros' => $registros,
+            'graficoImagen' => $rutaImagen,
+            'fecha_inicio' => $fecha_inicio,
+            'fecha_final' => $fecha_final,
+        ]);
+
+        $mpdf = new \Mpdf\Mpdf(['format' => 'A4', 'orientation' => 'P']);
+        $mpdf->WriteHTML($html);
+        $mpdf->Output("estadisticas_{$fecha_inicio}_{$fecha_final}.pdf", \Mpdf\Output\Destination::INLINE);
+    }
+
+
+
+
 
 
 

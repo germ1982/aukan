@@ -7,11 +7,15 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\RegistroRecepcion;
 
+
+
 /**
  * RegistroRecepcionlSearch represents the model behind the search form about `app\models\RegistroRecepcion`.
  */
 class RegistroRecepcionlSearch extends RegistroRecepcion
 {
+    public $dispositivoDescripcion;
+
     /**
      * @inheritdoc
      */
@@ -19,7 +23,8 @@ class RegistroRecepcionlSearch extends RegistroRecepcion
     {
         return [
             [['id_registro_recepcion', 'dni', 'acceso', 'id_dispositivo_derivacion', 'id_responsable_derivacion', 'id_tipo_recepcion'], 'integer'],
-            [['fecha', 'hora', 'motivo', 'observacion'], 'safe'],
+            [['dispositivoDescripcion', 'fecha', 'hora', 'motivo', 'observacion'], 'safe'],
+
         ];
     }
 
@@ -41,20 +46,27 @@ class RegistroRecepcionlSearch extends RegistroRecepcion
      */
     public function search($params)
     {
-        $query = RegistroRecepcion::find();
+        $query = RegistroRecepcion::find()->joinWith('dispositivoDerivacion');
 
+        // 🔧 Crear dataProvider ANTES de usarlo
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
+        // 🔃 Definir cómo ordenar por el campo virtual
+        $dataProvider->sort->attributes['dispositivoDescripcion'] = [
+            'asc' => ['dispositivo_derivacion.descripcion' => SORT_ASC],
+            'desc' => ['dispositivo_derivacion.descripcion' => SORT_DESC],
+        ];
+
+        // ⚠️ Cargar y validar datos ANTES de aplicar filtros
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 
+        // 📌 Filtros exactos
         $query->andFilterWhere([
             'id_registro_recepcion' => $this->id_registro_recepcion,
             'fecha' => $this->fecha,
@@ -66,8 +78,10 @@ class RegistroRecepcionlSearch extends RegistroRecepcion
             'id_tipo_recepcion' => $this->id_tipo_recepcion,
         ]);
 
+        // 📌 Filtros con "like"
         $query->andFilterWhere(['like', 'motivo', $this->motivo])
-            ->andFilterWhere(['like', 'observacion', $this->observacion]);
+            ->andFilterWhere(['like', 'observacion', $this->observacion])
+            ->andFilterWhere(['like', 'organismo_dispositivo.descripcion', $this->dispositivoDescripcion]);
 
         return $dataProvider;
     }

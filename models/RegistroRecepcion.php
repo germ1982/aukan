@@ -41,10 +41,11 @@ class RegistroRecepcion extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['fecha', 'hora'], 'safe'],
+            [['fecha'], 'required'],
+            [['hora'], 'safe'],
             [['dni', 'acceso', 'id_dispositivo_derivacion', 'id_responsable_derivacion', 'id_tipo_recepcion'], 'integer'],
             [['motivo', 'observacion'], 'string'],
-            [['nombre', 'apellido','documento_tipo','nacionalidad','genero','fecha_nacimiento',], 'safe'],
+            [['nombre', 'apellido', 'documento_tipo', 'nacionalidad', 'genero', 'fecha_nacimiento',], 'safe'],
         ];
     }
 
@@ -102,6 +103,11 @@ class RegistroRecepcion extends \yii\db\ActiveRecord
     {
         if (parent::beforeSave($insert)) {
 
+            // Si no se proporcionó una fecha, asignar la actual
+            if (empty($this->fecha)) {
+                $this->fecha = date('Y-m-d');
+            }
+
             // Convertir fecha de d/m/Y a Y-m-d si es necesario
             if (!empty($this->fecha) && strpos($this->fecha, '/') !== false) {
                 $fecha = \DateTime::createFromFormat('d/m/Y', $this->fecha);
@@ -118,7 +124,7 @@ class RegistroRecepcion extends \yii\db\ActiveRecord
                 }
             }
 
-            // ✅ Nueva validación para evitar duplicados por DNI y fecha
+            // Validación para evitar duplicados por DNI y fecha
             if ($this->dni) {
                 $existe = self::find()
                     ->where(['dni' => $this->dni, 'fecha' => $this->fecha])
@@ -137,13 +143,18 @@ class RegistroRecepcion extends \yii\db\ActiveRecord
         return false;
     }
 
+    public function getNombreDispositivoDerivacion()
+    {
+        return $this->dispositivoDerivacion ? $this->dispositivoDerivacion->descripcion : 'Sin dato';
+    }
+
+
     public function getDispositivoDerivacion()
     {
         return $this->hasOne(OrganismoDispositivo::class, ['iddispositivo' => 'id_dispositivo_derivacion']);
-    }
+    } 
     public function getPersona()
     {
         return $this->hasOne(\app\models\Persona::class, ['documento' => 'dni']);
     }
-    
 }
