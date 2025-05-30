@@ -5,12 +5,14 @@ namespace app\controllers;
 use Yii;
 use app\models\Configuracion;
 use app\models\ConfiguracionSearch;
+use app\models\ConfiguracionTipo;
 use app\models\LogPlataforma;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 /**
  * ConfiguracionController implements the CRUD actions for Configuracion model.
@@ -310,4 +312,23 @@ class ConfiguracionController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+    /* public static function botonAltaConfiguracion($model,$tipo,$titulo)
+        {
+            $nombreConstante = 'app\\models\\ConfiguracionTipo::' . $tipo;
+            //Creo un botón reutilizable para todas las configuraciones. Se muestra el sector de ABM configuración y se llena
+            //con lo que devuelve el método del controller 'actionCreate_ext'. Que sería como un create externo. Se usa también en risneu pero llenando un modal.
+            return Html::button('<i class="glyphicon glyphicon-plus"></i>', [
+                'value' => Url::to(['//configuracion/create_ext', 'tipo' => $nombreConstante]),
+                'class' => 'btn btn-success btn-flat',
+                'id' => 'btn_config_' . $nombreConstante, 'style' => 'margin-top:27px',
+                'tabIndex' => '-1',
+                "disabled" => !$model->isNewRecord,
+                'onclick' => '
+                    $("#abm_configuracion").show();
+                    $("#abm_configuracion_content").load($(this).attr("value"));
+                    $("#abm_configuracion_title").html("'.$titulo.'");
+                    $("#btnGuardar").hide();$("#btnCerrar").hide();
+                    $("#form_principal").hide();'
+            ]);
+        } */
 }
