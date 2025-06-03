@@ -6,6 +6,8 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\file\FileInput;
 use yii\helpers\Url;
+use app\helpers\AppHtmlHelper; // <-- ¡Importa tu nuevo Helper aquí!
+use app\models\ConfiguracionTipo;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Articulo */
@@ -54,14 +56,19 @@ $array_unidad_de_medida = Configuracion::find()->where(['activo' => 1, 'id_confi
 </style>
 
 
-<div class="articulo-form">
+<div class="articulo-form" id=form_principal>
 
     <?php $form = ActiveForm::begin(); ?>
     <div class="row">
         <div class=" col-md-8">
             <div class="row">
                 <div class=" col-md-6">
-                    <?= SiteController::actionGet_input_select2($form, $model, 'idtipo', 'cmb_tipo_articulo', $array_tipos, 'id_configuracion', 'descripcion', 'Tipo', 'seleccione articulo...') ?>
+                    <div class="input-group required">
+                        <?= SiteController::actionGet_input_select2($form, $model, 'idtipo', 'cmb_tipo_articulo', $array_tipos, 'id_configuracion', 'descripcion', 'Tipo', 'seleccione articulo...') ?>
+                        <span class="input-group-btn">
+                            <?= AppHtmlHelper::botonAltaConfiguracion($model,ConfiguracionTipo::TIPO_ARTICULO,'Tipo Articulo') ?>
+                        </span>
+                    </div>
                 </div>
                 <div class=" col-md-6">
                     <?= SiteController::actionGet_input_select2($form, $model, 'idmarca', 'cmb_tipo_marca', $array_marca, 'id_configuracion', 'descripcion', 'Marca', 'seleccione marca...') ?>
@@ -119,4 +126,14 @@ $array_unidad_de_medida = Configuracion::find()->where(['activo' => 1, 'id_confi
 
     <?php ActiveForm::end(); ?>
 
+</div>
+
+<div id="abm_configuracion" style="display:none; border: 1px solid #ccc; padding: 15px; margin-top: 20px;">
+    <h3 id="abm_configuracion_title"></h3>
+    <div id="abm_configuracion_content">
+        </div>
+    <div class="form-group text-right">
+        <?= Html::button('Guardarrrrrrrrr', ['id' => 'btnGuardar', 'class' => 'btn btn-primary']) ?>
+        <?= Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default']) ?>
+    </div>
 </div>
