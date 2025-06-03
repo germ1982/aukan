@@ -327,17 +327,23 @@ class Registro_recepcionController extends Controller
     public function actionEstadisticas($fecha_inicio = null, $fecha_final = null)
     {
 
-        if ($fecha_inicio !== null) {
-            $fecha_inicio = DateTime::createFromFormat('d/m/Y', $fecha_inicio)->format('Y-m-d');
-        } else {
-            $fecha_inicio = date('Y-m-d');
+        try {
+            if ($fecha_inicio !== null) {
+                $fecha_inicio = DateTime::createFromFormat('d/m/Y', $fecha_inicio)->format('Y-m-d');
+            } else {
+                $fecha_inicio = date('Y-m-d');
+            }
+
+            if ($fecha_final !== null) {
+                $fecha_final = DateTime::createFromFormat('d/m/Y', $fecha_final)->format('Y-m-d');
+            } else {
+                $fecha_final = date('Y-m-d');
+            }
+        } catch (\Exception $e) {
+            Yii::error('Error en fechas: ' . $e->getMessage(), 'app');
+            $fecha_inicio = $fecha_final = date('Y-m-d'); // fallback
         }
 
-        if ($fecha_final !== null) {
-            $fecha_final = DateTime::createFromFormat('d/m/Y', $fecha_final)->format('Y-m-d');
-        } else {
-            $fecha_final = date('Y-m-d');
-        }
 
         $mysql = "  SELECT concat(o.abreviatura,' - ',  od.descripcion) as descripcion , count(*) as visitas
                     from registro_recepcion r
@@ -351,11 +357,18 @@ class Registro_recepcionController extends Controller
         $registros = Yii::$app->db->createCommand($mysql)->queryAll();
 
 
-        return $this->render('estadisticas', [
+
+        return $this->renderAjax('estadisticas', [
             'registros' => $registros,
             'fecha_inicio' => $fecha_inicio,
             'fecha_final' => $fecha_final,
         ]);
+
+        /* return $this->render('estadisticas', [
+            'registros' => $registros,
+            'fecha_inicio' => $fecha_inicio,
+            'fecha_final' => $fecha_final,
+        ]); */
     }
 
 
