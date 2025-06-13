@@ -24,6 +24,7 @@ $clase = 'stock-informatica-egreso-index';
 
 
 
+
 <header class="page-header">
     <h2><?= $this->title ?></h2>
 
