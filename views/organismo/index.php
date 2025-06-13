@@ -13,19 +13,12 @@ $this->params['breadcrumbs'][] = $this->title;
 $clase = 'organismo-index';
 
 CrudAsset::register($this);
+
+use app\assets\CommonIndexAsset; // Importa tu nuevo Asset Bundle
+CommonIndexAsset::register($this);
 ?>
 
-<style>
-    .custom-grid {
-    font-size: 13px; /* Cambia el tamaño según tus necesidades */
-}
 
-.kv-grid-toolbar .btn {
-    height: 30px;  /* Ajusta la altura de todos los botones */
-    line-height: 1.42857143;  /* Esto centra el contenido verticalmente */
-}
-
-</style>
 <header class="page-header">
     <h2><?= $this->title ?></h2>
 
@@ -55,12 +48,24 @@ CrudAsset::register($this);
                         <?= GridView::widget([
                             'id' => 'crud-datatable',
                             'dataProvider' => $dataProvider,
+                            'tableOptions' => ['class' => 'custom-grid'],
                             'filterModel' => $searchModel,
                             'pjax' => false,
                             'columns' => require(__DIR__ . '/_columns.php'),
                             'toolbar' => [
                                 ['content' =>
-
+                                '<div class="row">' .
+                                    '<div class="col-md-9"> 
+                                        <div class="botones_a">' .
+                                            Html::a(
+                                                'Dispositivos',
+                                                ['/organismo_dispositivo'],
+                                                ['title' => 'Dispositivos', 'class' => 'btn btn-primary neon']
+                                            ) .
+                                        '</div>
+                                    </div>' .
+                                '<div class="col-md-3"> 
+                                    <div class="botones_b">' .
                                 Html::a(
                                         '<i class="glyphicon glyphicon-plus"></i>',
                                         ['create'],
@@ -75,7 +80,11 @@ CrudAsset::register($this);
                                     ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Refrescar Grilla']
                                 ) .
                                 '{toggleData}' .
-                                '{export}'],
+                                '{export}'.
+                                '</div>
+                                </div>' .
+                                '</div>'
+                            ],
                             ],
                             'striped' => true,
                             'condensed' => true,
@@ -93,13 +102,7 @@ CrudAsset::register($this);
         </section>
     </div>
 </div>
-<?php
-$this->registerJs(
-    "$('#ajaxCrudModal').on('hidden.bs.modal', function() {
-            location.reload();
-        })"
-);
-?>
+
 
 <?php Modal::begin([
     "id" => "ajaxCrudModal",
