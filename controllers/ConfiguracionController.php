@@ -40,11 +40,11 @@ class ConfiguracionController extends Controller
      * @return mixed
      */
     public function actionIndex()
-    {    
+    {
         $searchModel = new ConfiguracionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        $dataProvider->pagination->pageSize=50;
+        $dataProvider->pagination->pageSize = 50;
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -59,19 +59,19 @@ class ConfiguracionController extends Controller
      * @return mixed
      */
     public function actionView($id)
-    {   
+    {
         $request = Yii::$app->request;
-        if($request->isAjax){
+        if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                    'title'=> "Dato id ".$id,
-                    'content'=>$this->renderAjax('view', [
-                        'model' => $this->findModel($id),
-                    ]),
-                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
-        }else{
+                'title' => "Dato id " . $id,
+                'content' => $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+                ]),
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::a('Editar', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+            ];
+        } else {
             return $this->render('view', [
                 'model' => $this->findModel($id),
             ]);
@@ -100,11 +100,11 @@ class ConfiguracionController extends Controller
                         'model' => $model,
                     ]),
                     'footer' =>
-                        Html::button('Cerrar', [
-                            'id' => 'btnCerrar',
-                            'class' => 'btn btn-default pull-left',
-                            'data-dismiss' => 'modal',
-                        ]) .
+                    Html::button('Cerrar', [
+                        'id' => 'btnCerrar',
+                        'class' => 'btn btn-default pull-left',
+                        'data-dismiss' => 'modal',
+                    ]) .
                         Html::button('Guardar', [
                             'id' => 'btnGuardar',
                             'class' => 'btn btn-primary',
@@ -112,32 +112,29 @@ class ConfiguracionController extends Controller
                         ]),
                 ];
             } else if ($model->load($request->post()) && $model->validate()) {
-                    $transaction = Yii::$app->db->beginTransaction();
-                    $guardado = true;
-                 
-                    if ($guardado && $model->save()) {
-                            $transaction->commit();
-                            LogPlataforma::registrar(12, 1, $model->id_configuracion); // Asegúrate de que id_configuracion tenga un valor válido aquí
-                            return [
-                                //'forceReload' => '#crud-datatable-pjax', // Recarga el GridView en el modal
-                                'title' => 'Nuevo Dato',
-                                'content' => '<span class="text-success">Dato Creado Correctamente</span>',
-                                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal']) .
-                                            Html::a('Crear Otro', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
-                            ];
-                        } 
-                    else{
-                        return [
-                            'title' => "Nuevo Dato, Faltan datos!!! Complete Los datos Faltantes!!!",
-                            'content' => $this->renderAjax('create', [
-                                'model' => $model,
-                            ]),
-                            'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                                Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
-                        ];
-                    }
-                     
-                 
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
+
+                if ($guardado && $model->save()) {
+                    $transaction->commit();
+                    LogPlataforma::registrar(12, 1, $model->id_configuracion); // Asegúrate de que id_configuracion tenga un valor válido aquí
+                    return [
+                        //'forceReload' => '#crud-datatable-pjax', // Recarga el GridView en el modal
+                        'title' => 'Nuevo Dato',
+                        'content' => '<span class="text-success">Dato Creado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal']) .
+                            Html::a('Crear Otro', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
+                    ];
+                } else {
+                    return [
+                        'title' => "Nuevo Dato, Faltan datos!!! Complete Los datos Faltantes!!!",
+                        'content' => $this->renderAjax('create', [
+                            'model' => $model,
+                        ]),
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                            Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+                    ];
+                }
             }
 
             return [
@@ -149,14 +146,13 @@ class ConfiguracionController extends Controller
                     Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
             ];
         }
-
     }
 
     // ... (actionUpdate refactorizada de manera similar) ...
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
-        $model = $this->findModel($id); 
+        $model = $this->findModel($id);
 
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -168,11 +164,11 @@ class ConfiguracionController extends Controller
                         'model' => $model,
                     ]),
                     'footer' =>
-                        Html::button('Cerrar', [
-                            'id' => 'btnCerrar',
-                            'class' => 'btn btn-default pull-left',
-                            'data-dismiss' => 'modal',
-                        ]) .
+                    Html::button('Cerrar', [
+                        'id' => 'btnCerrar',
+                        'class' => 'btn btn-default pull-left',
+                        'data-dismiss' => 'modal',
+                    ]) .
                         Html::button('Guardar', [
                             'id' => 'btnGuardar',
                             'class' => 'btn btn-primary',
@@ -191,7 +187,7 @@ class ConfiguracionController extends Controller
                                 'title' => 'Editar Dato Id: ' . $id,
                                 'content' => '<span class="text-success">Dato Editado Correctamente</span>',
                                 'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                                            Html::a('Crear Otro', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
+                                    Html::a('Crear Otro', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
                             ];
                         } else {
                             $transaction->rollBack();
@@ -200,7 +196,7 @@ class ConfiguracionController extends Controller
                                 'title' => 'Error al Editar',
                                 'content' => '<span class="text-danger">Hubo un error al guardar los cambios. Por favor, intente de nuevo.</span><br>' . Html::errorSummary($model),
                                 'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                                            Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"]),
+                                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"]),
                             ];
                         }
                     } catch (\Exception $e) {
@@ -210,7 +206,7 @@ class ConfiguracionController extends Controller
                             'title' => 'Error Interno',
                             'content' => '<span class="text-danger">Ocurrió un error inesperado: ' . $e->getMessage() . '</span>',
                             'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                                        Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"]),
+                                Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"]),
                         ];
                     }
                 } else {
@@ -220,7 +216,7 @@ class ConfiguracionController extends Controller
                             'model' => $model,
                         ]),
                         'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"]),
+                            Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"]),
                     ];
                 }
             }
@@ -249,24 +245,22 @@ class ConfiguracionController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(12,3,$id);  
-        if($request->isAjax){
+        LogPlataforma::registrar(12, 3, $id);
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
             /*
             *   Process for non-ajax request
             */
             return $this->redirect(['index']);
         }
-
-
     }
 
-     /**
+    /**
      * Delete multiple existing Configuracion model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
@@ -274,27 +268,26 @@ class ConfiguracionController extends Controller
      * @return mixed
      */
     public function actionBulkDelete()
-    {        
+    {
         $request = Yii::$app->request;
-        $pks = explode(',', $request->post( 'pks' )); // Array or selected records primary keys
-        foreach ( $pks as $pk ) {
+        $pks = explode(',', $request->post('pks')); // Array or selected records primary keys
+        foreach ($pks as $pk) {
             $model = $this->findModel($pk);
             $model->delete();
         }
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
             /*
             *   Process for non-ajax request
             */
             return $this->redirect(['index']);
         }
-       
     }
 
     /**
@@ -312,23 +305,44 @@ class ConfiguracionController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-    /* public static function botonAltaConfiguracion($model,$tipo,$titulo)
-        {
-            $nombreConstante = 'app\\models\\ConfiguracionTipo::' . $tipo;
-            //Creo un botón reutilizable para todas las configuraciones. Se muestra el sector de ABM configuración y se llena
-            //con lo que devuelve el método del controller 'actionCreate_ext'. Que sería como un create externo. Se usa también en risneu pero llenando un modal.
-            return Html::button('<i class="glyphicon glyphicon-plus"></i>', [
-                'value' => Url::to(['//configuracion/create_ext', 'tipo' => $nombreConstante]),
-                'class' => 'btn btn-success btn-flat',
-                'id' => 'btn_config_' . $nombreConstante, 'style' => 'margin-top:27px',
-                'tabIndex' => '-1',
-                "disabled" => !$model->isNewRecord,
-                'onclick' => '
-                    $("#abm_configuracion").show();
-                    $("#abm_configuracion_content").load($(this).attr("value"));
-                    $("#abm_configuracion_title").html("'.$titulo.'");
-                    $("#btnGuardar").hide();$("#btnCerrar").hide();
-                    $("#form_principal").hide();'
-            ]);
-        } */
+
+    /* public function actionCreateConfigAjax()
+    {
+        $model = new Configuracion();
+        return $this->renderAjax('create', [
+            'model' => $model,
+        ]);
+    } */
+
+    public function actionCreate_ext($tipo)
+    {
+        
+        $model = new \app\models\Configuracion();
+        $model->id_configuracion_tipo = $tipo;
+    
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            // guardás y devolvés mensaje
+            if($model->save()){
+                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                return [
+                    'success' => true,
+                    'id' => $model->id_configuracion,
+                    'text' => $model->descripcion, // o el campo visible en el combo
+                ];
+            } // o con validación si preferís
+
+            
+        }
+        
+    
+        // si hubo errores o es la primera carga, devolvés el form (con errores si los hay)
+        return $this->renderAjax('_form', [
+            'model' => $model,
+            'ocultarTipo' => true,
+        ]);
+    }
+
+    
+
+
 }

@@ -6,7 +6,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\file\FileInput;
 use yii\helpers\Url;
-use app\helpers\AppHtmlHelper; // <-- ¡Importa tu nuevo Helper aquí!
+use app\helpers\AppConfiguracionHtmlHelper; // <-- ¡Importa tu nuevo Helper aquí!
 use app\models\ConfiguracionTipo;
 
 /* @var $this yii\web\View */
@@ -66,12 +66,17 @@ $array_unidad_de_medida = Configuracion::find()->where(['activo' => 1, 'id_confi
                     <div class="input-group required">
                         <?= SiteController::actionGet_input_select2($form, $model, 'idtipo', 'cmb_tipo_articulo', $array_tipos, 'id_configuracion', 'descripcion', 'Tipo', 'seleccione articulo...') ?>
                         <span class="input-group-btn">
-                            <?= AppHtmlHelper::botonAltaConfiguracion($model,ConfiguracionTipo::TIPO_ARTICULO,'Tipo Articulo') ?>
+                            <?= AppConfiguracionHtmlHelper::botonAltaConfiguracion($model, ConfiguracionTipo::TIPO_ARTICULO, 'Tipo Articulo','cmb_tipo_articulo') ?>
                         </span>
                     </div>
                 </div>
                 <div class=" col-md-6">
-                    <?= SiteController::actionGet_input_select2($form, $model, 'idmarca', 'cmb_tipo_marca', $array_marca, 'id_configuracion', 'descripcion', 'Marca', 'seleccione marca...') ?>
+                    <div class="input-group required">
+                        <?= SiteController::actionGet_input_select2($form, $model, 'idmarca', 'cmb_tipo_marca', $array_marca, 'id_configuracion', 'descripcion', 'Marca', 'seleccione marca...') ?>
+                        <span class="input-group-btn">
+                            <?= AppConfiguracionHtmlHelper::botonAltaConfiguracion($model, ConfiguracionTipo::MARCA, 'Marca','cmb_tipo_marca') ?>
+                        </span>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -79,12 +84,22 @@ $array_unidad_de_medida = Configuracion::find()->where(['activo' => 1, 'id_confi
                     <?= $form->field($model, 'modelo')->textInput() ?>
                 </div>
                 <div class=" col-md-6">
+                    <div class="input-group required">
                     <?= SiteController::actionGet_input_select2($form, $model, 'idrubro', 'cmb_tipo_rubro', $array_rubro, 'id_configuracion', 'descripcion', 'Rubro', 'seleccione rubro...') ?>
+                        <span class="input-group-btn">
+                            <?= AppConfiguracionHtmlHelper::botonAltaConfiguracion($model, ConfiguracionTipo::TIPO_RUBRO, 'Rubro','cmb_tipo_rubro') ?>
+                        </span>
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <div class=" col-md-6">
+                    <div class="input-group required">
                     <?= SiteController::actionGet_input_select2($form, $model, 'id_unidad_medida', 'cmb_tipo_unidad_de_medida', $array_unidad_de_medida, 'id_configuracion', 'descripcion', 'Unidad_de_Medida', 'seleccione unidad...') ?>
+                        <span class="input-group-btn">
+                            <?= AppConfiguracionHtmlHelper::botonAltaConfiguracion($model, ConfiguracionTipo::UNIDAD_DE_MEDIDA, 'Unidad Medida','cmb_tipo_unidad_de_medida') ?>
+                        </span>
+                    </div>
                 </div>
                 <div class=" col-md-4" style="padding-top:30px;">
                     <?= $form->field($model, 'activo')->checkbox(['checked' => $model->isNewRecord ? true : (bool)$model->activo]) ?>
@@ -128,12 +143,4 @@ $array_unidad_de_medida = Configuracion::find()->where(['activo' => 1, 'id_confi
 
 </div>
 
-<div id="abm_configuracion" style="display:none; border: 1px solid #ccc; padding: 15px; margin-top: 20px;">
-    <h3 id="abm_configuracion_title"></h3>
-    <div id="abm_configuracion_content">
-        </div>
-    <div class="form-group text-right">
-        <?= Html::button('Guardarrrrrrrrr', ['id' => 'btnGuardar', 'class' => 'btn btn-primary']) ?>
-        <?= Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default']) ?>
-    </div>
-</div>
+<?= AppConfiguracionHtmlHelper::renderAbmContenedor() ?>
