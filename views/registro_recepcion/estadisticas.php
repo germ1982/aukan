@@ -13,9 +13,6 @@ foreach ($registros as $registro) {
 }
 ?>
 
-
-<h3>Estadísticas de Derivación</h3>
-
 <div class="panel panel-default">
     <div class="panel-body">
         <?php $form = ActiveForm::begin([

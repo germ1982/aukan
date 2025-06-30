@@ -126,6 +126,10 @@ $this->registerJs("
         var modal = $('#ajaxCrudModal');
         modal.modal('show');
 
+        // Título del modal
+        modal.find('.modal-header').html('<h4>Estadisticas</h4>'); // <--- Añade esta línea
+
+
         // Spinner de carga en el modal-body
         modal.find('.modal-body').html('<div style=\"padding: 20px; text-align:center;\"><i class=\"fa fa-spinner fa-spin fa-2x fa-fw\"></i> Cargando...</div>');
 
@@ -160,7 +164,7 @@ $this->registerJs("
 
 <?php Modal::begin([
     'id' => 'ajaxCrudModal',
-    'header' => '<h4>Estadísticas de Derivación</h4>',
+    //'header' => '<h4>Estadísticas de Derivación</h4>',
     'options' => ['tabindex' => false],
     'size' => Modal::SIZE_LARGE,
     'clientOptions' => ['backdrop' => 'static'],
@@ -169,5 +173,5 @@ $this->registerJs("
         'data-dismiss' => 'modal'
     ]),
 ]) ?>
-<div class="modal-body"><!-- Aquí se carga el contenido dinámicamente --></div>
+
 <?php Modal::end(); ?>
