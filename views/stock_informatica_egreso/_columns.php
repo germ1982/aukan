@@ -56,54 +56,52 @@ return [
     ],
     [
         'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'idpersona_solicitante',
+        'attribute' => 'solicitante',
         'value' => function ($model) {
-            if ($model->idpersona_solicitante) {
-                $persona = Persona::get_persona_ayn($model->idpersona_solicitante);
-                return "$persona";
+            if ($model->personaSolicitante) {
+                return $model->personaSolicitante->apellido . ', ' . $model->personaSolicitante->nombre;
             }
-            return "";
+            return '';
         },
         'width' => $columna_3,
     ],
 
     [
         'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'idempleado_autorizacion',
+        'attribute' => 'autorizacion',
         'value' => function ($model) {
-            if ($model->idempleado_autorizacion) {
-                $empleado = Empleado::get_empleado($model->idempleado_autorizacion);
-                return "$empleado->descripcion";
-            }
-            return "";
+            return ($model->empleadoAutorizacion && $model->empleadoAutorizacion->persona)
+                ? $model->empleadoAutorizacion->persona->apellido . ' ' . $model->empleadoAutorizacion->persona->nombre : '';
         },
+        'filter' => Html::activeTextInput($searchModel, 'autorizacion', ['class' => 'form-control']),
         'width' => $columna_4,
     ],
     [
         'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'idempleado_despacha',
+        'attribute' => 'despachante',
         'value' => function ($model) {
-            if ($model->idempleado_despacha) {
-                $empleado = Empleado::get_empleado($model->idempleado_despacha);
-                return "$empleado->descripcion";
-            }
-            return "";
+            return ($model->empleadoDespacha && $model->empleadoDespacha->persona)
+                ? $model->empleadoDespacha->persona->apellido . ' ' . $model->empleadoDespacha->persona->nombre : '';
         },
+        'filter' => Html::activeTextInput($searchModel, 'despachante', [
+                'class' => 'form-control',
+            ]),
         'width' => $columna_5,
     ],
-
     [
         'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'idpersona_recibe',
+        'attribute' => 'receptor',
         'value' => function ($model) {
-            if ($model->idpersona_recibe) {
-                $persona = Persona::get_persona_ayn($model->idpersona_recibe);
-                return "$persona";
-            }
-            return "";
+            return ($model->personaReceptor)
+                ? $model->personaReceptor->apellido . ' ' . $model->personaReceptor->nombre : '';
         },
+        'filter' => Html::activeTextInput($searchModel, 'receptor', [
+                'class' => 'form-control',
+            ]),
         'width' => $columna_6,
     ],
+
+
 
     [
         'class' => 'kartik\grid\ActionColumn',
