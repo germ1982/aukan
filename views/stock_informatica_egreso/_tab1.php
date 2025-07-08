@@ -144,15 +144,17 @@ function datos_persona_solicitante() {
             
             if (data.length === 0) {
                 $('#txt_mensaje_solicitante').html("No se encontraron datos de Persona con dni " + dni_persona);
+                $('#txt_mensaje_receptor').html('');
+                $('#input_dni_receptor').val(dni_persona);
                 //buscar_en_renaper(dni_persona,tipo_persona);
             } else {
-
                 $('#input_idpersona_solicitante').val(data[0]['idpersona']);
-
                 aux = data[0]['apellido'] + ', ' + data[0]['nombre'];
                 $('#txt_mensaje_solicitante').html(aux);
+                console.log("Seteando input_dni_receptor en: ", dni_persona);
+                $('#input_dni_receptor').val(dni_persona);            
             }
-
+            datos_persona_receptor();
         });
 
 
