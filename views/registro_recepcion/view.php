@@ -21,10 +21,14 @@ $existePersona = \app\models\Persona::findOne(['documento' => $model->dni]);
 $existeNoHomo = \app\models\PersonasNoHomologadas::findOne(['documento' => $model->dni]);
 $persona_aux = $existePersona ? $existePersona : $existeNoHomo;
 
+// Evitar errores si falta algún dato
+$documento_tipo = Configuracion::findOne($persona_aux->documento_tipo)?->descripcion ?? 'No disponible';
+$nacionalidad = Configuracion::findOne($persona_aux->nacionalidad)?->descripcion ?? 'No disponible';
+$genero = Configuracion::findOne($persona_aux->genero)?->descripcion ?? 'No disponible';
 
-$documento_tipo = Configuracion::findOne($persona_aux->documento_tipo)->descripcion;
-$nacionalidad = Configuracion::findOne($persona_aux->nacionalidad)->descripcion;
-$genero = Configuracion::findOne($persona_aux->genero)->descripcion;
+$tipoRecepcion = Configuracion::findOne($model->id_tipo_recepcion)?->descripcion ?? 'No disponible';
+$responsable = Empleado::get_empleado($model->id_responsable_derivacion)?->descripcion ?? 'Sin asignar';
+$dispositivo = OrganismoDispositivo::get_dispositivo($model->id_dispositivo_derivacion)?->descripcion ?? 'Sin asignar';
 ?>
 
 <style>
@@ -48,15 +52,13 @@ $genero = Configuracion::findOne($persona_aux->genero)->descripcion;
             <?= campo('DNI', $model->dni) ?>
         </div>
         <div class="col-md-3">
-            <?= campo('Apellido', $model->persona ? $model->persona->apellido : 'No disponible') ?>
+            <?= campo('Apellido', $persona_aux?->apellido ?? 'No disponible') ?>
         </div>
         <div class="col-md-5">
-            <?= campo('Nombre', $model->persona ? $model->persona->nombre : 'No disponible') ?>
+            <?= campo('Nombre', $persona_aux?->nombre ?? 'No disponible') ?>
         </div>
-
-
-
     </div>
+
     <br>
     <div class="row">
         <div class="col-md-2">
@@ -66,39 +68,36 @@ $genero = Configuracion::findOne($persona_aux->genero)->descripcion;
             <?= campo('Hora', $model->horaFormateada) ?>
         </div>
         <div class="col-md-3">
-            <?= campo('Tipo de Recepción', Configuracion::findOne($model->id_tipo_recepcion)->descripcion) ?>
+            <?= campo('Tipo de Recepción', $tipoRecepcion) ?>
         </div>
         <div class="col-md-2">
             <?= campo('Acceso', EdificioAcceso::get_acceso_descripcion($model->acceso)) ?>
         </div>
-
-
     </div>
-        <br>
+
+    <br>
     <div class="row">
         <div class="col-md-12">
             <?= campo('Motivo', $model->motivo) ?>
         </div>
-
-
     </div>
-        <br>
+
+    <br>
     <div class="row">
         <div class="col-md-3">
-            <?= campo('Responsable Derivación', Empleado::get_empleado($model->id_responsable_derivacion)->descripcion) ?>
+            <?= campo('Responsable Derivación', $responsable) ?>
         </div>
         <div class="col-md-9">
-            <?= campo('Dispositivo Derivación', OrganismoDispositivo::get_dispositivo($model->id_dispositivo_derivacion)->descripcion) ?>
+            <?= campo('Dispositivo Derivación', $dispositivo) ?>
         </div>
-
-
     </div>
-<br>
-    <div class="row">
 
+    <br>
+    <div class="row">
         <div class="col-md-12">
             <?= campo('Observación', $model->observacion ?: 'Sin observaciones') ?>
         </div>
     </div>
-<br>
+
+    <br>
 </div>

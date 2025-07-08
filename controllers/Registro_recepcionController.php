@@ -81,7 +81,7 @@ class Registro_recepcionController extends Controller
         }
     }
 
-    public function actionCreate()
+    /* public function actionCreate()
     {
         $request = Yii::$app->request;
         $model = new RegistroRecepcion();
@@ -128,7 +128,7 @@ class Registro_recepcionController extends Controller
                         LogPlataforma::registrar(32, 1, $noHomo->idpersona_no_homologada);
                     }
                 }
-
+                
                 // Registrar la acción
                 LogPlataforma::registrar(31, 1, $model->id_registro_recepcion);
 
@@ -151,7 +151,91 @@ class Registro_recepcionController extends Controller
                 'model' => $model,
             ]);
         }
+    } */
+
+    public function actionCreate()
+    {
+        $request = Yii::$app->request;
+        $model = new RegistroRecepcion();
+
+        if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+
+            // Si es GET, mostrar formulario limpio
+            if ($request->isGet) {
+                $model = new RegistroRecepcion(); // Refuerza que venga vacío
+                return [
+                    'title' => "Crear Nuevo Registro",
+                    'content' => $this->renderAjax('create', ['model' => $model]),
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => 'submit', 'role' => 'modal-remote-submit']),
+                ];
+            }
+
+            // Si se cargaron datos y se guarda correctamente
+            elseif ($model->load($request->post()) && $model->save()) {
+                // Verificamos si existe en personas o no homologadas
+                $existePersona = \app\models\Persona::findOne(['documento' => $model->dni]);
+                $existeNoHomo = \app\models\PersonasNoHomologadas::findOne(['documento' => $model->dni]);
+
+                if (!$existePersona && !$existeNoHomo) {
+                    $noHomo = new \app\models\PersonasNoHomologadas();
+                    $noHomo->documento = $model->dni;
+                    $noHomo->nombre = $model->nombre;
+                    $noHomo->apellido = $model->apellido;
+                    $noHomo->documento_tipo = $model->documento_tipo;
+                    $noHomo->nacionalidad = $model->nacionalidad;
+                    $noHomo->genero = $model->genero;
+                    $noHomo->fecha_nacimiento = $model->fecha_nacimiento;
+
+                    if (!$noHomo->save()) {
+                        Yii::error($noHomo->getErrors(), 'app');
+                    } else {
+                        LogPlataforma::registrar(32, 1, $noHomo->idpersona_no_homologada);
+                    }
+                }
+
+                LogPlataforma::registrar(31, 1, $model->id_registro_recepcion);
+
+                // Si se presionó el botón "Crear Otro"
+                if ($request->post('create-another')) {
+                    $model = new RegistroRecepcion(); // reinicia el modelo limpio
+                    return [
+                        'forceReload' => '#crud-datatable-pjax',
+                        'title' => "Crear Nuevo Registro",
+                        'content' => $this->renderAjax('create', ['model' => $model]),
+                        'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                            Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => 'submit', 'role' => 'modal-remote-submit']),
+                    ];
+                }
+
+                // Caso normal, mostrar mensaje de éxito y opción "Crear Otro"
+                return [
+                    'forceReload' => '#crud-datatable-pjax',
+                    'title' => "Crear Nuevo Registro",
+                    'content' => '<span class="text-success">Registro Creado Correctamente</span>',
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::a('Crear Otro', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
+                ];
+            }
+
+            // Si no pasa la validación
+            return [
+                'title' => "Crear Nuevo Registro",
+                'content' => $this->renderAjax('create', ['model' => $model]),
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => 'submit', 'role' => 'modal-remote-submit']),
+            ];
+        }
+
+        // Si no es AJAX
+        if ($model->load($request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id_registro_recepcion]);
+        }
+
+        return $this->render('create', ['model' => $model]);
     }
+
 
 
     public function actionUpdate($id)

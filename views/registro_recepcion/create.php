@@ -2,7 +2,6 @@
 
 use yii\helpers\Html;
 
-
 /* @var $this yii\web\View */
 /* @var $model app\models\RegistroRecepcion */
 
@@ -12,3 +11,9 @@ use yii\helpers\Html;
         'model' => $model,
     ]) ?>
 </div>
+
+<?php
+$this->registerJsFile('@web/js/registro-recepcion.js', [
+    'depends' => [\yii\web\JqueryAsset::class]
+]);
+?>

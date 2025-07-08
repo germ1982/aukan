@@ -15,108 +15,7 @@ $persona_nombre = "";
 $model->fecha = $model->isNewRecord ? date('d/m/Y') : date('d/m/Y',strtotime($model->fecha));
 
 
-$script = <<<JS
 
-let dni_persona = $("#input_dni_persona").val();
-if(dni_persona){
-    datos_persona();
-}
-
-function datos_persona() {
-        
-        let dni_persona = $("#input_dni_persona").val();
-
-        if (dni_persona == "") {
-            alert("escriba un dni");
-            return;
-        }
-
-        $('#txt_mensaje').html("Buscando datos de Persona con dni " + dni_persona);
-        $.post("index.php?r=persona/validar_dni&dni=" + dni_persona, function(data) {
-            data = $.parseJSON(data);
-            console.log("console.log('funcion datos_persona'); // POST a index.php?r=persona/validar_dni&dni=" + dni_persona);
-            if (data.length === 0) {
-                $('#txt_mensaje').html("No se encontraron datos en Personas con dni " + dni_persona);
-                datos_persona_no_homo();
-                //buscar_en_renaper(dni_persona,tipo_persona);
-            } else {
-                console.log('funcion datos_persona // encontro en persona');
-                console.log(data);
-                rellenar_campos(data,1);
-            }
-
-        });
-
-
-        }
-
-        function datos_persona_no_homo() {
-            
-            let dni_persona = $("#input_dni_persona").val();
-
-            $('#txt_mensaje').html("Buscando datos de Persona con dni " + dni_persona);
-            $.post("index.php?r=personas_no_homologadas/validar_dni&dni=" + dni_persona, function(data) {
-                data = $.parseJSON(data);
-                console.log("console.log('funcion datos_persona'); // POST a index.php?r=persona/validar_dni&dni=" + dni_persona);
-                if (data.length === 0) {
-                    $('#txt_mensaje').html("No se encontraron datos en  Persona no Homologadas con dni " + dni_persona);
-                    rellenar_campos([],0);
-                } else {
-                    console.log('funcion datos_persona // encontro en personas no homologadas');
-                    console.log(data);
-                    rellenar_campos(data,2);
-                }
-
-            });
-
-
-        }
-
-
-        function rellenar_campos(data,tabla){
-
-            if(tabla==0){
-                $('#txt_mensaje').html('No se encontraron datos, rellene los campos para guardar en personas no homologadas');
-                return
-            }
-            aux = data[0]['apellido'] + ', ' + data[0]['nombre'];
-
-            if(tabla==1){
-                $('#txt_mensaje').html( aux + ' datos encontrados en personas ');
-            }
-
-            if(tabla==2){
-                $('#txt_mensaje').html( aux + ' datos encontrados en personas no homologadas');
-            }
-            console.log('data final: ' + data);
-
-            $('#registrorecepcion-nombre').val(data[0]['nombre']);
-            $('#registrorecepcion-apellido').val(data[0]['apellido']);
-            $('#cmb_documento_tipo').val(data[0]['documento_tipo']).trigger('change');
-            $('#cmb_nacionalidad').val(data[0]['nacionalidad']).trigger('change');
-            $('#cmb_genero').val(data[0]['genero']).trigger('change');
-            $('#input_fecha_nacimiento').val(data[0]['fecha_nacimiento']);
-
-        }
-
-        function ValidarIngresoDni() {
-            var aux = event.which;
-
-            if (aux == 13) //pregunto si fue el enter
-            {
-                datos_persona();
-            }
-        }
-        function formatearFecha(fecha) {
-                var day = fecha.substring(8, 10);
-                var month = fecha.substring(5, 7);
-                var year = fecha.substring(0, 4);
-                var today = day + "/" + month + "/" + year;
-                return today;
-            }
-
-JS;
-$this->registerJs($script);
 ?>
 
 
@@ -220,7 +119,7 @@ $this->registerJs($script);
             <?= $form->field($model, 'observacion')->textarea(['rows' => 6, 'placeholder' => 'Ingrese una observación (opcional)']) ?>
         </div>
     </div>
-
+                
 
 
     <?php ActiveForm::end(); ?>
