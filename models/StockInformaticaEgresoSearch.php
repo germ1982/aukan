@@ -20,7 +20,7 @@ class StockInformaticaEgresoSearch extends StockInformaticaEgreso
     public function rules()
     {
         return [
-            [['idegreso', 'idpersona_recibe'], 'integer'],
+            [['idegreso', 'idpersona_recibe','id_dispositivo_destino'], 'integer'],
             [['fecha', 'observacion', 'fdesde', 'fhasta', 'solicitante', 'autorizacion', 'despachante','receptor'], 'safe'], // 👈 2. Agregamos 'solicitante' a las reglas como atributo seguro
         ];
     }
@@ -68,6 +68,7 @@ class StockInformaticaEgresoSearch extends StockInformaticaEgreso
                     'autorizacion',
                     'despachante',
                     'receptor',
+                    'id_dispositivo_destino',
                 ],
 
             ],
@@ -95,6 +96,7 @@ class StockInformaticaEgresoSearch extends StockInformaticaEgreso
         $query->andFilterWhere([
             'idegreso' => $this->idegreso,
             'fecha' => $this->fecha,
+            'id_dispositivo_destino' => $this->id_dispositivo_destino
             //'idpersona_solicitante' => $this->idpersona_solicitante,
             //'idempleado_autorizacion' => $this->idempleado_autorizacion,
             //'idempleado_despacha' => $this->idempleado_despacha,

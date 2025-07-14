@@ -1,8 +1,11 @@
 <?php
 
 use app\models\Empleado;
+use app\models\OrganismoDispositivo;
 use app\models\Persona;
 use kartik\date\DatePicker;
+use kartik\grid\GridView;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -16,11 +19,12 @@ HTML;
 
 $columna_1 = '5%';
 $columna_2 = '10%';
-$columna_3 = '20%';
-$columna_4 = '20%';
-$columna_5 = '20%';
-$columna_6 = '20%';
-$columna_7 = '5%';
+$columna_3 = '15%';
+$columna_4 = '15%';
+$columna_5 = '15%';
+$columna_6 = '15%';
+$columna_7 = '20%';
+$columna_8 = '5%';
 
 return [
     [
@@ -101,12 +105,27 @@ return [
         'width' => $columna_6,
     ],
 
-
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'id_dispositivo_destino',
+        'value' => function ($model) {
+            return $model->id_dispositivo_destino ? OrganismoDispositivo::get_dispositivo($model->id_dispositivo_destino)->descripcion:'';
+            
+        },
+        'filterType' => GridView::FILTER_SELECT2,
+        'filter' => ArrayHelper::map(OrganismoDispositivo::get_dispositivos(), 'iddispositivo', 'descripcion'),
+        'filterWidgetOptions' => [
+            'pluginOptions' => ['allowClear' => true],
+        ],
+        'filterInputOptions' => ['placeholder' => 'dispositivo...'],
+        'format' => 'raw',
+        'width' => $columna_7,
+    ],
 
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
-        'width' => $columna_7,
+        'width' => $columna_8,
         'template' => '{view} {update} {imprimir_acta_entrega}',
         'vAlign' => 'middle',
         'urlCreator' => function ($action, $model, $key, $index) {

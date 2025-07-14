@@ -54,6 +54,7 @@ class StockInformaticaEgreso extends \yii\db\ActiveRecord
             'observacion' => 'Observacion',
             'idusuario_carga' => 'Carga',
             'idusuario_edicion' => 'Edicion',
+            'id_dispositivo_destino' => 'Destino',
         ];
     }
 

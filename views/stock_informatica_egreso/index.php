@@ -17,7 +17,7 @@ $this->title = 'Egreso de Stock de Informatica';
 $this->params['breadcrumbs'][] = $this->title;
 $clase = 'stock-informatica-egreso-index';
 
-
+$this->registerCss('.custom-grid.letra-chica { font-size: 11px!important; }');
 
 
 ?>
@@ -54,7 +54,7 @@ $clase = 'stock-informatica-egreso-index';
                         <?= GridView::widget([
                             'id' => 'crud-datatable',
                             'dataProvider' => $dataProvider,
-                            'tableOptions' => ['class' => 'custom-grid'],
+                            'tableOptions' => ['class' => 'custom-grid letra-chica'],
                             'filterModel' => $searchModel,
                             'pjax' => false,
                             'columns' => require(__DIR__ . '/_columns.php'),
