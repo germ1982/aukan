@@ -40,6 +40,7 @@ class ConfiguracionTipo extends \yii\db\ActiveRecord
     const TIPO_LEGAJO = 25 ;
     const TIPO_EVENTO_INFORMATICO = 26 ;
     const TIPO_RECEPCION = 27 ;
+    const TIPO_MODALIDAD_CURSO = 28 ;
 
   
     public static function tableName()
