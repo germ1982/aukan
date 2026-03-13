@@ -1,107 +1,46 @@
 <?php
 
 use app\controllers\SiteController;
+use app\helpers\AppBuscarPersonaHelper;
 use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
 use app\models\OrganismoDispositivo;
 use app\models\Persona;
 use kartik\file\FileInput;
+use yii\helpers\Html;
 
 if (isset($model->idpersona)) {
     $persona = Persona::findOne($model->idpersona);
     $model->documento = $persona->documento;
-    $persona_nombre = "$persona->apellido, $persona->nombre";
+    //$persona_nombre = "$persona->apellido, $persona->nombre";
 }
 
 ?>
 
 
 
-<?php
-$script = <<<JS
 
-function datos_persona() {
-        $('#input_idpersona').val('0');
-        
-        let dni_persona = $("#input_dni_persona").val();
-
-        if (dni_persona == "") {
-            alert("escriba un dni");
-            return;
-        }
-
-        $('#txt_mensaje').html("Buscando datos de Persona con dni " + dni_persona);
-        $.post("index.php?r=persona/validar_dni&dni=" + dni_persona, function(data) {
-            data = $.parseJSON(data);
-            console.log("console.log('funcion datos_persona'); // POST a index.php?r=persona/validar_dni&dni=" + dni_persona);
-            if (data.length === 0) {
-                $('#txt_mensaje').html("No se encontraron datos de Persona con dni " + dni_persona);
-                //buscar_en_renaper(dni_persona,tipo_persona);
-            } else {
-                console.log('funcion datos_persona // encontro');
-                console.log(data);
-                $('#input_idpersona').val(data[0]['idpersona']);
-
-                aux = data[0]['apellido'] + ', ' + data[0]['nombre'];
-                $('#txt_mensaje').html(aux);
-            }
-
-        });
-
-
-    }
-
-    function ValidarIngresoDni() {
-        var aux = event.which;
-
-        if (aux == 13) //pregunto si fue el enter
-        {
-            datos_persona();
-        }
-    }
-function formatearFecha(fecha) {
-        var day = fecha.substring(8, 10);
-        var month = fecha.substring(5, 7);
-        var year = fecha.substring(0, 4);
-        var today = day + "/" + month + "/" + year;
-        return today;
-    }
-JS;
-$this->registerJs($script);
-?>
-
+<!-- 
 <style>
     .linea_busqueda {
         margin-top: -20px;
     }
 </style>
+ -->
 
 
-
-<?= $form->field($model, 'idpersona')->hiddenInput(['id' => 'input_idpersona'])->label(false) ?>
+<?= Html::activeHiddenInput($model, 'documento', ['id' => 'input_documento']); ?>
 
 <div class="row linea_busqueda">
     <!-- Linea de busqueda -->
-    <div class="col-md-5">
-        <div class="input-group">
-            <?= $form->field($model, 'documento')->textInput([
-                'id' => 'input_dni_persona',
-                'onkeyup' => 'ValidarIngresoDni();',
-                //'disabled' => $generada
-            ])
-                ->label($model->isNewRecord ? 'Buscar Persona Por DNI' : 'DNI Persona') ?>
-            <span class="input-group-btn" style="padding-top:27px;">
-                <?= SiteController::actionGet_boton_buscar_x_documento(
-                    'btn_dni',
-                    'Buscar Dni',
-                    'datos_persona(0);'
-                ) ?>
-            </span>
-        </div>
+    <div class="col-md-12">
+        <?= AppBuscarPersonaHelper::widgetBuscarPersona($model, 'idpersona', 'Documento', 5, 7) ?>
     </div>
-    <div class="col-md-7" style="padding-top:30px;" id="txt_mensaje"><?= $persona_nombre ?></div>
+
 </div>
+
 <br>
+
 <div class="row">
 
     <div class="col-md-3">

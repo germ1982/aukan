@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\Configuracion;
+use app\models\ConfiguracionTipo;
 use app\models\LogPlataforma;
 use Yii;
 use app\models\Persona;
@@ -227,5 +229,141 @@ class PersonaController extends Controller
             array_push($result, $model_persona->getAttributes());
         }
         return json_encode($result);
+    }
+
+    public function actionGet_persona($dni)
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        // 1. Buscar en BD
+        $model = Persona::find()->where(['documento' => $dni])->one();
+        if ($model) {
+            return $model->toArray(); // 🔥 devuelvo array para JS
+        }
+
+        // 2. Intentar RENAPER con F y M
+        $data = '';
+
+        $generos = ['F' => 81, 'M' => 82];
+
+        foreach ($generos as $generoLetra => $generoCodigo) {
+            $renaper_response = $this->actionGet_persona_renaper($dni, $generoLetra);
+            $renaper_data = json_decode($renaper_response, true);
+
+            if (isset($renaper_data['data'])) {
+                $data = $renaper_data['data'];
+                $data['documento'] = $dni;
+                $data['genero'] = $generoCodigo;
+                //return $data; // 🔥 devuelvo datos de RENAPER para JS
+                $guardar = $this->actionGuardar_persona_desde_renaper($data);
+
+                if ($guardar !== null) {
+                        return $guardar->toArray();
+                    }          
+
+                return '';
+            }
+        }
+
+        return '';
+    }
+
+    
+    public function actionGuardar_persona_desde_renaper($data)
+    {
+
+        $model = new Persona();
+        
+        $model->apellido = $data['apellido'] ?? null;
+        
+        $model->nombre = $data['nombres'] ?? null;
+        $model->documento = $data['documento'] ?? null;
+        
+        // Corrección para fecha de nacimiento
+        if (isset($data['fecha_nacimiento']) && !empty($data['fecha_nacimiento'])) {
+            $model->fecha_nacimiento = \DateTime::createFromFormat('d/m/Y', $data['fecha_nacimiento'])->format('Y-m-d');
+        } else {
+            $model->fecha_nacimiento = null;
+        }
+
+        // Corrección para fecha de fallecimiento (la clave del problema)
+        if (isset($data['fecha_fallecimiento']) && !empty($data['fecha_fallecimiento'])) {
+            $model->fecha_fallecimiento = \DateTime::createFromFormat('d/m/Y', $data['fecha_fallecimiento'])->format('Y-m-d');
+        } else {
+            $model->fecha_fallecimiento = null;
+        }
+        
+        $model->documento_tipo = 83; // valor por defecto
+        $model->nacionalidad = $this->get_nacionalidad($data['nacionalidad']);   // Argentina, por ejemplo
+        $model->genero = $data['genero'] ?? null;         // Masculino/Femenino, según el contexto
+
+        $model->domicilio_calle = $data['calle'] ?? null;
+        $model->domicilio_numero = $data['numero'] ?? '0';
+        $model->domicilio = $data['monoblock'] ?? null . ' ' . ($data['piso'] ?? '') . ' ' . ($data['depto'] ?? '');
+        $model->idlocalidad = null; // podés resolverlo con lógica propia
+
+        $model->conviviente = 0;
+        $model->padre = null;
+        $model->madre = null;
+
+
+        if ($model->save()) {
+            return $model;
+        } else {
+            // Log de errores si querés investigar
+            Yii::error($model->getErrors(), 'persona_renaper');
+            return null;
+        }
+    }
+
+    public function actionGet_persona_renaper($dni, $genero)
+    {
+        $curl = curl_init();
+
+        $SSLCERT_PATH = env('SSLCERT_PATH');
+        $SSLKEY_PATH = env('SSLKEY_PATH');
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://xroadmingobierno.neuquen.gob.ar/r1/OPTIC/GOB/GOB00001/GP-RENAPER/WS_RENAPER_DOCUMENTO/' . $dni . '/' . $genero,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_SSLCERT => $SSLCERT_PATH,
+            CURLOPT_SSLKEY => $SSLKEY_PATH,
+            CURLOPT_POSTFIELDS => 'servicio=get_persona_renaper&filtro%20=documento%3D' . $dni . '%26sexo%3D' . $genero . '&auditoria=sur&usuario_auditoria=sur&tipo=0',
+            CURLOPT_HTTPHEADER => array(
+                'x-road-client: OPTIC/GOB/GOB00018/GP-SUBSEFAMILIA',
+                'Content-Type: application/x-www-form-urlencoded'
+            ),
+
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => 0,
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        $renaper_data = json_decode($response, true);
+
+        // Si no hay datos válidos, devolvés cadena vacía
+        if (!isset($renaper_data['data']) || empty($renaper_data['data']['apellido'])) {
+            return '';
+        }
+        return $response;
+    }
+
+    public static function get_nacionalidad($nacionalidad)
+    {
+        $nac = Configuracion::find()
+            ->where(['id_configuracion_tipo' => ConfiguracionTipo::NACIONALIDAD])
+            ->andWhere(['like', 'descripcion', $nacionalidad])
+            ->one();
+
+        return $nac->id_configuracion ?? null;
     }
 }
