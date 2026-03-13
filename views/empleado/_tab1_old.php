@@ -138,3 +138,4 @@ $this->registerJs($script);
         <?= $form->field($model, 'activo')->checkbox(['checked' => $model->isNewRecord ? true : (bool)$model->activo]) ?>
     </div>
 </div>
+

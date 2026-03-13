@@ -8,6 +8,7 @@ use app\models\OrganismoDispositivo;
 use app\models\Persona;
 use kartik\file\FileInput;
 use yii\helpers\Html;
+use yii\web\View as WebView;
 
 if (isset($model->idpersona)) {
     $persona = Persona::findOne($model->idpersona);
@@ -16,17 +17,6 @@ if (isset($model->idpersona)) {
 }
 
 ?>
-
-
-
-
-<!-- 
-<style>
-    .linea_busqueda {
-        margin-top: -20px;
-    }
-</style>
- -->
 
 
 <?= Html::activeHiddenInput($model, 'documento', ['id' => 'input_documento']); ?>
@@ -77,3 +67,38 @@ if (isset($model->idpersona)) {
         <?= $form->field($model, 'activo')->checkbox(['checked' => $model->isNewRecord ? true : (bool)$model->activo]) ?>
     </div>
 </div>
+
+
+
+<?php
+$script = <<< JS
+
+function asignar_datos_idpersona(data){
+    $('#input_documento_idpersona').val(data['documento']);
+    let nombre_idpersona = data['apellido'] + ', ' + data['nombre'];
+    $('#txt_mensaje_idpersona').html(nombre_idpersona);
+    }
+JS;
+
+
+$this->registerJs($script);
+
+
+
+if (!$model->isNewRecord) {
+    $model_persona = Persona::findOne($model->idpersona);
+    
+    // 1. Convertir los atributos del modelo (PHP) a una cadena JSON
+    $modelJson = \yii\helpers\Json::encode($model_persona->attributes);
+
+    $this->registerJs(<<<JS_UPDATE
+        // Esta función se ejecuta solo al cargar la página en modo UPDATE
+        let datosModelo = $modelJson; 
+        console.log(datosModelo);
+        
+        // Llamamos a la función centralizada para rellenar los campos
+        asignar_datos_idpersona(datosModelo); 
+    JS_UPDATE, WebView::POS_READY); // POS_READY asegura que el DOM esté listo
+}
+
+$this->registerJs($script);

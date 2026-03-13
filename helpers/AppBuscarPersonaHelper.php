@@ -123,7 +123,7 @@ class AppBuscarPersonaHelper
             'class' => 'btn btn-primary',
             'title' => 'Buscar DNI',
             'onclick' => "get_datos_persona('$inputDocumento', '$inputIdPersona', '$nombreDivMensaje','$funcionAsignarDatos'); return false;",
-            'style' => 'padding: 6px 12px;',
+            //'style' => 'padding: 6px 12px!important;',
         ]);
         $html .= '</span>
                         </div>
