@@ -59,7 +59,7 @@ class UsuariosSearch extends Usuarios
             'id' => $this->id,
             'status' => $this->status,
             'activo' => $this->activo,
-            'idpersona' => $this->idpersona,
+            'usuarios.idpersona' => $this->idpersona,
         ]);
 
         $query->andFilterWhere(['like', 'email', $this->email])
