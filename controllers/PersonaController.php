@@ -244,7 +244,7 @@ class PersonaController extends Controller
         // 2. Intentar RENAPER con F y M
         $data = '';
 
-        $generos = ['F' => 81, 'M' => 82];
+        $generos = ['F' => 20, 'M' => 21];
 
         foreach ($generos as $generoLetra => $generoCodigo) {
             $renaper_response = $this->actionGet_persona_renaper($dni, $generoLetra);
@@ -293,7 +293,7 @@ class PersonaController extends Controller
             $model->fecha_fallecimiento = null;
         }
         
-        $model->documento_tipo = 83; // valor por defecto
+        $model->documento_tipo = 2; // valor por defecto
         $model->nacionalidad = $this->get_nacionalidad($data['nacionalidad']);   // Argentina, por ejemplo
         $model->genero = $data['genero'] ?? null;         // Masculino/Femenino, según el contexto
 
