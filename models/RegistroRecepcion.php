@@ -43,7 +43,7 @@ class RegistroRecepcion extends \yii\db\ActiveRecord
         return [
             [['fecha'], 'required'],
             [['hora'], 'safe'],
-            [['dni', 'acceso', 'id_dispositivo_derivacion', 'id_responsable_derivacion', 'id_tipo_recepcion'], 'integer'],
+            [['dni', 'acceso', 'id_dispositivo_derivacion', 'id_responsable_derivacion', 'id_tipo_recepcion','idpersona'], 'integer'],
             [['motivo', 'observacion'], 'string'],
             [['nombre', 'apellido', 'documento_tipo', 'nacionalidad', 'genero', 'fecha_nacimiento',], 'safe'],
         ];
@@ -71,6 +71,7 @@ class RegistroRecepcion extends \yii\db\ActiveRecord
             'id_responsable_derivacion' => 'Id Responsable Derivacion',
             'id_tipo_recepcion' => 'Id Tipo Recepcion',
             'observacion' => 'Observacion',
+            'idpersona' => 'Buscar por Documento',
         ];
     }
     public static function getRutaUploads()
