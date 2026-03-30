@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use app\controllers\SiteController;
+use app\helpers\AppBuscarPersonaHelper;
 use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
 use app\models\OrganismoDispositivo;
@@ -12,7 +13,7 @@ use app\models\Persona;
 
 
 $persona_nombre = "";
-$model->fecha = $model->isNewRecord ? date('d/m/Y') : date('d/m/Y',strtotime($model->fecha));
+$model->fecha = $model->isNewRecord ? date('d/m/Y') : date('d/m/Y', strtotime($model->fecha));
 
 
 
@@ -27,43 +28,25 @@ $model->fecha = $model->isNewRecord ? date('d/m/Y') : date('d/m/Y',strtotime($mo
         'options' => ['data-pjax' => false] // importante
     ]); ?>
 
-    <div class="row linea_busqueda">
-        <div class="col-md-2">
-            <?= SiteController::actionGet_input_select2($form, $model, 'documento_tipo', 'cmb_documento_tipo', Configuracion::get_configuraciones(ConfiguracionTipo::TIPO_DOCUMENTO), 'id_configuracion', 'descripcion', 'Tipo Documento', 'seleccione tipo documento...') ?>
-        </div>
-        <!-- Linea de busqueda -->
-        <div class="col-md-3">
-            <div class="input-group">
-                <?= $form->field($model, 'dni')->textInput([
-                    'id' => 'input_dni_persona',
-                    'onkeyup' => 'ValidarIngresoDni();',
-                    //'disabled' => $generada
-                ])
-                    ->label($model->isNewRecord ? 'Buscar Persona Por DNI' : 'DNI Persona') ?>
-                <span class="input-group-btn" style="padding-top:27px;">
-                    <?= SiteController::actionGet_boton_buscar_x_documento(
-                        'btn_dni',
-                        'Buscar Dni',
-                        'datos_persona();'
-                    ) ?>
-                </span>
-            </div>
-        </div>
-        <div class="col-md-7" style="padding-top:30px;" id="txt_mensaje"><?= $persona_nombre ?></div>
+<div class="row" style="padding-left: 15px;">
+        <?= AppBuscarPersonaHelper::widgetBuscarPersona($model) ?>
     </div>
-    <hr>
+
+
     <div class="row">
 
 
 
-
+        <div class="col-md-2    ">
+            <?= $form->field($model, 'dni')->textInput(['id' => 'registrorecepcion-dni']) ?>
+        </div>
         <div class="col-md-4    ">
             <?= $form->field($model, 'apellido')->textInput(['id' => 'registrorecepcion-apellido']) ?>
         </div>
         <div class="col-md-4">
             <?= $form->field($model, 'nombre')->textInput(['id' => 'registrorecepcion-nombre']) ?>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <?= SiteController::actionGet_input_fecha($form, $model, 'fecha_nacimiento', 'input_fecha_nacimiento', 'Fecha Nacimiento') ?>
         </div>
 
@@ -76,18 +59,18 @@ $model->fecha = $model->isNewRecord ? date('d/m/Y') : date('d/m/Y',strtotime($mo
         <div class="col-md-3">
             <?= SiteController::actionGet_input_select2($form, $model, 'genero', 'cmb_genero', Configuracion::get_configuraciones(ConfiguracionTipo::GENERO), 'id_configuracion', 'descripcion', 'Genero', 'seleccione genero...') ?>
         </div>
+        <div class="col-md-3">
+            <?= SiteController::actionGet_input_fecha($form, $model, 'fecha', 'input_fecha', 'Fecha') ?>
+        </div>
+
+        <div class="col-md-3">
+            <?= SiteController::actionGet_input_hora($form, $model, 'hora', 'input_hora', 'Hora') ?>
+        </div>
 
     </div>
     <hr>
     <div class="row">
-        <div class="col-md-2">
-            <?= SiteController::actionGet_input_fecha($form,$model,'fecha','input_fecha','Fecha')?>
-        </div>
 
-
-        <div class="col-md-2">
-            <?= SiteController::actionGet_input_hora($form, $model, 'hora', 'input_hora', 'Hora') ?>
-        </div>
         <div class="col-md-3">
             <?= $form->field($model, 'acceso')->dropDownList(
                 \app\models\EdificioAcceso::getListaAccesos(),
@@ -119,8 +102,55 @@ $model->fecha = $model->isNewRecord ? date('d/m/Y') : date('d/m/Y',strtotime($mo
             <?= $form->field($model, 'observacion')->textarea(['rows' => 6, 'placeholder' => 'Ingrese una observación (opcional)']) ?>
         </div>
     </div>
-                
+
 
 
     <?php ActiveForm::end(); ?>
 </div>
+
+
+
+<?php
+$script = <<< JS
+
+function asignar_datos_idpersona(data){
+    console.log(data);
+    $('#registrorecepcion-dni').val(data['documento']);
+    $('#registrorecepcion-apellido').val(data['apellido']);
+    $('#registrorecepcion-nombre').val(data['nombre']);
+
+    $('#input_fecha_nacimiento').val(data['fecha_nacimiento']);
+    $('#cmb_genero').val(data['genero']).trigger('change');
+    $('#cmb_nacionalidad').val(data['nacionalidad']).trigger('change');
+    var fecha_nac = data['fecha_nacimiento'].split('-').reverse().join('/');
+
+    $('#input_fecha_nacimiento').val(fecha_nac).trigger('change');
+
+    }
+
+
+
+JS;
+
+
+$this->registerJs($script);
+
+
+
+/* if (!$model->isNewRecord) {
+    $model_persona = Persona::findOne($model->idpersona);
+    
+    // 1. Convertir los atributos del modelo (PHP) a una cadena JSON
+    $modelJson = \yii\helpers\Json::encode($model_persona->attributes);
+
+    $this->registerJs(<<<JS_UPDATE
+        // Esta función se ejecuta solo al cargar la página en modo UPDATE
+        let datosModelo = $modelJson; 
+        console.log(datosModelo);
+        
+        // Llamamos a la función centralizada para rellenar los campos
+        asignar_datos_idpersona(datosModelo); 
+    JS_UPDATE, WebView::POS_READY); // POS_READY asegura que el DOM esté listo
+} */
+
+$this->registerJs($script);
