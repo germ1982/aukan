@@ -206,13 +206,7 @@ if (!isset($id) || $id == null) {
 
                   <!--Contenido a llenar por yii-->
                   <section role="main" class="content-body">
-                        <div id="loading" style="display: none;">
-                              <div style="text-align: center;font-size: 24px;">
-                                    <div id="loading-gif">
-                                          <h4 style="padding-top:100px;color: #000;font-style:italic;font-family: Open Sans, Arial, sans-serif"><i>Cargando...</i></h4>
-                                    </div>
-                              </div>
-                        </div>
+                        <?= $this->render('loading') ?>
                         <?= $content ?>
 
                         <?php Modal::begin([
