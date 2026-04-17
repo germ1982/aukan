@@ -18,7 +18,7 @@ class LogPlataformaSearch extends LogPlataforma
     public function rules()
     {
         return [
-            [['idlog', 'idusuario', 'modulo', 'accion', 'idregistro'], 'integer'],
+            [['idlog', 'idusuario', 'idmodulo', 'idaccion', 'idregistro'], 'integer'],
             [['fecha', 'hora', 'fdesde', 'fhasta'], 'safe'],
         ];
     }
@@ -81,8 +81,8 @@ class LogPlataformaSearch extends LogPlataforma
             'idusuario' => $this->idusuario,
             'fecha' => $this->fecha,
             'hora' => $this->hora,
-            'modulo' => $this->modulo,
-            'accion' => $this->accion,
+            'idmodulo' => $this->idmodulo,
+            'idaccion' => $this->idaccion,
             'idregistro' => $this->idregistro,
         ]);
 

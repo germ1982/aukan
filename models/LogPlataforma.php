@@ -11,8 +11,8 @@ use Yii;
  * @property int|null $idusuario
  * @property string|null $fecha
  * @property string|null $hora
- * @property int|null $modulo
- * @property int|null $accion
+ * @property int|null $idmodulo
+ * @property int|null $idaccion
  * @property int|null $idregistro
  */
 class LogPlataforma extends \yii\db\ActiveRecord
@@ -33,7 +33,7 @@ class LogPlataforma extends \yii\db\ActiveRecord
     {
         return [
             [['idlog'], 'required'],
-            [['idlog', 'idusuario', 'modulo', 'accion', 'idregistro'], 'integer'],
+            [['idlog', 'idusuario', 'idmodulo', 'idaccion', 'idregistro'], 'integer'],
             [['fecha', 'hora', 'fdesde', 'fhasta'], 'safe'], //se agregan estas dos variables para que funcione el filtro por fechas
             [['idlog'], 'unique'],
         ];
@@ -49,8 +49,8 @@ class LogPlataforma extends \yii\db\ActiveRecord
             'idusuario' => 'Usuario',
             'fecha' => 'Fecha',
             'hora' => 'Hora',
-            'modulo' => 'Modulo',
-            'accion' => 'Accion',
+            'idmodulo' => 'Modulo',
+            'idaccion' => 'Accion',
             'idregistro' => 'ID Registro',
         ];
     }
@@ -232,14 +232,14 @@ class LogPlataforma extends \yii\db\ActiveRecord
         return self::ACCIONES;
     }
 
-    public static function registrar($modulo_id, $accion, $registro_id)
+    public static function registrar($idmodulo, $idaccion, $idregistro)
     {
         $usuario_id = Yii::$app->user->identity->id;
         $log = new self();
         $log->idusuario = $usuario_id;
-        $log->modulo = $modulo_id;
-        $log->accion = $accion;
-        $log->idregistro = $registro_id;
+        $log->idmodulo = $idmodulo;
+        $log->idaccion = $idaccion;
+        $log->idregistro = $idregistro;
         $log->fecha = date('Y-m-d H:i:s');
         $log->hora = date('H:i:s');
         $log->save(false); // false si no querés validar (más rápido)
