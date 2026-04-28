@@ -4,33 +4,24 @@ namespace app\models;
 
 use Yii;
 
-/**
- * This is the model class for table "organismo".
- *
- * @property int $idorganismo
- * @property string $descripcion
- * @property int|null $padre
- * @property int $nivel
- * @property int $activo
- * @property string $abreviatura
- *
- * @property Organismo $padre0
- * @property Organismo[] $organismos
- * @property OrganismoDispositivo[] $organismoDispositivos
- */
 class Organismo extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
+
+    public $iddecreto; // Atributo temporal para manejar el ID del decreto en el formulario
+    public $origen_alta; // Atributo temporal para saber si venimos del árbol o no
+    /* 
+    $origen_alta:
+    0 =  desde grilla,
+    1 =  desde boton iniciar arbol
+    2 = desde boton agregar rama sobre un nodo del arbol
+    */
+
     public static function tableName()
     {
         return 'organismo';
     }
 
-    /**
-     * {@inheritdoc}
-     */
+
     public function rules()
     {
         return [
@@ -39,6 +30,7 @@ class Organismo extends \yii\db\ActiveRecord
             [['descripcion'], 'string', 'max' => 200],
             [['abreviatura'], 'string', 'max' => 100],
             [['padre'], 'exist', 'skipOnError' => true, 'targetClass' => Organismo::className(), 'targetAttribute' => ['padre' => 'idorganismo']],
+            [['iddecreto', 'origen_alta'], 'safe'],
         ];
     }
 
@@ -54,6 +46,8 @@ class Organismo extends \yii\db\ActiveRecord
             'nivel' => 'Nivel',
             'activo' => 'Activo',
             'abreviatura' => 'Abreviatura',
+            'iddecreto' => 'Iddecreto',
+            'origen_alta' => 'Origen Alta',
         ];
     }
 
@@ -88,7 +82,7 @@ class Organismo extends \yii\db\ActiveRecord
     }
     public static function get_organismos()
     {
-        
+
         $sql = "SELECT o.idorganismo, o.descripcion
         FROM organismo o 
         
@@ -99,7 +93,7 @@ class Organismo extends \yii\db\ActiveRecord
     }
     public static function get_organismo($id)
     {
-        
+
         $sql = "SELECT o.idorganismo, o.descripcion
         FROM organismo o 
         
