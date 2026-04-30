@@ -10,7 +10,7 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model app\models\OrganismoDecreto */
 
-$title = 'Organigrama de Decreto N° ' . $model->iddecreto;
+$title = 'Decreto N° ' . $model->iddecreto;
 $this->title = $title;
 
 ?>
@@ -48,8 +48,78 @@ $this->title = $title;
                     ) ?>
                 </li>
             </ol>
+        <?php else: ?>
+            <div class="btn-group" role="group" aria-label="Selector de Vista" style="margin-left: 20px;">
+                <a href="<?= Url::current(['vista' => 'identado']) ?>"
+                    class="btn  <?= ($vista == 'identado') ? 'active btn-led-verde' : '' ?>"
+                    style="margin-right: 5px; border-radius: 25px; font-size: 20px;"
+                    title="Vista Vertical (Lista)">
+                    <i class="fa fa-list-ul neon"></i>
+                </a>
+
+                <!-- <a href="<?php // Url::current(['vista' => 'lateral']) 
+                                ?>"
+                    class="btn  <?php // ($vista == 'lateral') ? 'active btn-led-verde' : '' 
+                                ?>"
+                    style="margin-right: 5px; border-radius: 25px;font-size: 20px;"
+                    title="Vista Lateral (Derecha)">
+                    <i class="fa fa-indent neon"></i>
+                </a> -->
+
+                <a href="<?= Url::current(['vista' => 'organigrama']) ?>"
+                    class="btn <?= ($vista == 'organigrama' || !$vista) ? 'active btn-led-verde' : '' ?>"
+                    style="border-radius: 25px;font-size: 20px;"
+                    title="Vista Organigrama (Árbol)">
+                    <i class="fa fa-sitemap neon"></i>
+                </a>
+            </div>
         <?php endif; ?>
     </div>
+
+    <style>
+        /* --- Estilo Base para el Botón LED --- */
+        .btn-led-verde {
+            background-color: transparent;
+            /* Fondo transparente por defecto */
+
+            color: #00e676;
+            /* Verde un poco más fuerte para el texto */
+
+            transition: all 0.4s ease;
+            /* Transición suave para el hover y active */
+        }
+
+        /* --- Hover (cuando pasás el mouse) --- */
+        .btn-led-verde:hover {
+            color: #00e676;
+            /* Verde un poco más fuerte para el texto */
+            background-color: rgba(0, 255, 0, 0.05);
+            /* Un tinte verde de fondo casi imperceptible */
+            border-color: rgba(0, 255, 0, 0.5);
+            /* Borde un poco más nítido */
+        }
+
+        /* --- ESTILO ACTIVO (EL EFECTO NEÓN/LED) --- */
+        /* Esta clase la pondremos dinámicamente con PHP */
+        .btn-led-verde.led-active {
+            color: white !important;
+            /* Texto blanco para que resalte */
+            border-color: #00e676;
+            /* Borde verde brillante */
+            background-color: rgba(0, 230, 118, 0.7);
+            /* Fondo verde traslúcido */
+
+            /* EL SECRETO DEL NEÓN: box-shadow */
+            /* Usamos múltiples sombras para crear la difusión del gas argón */
+            box-shadow:
+                0 0 5px rgba(0, 255, 0, 0.8),
+                /* Brillo interno tenue */
+                0 0 10px rgba(0, 255, 0, 0.6),
+                /* Halo intermedio */
+                0 0 20px rgba(0, 255, 0, 0.4);
+            /* Halo externo suave y difuso */
+        }
+    </style>
 
     <div class="right-wrapper pull-right">
         <ol class="breadcrumbs">
@@ -66,17 +136,31 @@ $this->title = $title;
 </header>
 
 <div class="row">
-    <div class="col-md-12 col-lg-12 col-xl-12">
-
-
-        <?php echo $this->render('_form_arbol', [
-            'model' => $model,
-            'iddecreto' => $model->iddecreto, // Pasamos el ID del decreto explícitamente
-        ]); ?>
-
+    <div class="col-md-12 col-lg-12 col-xl-12 mt-3">
+        <?= $this->render('jerarquias', ['ubi' => 'i']); ?>
     </div>
 </div>
 
+
+<div class="row ">
+    <div class="col-md-12 col-lg-12 col-xl-12 " style="padding: 64px 50px;">
+        <?php
+        /**
+         * Definimos la vista por defecto si $vista llega nulo o vacío.
+         * En este caso, 'organigrama'.
+         */
+        $vistaSeleccionada = !empty($vista) ? $vista : 'identado';
+
+        // Construimos el nombre del archivo: arbol_identado, arbol_lateral o arbol_organigrama
+        $archivoARenderizar = 'arbol_' . $vistaSeleccionada;
+
+        echo $this->render($archivoARenderizar, [
+            'model' => $model,
+            'iddecreto' => $model->iddecreto,
+        ]);
+        ?>
+    </div>
+</div>
 
 <?php
 $this->registerJs(

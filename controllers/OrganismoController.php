@@ -107,7 +107,7 @@ class OrganismoController extends Controller
         //del cual se puede rescatar el iddecreto.
         //y el nivel queda habilitado en el formulario.
         if ($model->origen_alta == 2 && !empty($idpadre)) {
-            $relacionPadre = OrganismoOrgDec::findOne(['idorganismo' => $model->idpadre]);
+            $relacionPadre = OrganismoOrgDec::findOne(['idorganismo' => $model->padre]);
             if ($relacionPadre) {
                 $model->iddecreto = $relacionPadre->iddecreto;
             }
