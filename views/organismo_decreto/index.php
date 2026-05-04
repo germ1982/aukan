@@ -4,17 +4,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
     $gridColumns = require(__DIR__ . '/_columns.php');
-    $customButtonsA = Html::a(
-                            'Manual',
-                            Url::to('instructivos/manual_navidad_compartida.pdf'),
-                            [
-                                'data-pjax' => 0,
-                                'data-toggle' => 'tooltip',
-                                'title' => 'Ver Manual de Uso',
-                                'class' => 'btn btn-primary boton_menu neon',
-                                'target' => '_blank'
-                            ]
-                        ) ; // o define aquí tus botones HTML::a(...) para la izquierda si es necesario
+    $customButtonsA = ""; // o define aquí tus botones HTML::a(...) para la izquierda si es necesario
 
     $customButtonsB = ''; // o define aquí tus botones HTML::a(...) para la derecha si es necesario
 
