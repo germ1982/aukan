@@ -3,7 +3,7 @@ use app\models\OrganismoOrgDec;
 use app\models\Organismo;
 use yii\helpers\Html;
 
-/* @var $iddecreto integer */
+$iddecreto = $iddecreto ?? null;
 
 $relacionRaiz = OrganismoOrgDec::find()->where(['iddecreto' => $iddecreto])->one();
 ?>
@@ -66,6 +66,11 @@ function renderizarNodo($nodo, $iddecreto, $nivel = 1) {
 ?>
 
 <style>
+
+    .df-tree-wrapper {
+    overflow-x: auto;
+    width: 100%;
+}
     /* Contenedor principal con prefijo para evitar colisiones */
 .df-tree-wrapper ul {
     padding-top: 20px; 

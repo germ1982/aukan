@@ -10,7 +10,7 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model app\models\OrganismoDecreto */
 
-$title = 'Decreto N° ' . $model->iddecreto;
+$title = 'Decreto: ' . $model->descripcion . ' - ' . ($model->activo ? ' Vigente' : 'Finalizado');
 $this->title = $title;
 
 ?>
