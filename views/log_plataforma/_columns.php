@@ -41,8 +41,8 @@ return [
     ],
     [
         'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'modulo',
-        'value' => fn($model) => LogPlataforma::getModuloNombre($model->modulo),
+        'attribute' => 'idmodulo',
+        'value' => fn($model) => LogPlataforma::getModuloNombre($model->idmodulo),
         'filterType' => GridView::FILTER_SELECT2,
         'filter' => LogPlataforma::getModulosLista(),
         'filterWidgetOptions' => ['pluginOptions' => ['allowClear' => true],],
@@ -52,8 +52,8 @@ return [
     ],
     [
         'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'accion',
-        'value' => fn($model) => LogPlataforma::getAccionNombre($model->accion),
+        'attribute' => 'idaccion',
+        'value' => fn($model) => LogPlataforma::getAccionNombre($model->idaccion),
         'filterType' => GridView::FILTER_SELECT2,
         'filter' => LogPlataforma::getAccionesLista(),
         'filterWidgetOptions' => ['pluginOptions' => ['allowClear' => true],],

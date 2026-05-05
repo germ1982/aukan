@@ -40,7 +40,7 @@ class Persona extends \yii\db\ActiveRecord
     {
         return [
             [['documento', 'documento_tipo', 'nacionalidad', 'genero', 'nombre', 'apellido'], 'required'],
-            [['documento', 'documento_tipo', 'nacionalidad', 'genero', 'padre', 'conviviente', 'idlocalidad'], 'integer'],
+            [['documento', 'documento_tipo', 'nacionalidad', 'genero', 'padre', 'madre', 'conviviente', 'idlocalidad'], 'integer'],
             [['fecha_nacimiento', 'nombre_apellido', 'fdesde', 'fhasta', 'idprovincia'], 'safe'],
             [['nombre', 'apellido', 'domicilio'], 'string', 'max' => 100],
             [['domicilio_calle'], 'string', 'max' => 255],
@@ -64,6 +64,7 @@ class Persona extends \yii\db\ActiveRecord
             'nombre' => 'Nombre',
             'apellido' => 'Apellido',
             'padre' => 'Padre',
+            'madre' => 'Madre',
             'conviviente' => 'Conviviente',
             'domicilio' => 'Domicilio',
             'domicilio_calle' => 'Calle',

@@ -17,7 +17,7 @@ class OrganismoDispositivoSearch extends OrganismoDispositivo
     {
         return [
             [['iddispositivo', 'idcapaitem','idoficina'], 'integer'],
-            [['descripcion', 'es_oficial', 'es_organismo', 'activo', 'direccion', 'alias', 'telefono','organismo'], 'safe'],
+            [['descripcion', 'es_oficial', 'es_organismo', 'activo', 'alias', 'telefono','organismo'], 'safe'],
         ];
     }
 
@@ -52,7 +52,6 @@ class OrganismoDispositivoSearch extends OrganismoDispositivo
                     'es_oficial',
                     'es_organismo',
                     'activo',
-                    'direccion',
                     'alias',
                     'telefono',
                     'idoficina',
@@ -91,7 +90,6 @@ class OrganismoDispositivoSearch extends OrganismoDispositivo
         ->andFilterWhere(['like', 'es_oficial', $this->es_oficial])
         ->andFilterWhere(['like', 'es_organismo', $this->es_organismo])
         ->andFilterWhere(['like', 'activo', $this->activo])
-        ->andFilterWhere(['like', 'direccion', $this->direccion])
         ->andFilterWhere(['like', 'alias', $this->alias])
         ->andFilterWhere(['like', 'telefono', $this->telefono]);
 

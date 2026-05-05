@@ -13,7 +13,6 @@ use Yii;
  * @property int $es_oficial
  * @property int $es_organismo
  * @property int $activo
- * @property string $direccion
  * @property string $alias
  * @property int $idcapaitem
  * @property string|null $telefono
@@ -35,9 +34,9 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['descripcion', 'idorganismo', 'direccion', 'alias','idoficina'], 'required'],
+            [['descripcion', 'idorganismo', 'alias','idoficina'], 'required'],
             [['idorganismo', 'es_oficial', 'es_organismo', 'activo', 'idcapaitem','idoficina'], 'integer'],
-            [['descripcion', 'direccion', 'alias', 'telefono'], 'string', 'max' => 100],
+            [['descripcion', 'alias', 'telefono'], 'string', 'max' => 100],
             [['idorganismo'], 'exist', 'skipOnError' => true, 'targetClass' => Organismo::className(), 'targetAttribute' => ['idorganismo' => 'idorganismo']],
             [['organismo'], 'safe'],
         ];
@@ -55,7 +54,6 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
             'es_oficial' => 'Es Oficial',
             'es_organismo' => 'Es Organismo',
             'activo' => 'Activo',
-            'direccion' => 'Direccion',
             'alias' => 'Alias',
             'idcapaitem' => 'Capa',
             'telefono' => 'Telefono',
@@ -76,6 +74,7 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
 
     public static function get_dispositivos($modulo='')
     {
+        //modificar para agregar oficina
         $filtro = $modulo ? " and d.iddispositivo in (SELECT iddispositivo from $modulo)" :'';
         $sql = "SELECT d.iddispositivo, concat(o.abreviatura,' - ', d.descripcion) as descripcion 
         FROM organismo o 

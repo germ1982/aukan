@@ -1,6 +1,7 @@
 <?php
 
 use app\controllers\SiteController;
+use app\helpers\AppBuscarPersonaHelper;
 use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
 use app\models\Localidades;
@@ -62,6 +63,25 @@ use yii\widgets\ActiveForm;
             <div class="col-md-5">
                   <?= $form->field($model, 'domicilio')->textInput(['maxlength' => true]) ?>
             </div>
+      </div>
+
+      <div class="row">
+            <div class="col-md-6">
+                  <?= AppBuscarPersonaHelper::widgetBuscarPersona($model, 'padre', 'DNI Padre',5,7) ?>
+            </div>
+            <div class="col-md-6">
+                  <?= AppBuscarPersonaHelper::widgetBuscarPersona($model, 'conviviente', 'DNI Conviviente',5,7) ?>
+            </div>
+
+
+      </div>
+
+      <div class="row">
+
+            <div class="col-md-6">
+                  <?= AppBuscarPersonaHelper::widgetBuscarPersona($model, 'madre', 'DNI Madre',5,7) ?>
+            </div>
+
       </div>
 
       <?php ActiveForm::end(); ?>

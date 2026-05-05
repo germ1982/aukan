@@ -14,7 +14,7 @@ $usuario = Usuarios::findOne($model->idusuario);
 $persona = Persona::findOne($usuario->idpersona);
 
 
-$moduloInfo = LogPlataforma::MODULOS[$model->modulo];
+$moduloInfo = LogPlataforma::MODULOS[$model->idmodulo];
 $modeloClase = $moduloInfo['modelo'];
 $registro = $modeloClase::findOne($model->idregistro);
 $detalle = '';
@@ -74,10 +74,10 @@ padding: 20px;
 
             <div class="row">
                 <div class="col-md-8">
-                    <?= campo('Modulo', LogPlataforma::getModuloNombre($model->modulo)) ?>
+                    <?= campo('Modulo', LogPlataforma::getModuloNombre($model->idmodulo)) ?>
                 </div>
                 <div class="col-md-4">
-                    <?= campo('Accion', LogPlataforma::getAccionNombre($model->accion)) ?>
+                    <?= campo('Accion', LogPlataforma::getAccionNombre($model->idaccion)) ?>
                 </div>
             </div>
 

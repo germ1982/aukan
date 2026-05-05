@@ -11,10 +11,13 @@ use yii\helpers\Url;
     $anchoModal = '1200px'; // Ancho del modal en PX
     $tamañoLetra = '11px'; // Tamaño de letra para la grilla
 
+    $dataProvider = $dataProvider ?? null; // Asegúrate de que $dataProvider esté definido
+    $searchModel = $searchModel ?? null; // Asegúrate de que $
+
     // 2. Renderizar la vista completa
     echo AppIndexGenericoHelper::renderIndex(
         $this,                  // Objeto View ($this)
-        'Logs de DATAFAM',      // Título
+        'Registro Tecnico',      // Título
         $gridColumns,           // Columnas
         $dataProvider,          // DataProvider (viene del controlador)
         $searchModel,           // SearchModel (viene del controlador)

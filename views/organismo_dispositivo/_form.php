@@ -58,9 +58,7 @@ $organismo = Organismo::findOne($model->idorganismo)
         <div class=" col-md-6">
             <?= SiteController::actionGet_input_select2($form, $model, 'idorganismo', 'cmb_organismo', Organismo::get_organismos(), 'idorganismo', 'descripcion', 'Organismo') ?>
         </div>
-        <div class=" col-md-6">
-            <?= $form->field($model, 'direccion')->textInput(['maxlength' => true]) ?>
-        </div>
+
     </div>
 
     <div class="row">

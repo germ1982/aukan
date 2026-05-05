@@ -191,6 +191,7 @@ class SiteController extends Controller
 
       public static function actionGet_input_select($form, $model, $atributo, $id_input, $datos, $iddatos, $descripciondatos, $label = null, $placeholder = null, $onchange = null)
       {
+            $label = $label ? $label : $model->getAttributeLabel("$atributo");
           $options = ['id' => $id_input];
       
           if ($placeholder) {
@@ -208,7 +209,7 @@ class SiteController extends Controller
 
       public static function actionGet_input_select2($form, $model, $atributo, $id_input, $datos, $iddatos, $descripciondatos, $label = null, $placeholder = null, $where = null, $onchange = null, $readonly = null, $disabled = null, $html = false)
       {
-            $label = $label ? $label : '';
+            $label = $label ? $label : $model->getAttributeLabel("$atributo");
             $placeholder = $placeholder ? $placeholder : '';
             $where = $where ? $where : '';
             $onchange = $onchange ? $onchange : '';
@@ -237,7 +238,7 @@ class SiteController extends Controller
 
       public static function actionGet_input_select2_multiple($form, $model, $atributo, $id_input, $datos, $iddatos, $descripciondatos, $label = null, $placeholder = null, $where = null, $readonly = null, $disabled = null)
       {
-            $label = $label ? $label : '';
+            $label = $label ? $label : $model->getAttributeLabel("$atributo");
             $placeholder = $placeholder ? $placeholder : '';
             $where = $where ? $where : '';
             $readonly = $readonly ? $readonly : false;
@@ -270,6 +271,7 @@ class SiteController extends Controller
             /* Esta funcion crea control de la fecha usando una sola linea desde donde sea invocada,
         se pasan como parametros el form y model que se este usando, el atributo de fecha del modelo para 
         el que se quiere usar, el id del control para usar con javascrip, y opcional el label. */
+            $label = $label ? $label : $model->getAttributeLabel("$atributo");
             $readonly = $readonly ? $readonly : false;
             $onchange = $onchange ? $onchange : '';
             return $form->field($model, $atributo)->widget(DatePicker::ClassName(), [
@@ -299,6 +301,7 @@ class SiteController extends Controller
             /* Esta funcion crea control de la hora usando una sola linea desde donde sea invocada,
         se pasan como parametros el form y model que se este usando, el atributo de fecha del modelo para 
         el que se quiere usar, el id del control para usar con javascrip, y opcional el label. */
+        $label = $label ? $label : $model->getAttributeLabel("$atributo");
             return $form->field($model, $atributo)->widget(TimePicker::classname(), [
                   'options' => [
                         'id' => $id_input,

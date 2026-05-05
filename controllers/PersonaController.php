@@ -165,7 +165,7 @@ class PersonaController extends Controller
                   $transaction = Yii::$app->db->beginTransaction();
                   $guardado = true;
 
-                  
+                  /* var_dump($model->conviviente); die; // <-- agregá esto temporalmente */
                   if ($guardado && $model->save()) {
                       $transaction->commit();
                       LogPlataforma::registrar(4,2,$model->idpersona); 

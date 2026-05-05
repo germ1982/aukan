@@ -128,19 +128,34 @@ class Empleado extends \yii\db\ActiveRecord
         return $empleados;
     }
 
-    public static function get_empleado_choferes(){
+    public static function
+    get_empleado_choferes()
+    {
         $choferes =  Empleado::find()
-        ->select([
-            'idempleado',
-            "CONCAT(personas.nombre, ' ', personas.apellido, ' legajo ', empleado.legajo) AS descripcion"
-        ])
-        ->innerJoin('personas', 'personas.idpersona = empleado.idpersona')
-        ->where(['empleado.funcion' => 69])
-        ->asArray()
-        ->all();
+            ->select([
+                'idempleado',
+                "CONCAT(personas.nombre, ' ', personas.apellido, ' legajo ', empleado.legajo) AS descripcion"
+            ])
+            ->innerJoin('personas', 'personas.idpersona = empleado.idpersona')
+            ->where(['empleado.funcion' => 69])
+            ->asArray()
+            ->all();
         return $choferes;
-    
     }
 
-    
+    public static function
+    get_asistentes_informaticos()
+    {
+        $asistentes =  Empleado::find()
+            ->select([
+                'idempleado',
+                "CONCAT(p.nombre, ' ', p.apellido, ' - legajo ', e.legajo) AS descripcion"
+            ])
+            ->from('configuracion c')
+            ->innerJoin('empleado e', 'c.descripcion = CAST(e.idempleado AS CHAR)') // Ojo con los tipos si descripcion es string
+            ->innerJoin('personas p', 'p.idpersona = e.idpersona')
+            ->where(['c.id_configuracion_tipo' => ConfiguracionTipo::TIPO_ASISTENCIA_INFORMATICA])
+            ->all();/*  */
+        return $asistentes;
+    }
 }

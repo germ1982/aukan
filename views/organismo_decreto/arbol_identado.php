@@ -4,7 +4,7 @@ use app\models\OrganismoOrgDec;
 use app\models\Organismo;
 use yii\helpers\Html;
 
-/* @var $iddecreto integer */
+$iddecreto = $iddecreto ?? null;
 
 $relacionRaiz = OrganismoOrgDec::find()
     ->alias('od')
@@ -48,10 +48,26 @@ function renderizarNodoColumnar($nodo, $iddecreto, $nivel)
             <span class="df-descripcion"><?= Html::encode($nodo->descripcion) ?></span>
 
             <?= Html::a(
-                '<i class="fa fa-plus-circle"></i>',
+                '<i class="fa fa-plus-circle"></i><span class="df-btn-text">Crear Organismo</span>',
                 ['organismo/create', 'origen_alta' => 2, 'iddecreto' => $iddecreto, 'idpadre' => $nodo->idorganismo],
-                ['role' => 'modal-remote', 'class' => 'text-success']
+                ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-success']
             ) ?>
+            <?= Html::a(
+                '<i class="fa fa-edit"></i><span class="df-btn-text">Editar Organismo</span>',
+                ['organismo/update', 'id' => $nodo->idorganismo],
+                ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-warning']
+            ) ?>
+            <?= Html::a(
+                '<i class="fa fa-eye"></i><span class="df-btn-text">Ver Organismo</span>',
+                ['organismo/view', 'id' => $nodo->idorganismo],
+                ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-info']
+            ) ?>
+            <?= Html::a(
+                '<i class="fa fa-plus-circle"></i><span class="df-btn-text">Crear Dispositivo</span>',
+                ['organismo_dispositivo/create', 'origen_alta' => 2, 'iddecreto' => $iddecreto, 'idpadre' => $nodo->idorganismo],
+                ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-success']
+            ) ?>
+
         </div>
 
         <?php
@@ -251,46 +267,50 @@ function renderizarNodoColumnar($nodo, $iddecreto, $nivel)
 
 
     /* Estilo base del botón expandible */
-.df-btn-expandible {
-    display: inline-flex;
-    align-items: center;
-    text-decoration: none;
-    overflow: hidden;
-    max-width: 30px; /* Solo muestra el icono al inicio */
-    transition: max-width 0.5s ease-in-out, background-color 0.3s;
-    white-space: nowrap;
-    vertical-align: middle;
-    padding: 5px;
-    border-radius: 20px;
-}
+    .df-btn-expandible {
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        overflow: hidden;
+        max-width: 30px;
+        /* Solo muestra el icono al inicio */
+        transition: max-width 0.5s ease-in-out, background-color 0.3s;
+        white-space: nowrap;
+        vertical-align: middle;
+        padding: 5px;
+        border-radius: 20px;
+    }
 
-/* El texto oculto por defecto */
-.df-btn-text {
-    max-width: 0;
-    opacity: 0;
-    margin-left: 0;
-    transition: all 0.5s;
-    font-size: 12px;
-    font-weight: bold;
-}
+    /* El texto oculto por defecto */
+    .df-btn-text {
+        max-width: 0;
+        opacity: 0;
+        margin-left: 0;
+        transition: all 0.5s;
+        font-size: 12px;
+        font-weight: bold;
+    }
 
-/* EFECTO HOVER: Se estira y muestra el texto */
-.df-btn-expandible:hover {
-    max-width: 200px; /* Se estira lo suficiente para el texto */
-    background-color: #ebf7ee; /* Un verde muy clarito de fondo al expandir */
-    padding-right: 12px;
-    text-decoration: none;
-}
+    /* EFECTO HOVER: Se estira y muestra el texto */
+    .df-btn-expandible:hover {
+        max-width: 200px;
+        /* Se estira lo suficiente para el texto */
+        background-color: #ebf7ee;
+        /* Un verde muy clarito de fondo al expandir */
+        padding-right: 12px;
+        text-decoration: none;
+    }
 
-.df-btn-expandible:hover .df-btn-text {
-    max-width: 150px;
-    opacity: 1;
-    margin-left: 8px; /* Espacio entre el + y el texto */
-}
+    .df-btn-expandible:hover .df-btn-text {
+        max-width: 150px;
+        opacity: 1;
+        margin-left: 8px;
+        /* Espacio entre el + y el texto */
+    }
 
-/* Ajuste del icono para que no se mueva */
-.df-btn-expandible i {
-    font-size: 18px;
-    flex-shrink: 0;
-}
+    /* Ajuste del icono para que no se mueva */
+    .df-btn-expandible i {
+        font-size: 14px;
+        flex-shrink: 0;
+    }
 </style>
