@@ -13,7 +13,7 @@ $layoutDate = <<< HTML
         <i class="glyphicon glyphicon-remove"></i>
     </span>
 HTML;
-
+$searchModel = $searchModel ?? null; // Asegúrate de que $searchModel esté definido
 $columna_1 = '5%';
 $columna_2 = '10%';
 $columna_3 = '20%';

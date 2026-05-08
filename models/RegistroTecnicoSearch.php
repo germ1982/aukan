@@ -18,8 +18,8 @@ class RegistroTecnicoSearch extends RegistroTecnico
     public function rules()
     {
         return [
-            [['idregistro', 'idsolicitante', 'iddispositivo', 'idtipo_registro'], 'integer'],
-            [['fecha_solicitud', 'problema', 'solucion', 'fecha_solucion'], 'safe'],
+            [['idregistro', 'idsolicitante', 'iddispositivo', 'idtipo_registro','estado'], 'integer'],
+            [['fecha_solicitud', 'problema', 'solucion', 'fecha_solucion', 'fdesde', 'fhasta','solicitante'], 'safe'],
         ];
     }
 
@@ -55,6 +55,19 @@ class RegistroTecnicoSearch extends RegistroTecnico
             return $dataProvider;
         }
 
+
+                $sql_desde = '';
+        $sql_hasta = '';
+        if ($this->fdesde != null) {
+            $fecha_desde_aux = date_format(date_create(str_replace('/', '-', $this->fdesde)), 'Y-m-d');
+            $sql_desde = "DATEDIFF(fecha_solicitud,'$fecha_desde_aux')>=0 ";
+        }
+        if ($this->fhasta != null) {
+            $fecha_hasta_aux = date_format(date_create(str_replace('/', '-', $this->fhasta)), 'Y-m-d');
+            $sql_hasta = "DATEDIFF(fecha_solicitud,'$fecha_hasta_aux')<=0 ";
+        }
+
+
         $query->andFilterWhere([
             'idregistro' => $this->idregistro,
             'fecha_solicitud' => $this->fecha_solicitud,
@@ -62,10 +75,13 @@ class RegistroTecnicoSearch extends RegistroTecnico
             'iddispositivo' => $this->iddispositivo,
             'idtipo_registro' => $this->idtipo_registro,
             'fecha_solucion' => $this->fecha_solucion,
+            
         ]);
 
         $query->andFilterWhere(['like', 'problema', $this->problema])
-            ->andFilterWhere(['like', 'solucion', $this->solucion]);
+            ->andFilterWhere(['like', 'solucion', $this->solucion])
+                    ->andWhere($sql_desde)
+        ->andWhere($sql_hasta);;
 
         return $dataProvider;
     }

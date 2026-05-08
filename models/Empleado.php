@@ -149,12 +149,15 @@ class Empleado extends \yii\db\ActiveRecord
         $asistentes =  Empleado::find()
             ->select([
                 'idempleado',
-                "CONCAT(p.nombre, ' ', p.apellido, ' - legajo ', e.legajo) AS descripcion"
+                "CONCAT(p.nombre) AS descripcion"
             ])
             ->from('configuracion c')
             ->innerJoin('empleado e', 'c.descripcion = CAST(e.idempleado AS CHAR)') // Ojo con los tipos si descripcion es string
             ->innerJoin('personas p', 'p.idpersona = e.idpersona')
             ->where(['c.id_configuracion_tipo' => ConfiguracionTipo::TIPO_ASISTENCIA_INFORMATICA])
+            ->orderBy([
+                'p.nombre' => SORT_ASC
+            ])
             ->all();/*  */
         return $asistentes;
     }

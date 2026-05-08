@@ -1202,3 +1202,14 @@ SET character_set_client = @saved_cs_client;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2026-03-16 13:29:35
+
+CREATE TABLE `familia`.`registro_tecnico` (
+  `idregistro` INT NOT NULL AUTO_INCREMENT,
+  `fecha_solicitud` DATETIME NOT NULL,
+  `idsolicitante` INT NOT NULL,
+  `iddispositivo` INT NULL,
+  `idtipo_registro` INT NULL,
+  `problema` VARCHAR(200) NULL,
+  `solucion` VARCHAR(200) NULL,
+  `fecha_solucion` DATETIME NULL,
+  PRIMARY KEY (`idregistro`));

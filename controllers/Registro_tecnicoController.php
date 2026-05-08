@@ -2,8 +2,13 @@
 
 namespace app\controllers;
 
+use app\models\Configuracion;
+use app\models\ConfiguracionSearch;
+use app\models\ConfiguracionTipo;
+use app\models\LogPlataforma;
 use Yii;
 use app\models\RegistroTecnico;
+use app\models\RegistroTecnicoAsistencia;
 use app\models\RegistroTecnicoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -37,11 +42,35 @@ class Registro_tecnicoController extends Controller
      * @return mixed
      */
     public function actionIndex()
-    {    
+    {
         $searchModel = new RegistroTecnicoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionIndex_asistentes()
+    {
+        $searchModel = new ConfiguracionSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->andWhere(['id_configuracion_tipo' => ConfiguracionTipo::TIPO_ASISTENCIA_INFORMATICA]);
+
+        return $this->render('index_asistentes', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionIndex_tipos_registro()
+    {
+        $searchModel = new ConfiguracionSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->andWhere(['id_configuracion_tipo' => ConfiguracionTipo::TIPO_REGISTRO_TECNICO]);
+
+        return $this->render('index_tipos_registro', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -54,19 +83,19 @@ class Registro_tecnicoController extends Controller
      * @return mixed
      */
     public function actionView($id)
-    {   
+    {
         $request = Yii::$app->request;
-        if($request->isAjax){
+        if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                    'title'=> "RegistroTecnico #".$id,
-                    'content'=>$this->renderAjax('view', [
-                        'model' => $this->findModel($id),
-                    ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
-        }else{
+                'title' => "RegistroTecnico #" . $id,
+                'content' => $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+                ]),
+                'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+            ];
+        } else {
             return $this->render('view', [
                 'model' => $this->findModel($id),
             ]);
@@ -82,44 +111,74 @@ class Registro_tecnicoController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->request;
-        $model = new RegistroTecnico();  
+        $model = new RegistroTecnico();
+        $asistentes = Yii::$app->request->post('asistentes', []);
+        $model->idtipo_registro = Yii::$app->request->post('idtipo_registro');
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            if($request->isGet){
+            if ($request->isGet) {
                 return [
-                    'title'=> "Create new RegistroTecnico",
-                    'content'=>$this->renderAjax('create', [
+                    'title' => "Create new RegistroTecnico",
+                    'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-        
-                ];         
-            }else if($model->load($request->post()) && $model->save()){
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+
+                ];
+            } else if ($model->load($request->post())) {
+                $model->idtipo_registro = Yii::$app->request->post('idtipo_registro');
+
+                $model->fecha_solicitud = ArmarDateParaMySql($model->fecha_solicitud);
+
+                if ($model->solucion) {
+                    $model->fecha_solucion = ArmarDateParaMySql($model->fecha_solicitud);
+                    $model->estado = RegistroTecnico::ESTADO_FINALIZADO;
+                }
+                else {
+                    if (!empty($asistentes)) {
+                        $model->estado = RegistroTecnico::ESTADO_ASISTENCIA;
+                    } else {
+                        $model->estado = RegistroTecnico::ESTADO_PENDIENTE;
+                    }
+
+                }
+
+
+
+                if ($model->save()) {
+
+                    foreach ($asistentes as $idempleado) {
+                        $registroAsistencia = new RegistroTecnicoAsistencia();
+                        $registroAsistencia->idregistro = $model->idregistro;
+                        $registroAsistencia->idtecnico = $idempleado;
+                        $registroAsistencia->save();
+                    }
+                    return [
+                        //'forceReload' => '#crud-datatable-pjax',
+                        'title' => "Create new RegistroTecnico",
+                        'content' => '<span class="text-success">Create RegistroTecnico success</span>',
+                        'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                            Html::a('Create More', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+
+                    ];
+                }
+            } else {
                 return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Create new RegistroTecnico",
-                    'content'=>'<span class="text-success">Create RegistroTecnico success</span>',
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
-        
-                ];         
-            }else{           
-                return [
-                    'title'=> "Create new RegistroTecnico",
-                    'content'=>$this->renderAjax('create', [
+                    'title' => "Create new RegistroTecnico",
+                    'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-        
-                ];         
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+
+                ];
             }
-        }else{
+        } else {
             /*
             *   Process for non-ajax request
             */
@@ -131,7 +190,6 @@ class Registro_tecnicoController extends Controller
                 ]);
             }
         }
-       
     }
 
     /**
@@ -144,43 +202,74 @@ class Registro_tecnicoController extends Controller
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
-        $model = $this->findModel($id);       
+        $model = $this->findModel($id);
 
-        if($request->isAjax){
+        $asistentes = Yii::$app->request->post('asistentes', []);
+
+
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            if($request->isGet){
+            if ($request->isGet) {
                 return [
-                    'title'=> "Update RegistroTecnico #".$id,
-                    'content'=>$this->renderAjax('update', [
+                    'title' => "Update RegistroTecnico #" . $id,
+                    'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-                ];         
-            }else if($model->load($request->post()) && $model->save()){
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                ];
+            } else if ($model->load($request->post())) {
+                $model->idtipo_registro = Yii::$app->request->post('idtipo_registro');
+
+                $model->fecha_solicitud = ArmarDateParaMySql($model->fecha_solicitud);
+
+                if ($model->solucion) {
+                    $model->fecha_solucion = ArmarDateParaMySql($model->fecha_solicitud);
+                    $model->estado = RegistroTecnico::ESTADO_FINALIZADO;
+                }
+                else {
+                    if (!empty($asistentes)) {
+                        $model->estado = RegistroTecnico::ESTADO_ASISTENCIA;
+                    } else {
+                        $model->estado = RegistroTecnico::ESTADO_PENDIENTE;
+                    }
+
+                }
+
+
+                if ($model->save()) {
+                    RegistroTecnicoAsistencia::deleteAll(['idregistro' => $model->idregistro]);
+                    foreach ($asistentes as $idempleado) {
+                        $registroAsistencia = new RegistroTecnicoAsistencia();
+                        $registroAsistencia->idregistro = $model->idregistro;
+                        $registroAsistencia->idtecnico = $idempleado;
+                        $registroAsistencia->save();
+                    }
+
+                    return [
+                        //'forceReload' => '#crud-datatable-pjax',
+                        'title' => "RegistroTecnico #" . $id,
+                        'content' => $this->renderAjax('view', [
+                            'model' => $model,
+                        ]),
+                        'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                            Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                    ];
+                }
+            } else {
                 return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "RegistroTecnico #".$id,
-                    'content'=>$this->renderAjax('view', [
+                    'title' => "Update RegistroTecnico #" . $id,
+                    'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
-            }else{
-                 return [
-                    'title'=> "Update RegistroTecnico #".$id,
-                    'content'=>$this->renderAjax('update', [
-                        'model' => $model,
-                    ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-                ];        
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                ];
             }
-        }else{
+        } else {
             /*
             *   Process for non-ajax request
             */
@@ -206,23 +295,21 @@ class Registro_tecnicoController extends Controller
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
             /*
             *   Process for non-ajax request
             */
             return $this->redirect(['index']);
         }
-
-
     }
 
-     /**
+    /**
      * Delete multiple existing RegistroTecnico model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
@@ -230,27 +317,26 @@ class Registro_tecnicoController extends Controller
      * @return mixed
      */
     public function actionBulkDelete()
-    {        
+    {
         $request = Yii::$app->request;
-        $pks = explode(',', $request->post( 'pks' )); // Array or selected records primary keys
-        foreach ( $pks as $pk ) {
+        $pks = explode(',', $request->post('pks')); // Array or selected records primary keys
+        foreach ($pks as $pk) {
             $model = $this->findModel($pk);
             $model->delete();
         }
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
             /*
             *   Process for non-ajax request
             */
             return $this->redirect(['index']);
         }
-       
     }
 
     /**
@@ -268,4 +354,150 @@ class Registro_tecnicoController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+    public function actionCreate_asistentes()
+    {
+        $request = Yii::$app->request;
+        $model = new Configuracion();
+        $model->id_configuracion_tipo = Yii::$app->request->get('id_configuracion_tipo');
+        $model_tipo = ConfiguracionTipo::findOne($model->id_configuracion_tipo);
+
+        if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+
+            if ($request->isGet) {
+                return [
+                    'title' => 'Nuevo ' . $model_tipo->descripcion,
+                    'content' => $this->renderAjax('create_asistentes', [
+                        'model' => $model,
+                    ]),
+                    'footer' =>
+                    Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal']) .
+                        Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => 'submit']),
+                ];
+            } else if ($model->load($request->post()) && $model->validate()) {
+                $transaction = Yii::$app->db->beginTransaction();
+
+                if ($model->save()) {
+                    $transaction->commit();
+                    LogPlataforma::registrar(12, 1, $model->id_configuracion);
+                    return [
+                        'title' => 'Nuevo ' . $model_tipo->descripcion,
+                        'content' => '<span class="text-success">Asistente Creado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal']) .
+                            Html::a('Crear Otro', ['create_asistentes', 'id_configuracion_tipo' => $model->id_configuracion_tipo], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
+                    ];
+                } else {
+                    $transaction->rollBack();
+                }
+            }
+
+            return [
+                'title' => 'Nuevo ' . $model_tipo->descripcion . ' - Faltan datos!!!',
+                'content' => $this->renderAjax('create_asistentes', ['model' => $model]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal']) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => 'submit'])
+            ];
+        }
+    }
+
+
+    public function actionUpdate_asistentes($id)
+    {
+
+        $request = Yii::$app->request;
+
+        $model = Configuracion::findOne($id);
+
+
+
+        $model_tipo = ConfiguracionTipo::findOne($model->id_configuracion_tipo);
+
+        if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+
+            if ($request->isGet) {
+                return [
+                    'title' => 'Actualizar ',
+                    'content' => $this->renderAjax('update_asistentes', [
+                        'model' => $model,
+                    ]),
+                    'footer' =>
+                    Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal']) .
+                        Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => 'submit']),
+                ];
+            } else if ($model->load($request->post()) && $model->validate()) {
+                $transaction = Yii::$app->db->beginTransaction();
+
+                if ($model->save()) {
+                    $transaction->commit();
+                    //LogPlataforma::registrar(12, 1, $model->id_configuracion);
+                    return [
+                        'title' => 'Actualizar ' . $model_tipo->descripcion,
+                        'content' => '<span class="text-success">Asistente Actualizado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal']) .
+                            Html::a('Crear Otro', ['create_asistentes', 'id_configuracion_tipo' => $model->id_configuracion_tipo], ['class' => 'btn btn-primary', 'role' => 'modal-remote']),
+                    ];
+                } else {
+                    $transaction->rollBack();
+                }
+            }
+
+            return [
+                'title' => 'Actualizar ' . $model_tipo->descripcion . ' - Faltan datos!!!',
+                'content' => $this->renderAjax('update_asistentes', ['model' => $model]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal']) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => 'submit'])
+            ];
+        }
+    }
+
+    public function actionActivar_configuracion($id)
+    {
+        $model = Configuracion::findOne($id);
+        $model->activo = 1;
+        $model->save();
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return [
+            'title' => 'Activar',
+            'content' => "Se ah Activado el Item", // . json_encode($model->getErrors()),
+            'footer' =>
+            Html::button('Cerrar', [
+                'id' => 'btnCerrar',
+                'class' => 'btn btn-default pull-left',
+                'data-dismiss' => 'modal',
+            ])
+        ];
+    }
+
+    public function actionDesactivar_configuracion($id)
+    {
+        $model = Configuracion::findOne($id);
+        $model->activo = 0;
+        $model->save();
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return [
+            'title' => 'Desactivar',
+            'content' => "Se ah Desactivado el Item", // . json_encode($model->getErrors()),
+            'footer' =>
+            Html::button('Cerrar', [
+                'id' => 'btnCerrar',
+                'class' => 'btn btn-default pull-left',
+                'data-dismiss' => 'modal',
+            ])
+        ];
+    }
+}
+function ArmarDateParaMySql($Fecha)
+{
+    $anio = substr($Fecha, 6, 4);
+    $mes  = substr($Fecha, 3, 2);
+    $dia = substr($Fecha, 0, 2);
+    $DT = "$anio-$mes-$dia";
+
+    $fecha = date_create($DT);
+    $fecha = date_format($fecha, 'Y-m-d');
+    return $fecha;
 }
