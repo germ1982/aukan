@@ -12,12 +12,14 @@ use yii\widgets\DetailView;
         'attributes' => [
             'idregistro',
             'fecha_solicitud',
+            'hora_solicitud',
             'idsolicitante',
             'iddispositivo',
             'idtipo_registro',
             'problema',
             'solucion',
             'fecha_solucion',
+            'hora_solucion',
         ],
     ]) ?>
 

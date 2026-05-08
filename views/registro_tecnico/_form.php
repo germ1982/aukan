@@ -20,18 +20,18 @@ $tecnicos_asistencia = Empleado::get_asistentes_informaticos();
 
 if ($model->fecha_solicitud) {
     $model->fecha_solicitud = date('d/m/Y', strtotime($model->fecha_solicitud));
-    $model->hora_solicitud = date('H:i', strtotime($model->fecha_solicitud));
+    $model->hora_solicitud = substr($model->hora_solicitud, 0, 5);
 } else {
     $model->fecha_solicitud = date('d/m/Y');
-    $model->hora_solicitud = date('H:i');
+    $model->hora_solicitud = substr($model->hora_solicitud, 0, 5);
 }
 
 if ($model->fecha_solucion) {
     $model->fecha_solucion = date('d/m/Y', strtotime($model->fecha_solucion));
-    $model->hora_solucion = date('H:i', strtotime($model->fecha_solucion));
+    $model->hora_solucion = substr($model->hora_solucion, 0, 5);
 } else {
     $model->fecha_solucion = date('d/m/Y');
-    $model->hora_solucion = date('H:i');
+    $model->hora_solucion = substr($model->hora_solucion, 0, 5);
 }
 
 $asistentes_seleccionados = [];

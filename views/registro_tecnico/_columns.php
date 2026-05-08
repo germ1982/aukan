@@ -134,7 +134,7 @@ return [
         'attribute' => 'asistentes_asignados',
         'format' => 'raw',
         'value' => function ($model) {
-            $sql = "SELECT e.foto, CONCAT(p.apellido, ' ', p.nombre) as nombre
+            $sql = "SELECT e.idempleado, e.foto, CONCAT(p.apellido, ' ', p.nombre) as nombre
             FROM registro_tecnico_asistencia a
             JOIN empleado e ON a.idtecnico = e.idempleado
             JOIN personas p ON p.idpersona = e.idpersona
@@ -149,8 +149,13 @@ return [
                 $src = $a['foto']
                     ? \yii\helpers\Url::base(true) . '/img/empleados-fotos/' . $a['foto']
                     : \yii\helpers\Url::base(true) . '/img/empleados-fotos/default.jpg';
+                // Creamos la URL hacia la vista del empleado
+                $urlView = \yii\helpers\Url::to(['empleado/view', 'id' => $a['idempleado']]);
                 //$html .= '<img src="' . $src . '" title="' . $a['nombre'] . '" style="width:28px; height:28px; border-radius:50%; object-fit:cover; border:2px solid #ddd;">';
-                $html .= '<img src="' . $src . '" title="' . $a['nombre'] . '" class="imagen-avatar-grilla" style="width:28px; height:28px; border-radius:50%; object-fit:cover; border:2px solid #ddd;">';
+                //$html .= '<img src="' . $src . '" title="' . $a['nombre'] . '" class="imagen-avatar-grilla" style="width:20px; height:20px; border-radius:50%; object-fit:cover; ">';
+                $html .= '<a href="' . $urlView . '" role="modal-remote" title="' . $a['nombre'] . '">';
+                $html .= '<img src="' . $src . '" class="imagen-avatar-grilla" style="width:22px; height:22px; border-radius:50%; object-fit:cover; border: 1px solid #ccc; cursor:pointer;">';
+                $html .= '</a>';
             }
             $html .= '</div>';
             return $html;

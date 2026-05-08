@@ -133,10 +133,12 @@ class Registro_tecnicoController extends Controller
             } else if ($model->load($request->post())) {
                 $model->idtipo_registro = Yii::$app->request->post('idtipo_registro');
 
-                $model->fecha_solicitud = ArmarDateParaMySql($model->fecha_solicitud);
+                $model->fecha_solicitud = $model->fecha_solicitud ? ArmarDateParaMySql($model->fecha_solicitud) : null;
+                $model->hora_solicitud = $model->hora_solicitud ? date('H:i:s', strtotime($model->hora_solicitud)) : null;
 
                 if ($model->solucion) {
-                    $model->fecha_solucion = ArmarDateParaMySql($model->fecha_solicitud);
+                    $model->fecha_solucion = $model->fecha_solucion ? ArmarDateParaMySql($model->fecha_solucion) : null;
+                    $model->hora_solucion = $model->hora_solucion ? date('H:i:s', strtotime($model->hora_solucion)) : null;
                     $model->estado = RegistroTecnico::ESTADO_FINALIZADO;
                 }
                 else {
@@ -224,10 +226,12 @@ class Registro_tecnicoController extends Controller
             } else if ($model->load($request->post())) {
                 $model->idtipo_registro = Yii::$app->request->post('idtipo_registro');
 
-                $model->fecha_solicitud = ArmarDateParaMySql($model->fecha_solicitud);
+                $model->fecha_solicitud = $model->fecha_solicitud ? ArmarDateParaMySql($model->fecha_solicitud) : null;
+                $model->hora_solicitud = $model->hora_solicitud ? date('H:i:s', strtotime($model->hora_solicitud)) : null;
 
                 if ($model->solucion) {
-                    $model->fecha_solucion = ArmarDateParaMySql($model->fecha_solicitud);
+                    $model->fecha_solucion = $model->fecha_solucion ? ArmarDateParaMySql($model->fecha_solucion) : null;
+                    $model->hora_solucion = $model->hora_solucion ? date('H:i:s', strtotime($model->hora_solucion)) : null;
                     $model->estado = RegistroTecnico::ESTADO_FINALIZADO;
                 }
                 else {
@@ -497,7 +501,11 @@ function ArmarDateParaMySql($Fecha)
     $dia = substr($Fecha, 0, 2);
     $DT = "$anio-$mes-$dia";
 
-    $fecha = date_create($DT);
-    $fecha = date_format($fecha, 'Y-m-d');
-    return $fecha;
+    $DT = date_create($DT);
+    $DT = date_format($DT, 'Y-m-d');
+    return $DT;
 }
+
+
+
+
