@@ -126,3 +126,35 @@ if (!$model->isNewRecord) {
     <?php ActiveForm::end(); ?>
 
 </div>
+
+<?php
+$script = <<<JS
+
+// Al cambiar solicitante → setea el sector
+$('#input_idsolicitante').on('change', function() {
+    var idempleado = $(this).val();
+    if (!idempleado) return;
+    $.get('index.php?r=empleado/get_dispositivo&id=' + idempleado, function(data) {
+        if (data) {
+            $('#input_iddispositivo').val(data).trigger('change');
+        }
+    });
+});
+
+// Al cambiar sector → filtra solicitantes
+$('#input_iddispositivo').on('change', function() {
+    var iddispositivo = $(this).val();
+    if (!iddispositivo) return;
+    $.get('index.php?r=empleado/get_por_dispositivo&id=' + iddispositivo, function(data) {
+        var select = $('#input_idsolicitante');
+        select.empty();
+        $.each(data, function(i, item) {
+            select.append(new Option(item.descripcion, item.idempleado));
+        });
+        select.trigger('change');
+    });
+});
+
+JS;
+$this->registerJs($script);
+?>

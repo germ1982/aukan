@@ -161,4 +161,20 @@ class Empleado extends \yii\db\ActiveRecord
             ->all();/*  */
         return $asistentes;
     }
+
+    public static function get_dispositivo($id)
+{
+    $empleado = self::findOne($id);
+    return $empleado->iddispositivo ?? null;
+}
+
+public static function get_por_dispositivo($id)
+{
+    $sql = "SELECT e.idempleado, CONCAT(p.apellido, ' ', p.nombre) as descripcion
+            FROM empleado e
+            JOIN personas p ON p.idpersona = e.idpersona
+            WHERE e.activo = 1 AND e.iddispositivo = $id
+            ORDER BY p.apellido, p.nombre";
+    return self::findBySql($sql)->asArray()->all();
+}
 }

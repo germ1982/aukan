@@ -134,7 +134,7 @@ class EmpleadoController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
-                    LogPlataforma::registrar(5,1,$model->idempleado); 
+                    LogPlataforma::registrar(5, 1, $model->idempleado);
                     return [
                         'title' => "Nuevo Empleado",
                         'content' => '<span class="text-success">Empleado Creado Correctamente</span>',
@@ -158,7 +158,7 @@ class EmpleadoController extends Controller
     {
         $request = Yii::$app->request;
         $model = $this->findModel($id);
-        
+
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
@@ -182,7 +182,7 @@ class EmpleadoController extends Controller
             } else if ($model->load($request->post())) {
                 $transaction = Yii::$app->db->beginTransaction();
                 $guardado = true;
-                
+
 
                 $ingreso_real = ArmarDateParaMySql($model->ingreso_real);
                 $ingreso_real = date_create($ingreso_real);
@@ -213,7 +213,7 @@ class EmpleadoController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
-                    LogPlataforma::registrar(5,2,$model->idempleado); 
+                    LogPlataforma::registrar(5, 2, $model->idempleado);
                     return [
                         'title' => "Editar Empleado",
                         'content' => '<span class="text-success">Empleado Editado Correctamente</span>',
@@ -243,7 +243,7 @@ class EmpleadoController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(5,3,$id); 
+        LogPlataforma::registrar(5, 3, $id);
         if ($request->isAjax) {
             /*
             *   Process for ajax request
@@ -302,6 +302,25 @@ class EmpleadoController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+
+    public function actionGet_dispositivo($id)
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $empleado = Empleado::findOne($id);
+        return $empleado->iddispositivo ?? null;
+    }
+
+    public function actionGet_por_dispositivo($id)
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $sql = "SELECT e.idempleado, CONCAT(p.apellido, ' ', p.nombre) as descripcion
+            FROM empleado e
+            JOIN personas p ON p.idpersona = e.idpersona
+            WHERE e.activo = 1 AND e.iddispositivo = $id
+            ORDER BY p.apellido, p.nombre";
+        return Empleado::findBySql($sql)->asArray()->all();
     }
 }
 

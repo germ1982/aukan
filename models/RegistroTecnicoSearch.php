@@ -44,8 +44,9 @@ class RegistroTecnicoSearch extends RegistroTecnico
         $query = RegistroTecnico::find();
 
         $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
+        'query' => $query,
+        'sort' => ['defaultOrder' => ['idregistro' => SORT_DESC]] // Opcional: ver últimos primero
+    ]);
 
         $this->load($params);
 
@@ -75,6 +76,7 @@ class RegistroTecnicoSearch extends RegistroTecnico
             'iddispositivo' => $this->iddispositivo,
             'idtipo_registro' => $this->idtipo_registro,
             'fecha_solucion' => $this->fecha_solucion,
+            'estado' => ($this->estado !== null && $this->estado !== '') ? $this->estado : null,
             
         ]);
 

@@ -70,8 +70,27 @@ return [
             ]
         ])
     ],
-
-    [
+[
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'iddispositivo',
+        'width' => $columna_2,
+        'format' => 'raw',
+        'value' => function ($model) {
+            if ($model->iddispositivo) {
+                $dispositivo = OrganismoDispositivo::get_dispositivo($model->iddispositivo);
+                $url = \yii\helpers\Url::to(['organismo_dispositivo/view', 'id' => $model->iddispositivo]);
+                return '<a href="' . $url . '" role="modal-remote" title="Ver sector">' . $dispositivo->descripcion . '</a>';
+            }
+            return '';
+        },
+        'filterType' => GridView::FILTER_SELECT2,
+        'filter' => ArrayHelper::map($sectores, 'iddispositivo', 'descripcion'),
+        'filterWidgetOptions' => [
+            'pluginOptions' => ['allowClear' => true],
+        ],
+        'filterInputOptions' => ['placeholder' => 'Sector...'],
+    ],
+    /* [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'iddispositivo',
         'width' => $columna_2,
@@ -89,7 +108,7 @@ return [
         ],
         'filterInputOptions' => ['placeholder' => 'Sector...'],
         'format' => 'raw',
-    ],
+    ], */
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'idsolicitante',
@@ -162,23 +181,29 @@ return [
         },
         'width' => $columna_5,
     ],
-    [
+ [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'estado',
         'width' => $columna_6,
+        'format' => 'raw',
         'value' => function ($model) {
-            return $model->getEstadoEtiqueta();
+            $etiquetas = [
+                RegistroTecnico::ESTADO_PENDIENTE   => '<span style="background:#FAEEDA;color:#633806;padding:2px 8px;border-radius:10px;font-size:11px;">Pendiente</span>',
+                RegistroTecnico::ESTADO_ASISTENCIA  => '<span style="background:#E6F1FB;color:#0C447C;padding:2px 8px;border-radius:10px;font-size:11px;">En Asistencia</span>',
+                RegistroTecnico::ESTADO_FINALIZADO  => '<span style="background:#EAF3DE;color:#27500A;padding:2px 8px;border-radius:10px;font-size:11px;">Finalizado</span>',
+            ];
+            return $etiquetas[$model->estado] ?? $model->estado;
         },
+        'filterType' => GridView::FILTER_SELECT2,
         'filter' => [
-            RegistroTecnico::ESTADO_PENDIENTE => 'Pendiente',
+            RegistroTecnico::ESTADO_PENDIENTE  => 'Pendiente',
             RegistroTecnico::ESTADO_ASISTENCIA => 'En Asistencia',
             RegistroTecnico::ESTADO_FINALIZADO => 'Finalizado',
         ],
-        'filterInputOptions' => [
-            'id' => 'filtro-estado', // Opcional: un ID único
-            'class' => 'form-control',
-            'prompt' => 'Todos', // AQUÍ es donde va el prompt
+        'filterWidgetOptions' => [
+            'pluginOptions' => ['allowClear' => true],
         ],
+        'filterInputOptions' => ['placeholder' => 'Estado...'],
     ],
 
 
