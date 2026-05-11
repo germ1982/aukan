@@ -1,17 +1,12 @@
 <?php
+
+$dbname=env('DB_DATAFAM_NAME');
+$dbHost=env('DB_DATAFAM_HOST');
+
 return [
-    /* 'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=10.1.73.249;dbname=familia',
-    'username' => 'root',
-    'password' => '0303456',//local
-    'charset' => 'utf8', */
-
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=familia',
-    'username' => 'root',
-    //'password' => 'Dsyt**2402',//local
-    'password' => '',//local
+    'dsn' => "mysql:host=$dbHost;dbname=$dbname",
+    'username' => env('DB_DATAFAM_USERNAME'),
+    'password' => env('DB_DATAFAM_PASSWORD'),
     'charset' => 'utf8',
-
-
 ];
