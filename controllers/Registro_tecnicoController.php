@@ -235,6 +235,9 @@ class Registro_tecnicoController extends Controller
                     $model->estado = RegistroTecnico::ESTADO_FINALIZADO;
                 }
                 else {
+
+                    $model->fecha_solucion = null;
+                    $model->hora_solucion = null;   
                     if (!empty($asistentes)) {
                         $model->estado = RegistroTecnico::ESTADO_ASISTENCIA;
                     } else {

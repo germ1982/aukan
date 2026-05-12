@@ -85,6 +85,23 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
         return $array;
     }
 
+    public static function get_dispositivos_con_decreto($activo=false)
+    {
+        //modificar para agregar oficina
+        $filtro = $activo ? "where od.activo = 1" :'';
+        $sql = "SELECT d.iddispositivo, CONCAT('DECRETO: ',od.descripcion , ' (', DATE_FORMAT(od.periodo_inicio, '%d/%m/%Y'),') - ',e.descripcion_fija,' - ', eo.descripcion, ' - ',o.abreviatura,' - ', d.descripcion) as descripcion 
+        FROM organismo o 
+        join organismo_dispositivo d on o.idorganismo = d.idorganismo
+        join organismo_org_dec ood on ood.idorganismo = o.idorganismo
+        join organismo_decreto od on od.iddecreto = ood.iddecreto
+        join edificio_oficina eo on eo.idoficina = d.idoficina
+        join edificio e on e.idedificio = eo.idedificio
+        $filtro
+        order by e.descripcion_fija, eo.descripcion, od.descripcion, o.abreviatura, d.descripcion";
+        $array = OrganismoDispositivo::findBySql($sql)->all();
+        return $array;
+    }
+
     public static function get_dispositivo($id)
     {
         $sql = "SELECT d.iddispositivo, concat(o.abreviatura,' - ', d.descripcion) as descripcion 
@@ -92,6 +109,17 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
         join organismo_dispositivo d on o.idorganismo = d.idorganismo
         where o.activo = 1 and d.activo = 1 and d.iddispositivo = $id
         order by o.abreviatura, d.descripcion";
+        $dato = OrganismoDispositivo::findBySql($sql)->one();
+        return $dato;
+    }
+        public static function get_dispositivo_pro($id)
+    {
+        $sql = "SELECT d.iddispositivo, concat(e.descripcion_fija,' - ', eo.descripcion, ' - ', o.abreviatura, ' - ', d.descripcion) as descripcion 
+        FROM organismo o 
+        join organismo_dispositivo d on o.idorganismo = d.idorganismo
+        join edificio_oficina eo on eo.idoficina = d.idoficina
+        join edificio e on e.idedificio = eo.idedificio
+        where d.iddispositivo = $id";
         $dato = OrganismoDispositivo::findBySql($sql)->one();
         return $dato;
     }

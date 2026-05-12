@@ -18,8 +18,11 @@ class RegistroTecnicoSearch extends RegistroTecnico
     public function rules()
     {
         return [
-            [['idregistro', 'idsolicitante', 'iddispositivo', 'idtipo_registro','estado'], 'integer'],
-            [['fecha_solicitud', 'problema', 'solucion', 'fecha_solucion', 'fdesde', 'fhasta','solicitante'], 'safe'],
+            // Quitá 'estado' de la regla de 'integer'
+            [['idregistro', 'idsolicitante', 'iddispositivo', 'idtipo_registro'], 'integer'],
+
+            // Agregalo a la regla de 'safe' para que permita recibir el array de checkboxes
+            [['estado', 'fecha_solicitud', 'problema', 'solucion', 'fdesde', 'fhasta', 'solicitante'], 'safe'],
         ];
     }
 
@@ -44,9 +47,17 @@ class RegistroTecnicoSearch extends RegistroTecnico
         $query = RegistroTecnico::find();
 
         $dataProvider = new ActiveDataProvider([
-        'query' => $query,
-        'sort' => ['defaultOrder' => ['idregistro' => SORT_DESC]] // Opcional: ver últimos primero
-    ]);
+            'query' => $query,
+            'sort' => ['defaultOrder' => ['idregistro' => SORT_DESC]] // Opcional: ver últimos primero
+        ]);
+
+        // Si no vienen parámetros de búsqueda en la URL, ponemos los default
+        if (!isset($params['RegistroTecnicoSearch']['estado'])) {
+            $this->estado = [
+                RegistroTecnico::ESTADO_PENDIENTE,
+                RegistroTecnico::ESTADO_ASISTENCIA
+            ];
+        }
 
         $this->load($params);
 
@@ -57,7 +68,7 @@ class RegistroTecnicoSearch extends RegistroTecnico
         }
 
 
-                $sql_desde = '';
+        $sql_desde = '';
         $sql_hasta = '';
         if ($this->fdesde != null) {
             $fecha_desde_aux = date_format(date_create(str_replace('/', '-', $this->fdesde)), 'Y-m-d');
@@ -77,13 +88,13 @@ class RegistroTecnicoSearch extends RegistroTecnico
             'idtipo_registro' => $this->idtipo_registro,
             'fecha_solucion' => $this->fecha_solucion,
             'estado' => ($this->estado !== null && $this->estado !== '') ? $this->estado : null,
-            
+
         ]);
 
         $query->andFilterWhere(['like', 'problema', $this->problema])
             ->andFilterWhere(['like', 'solucion', $this->solucion])
-                    ->andWhere($sql_desde)
-        ->andWhere($sql_hasta);;
+            ->andWhere($sql_desde)
+            ->andWhere($sql_hasta);;
 
         return $dataProvider;
     }

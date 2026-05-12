@@ -322,6 +322,17 @@ class EmpleadoController extends Controller
             ORDER BY p.apellido, p.nombre";
         return Empleado::findBySql($sql)->asArray()->all();
     }
+
+        public function actionGet_empleados()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $sql = "SELECT e.idempleado, CONCAT(p.apellido, ' ', p.nombre) as descripcion
+            FROM empleado e
+            JOIN personas p ON p.idpersona = e.idpersona
+            WHERE e.activo = 1 
+            ORDER BY p.apellido, p.nombre";
+        return Empleado::findBySql($sql)->asArray()->all();
+    }
 }
 
 function ArmarDateParaMySql($Fecha)

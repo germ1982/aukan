@@ -70,14 +70,14 @@ return [
             ]
         ])
     ],
-[
+    [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'iddispositivo',
         'width' => $columna_2,
         'format' => 'raw',
         'value' => function ($model) {
             if ($model->iddispositivo) {
-                $dispositivo = OrganismoDispositivo::get_dispositivo($model->iddispositivo);
+                $dispositivo = OrganismoDispositivo::get_dispositivo_pro($model->iddispositivo);
                 $url = \yii\helpers\Url::to(['organismo_dispositivo/view', 'id' => $model->iddispositivo]);
                 return '<a href="' . $url . '" role="modal-remote" title="Ver sector">' . $dispositivo->descripcion . '</a>';
             }
@@ -151,6 +151,9 @@ return [
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'asistentes_asignados',
+        'headerOptions' => [
+            'style' => 'color: #87b867; ',
+        ],
         'format' => 'raw',
         'value' => function ($model) {
             $sql = "SELECT e.idempleado, e.foto, CONCAT(p.apellido, ' ', p.nombre) as nombre
@@ -181,10 +184,11 @@ return [
         },
         'width' => $columna_5,
     ],
- [
+
+    [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'estado',
-        'width' => $columna_6,
+        'width' => '150px',
         'format' => 'raw',
         'value' => function ($model) {
             $etiquetas = [
@@ -194,24 +198,21 @@ return [
             ];
             return $etiquetas[$model->estado] ?? $model->estado;
         },
-        'filterType' => GridView::FILTER_SELECT2,
-        'filter' => [
-            RegistroTecnico::ESTADO_PENDIENTE  => 'Pendiente',
-            RegistroTecnico::ESTADO_ASISTENCIA => 'En Asistencia',
-            RegistroTecnico::ESTADO_FINALIZADO => 'Finalizado',
-        ],
-        'filterWidgetOptions' => [
-            'pluginOptions' => ['allowClear' => true],
-        ],
-        'filterInputOptions' => ['placeholder' => 'Estado...'],
-    ],
 
+        // Pero la mejor opción manual es:
+        'filter' => \yii\helpers\Html::activeCheckboxList($searchModel, 'estado', [
+            RegistroTecnico::ESTADO_PENDIENTE   => 'Pendiente',
+            RegistroTecnico::ESTADO_ASISTENCIA  => 'En Asistencia',
+            RegistroTecnico::ESTADO_FINALIZADO  => 'Finalizado',
+        ], ['style' => 'font-size:10px;']),
+    ],
 
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
         'vAlign' => 'middle',
         'width' => $columna_7,
+        'template' => '{view} {update} ',
         'urlCreator' => function ($action, $model, $key, $index) {
             return Url::to([$action, 'id' => $key]);
         },
