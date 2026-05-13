@@ -7,11 +7,13 @@ use yii\widgets\ActiveForm;
 use app\models\OrganismoDispositivo;
 use app\models\Organismo;
 
-$organismo = Organismo::findOne($model->idorganismo)
+$organismo = Organismo::findOne($model->idorganismo);
 
 /* @var $this yii\web\View */
 /* @var $model app\models\OrganismoDispositivo */
 /* @var $form yii\widgets\ActiveForm */
+
+$this->registerJs("aplicarCorrector('input_descripcion');");
 ?>
 
 <style>
@@ -47,7 +49,7 @@ $organismo = Organismo::findOne($model->idorganismo)
     <div class="row">
 
         <div class=" col-md-6">
-            <?= $form->field($model, 'descripcion')->textInput() ?>
+            <?= $form->field($model, 'descripcion')->textInput(['id' => 'input_descripcion']) ?>
         </div>
         <div class=" col-md-6">
             <?= SiteController::actionGet_input_select2($form, $model, 'idoficina', 'cmb_oficina', EdificioOficina::find()->orderBy('descripcion')->all(), 'idoficina', 'descripcion', 'Oficina') ?>

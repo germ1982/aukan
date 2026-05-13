@@ -16,6 +16,7 @@ if ($model->origen_alta != 0) {
     }
     $subtitulo = "Decreto: $decreto - Padre: $rama";
 }
+$this->registerJs("aplicarCorrector('input_descripcion');");
 
 
 /* @var $this yii\web\View */
@@ -35,7 +36,7 @@ if ($model->origen_alta != 0) {
         <div class=" col-md-12">
             <div class="row">
                 <div class=" col-md-6">
-                    <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($model, 'descripcion')->textInput(['id' => 'input_descripcion', 'maxlength' => true, 'spellcheck' => 'true', 'lang' => 'es','autocomplete' => 'on'])->label("algo") ?>
                 </div>
                 <div class="col-md-6">
                     <?php if ($model->origen_alta == 0): ?>
@@ -112,3 +113,4 @@ if ($model->origen_alta != 0) {
     <?php ActiveForm::end(); ?>
 
 </div>
+

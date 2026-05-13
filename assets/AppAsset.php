@@ -94,6 +94,7 @@ class AppAsset extends AssetBundle
 		"template/vendor/jquery-confirm/jquery-confirm.min.js",/* * */
 		//"https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js",
 		'js/common-index-select2-foco.js',//esto es para que el foco en los search de los select2
+		'js/formatos.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',
