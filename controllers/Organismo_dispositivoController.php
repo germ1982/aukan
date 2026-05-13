@@ -80,10 +80,22 @@ class Organismo_dispositivoController extends Controller
      * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($origen_alta = 0, $idorganismo = null)
     {
+
+        /* 
+            $origen_alta:
+            0 =  desde grilla,
+            1 =  desde boton agregar rama sobre un nodo del arbol
+        */
         $request = Yii::$app->request;
         $model = new OrganismoDispositivo();
+        
+        $model->origen_alta = $origen_alta;
+
+        if($origen_alta == 1 && $idorganismo != null){
+            $model->idorganismo = $idorganismo;
+        }
 
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;

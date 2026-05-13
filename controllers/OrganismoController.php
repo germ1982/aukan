@@ -140,7 +140,7 @@ class OrganismoController extends Controller
 
                 LogPlataforma::registrar(6, 1, $model->idorganismo);
                 return [
-                    'forceReload' => '#crud-datatable-pjax',
+                    //'forceReload' => '#crud-datatable-pjax',
                     'title' => "Nuevo Organismo",
                     'content' => '<span class="text-success">Create Organismo success</span>',
                     'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
@@ -201,7 +201,7 @@ class OrganismoController extends Controller
             } else if ($model->load($request->post()) && $model->save()) {
                 LogPlataforma::registrar(6, 2, $model->idorganismo);
                 return [
-                    'forceReload' => '#crud-datatable-pjax',
+                    //'forceReload' => '#crud-datatable-pjax',
                     'title' => "Organismo " . $id,
                     'content' => $this->renderAjax('view', [
                         'model' => $model,

@@ -69,7 +69,7 @@ $organismo = Organismo::findOne($model->idorganismo)
             </div>
             <div class="row">               
                 <div class="col-md-4">
-                    <?= campo('Direccion', OrganismoDispositivo::findOne("$model->iddispositivo")->direccion ) ?>
+                    aca poner plano de oficina  y mapa de direccion del edificio
                 </div>
                 <div class="col-md-4">
                     <?= campo('Alias', OrganismoDispositivo::findOne("$model->iddispositivo")->alias) ?>

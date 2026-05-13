@@ -7,6 +7,7 @@
     <div class="df-item-h nivel-5"><span class="df-color"></span> 5 - Dir. Generales</div>
     <div class="df-item-h nivel-6"><span class="df-color"></span> 6 - Direcciónes</div>
     <div class="df-item-h nivel-7"><span class="df-color"></span> 7 - Departamentos</div>
+    <div class="df-item-h nivel-8"><span class="df-color"></span> 8 - Dispositivos</div>
 </div>
 
 <style>
@@ -14,7 +15,7 @@
     /* --- COMPORTAMIENTO FLOTANTE --- */
     position: fixed;
     margin-top: 15px;
-    left: 600px;
+    left: 650px;
     transform: translateX(-50%); /* Lo centra horizontalmente */
     z-index: 1000;
     
@@ -54,6 +55,7 @@
 .nivel-5 .df-color { background-color: #3498db; }
 .nivel-6 .df-color { background-color: #d2e052; }
 .nivel-7 .df-color { background-color: #7ade5b; }
+.nivel-8 .df-color { background-color: #9b59b6; }
 
 /* Se desvanece al pasar el mouse por si tapa algo importante */
 .df-leyenda-horizontal:hover {

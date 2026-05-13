@@ -82,10 +82,16 @@ class EmpleadoController extends Controller
      * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($origen_alta = 0, $iddispositivo = null)
     {
         $request = Yii::$app->request;
         $model = new Empleado();
+
+        $model->origen_alta = $origen_alta;
+
+        if ($origen_alta == 1 && $iddispositivo != null) {
+            $model->iddispositivo = $iddispositivo;
+        }
 
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -323,7 +329,7 @@ class EmpleadoController extends Controller
         return Empleado::findBySql($sql)->asArray()->all();
     }
 
-        public function actionGet_empleados()
+    public function actionGet_empleados()
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $sql = "SELECT e.idempleado, CONCAT(p.apellido, ' ', p.nombre) as descripcion
@@ -333,7 +339,103 @@ class EmpleadoController extends Controller
             ORDER BY p.apellido, p.nombre";
         return Empleado::findBySql($sql)->asArray()->all();
     }
+
+    public function actionMigracion_empleados($iddispositivo_viejo)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        return [
+            'title' => 'Migrar Empleados',
+            'content' => $this->renderAjax('migrar_empleados', [
+                'iddispositivo_viejo' => $iddispositivo_viejo,
+            ]),
+            'footer' =>
+            Html::button('Cerrar', [
+                'id' => 'btnCerrar',
+                'class' => 'btn btn-default pull-left',
+                'data-dismiss' => 'modal',
+            ]) .
+                Html::button('Migrar', [
+                    'id' => 'btnMigrar',
+                    'class' => 'btn btn-primary',
+                    'type' => 'submit',
+                    'form' => 'form-migrar-empleados', // Esto lo vincula mágicamente
+                ]),
+        ];
+    }
+
+    public function actionMigrar_empleados_old($iddispositivo_viejo, $iddispositivo_nuevo)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+
+        $sql = "UPDATE empleado SET iddispositivo = $iddispositivo_nuevo WHERE iddispositivo = $iddispositivo_viejo";
+        Yii::$app->db->createCommand($sql)->execute();
+        //y si falla?
+
+        return [
+            'title' => 'Empleados Migrados',
+            'content' => "<span class='text-success'>Empleados del dispositivo migrados correctamente</span>",
+            'footer' =>
+            Html::button('Cerrar', [
+                'id' => 'btnCerrar',
+                'class' => 'btn btn-default pull-left',
+                'data-dismiss' => 'modal',
+            ])
+        ];
+    }
+    public function actionMigrar_empleados($iddispositivo_viejo)
+{
+    $request = Yii::$app->request;
+    Yii::$app->response->format = Response::FORMAT_JSON;
+
+    if ($request->isGet) {
+        return [
+            'title' => 'Migrar Empleados',
+            'content' => $this->renderAjax('migrar_empleados', [
+                'iddispositivo_viejo' => $iddispositivo_viejo,
+            ]),
+            'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal']) .
+                        Html::button('Migrar', ['id' => 'btnMigrar', 'class' => 'btn btn-primary', 'type' => 'submit']),
+        ];
+    } 
+
+    if ($request->isPost) {
+        // Capturamos el ID del combo Select2
+        $iddispositivo_nuevo = $request->post('iddispositivo_nuevo');
+
+
+        if (!$iddispositivo_nuevo) {
+            return [
+                'title' => 'Error',
+                'content' => '<span class="text-danger">Debe seleccionar un dispositivo de destino.</span>',
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default', 'data-dismiss' => 'modal'])
+            ];
+        }
+
+        try {
+            $sql = "UPDATE empleado SET iddispositivo = :nuevo WHERE iddispositivo = :viejo";
+            Yii::$app->db->createCommand($sql)
+                ->bindValue(':nuevo', $iddispositivo_nuevo)
+                ->bindValue(':viejo', $iddispositivo_viejo)
+                ->execute();
+
+            return [
+                'title' => 'Empleados Migrados',
+                'content' => "<span class='text-success'>Empleados del dispositivo migrados correctamente.</span>",
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default', 'data-dismiss' => 'modal'])
+            ];
+        } catch (\Exception $e) {
+            return [
+                'title' => 'Error en la Base de Datos',
+                'content' => '<span class="text-danger">No se pudo realizar la migración: ' . $e->getMessage() . '</span>',
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default', 'data-dismiss' => 'modal'])
+            ];
+        }
+    }
 }
+}
+
 
 function ArmarDateParaMySql($Fecha)
 {

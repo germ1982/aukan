@@ -27,16 +27,12 @@ $this->registerJs("aplicarCorrector('input_descripcion');");
 <div class="organismo-form">
 
     <?php $form = ActiveForm::begin(); ?>
-    <div class="row">
-        <div class="col-md-12">
-            <h4><?= $subtitulo ?></h4>
-        </div>
-    </div>
+
     <div class="row">
         <div class=" col-md-12">
             <div class="row">
                 <div class=" col-md-6">
-                    <?= $form->field($model, 'descripcion')->textInput(['id' => 'input_descripcion', 'maxlength' => true, 'spellcheck' => 'true', 'lang' => 'es','autocomplete' => 'on'])->label("algo") ?>
+                    <?= $form->field($model, 'descripcion')->textInput(['id' => 'input_descripcion', 'maxlength' => true, 'spellcheck' => 'true', 'lang' => 'es','autocomplete' => 'on']) ?>
                 </div>
                 <div class="col-md-6">
                     <?php if ($model->origen_alta == 0): ?>

@@ -22,6 +22,7 @@ use Yii;
 class OrganismoDispositivo extends \yii\db\ActiveRecord
 {
     public $organismo;
+    public $origen_alta;
 
     public static function tableName()
     {
@@ -38,7 +39,7 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
             [['idorganismo', 'es_oficial', 'es_organismo', 'activo', 'idcapaitem','idoficina'], 'integer'],
             [['descripcion', 'alias', 'telefono'], 'string', 'max' => 100],
             [['idorganismo'], 'exist', 'skipOnError' => true, 'targetClass' => Organismo::className(), 'targetAttribute' => ['idorganismo' => 'idorganismo']],
-            [['organismo'], 'safe'],
+            [['organismo', 'origen_alta'], 'safe'],
         ];
     }
 
@@ -88,7 +89,7 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
     public static function get_dispositivos_con_decreto($activo=false)
     {
         //modificar para agregar oficina
-        $filtro = $activo ? "where od.activo = 1" :'';
+        $filtro = $activo==true ? "where od.activo = 1" :'';
         $sql = "SELECT d.iddispositivo, CONCAT('DECRETO: ',od.descripcion , ' (', DATE_FORMAT(od.periodo_inicio, '%d/%m/%Y'),') - ',e.descripcion_fija,' - ', eo.descripcion, ' - ',o.abreviatura,' - ', d.descripcion) as descripcion 
         FROM organismo o 
         join organismo_dispositivo d on o.idorganismo = d.idorganismo

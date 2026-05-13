@@ -58,7 +58,23 @@ $this->registerJs("aplicarCorrector('input_descripcion');");
 
     <div class="row">
         <div class=" col-md-6">
-            <?= SiteController::actionGet_input_select2($form, $model, 'idorganismo', 'cmb_organismo', Organismo::get_organismos(), 'idorganismo', 'descripcion', 'Organismo') ?>
+
+                    <?php if ($model->origen_alta == 0): ?>
+                        <?= SiteController::actionGet_input_select2($form, $model, 'idorganismo', 'cmb_organismo', Organismo::get_organismos(), 'idorganismo', 'descripcion', 'Organismo') ?>
+
+                    <?php else: ?>
+
+
+                        <label class="control-label"><?= $model->getAttributeLabel('idorganismo') ?></label>
+                        <p class="form-control-static" style="background: #eee; padding: 6px 12px; border-radius: 4px;">
+                            <?= $model->idorganismo ? Organismo::findOne($model->idorganismo)->descripcion : 'Raíz' ?>
+                        </p>
+
+                        <?= $form->field($model, 'idorganismo')->hiddenInput()->label(false) ?>
+
+                    <?php endif; ?>
+
+            
         </div>
 
     </div>

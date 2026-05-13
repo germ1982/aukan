@@ -35,6 +35,7 @@ class Empleado extends \yii\db\ActiveRecord
     public $descripcion;
     public $imageFile;
     public $orden;
+    public $origen_alta;
     public static function tableName()
     {
         return 'empleado';
@@ -48,7 +49,7 @@ class Empleado extends \yii\db\ActiveRecord
         return [
             [['idpersona', 'iddispositivo', 'legajo', 'activo', 'foto'], 'required'],
             [['idpersona', 'iddispositivo', 'legajo', 'activo', 'categoria', 'antiguedad_legal', 'antiguedad_total', 'contratacion', 'cuil', 'funcion', 'fichado', 'afiliacion'], 'integer'],
-            [['ingreso_real', 'ingreso_administrativo'], 'safe'],
+            [['ingreso_real', 'ingreso_administrativo', 'origen_alta'], 'safe'],
             [['email', 'foto', 'descripcion'], 'string', 'max' => 100],
             [['telefono'], 'string', 'max' => 50],
             [['imageFile'], 'file', 'extensions' => 'jpg, jpeg, gif, png', 'maxSize' => 1000000],

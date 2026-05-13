@@ -63,8 +63,8 @@ function renderizarNodoColumnar($nodo, $iddecreto, $nivel)
                 ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-info']
             ) ?>
             <?= Html::a(
-                '<i class="fa fa-plus-circle"></i><span class="df-btn-text">Crear Dispositivo</span>',
-                ['organismo_dispositivo/create', 'origen_alta' => 2, 'iddecreto' => $iddecreto, 'idpadre' => $nodo->idorganismo],
+                '<i class="fa fa-plus-circle" style="color: #9b59b6;"></i><span class="df-btn-text">Crear Dispositivo</span>',
+                ['organismo_dispositivo/create', 'origen_alta' => 1, 'idorganismo' => $nodo->idorganismo],
                 ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-success']
             ) ?>
 
@@ -72,11 +72,18 @@ function renderizarNodoColumnar($nodo, $iddecreto, $nivel)
 
         <?php
         $hijos = app\models\Organismo::find()->where(['padre' => $nodo->idorganismo])->all();
-        if (!empty($hijos)): ?>
+
+        $dispositivos = app\models\OrganismoDispositivo::find()->where(['idorganismo' => $nodo->idorganismo])->all();
+        if (!empty($hijos) || !empty($dispositivos)): ?>
             <ul>
                 <?php foreach ($hijos as $hijo): ?>
                     <?= renderizarNodoColumnar($hijo, $iddecreto, $nivel + 1) ?>
                 <?php endforeach; ?>
+                <!-- nuevo -->
+                <?php foreach ($dispositivos as $disp): ?>
+                    <?= renderizarNodoDispositivo($disp) ?>
+                <?php endforeach; ?>
+                <!-- nuevo -->
             </ul>
         <?php endif; ?>
     </li>
@@ -84,10 +91,116 @@ function renderizarNodoColumnar($nodo, $iddecreto, $nivel)
     return ob_get_clean();
 }
 
+?>
 
+<?php
+/**
+ * @param mixed $dispositivo
+ * @return string
+ */
+function renderizarNodoDispositivo($dispositivo)
+{
+    ob_start();
+    $empleados = app\models\Empleado::get_por_dispositivo($dispositivo->iddispositivo);
+?>
+    <li class="df-col-nivel-8">
+        <div class="df-nodo-indentado df-nodo-dispositivo"> <span class="df-descripcion">
+                <?= Html::encode($dispositivo->descripcion)/* .' Telefono: ' .Html::encode($dispositivo->telefono) */  ?>
+            </span>
+
+            <?= Html::a(
+                '<i class="fa fa-edit"></i><span class="df-btn-text">Editar Dispositivo</span>',
+                ['organismo_dispositivo/update', 'id' => $dispositivo->iddispositivo],
+                ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-warning']
+            ) .
+                Html::a(
+                    '<i class="fa fa-eye"></i><span class="df-btn-text">Ver Dispositivo</span>',
+                    ['organismo_dispositivo/view', 'id' => $dispositivo->iddispositivo],
+                    ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-info']
+                ) .
+                Html::a(
+                    '<i class="fa fa-user"  style="color: #0075fa;"></i><span class="df-btn-text">Crear Empleado</span>',
+                    ['empleado/create', 'origen_alta' => 1, 'iddispositivo' => $dispositivo->iddispositivo],
+                    ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-warning']
+                ) .
+                Html::a(
+                    '<i class="fa fa-users"  style="color: #108801;"></i><span class="df-btn-text">Migrar Empleados</span>',
+                    ['empleado/migrar_empleados', 'iddispositivo_viejo' => $dispositivo->iddispositivo],
+                    ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-warning']
+                )
+
+            ?>
+        </div>
+
+        <?php if (!empty($empleados)): ?>
+            <ul>
+                <?= renderizarListaEmpleados($empleados) ?>
+            </ul>
+        <?php endif; ?>
+    </li>
+<?php
+    return ob_get_clean();
+}
+
+function renderizarListaEmpleados($empleados)
+{
+    ob_start();
+    ?>
+    <li class="df-col-nivel-9">
+        <div class="df-nodo-indentado df-nodo-personal-lista">
+            <div style="width: 100%;">
+                <!--  -->
+                <div class="df-lista-interna-empleados">
+                    <?php foreach ($empleados as $emp): ?>
+                        <div class="df-item-empleado-linea" style="padding: 2px 0; border-bottom: 1px solid #f0f0f0; font-size: 11px;">
+                            <i class="fa fa-user-o text-muted" style="font-size: 10px;"></i> 
+                            <?= Html::encode($emp['descripcion']) ?>
+                            
+                            <?= 
+                            Html::a(
+                                '<i class="fa fa-edit"></i><span class="df-btn-text">Editar Organismo</span>',
+                                ['empleado/update', 'id' => $emp['idempleado']], 
+                                ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-warning',]
+                            ).
+                            Html::a(
+                                '<i class="fa fa-eye"></i>', 
+                                ['empleado/view', 'id' => $emp['idempleado']], 
+                                ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-info']
+                            ) ?>
+                            <div style="clear: both;"></div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    </li>
+    <?php
+    return ob_get_clean();
+}
 ?>
 
 <style>
+.df-col-nivel-9 {
+        margin-left: 240px;
+    }
+
+    .df-nodo-personal-lista {
+        background-color: #fcfcfc;
+        border-left-color: #2ecc71 !important;
+        min-width: 350px;
+    }
+
+    .df-lista-empleados {
+        margin: 0;
+        padding: 5px 0;
+        list-style: none;
+        font-size: 11px;
+    }
+
+    .df-item-empleado {
+        padding: 2px 0;
+        border-bottom: 1px dotted #eee;
+    }
     /* Espacio entre descripción y botón */
     .df-descripcion {
         margin-right: 15px;
@@ -130,6 +243,10 @@ function renderizarNodoColumnar($nodo, $iddecreto, $nivel)
     }
 
     .df-col-nivel-7 {
+        margin-left: 80px;
+    }
+
+    .df-col-nivel-8 {
         margin-left: 80px;
     }
 
@@ -183,6 +300,10 @@ function renderizarNodoColumnar($nodo, $iddecreto, $nivel)
     /* Nivel 7: Departamentos */
     .df-col-nivel-7>.df-nodo-indentado {
         border-left-color: #7ade5b;
+    }
+
+    .df-col-nivel-8>.df-nodo-indentado {
+        border-left-color: #9b59b6;
     }
 
     .badge-nivel {
@@ -312,5 +433,10 @@ function renderizarNodoColumnar($nodo, $iddecreto, $nivel)
     .df-btn-expandible i {
         font-size: 14px;
         flex-shrink: 0;
+    }
+
+    .df-nodo-dispositivo {
+        background-color: #f5dafa;
+        border-left-color: #cda2df;
     }
 </style>

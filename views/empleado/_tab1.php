@@ -55,7 +55,20 @@ if (isset($model->idpersona)) {
 
 <div class="row">
     <div class="col-md-12">
-        <?= SiteController::actionGet_input_select2($form, $model, 'iddispositivo', 'cmb_dispositivos', OrganismoDispositivo::get_dispositivos(), 'iddispositivo', 'descripcion', 'Sector', 'Seleccione Sector...') ?>
+        <?php if ($model->origen_alta == 0): ?>
+                        <?= SiteController::actionGet_input_select2($form, $model, 'iddispositivo', 'cmb_dispositivos', OrganismoDispositivo::get_dispositivos(), 'iddispositivo', 'descripcion', 'Sector', 'Seleccione Sector...') ?>
+                    <?php else: ?>
+
+
+                        <label class="control-label"><?= $model->getAttributeLabel('iddispositivo') ?></label>
+                        <p class="form-control-static" style="background: #eee; padding: 6px 12px; border-radius: 4px;">
+                            <?= $model->iddispositivo ? OrganismoDispositivo::findOne($model->iddispositivo)->descripcion : '' ?>
+                        </p>
+
+                        <?= $form->field($model, 'iddispositivo')->hiddenInput()->label(false) ?>
+
+                    <?php endif; ?>
+        
     </div>
 </div>
 <div class="row">

@@ -11,7 +11,7 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model app\models\RegistroTecnico */
 
-$this->title = 'Registro Técnico #' . str_pad($model->idregistro, 5, '0', STR_PAD_LEFT);
+$this->title = 'Registro numero ' . str_pad($model->idregistro, 5, '0', STR_PAD_LEFT);
 
 $solicitante = Empleado::get_empleado($model->idsolicitante);
 $dispositivo = $model->iddispositivo ? OrganismoDispositivo::get_dispositivo($model->iddispositivo) : null;
