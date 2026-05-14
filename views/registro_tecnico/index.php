@@ -46,7 +46,26 @@ $boton_ultimo_decreto = Html::a(
     ]
 );
 
-$customButtonsA = "$boton_asistentes . $boton_tipos_registro . $boton_ultimo_decreto"; // o define aquí tus botones HTML::a(...) para la izquierda si es necesario
+$boton_diccionario = Html::a(
+    '',
+    ['configuracion_diccionario/index'], 
+    [
+        'title' => 'Diccionario', 
+        'class' => 'btn btn-primary boton_menu neon',
+        'style' => '
+            background-image: url("img/diccionario.jpg"); /* Asegúrate de que la ruta sea correcta */
+            background-size: cover;
+            background-position: center;
+            color: white; 
+            border: none;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            padding: 15px 60px; /* Ajustalo según el tamaño que quieras */
+        '
+    ]
+);
+
+$customButtonsA = "$boton_asistentes . $boton_tipos_registro . $boton_ultimo_decreto . $boton_diccionario"; // o define aquí tus botones HTML::a(...) para la izquierda si es necesario
 
 $customButtonsB = ''; // o define aquí tus botones HTML::a(...) para la derecha si es necesario
 

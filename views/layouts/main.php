@@ -5,10 +5,23 @@ use app\assets\AppAsset;
 use app\models\Empleado;
 use yii\bootstrap\Modal;
 use yii\helpers\Url;
+use yii\helpers\Json;
+use app\models\ConfiguracionDiccionario;
+
+$diccionarioDB = ConfiguracionDiccionario::find()
+    ->select(['palabra_mal', 'palabra_correcta'])
+    ->asArray()
+    ->all();
+
+$comunes = [];
+foreach ($diccionarioDB as $fila) {
+    $comunes[strtolower($fila['palabra_mal'])] = $fila['palabra_correcta'];
+}
 
 AppAsset::register($this);
 //$this->registerCssFile("@web/css/datafam.css", ['depends' => [\yii\web\YiiAsset::className(), \yii\bootstrap\BootstrapAsset::className()]]);
 $this->registerCssFile("@web/css/rolo.css", ['depends' => [\yii\web\YiiAsset::className(), \yii\bootstrap\BootstrapAsset::className()]]);
+$this->registerJs("var diccPersonalizado = " . Json::encode($comunes) . ";", \yii\web\View::POS_HEAD);
 $this->title = "DATAFAM | INFORMACION";
 
 $usuario = Yii::$app->user->identity;
@@ -85,7 +98,9 @@ if (!isset($id) || $id == null) {
       <link rel="shortcut icon" href="<?php echo Yii::$app->request->baseUrl; ?>/favicon.png" type="image/x-icon" />
       <?php $this->registerCsrfMetaTags() ?>
       <title><?= Html::encode($this->title) ?></title>
+      <?php $this->registerJs("var diccPersonalizado = " . Json::encode($comunes) . ";", \yii\web\View::POS_HEAD); ?>
       <?php $this->head() ?>
+      
 </head>
 
 <body onload="$('#loading').hide();">
