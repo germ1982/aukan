@@ -123,3 +123,53 @@ echo AppIndexGenericoHelper::renderIndex(
         margin-bottom: 0px !important;
     }
 </style>
+
+
+<?php
+// Mantenemos tu ruta tal cual la tenías
+$url = \yii\helpers\Url::to(['registro_tecnico/check_alerta']);
+
+$this->registerJs(<<<JS
+    // Cargamos el archivo de audio
+    // Podés usar una URL externa o un archivo local en /web
+    //var sonido = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+    var sonido = new Audio('<?= \yii\helpers\Url::base(true) ?>/sounds/registro.wav');
+
+    setInterval(function() {
+        fetch('{$url}')
+            .then(response => response.json())
+            .then(data => {
+                if (data.disparar) {
+                    // 1. Reproducir audio
+                    sonido.play().catch(err => console.log("El navegador bloqueó el audio hasta que interactúes con la página."));
+
+                    // 2. Tu diseño de alerta con Cartman
+                    var texto = '<div style="text-align:center"><h2>ATENCION!!!</h2></div>' + 
+                                '<br><div style="text-align:center">' + 
+                                '<img src="https://media.tenor.com/-D_PhyS1dq8AAAAj/cartman-south-park.gif" alt="gif" style="width:150px; height:100px;">' + 
+                                '<br><h4>Chicos, hay registros pendientes!!!</h4></div>';
+                    
+                    $.alert({
+                        title: '',
+                        content: texto,
+                        type: 'orange',
+                        buttons: {
+                            entendido: {
+                                text: 'OK',
+                                action: function() {
+                                    sonido.pause(); // Pausa el sonido al cerrar
+                                    sonido.currentTime = 0; // Reinicia el audio
+                                }
+                            }
+                        }
+                    });
+
+                    $('#loading').hide();
+                }
+            })
+            .catch(err => console.error("Error:", err));
+
+    }, 30000); // 30 segundos para no saturar
+JS
+);
+?>

@@ -8,6 +8,8 @@ use yii\helpers\Url;
 use yii\helpers\Json;
 use app\models\ConfiguracionDiccionario;
 
+/** @var string $content */
+
 $diccionarioDB = ConfiguracionDiccionario::find()
     ->select(['palabra_mal', 'palabra_correcta'])
     ->asArray()
