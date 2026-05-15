@@ -65,7 +65,13 @@ $boton_diccionario = Html::a(
     ]
 );
 
-$customButtonsA = "$boton_asistentes . $boton_tipos_registro . $boton_ultimo_decreto . $boton_diccionario"; // o define aquí tus botones HTML::a(...) para la izquierda si es necesario
+$boton_indicadores = Html::a(
+    '<i class="fa fa-users"></i> Indicadores',
+    ['view_indicadores'],
+    ['title' => 'Asistentes', 'class' => 'btn btn-primary boton_menu neon','target' => '_blank']
+);
+
+$customButtonsA = "$boton_asistentes . $boton_tipos_registro . $boton_ultimo_decreto . $boton_diccionario.$boton_indicadores"; // o define aquí tus botones HTML::a(...) para la izquierda si es necesario
 
 $customButtonsB = ''; // o define aquí tus botones HTML::a(...) para la derecha si es necesario
 
@@ -174,7 +180,7 @@ $this->registerJs(
 
                     // F. INTERFAZ DE USUARIO
                     // Si tenías un spinner o cartel de carga, lo ocultamos.
-                    $('#loading').hide();
+                    //$('#loading').hide();
                 }
             })
             // G. CONTROL DE ERRORES DE RED

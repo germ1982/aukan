@@ -64,6 +64,13 @@ class Registro_tecnicoController extends Controller
         ]);
     }
 
+        public function actionView_indicadores()
+    {
+
+
+        return $this->render('view_indicadores', []);
+    }
+
     public function actionIndex_tipos_registro()
     {
         $searchModel = new ConfiguracionSearch();

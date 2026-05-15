@@ -101,6 +101,7 @@ if (!isset($id) || $id == null) {
       <?php $this->registerCsrfMetaTags() ?>
       <title><?= Html::encode($this->title) ?></title>
       <?php $this->registerJs("var diccPersonalizado = " . Json::encode($comunes) . ";", \yii\web\View::POS_HEAD); ?>
+      <?php $this->registerJsFile('https://cdn.jsdelivr.net/npm/chart.js'); ?>
       <?php $this->head() ?>
       
 </head>
