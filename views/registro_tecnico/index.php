@@ -149,7 +149,7 @@ $this->registerJs(<<<JS
                                 '<img src="https://media.tenor.com/-D_PhyS1dq8AAAAj/cartman-south-park.gif" alt="gif" style="width:150px; height:100px;">' + 
                                 '<br><h4>Chicos, hay registros pendientes!!!</h4></div>';
                     
-                    $.alert({
+                    /* $.alert({
                         title: '',
                         content: texto,
                         type: 'orange',
@@ -162,7 +162,7 @@ $this->registerJs(<<<JS
                                 }
                             }
                         }
-                    });
+                    }); */
 
                     $('#loading').hide();
                 }
