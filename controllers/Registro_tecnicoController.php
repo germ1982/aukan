@@ -148,6 +148,8 @@ $this->layout = false;
                     $model->hora_solucion = $model->hora_solucion ? date('H:i:s', strtotime($model->hora_solucion)) : null;
                     $model->estado = RegistroTecnico::ESTADO_FINALIZADO;
                 } else {
+                    $model->fecha_solucion = null;
+                    $model->hora_solucion = null;
                     if (!empty($asistentes)) {
                         $model->estado = RegistroTecnico::ESTADO_ASISTENCIA;
                     } else {

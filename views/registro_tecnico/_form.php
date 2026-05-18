@@ -19,6 +19,8 @@ $tipos_registros = Configuracion::get_configuraciones(ConfiguracionTipo::TIPO_RE
 
 $tecnicos_asistencia = Empleado::get_asistentes_informaticos();
 
+
+
 if ($model->fecha_solicitud) {
     $model->fecha_solicitud = date('d/m/Y', strtotime($model->fecha_solicitud));
     $model->hora_solicitud = substr($model->hora_solicitud, 0, 5);
