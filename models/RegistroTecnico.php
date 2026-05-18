@@ -39,7 +39,7 @@ class RegistroTecnico extends \yii\db\ActiveRecord
             [['fecha_solicitud', 'idsolicitante'], 'required'],
             [['fecha_solicitud','hora_solicitud', 'fecha_solucion', 'hora_solucion', 'asistentes_informaticos', 'solicitante'], 'safe'],
             [['idsolicitante', 'iddispositivo', 'idtipo_registro', 'estado'], 'integer'],
-            [['problema', 'solucion'], 'string', 'max' => 200],
+            [['problema', 'solucion'], 'string'],
         ];
     }
 

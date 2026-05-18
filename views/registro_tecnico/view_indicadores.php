@@ -2,6 +2,9 @@
 use yii\helpers\Url;
 use yii\helpers\Json;
 
+// Mantenemos tu ruta de consulta para las alertas
+$urlCheckAlerta = Url::to(['registro_tecnico/check_alerta']);
+
 // Datos hardcodeados con onda
 $pendientes = 18;
 $solucionados = 45;
@@ -13,35 +16,84 @@ $datosGrafico = [
     ['Tipo' => 'Telefonía IP', 'Total' => 8, 'Resueltos' => 8],
 ];
 
-// Estilos personalizados para que no parezca el Yii2 de base
-$this->registerCss("
-
-    body { background-color: #1a1a2e; color: #fff; }
-    .card-tecnica { 
-        background: rgba(255, 255, 255, 0.05); 
-        backdrop-filter: blur(10px); 
-        border: 1px solid rgba(255, 255, 255, 0.1); 
-        border-radius: 15px; 
-        padding: 20px;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        transition: transform 0.3s;
-    }
-          html.fixed .inner-wrapper {
-    padding-top: 45px;
-  }
-    .card-tecnica:hover { transform: translateY(-5px); border-color: #4ecca3; }
-    .valor-kpi { font-size: 3rem; font-weight: bold; display: block; }
-    .label-kpi { text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; color: #a2a2a2; }
-    .bg-critico { border-left: 5px solid #ff4b2b; }
-    .bg-proceso { border-left: 5px solid #4facfe; }
-    .bg-exito { border-left: 5px solid #4ecca3; }
-    .progress { background-color: rgba(255,255,255,0.1); border-radius: 10px; height: 8px; }
-    .progress-bar-glow { box-shadow: 0 0 10px #4facfe; background: linear-gradient(90deg, #00f2fe 0%, #4facfe 100%); }
-");
+// Pasamos los datos a formato JSON para el gráfico
+$labels = Json::encode(array_column($datosGrafico, 'Tipo'));
+$totales = Json::encode(array_column($datosGrafico, 'Total'));
+$resueltos = Json::encode(array_column($datosGrafico, 'Resueltos'));
 ?>
 
-<div class="container-fluid" style="padding-top: 20px;">
-    <h2 class="text-center" style="margin-bottom: 30px; font-weight: 200;">CENTRO DE MONITOREO INFORMATICO <span style="font-weight: 800; color: #4ecca3;">DATAFAM</span></h2>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>MONITOR GENERAL - DATAFAM</title>
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        body { 
+            background-color: #0f0f1e; 
+            color: #fff; 
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            padding-top: 20px;
+        }
+        .card-tecnica { 
+            background: rgba(255, 255, 255, 0.04); 
+            backdrop-filter: blur(10px); 
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-radius: 15px; 
+            padding: 25px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, border-color 0.3s;
+            margin-bottom: 20px;
+        }
+        .card-tecnica:hover { 
+            transform: translateY(-5px); 
+            border-color: #4ecca3; 
+        }
+        .valor-kpi { 
+            font-size: 3.5rem; 
+            font-weight: bold; 
+            display: block; 
+            line-height: 1;
+            margin-top: 10px;
+        }
+        .label-kpi { 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            font-size: 0.85rem; 
+            color: #a2a2a2; 
+        }
+        .bg-critico { border-left: 5px solid #ff4b2b; }
+        .bg-proceso { border-left: 5px solid #4facfe; }
+        .bg-exito { border-left: 5px solid #4ecca3; }
+        
+        .progress { 
+            background-color: rgba(255, 255, 255, 0.1); 
+            border-radius: 10px; 
+            height: 10px; 
+            margin-bottom: 0;
+        }
+        .progress-bar-glow { 
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.5); 
+            background: linear-gradient(90deg, #00f2fe 0%, #4facfe 100%); 
+        }
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <h2 class="text-center" style="margin-bottom: 40px; font-weight: 200; letter-spacing: 1px;">
+        CENTRO DE MONITOREO INFORMATICO <span style="font-weight: 800; color: #4ecca3;">DATAFAM</span>
+    </h2>
 
     <div class="row">
         <div class="col-md-4">
@@ -64,23 +116,27 @@ $this->registerCss("
         </div>
     </div>
 
-    <div class="row" style="margin-top: 30px;">
+    <div class="row" style="margin-top: 20px;">
         <div class="col-md-7">
             <div class="card-tecnica" style="height: 400px;">
-                <h4 style="margin-bottom: 20px;">Carga de Trabajo por Categoría</h4>
-                <canvas id="graficoNeon"></canvas>
+                <h4 style="margin-bottom: 20px; font-weight: 300;">Carga de Trabajo por Categoría</h4>
+                <div style="position: relative; height: 300px; width: 100%;">
+                    <canvas id="graficoNeon"></canvas>
+                </div>
             </div>
         </div>
+        
         <div class="col-md-5">
             <div class="card-tecnica" style="height: 400px; overflow-y: auto;">
-                <h4 style="margin-bottom: 20px;">Eficacia de Respuesta</h4>
+                <h4 style="margin-bottom: 25px; font-weight: 300;">Eficacia de Respuesta</h4>
+                
                 <?php foreach ($datosGrafico as $dato): 
                     $porc = ($dato['Total'] > 0) ? round(($dato['Resueltos'] / $dato['Total']) * 100) : 0;
                 ?>
-                    <div style="margin-bottom: 20px;">
-                        <div class="d-flex justify-content-between" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                            <span><?= $dato['Tipo'] ?></span>
-                            <span style="color: #4ecca3;"><?= $porc ?>%</span>
+                    <div style="margin-bottom: 22px;">
+                        <div class="flex-container">
+                            <span style="font-size: 0.95rem; color: #e0e0e0;"><?= $dato['Tipo'] ?></span>
+                            <span style="color: #4ecca3; font-weight: bold;"><?= $porc ?>%</span>
                         </div>
                         <div class="progress">
                             <div class="progress-bar progress-bar-glow" style="width: <?= $porc ?>%"></div>
@@ -92,40 +148,78 @@ $this->registerCss("
     </div>
 </div>
 
-<?php
-$labels = Json::encode(array_column($datosGrafico, 'Tipo'));
-$totales = Json::encode(array_column($datosGrafico, 'Total'));
-$resueltos = Json::encode(array_column($datosGrafico, 'Resueltos'));
-
-$this->registerJs(<<<JS
+<script>
+    // 1. Configuración y renderizado del gráfico de barras
     var ctx = document.getElementById('graficoNeon').getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: {$labels},
+            labels: <?= $labels ?>,
             datasets: [{
                 label: 'Solicitados',
-                data: {$totales},
-                backgroundColor: 'rgba(79, 172, 254, 0.4)',
+                data: <?= $totales ?>,
+                backgroundColor: 'rgba(79, 172, 254, 0.3)',
                 borderColor: '#4facfe',
-                borderWidth: 2
+                borderWidth: 2,
+                borderRadius: 5
             }, {
                 label: 'Solucionados',
-                data: {$resueltos},
-                backgroundColor: 'rgba(78, 204, 163, 0.4)',
+                data: <?= $resueltos ?>,
+                backgroundColor: 'rgba(78, 204, 163, 0.3)',
                 borderColor: '#4ecca3',
-                borderWidth: 2
+                borderWidth: 2,
+                borderRadius: 5
             }]
         },
         options: {
             maintainAspectRatio: false,
             scales: {
-                y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } },
-                x: { grid: { display: false } }
+                y: { 
+                    beginAtZero: true, 
+                    grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                    ticks: { color: '#a2a2a2' }
+                },
+                x: { 
+                    grid: { display: false },
+                    ticks: { color: '#a2a2a2' }
+                }
             },
-            plugins: { legend: { labels: { color: '#fff' } } }
+            plugins: { 
+                legend: { 
+                    labels: { color: '#fff', font: { family: 'Helvetica' } } 
+                } 
+            }
         }
     });
-JS
-);
-?>
+
+    // 2. Configuración de la alerta sonora en segundo plano
+    var urlSonido = "https://tmpfiles.org/dl/wtw0A5zfVOP7/registro.wav";
+    var sonido = new Audio(urlSonido);
+
+    // Activamos el permiso de audio con la primera interacción en la pantalla
+    document.addEventListener('click', function() {
+        sonido.play().then(() => {
+            sonido.pause();
+            sonido.currentTime = 0;
+        }).catch(e => console.log("Audio en espera de interacción."));
+    }, { once: true });
+
+    // 3. Intervalo de consulta periódica (Loop de 30 segundos)
+    setInterval(function() {
+        // Ejecuta la consulta silenciosa al backend de Yii
+        fetch('<?= $urlCheckAlerta ?>')
+            .then(response => response.json())
+            .then(data => {
+                if (data.disparar) {
+                    sonido.play().catch(err => console.log("Reproducción bloqueada por el navegador."));
+                }
+            })
+            .catch(err => console.error("Error en la comprobación de alertas de red:", err));
+            
+        // Si precisás que refresque toda la pantalla para actualizar las tarjetas duras:
+        // location.reload();
+    }, 30000);
+</script>
+
+</body>
+</html>

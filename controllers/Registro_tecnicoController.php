@@ -64,10 +64,10 @@ class Registro_tecnicoController extends Controller
         ]);
     }
 
-        public function actionView_indicadores()
+    public function actionView_indicadores()
     {
-
-
+$this->layout = 'main-login';
+$this->layout = false;
         return $this->render('view_indicadores', []);
     }
 
