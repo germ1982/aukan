@@ -117,7 +117,10 @@ function renderizarNodoDispositivo($dispositivo)
                     '<i class="fa fa-eye"></i><span class="df-btn-text">Ver Dispositivo</span>',
                     ['organismo_dispositivo/view', 'id' => $dispositivo->iddispositivo],
                     ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-info']
-                )
+                ). 
+
+                (!empty($empleados) ? '' : Html::a('<i class="fa fa-user" style="color: #0075fa; padding-right: 5px; padding-left: 5px;"></i><span class="df-btn-text">Nuevo Empleado</span>', ['empleado/create', 'origen_alta' => 1, 'iddispositivo' => $dispositivo->iddispositivo], ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-warning', 'title' => 'Añadir Empleado al Dispositivo']))
+
 
 
             ?>
