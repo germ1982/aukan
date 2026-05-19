@@ -1,109 +1,46 @@
 <?php
 
-use app\models\Inventario;
+use app\helpers\AppIndexGenericoHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\grid\ActionColumn;
-use yii\bootstrap\Modal;
-use kartik\grid\GridView;
-use johnitvn\ajaxcrud\CrudAsset;
 
-$this->title = 'Inventario Informatica';
-$this->params['breadcrumbs'][] = $this->title;
-$clase = 'inventario-index';
-
-CrudAsset::register($this);?> 
-<style>
-.custom-grid {
-font-size: 13px; /* Cambia el tamaño según tus necesidades */
-}
-</style>
-
-<header class="page-header">
-    <h2><?= $this->title ?></h2>
-
-    <div class="right-wrapper pull-right">
-        <ol class="breadcrumbs">
-            <li>
-                <a href="index.html">
-                    <i class="neon fa fa-home"></i>
-                </a>
-            </li>
-            <li><span><?= $this->title ?></span></li>
-        </ol>
-
-        <div class="sidebar-right-toggle"></div>
-    </div>
-</header>
-
-
-<div class="row">
-
-    <div class="col-md-12 col-lg-12 col-xl-12">
-        <section class="panel">
-            <div class="panel-body">
-                <div class="<?= $clase ?>">
-                    <div id="ajaxCrudDatatable">
-
-                        <?= GridView::widget([
-                            'id' => 'crud-datatable',
-                            'dataProvider' => $dataProvider,
-                            'filterModel' => $searchModel,
-                            'tableOptions' => ['class' => 'custom-grid'],
-                            'pjax' => false,
-                            'columns' => require(__DIR__ . '/_columns.php'),
-                            'toolbar' => [
-                                ['content' =>
-
-                                Html::a(
-                                        '<i class="glyphicon glyphicon-plus"></i>',
-                                        ['create'],
-                                        ['role' => 'modal-remote', 'title' => 'Nuevo', 'class' => 'btn btn-default']
-                                    ) .
+$gridColumns = require(__DIR__ . '/_columns.php');
 
 
 
-                                Html::a(
-                                    '<i class="glyphicon glyphicon-repeat"></i>',
-                                    [''],
-                                    ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Refrescar Grilla']
-                                ) .
-                                '{toggleData}' .
-                                '{export}'],
-                            ],
-                            'striped' => true,
-                            'condensed' => true,
-                            'responsive' => false,
-                            'panel' => [
-                                'type' => 'primary',
-                                'heading' => false,
-                                'after' => '<div class="clearfix"></div>',
-                            ]
-                        ]); ?>
+$boton_articulos = Html::a(
+    '<i class="fas fa-boxes"></i> Articulos',
+    ['articulo/index'],
+    ['title' => 'Artículos', 'class' => 'btn btn-primary boton_menu neon','target' => '_blank']
+);
 
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-</div>
-<?php
-$this->registerJs(
-    "$('#ajaxCrudModal').on('hidden.bs.modal', function() {
-            location.reload();
-        })"
+$boton_nuevo_articulo = Html::a(
+    '<i class="fas fa-plus"></i> Nuevo Artículo',
+    ['articulo/create'],
+    ['title' => 'Nuevo Artículo', 'class' => 'btn btn-primary boton_menu neon','role' => 'modal-remote']
+);
+
+$customButtonsA = "$boton_articulos. $boton_nuevo_articulo"; // o define aquí tus botones HTML::a(...) para la izquierda si es necesario
+
+$customButtonsB = ''; // o define aquí tus botones HTML::a(...) para la derecha si es necesario
+
+$anchoModal = '1200px'; // Ancho del modal en PX
+$tamañoLetra = '10px'; // Tamaño de letra para la grilla
+
+$dataProvider = $dataProvider ?? null; // Asegúrate de que $dataProvider esté definido
+$searchModel = $searchModel ?? null; // Asegúrate de que $
+
+// 2. Renderizar la vista completa
+echo AppIndexGenericoHelper::renderIndex(
+    $this,                  // Objeto View ($this)
+    'Inventario',      // Título
+    $gridColumns,           // Columnas
+    $dataProvider,          // DataProvider (viene del controlador)
+    $searchModel,           // SearchModel (viene del controlador)
+    $customButtonsA,
+    $customButtonsB,
+    $anchoModal,
+    $tamañoLetra,
 );
 ?>
 
-<?php Modal::begin([
-    "id" => "ajaxCrudModal",
-    'options' => [
-        'tabindex' => false // important for Select2 to work properly
-    ],
-    'size' => Modal::SIZE_LARGE,
-    'clientOptions' => [
-        'backdrop' => 'static'
-    ],
-    "footer" => "", // always need it for jquery plugin
-]) ?>
-<?php Modal::end(); ?>

@@ -117,24 +117,15 @@ function renderizarNodoDispositivo($dispositivo)
                     '<i class="fa fa-eye"></i><span class="df-btn-text">Ver Dispositivo</span>',
                     ['organismo_dispositivo/view', 'id' => $dispositivo->iddispositivo],
                     ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-info']
-                ) .
-                Html::a(
-                    '<i class="fa fa-user"  style="color: #0075fa;"></i><span class="df-btn-text">Crear Empleado</span>',
-                    ['empleado/create', 'origen_alta' => 1, 'iddispositivo' => $dispositivo->iddispositivo],
-                    ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-warning']
-                ) .
-                Html::a(
-                    '<i class="fa fa-users"  style="color: #108801;"></i><span class="df-btn-text">Migrar Empleados</span>',
-                    ['empleado/migrar_empleados', 'iddispositivo_viejo' => $dispositivo->iddispositivo],
-                    ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-warning']
                 )
+
 
             ?>
         </div>
 
         <?php if (!empty($empleados)): ?>
             <ul>
-                <?= renderizarListaEmpleados($empleados) ?>
+                <?= renderizarListaEmpleados($empleados, $dispositivo) ?>
             </ul>
         <?php endif; ?>
     </li>
@@ -142,52 +133,103 @@ function renderizarNodoDispositivo($dispositivo)
     return ob_get_clean();
 }
 
-function renderizarListaEmpleados($empleados)
+function renderizarListaEmpleados($empleados, $dispositivo)
 {
     ob_start();
-    ?>
+?>
     <li class="df-col-nivel-9">
         <div class="df-nodo-indentado df-nodo-personal-lista">
-            <div style="width: 100%;">
-                <!--  -->
-                <div class="df-lista-interna-empleados">
-                    <?php foreach ($empleados as $emp): ?>
-                        <div class="df-item-empleado-linea" style="padding: 2px 0; border-bottom: 1px solid #f0f0f0; font-size: 11px;">
-                            <i class="fa fa-user-o text-muted" style="font-size: 10px;"></i> 
-                            <?= Html::encode($emp['descripcion']) ?>
-                            
-                            <?= 
+
+            <div style="display: flex; width: 100%; gap: 15px; box-sizing: border-box;">
+
+                <div style="flex: 1; width: 50%; min-width: 0;">
+                    <h4 class="df-titulo-empleados" style="font-size: 13px; margin-top: 0; font-weight: bold; color: #555; padding-bottom: 5px; border-bottom: 1px solid #eee;">
+                        Empleados
+                        <?=
+                        Html::a(
+                            '<i class="fa fa-user"  style="color: #0075fa; padding-right: 5px; padding-left: 5px;"></i><span class="df-btn-text"></span>',
+                            ['empleado/create', 'origen_alta' => 1, 'iddispositivo' => $dispositivo->iddispositivo],
+                            ['role' => 'modal-remote', 'class' => 'text-warning', 'title' => 'Añadir Empleado al Dispositivo']
+                        ) .
                             Html::a(
-                                '<i class="fa fa-edit"></i><span class="df-btn-text">Editar Organismo</span>',
-                                ['empleado/update', 'id' => $emp['idempleado']], 
-                                ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-warning',]
-                            ).
-                            Html::a(
-                                '<i class="fa fa-eye"></i>', 
-                                ['empleado/view', 'id' => $emp['idempleado']], 
-                                ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-info']
-                            ) ?>
-                            <div style="clear: both;"></div>
-                        </div>
-                    <?php endforeach; ?>
+                                '<i class="fa fa-users"  style="color: #108801; padding-right: 5px; padding-left: 5px;"></i><span class="df-btn-text"></span>',
+                                ['empleado/migrar_empleados', 'iddispositivo_viejo' => $dispositivo->iddispositivo],
+                                ['role' => 'modal-remote', 'class' => 'text-warning', 'title' => 'Migrar Empleados']
+                            )
+                        ?>
+                    </h4>
+
+                    <div class="df-lista-interna-empleados" style="max-height: 200px; overflow-y: auto;">
+                        <?php foreach ($empleados as $emp): ?>
+                            <div class="df-item-empleado-linea" style="padding: 4px 0; border-bottom: 1px solid #f9f9f9; font-size: 11px; display: flex; justify-content: space-between; align-items: center;">
+
+                                <div style="flex: 1; min-width: 0; padding-right: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    <i class="fa fa-user-o text-muted" style="font-size: 10px; margin-right: 3px;"></i>
+                                    <span style="color: #666;" title="<?= Html::encode($emp['descripcion']) ?>">
+                                        <?= Html::encode($emp['descripcion']) ?>
+                                    </span>
+                                </div>
+
+                                <div style="flex-shrink: 0; display: flex; gap: 6px;">
+                                    <?= Html::a(
+                                        '<i class="fa fa-edit"></i>',
+                                        ['empleado/update', 'id' => $emp['idempleado']],
+                                        ['role' => 'modal-remote', 'class' => 'text-warning ', 'style' => 'font-size: 12px;', 'title' => 'Editar']
+                                    ) ?>
+                                    <?= Html::a(
+                                        '<i class="fa fa-eye"></i>',
+                                        ['empleado/view', 'id' => $emp['idempleado']],
+                                        ['role' => 'modal-remote', 'class' => 'text-info', 'style' => 'font-size: 12px;', 'title' => 'Ver']
+                                    ) ?>
+                                </div>
+
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
+
+                <div style="flex: 1; width: 50%; min-width: 0; border-left: 1px solid #eee; padding-left: 10px;">
+                    <h4 style="font-size: 13px; margin-top: 0; font-weight: bold; color: #555; padding-bottom: 5px; border-bottom: 1px solid #eee;">
+                        Inventario
+                        <?=
+                        Html::a(
+                            '<i class="fa fa-plus"  style="color: #a8a606;  padding-right: 5px; padding-left: 5px;"></i><span class="df-btn-text">    </span>',
+                            ['inventario/create'],
+                            ['role' => 'modal-remote', 'class' => ' text-warning', 'title' => 'Añadir Articulo a Inventario']
+                        )
+                            .
+                            Html::a(
+                                '<i class="fa fa-boxes"  style="color: #e9b200;  padding-right: 5px; padding-left: 5px;"></i><span class="df-btn-text">    </span>',
+                                ['articulo/create'],
+                                ['role' => 'modal-remote', 'class' => ' text-warning', 'title' => 'Nuevo Articulo']
+                            )
+                        ?>
+                    </h4>
+
+
+                    <div class="df-contenido-extra" style="font-size: 11px; color: #777; padding-top: 5px;">
+                        <p>hacer listado con la oficina.</p>
+                    </div>
+                </div>
+
             </div>
+
         </div>
     </li>
-    <?php
+<?php
     return ob_get_clean();
 }
 ?>
 
 <style>
-.df-col-nivel-9 {
+    .df-col-nivel-9 {
         margin-left: 240px;
     }
 
     .df-nodo-personal-lista {
         background-color: #fcfcfc;
         border-left-color: #2ecc71 !important;
-        min-width: 350px;
+        min-width: 450px !important;
     }
 
     .df-lista-empleados {
@@ -201,6 +243,7 @@ function renderizarListaEmpleados($empleados)
         padding: 2px 0;
         border-bottom: 1px dotted #eee;
     }
+
     /* Espacio entre descripción y botón */
     .df-descripcion {
         margin-right: 15px;
