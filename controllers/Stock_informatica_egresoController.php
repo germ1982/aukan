@@ -326,6 +326,39 @@ class Stock_informatica_egresoController extends Controller
         return $pdf->render();
     }
 
+    public function actionImprimir_acta_entrega_2026($idegreso)
+{
+    $content = $this->renderPartial('imprimir_acta_entrega_2026', [
+        'idegreso' => $idegreso,
+    ]);
+
+    $pdf = new \kartik\mpdf\Pdf([
+
+        'mode' => \kartik\mpdf\Pdf::MODE_UTF8,
+
+        'format' => \kartik\mpdf\Pdf::FORMAT_A4,
+
+        'orientation' => \kartik\mpdf\Pdf::ORIENT_PORTRAIT,
+
+        'destination' => \kartik\mpdf\Pdf::DEST_BROWSER,
+
+        'content' => $content,
+
+        'marginTop' => 10,
+        'marginBottom' => 10,
+        'marginLeft' => 10,
+        'marginRight' => 10,
+
+        'methods' => [
+
+            'SetTitle' => ['ACTA DE ENTREGA'],
+
+        ]
+
+    ]);
+
+    return $pdf->render();
+}
 
     public function actionDelete($id)
     {

@@ -9,6 +9,9 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+/** @var \app\models\StockInformaticaEgreso\SearchModel $searchModel */
+
+
 $layoutDate = <<< HTML
     {input1}
     {input2}
@@ -126,7 +129,7 @@ return [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
         'width' => $columna_8,
-        'template' => '{view} {update} {imprimir_acta_entrega}',
+        'template' => '{view} {update}{imprimir_acta_entrega} {imprimir_acta_entrega_2026}',
         'vAlign' => 'middle',
         'urlCreator' => function ($action, $model, $key, $index) {
             return Url::to([$action, 'id' => $key]);
@@ -154,7 +157,20 @@ return [
                     'data-toggle' => 'tooltip',
                 ]);
             },
-        ],
+        
+
+        
+            'imprimir_acta_entrega_2026' => function ($url, $model) {
+                $url =  Url::to(['/stock_informatica_egreso/imprimir_acta_entrega_2026', 'idegreso' => $model->idegreso]);
+                return Html::a('<span class= "fas fa-print"></span>', $url, [
+                    'title' => "Imprimir Acta2026 ",
+                    'role' => 'post',
+                    'data-pjax' => 0,
+                    'target' => '_blank',
+                    'data-toggle' => 'tooltip',
+                ]);
+            },],
+        
     ],
 
 ];
