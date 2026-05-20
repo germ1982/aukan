@@ -17,6 +17,7 @@ if ($model->origen_alta != 0) {
     $subtitulo = "Decreto: $decreto - Padre: $rama";
 }
 $this->registerJs("aplicarCorrector('input_descripcion');");
+$this->registerJs("aplicarCorrector('input_abreviatura');");
 
 
 /* @var $this yii\web\View */
@@ -57,7 +58,7 @@ $this->registerJs("aplicarCorrector('input_descripcion');");
             <div class="row">
 
                 <div class=" col-md-4">
-                    <?= $form->field($model, 'abreviatura')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($model, 'abreviatura')->textInput(['id' => 'input_abreviatura', 'maxlength' => true]) ?>
                 </div>
                 <div class=" col-md-2" style="padding-top:30px;">
                     <?= $form->field($model, 'activo')->checkbox(['checked' => $model->isNewRecord ? true : (bool)$model->activo]) ?>

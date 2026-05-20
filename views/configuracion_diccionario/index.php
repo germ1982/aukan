@@ -8,19 +8,26 @@ $gridColumns = require(__DIR__ . '/_columns.php');
 
 
 
-$boton_articulos = Html::a(
-    '<i class="fas fa-boxes"></i> Articulos',
-    ['articulo/index'],
-    ['title' => 'Artículos', 'class' => 'btn btn-primary boton_menu neon','target' => '_blank']
+$boton_registro = Html::a(
+    '',
+    ['registro_tecnico/index'], 
+    [
+        'title' => 'Diccionario', 
+        'class' => 'btn btn-primary boton_menu neon',
+        'style' => '
+            background-image: url("img/registros_tecnicos.jpg"); /* Asegúrate de que la ruta sea correcta */
+            background-size: cover;
+            background-position: center;
+            color: white; 
+            border: none;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            padding: 15px 60px; /* Ajustalo según el tamaño que quieras */
+        '
+    ]
 );
 
-$boton_nuevo_articulo = Html::a(
-    '<i class="fas fa-plus"></i> Nuevo Artículo',
-    ['articulo/create'],
-    ['title' => 'Nuevo Artículo', 'class' => 'btn btn-primary boton_menu neon','role' => 'modal-remote']
-);
-
-$customButtonsA = "$boton_articulos. $boton_nuevo_articulo"; // o define aquí tus botones HTML::a(...) para la izquierda si es necesario
+$customButtonsA = "$boton_registro"; // o define aquí tus botones HTML::a(...) para la izquierda si es necesario
 
 $customButtonsB = ''; // o define aquí tus botones HTML::a(...) para la derecha si es necesario
 
@@ -33,7 +40,7 @@ $searchModel = $searchModel ?? null; // Asegúrate de que $
 // 2. Renderizar la vista completa
 echo AppIndexGenericoHelper::renderIndex(
     $this,                  // Objeto View ($this)
-    'Inventario',      // Título
+    'Diccionario De Palabras De Silvana',      // Título
     $gridColumns,           // Columnas
     $dataProvider,          // DataProvider (viene del controlador)
     $searchModel,           // SearchModel (viene del controlador)
@@ -43,4 +50,3 @@ echo AppIndexGenericoHelper::renderIndex(
     $tamañoLetra,
 );
 ?>
-

@@ -1,16 +1,21 @@
 // web/js/formatos.js
 function aplicarCorrector(idInput) {
+    console.log("Aplicando corrector a " + idInput);
     let selector = '#' + idInput;
 
     function procesar() {
         let input = $(selector);
         let texto = input.val();
+        console.log("Aplicando corrector a " + texto);
         if (!texto) return;
 
-        const comunes = {
+        /* const comunes = {
             'area': 'Área', 'tecnico': 'Técnico', 'tecnica': 'Técnica',
             'codigo': 'Código', 'ultimo': 'Último', 'regimen': 'Régimen'
-        };
+        }; */
+
+        // Ahora 'comunes' viene de la base de datos (inyectado en el header)
+        const comunes = window.diccPersonalizado || {};
 
         let palabras = texto.split(' ');
         let corregidas = palabras.map(p => {

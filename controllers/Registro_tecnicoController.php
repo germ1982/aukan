@@ -64,6 +64,13 @@ class Registro_tecnicoController extends Controller
         ]);
     }
 
+    public function actionView_indicadores()
+    {
+$this->layout = 'main-login';
+$this->layout = false;
+        return $this->render('view_indicadores', []);
+    }
+
     public function actionIndex_tipos_registro()
     {
         $searchModel = new ConfiguracionSearch();
@@ -140,14 +147,14 @@ class Registro_tecnicoController extends Controller
                     $model->fecha_solucion = $model->fecha_solucion ? ArmarDateParaMySql($model->fecha_solucion) : null;
                     $model->hora_solucion = $model->hora_solucion ? date('H:i:s', strtotime($model->hora_solucion)) : null;
                     $model->estado = RegistroTecnico::ESTADO_FINALIZADO;
-                }
-                else {
+                } else {
+                    $model->fecha_solucion = null;
+                    $model->hora_solucion = null;
                     if (!empty($asistentes)) {
                         $model->estado = RegistroTecnico::ESTADO_ASISTENCIA;
                     } else {
                         $model->estado = RegistroTecnico::ESTADO_PENDIENTE;
                     }
-
                 }
 
 
@@ -233,17 +240,15 @@ class Registro_tecnicoController extends Controller
                     $model->fecha_solucion = $model->fecha_solucion ? ArmarDateParaMySql($model->fecha_solucion) : null;
                     $model->hora_solucion = $model->hora_solucion ? date('H:i:s', strtotime($model->hora_solucion)) : null;
                     $model->estado = RegistroTecnico::ESTADO_FINALIZADO;
-                }
-                else {
+                } else {
 
                     $model->fecha_solucion = null;
-                    $model->hora_solucion = null;   
+                    $model->hora_solucion = null;
                     if (!empty($asistentes)) {
                         $model->estado = RegistroTecnico::ESTADO_ASISTENCIA;
                     } else {
                         $model->estado = RegistroTecnico::ESTADO_PENDIENTE;
                     }
-
                 }
 
 
@@ -496,6 +501,40 @@ class Registro_tecnicoController extends Controller
             ])
         ];
     }
+
+    public function actionCheck_alerta()
+    {
+        // Obtenemos el componente de conexión a la base de datos de Yii
+        $db = \Yii::$app->db;
+
+        // Ejecutamos tu consulta de técnicos libres y guardamos el resultado (un número)
+        $libres = $db->createCommand("
+        SELECT COUNT(*)
+        FROM configuracion c 
+        WHERE c.id_configuracion_tipo = " . ConfiguracionTipo::TIPO_ASISTENCIA_INFORMATICA . " 
+        AND c.activo = 1 
+        AND c.descripcion NOT IN (
+            SELECT DISTINCT ra.idtecnico 
+            FROM registro_tecnico r 
+            JOIN registro_tecnico_asistencia ra ON ra.idregistro = r.idregistro 
+            WHERE r.estado = 1
+        )
+    ")->queryScalar(); // queryScalar devuelve solo el valor de la primera columna (el COUNT)
+
+        // Ejecutamos la consulta para contar cuántos registros están en espera (estado 0)
+        $pendientes = $db->createCommand("
+        SELECT COUNT(*) FROM registro_tecnico WHERE estado = 0
+    ")->queryScalar();
+
+        // Establecemos que la respuesta de este método será en formato JSON
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        // Retornamos un array que Yii convertirá a JSON: { "disparar": true/false }
+        // Solo será true si hay más de 0 libres Y más de 0 pendientes
+        return [
+            'disparar' => ($libres > 0 && $pendientes > 0)
+        ];
+    }
 }
 function ArmarDateParaMySql($Fecha)
 {
@@ -508,7 +547,3 @@ function ArmarDateParaMySql($Fecha)
     $DT = date_format($DT, 'Y-m-d');
     return $DT;
 }
-
-
-
-
