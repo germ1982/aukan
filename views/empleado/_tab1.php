@@ -10,6 +10,10 @@ use kartik\file\FileInput;
 use yii\helpers\Html;
 use yii\web\View as WebView;
 
+/** @var yii\web\View $this */
+/** @var app\models\Empleado $model */
+/** @var yii\widgets\ActiveForm $form */
+
 if (isset($model->idpersona)) {
     $persona = Persona::findOne($model->idpersona);
     $model->documento = $persona->documento;
@@ -38,37 +42,37 @@ if (isset($model->idpersona)) {
     </div>
 
     <div class="col-md-3">
-        <?= $form->field($model, 'cuil')->textInput() ?>
+        <?= $form->field($model, 'cuil')->textInput(['id' => 'input_cuil']) ?>
     </div>
 
     <div class="col-md-6">
-        <?= $form->field($model, 'telefono')->textInput() ?>
+        <?= $form->field($model, 'telefono')->textInput(['id' => 'input_telefono']) ?>
     </div>
 
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <?= $form->field($model, 'email')->textInput() ?>
+        <?= $form->field($model, 'email')->textInput(['id' => 'input_email']) ?>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
         <?php if ($model->origen_alta == 0): ?>
-                        <?= SiteController::actionGet_input_select2($form, $model, 'iddispositivo', 'cmb_dispositivos', OrganismoDispositivo::get_dispositivos(), 'iddispositivo', 'descripcion', 'Sector', 'Seleccione Sector...') ?>
-                    <?php else: ?>
+            <?= SiteController::actionGet_input_select2($form, $model, 'iddispositivo', 'cmb_dispositivos', OrganismoDispositivo::get_dispositivos(), 'iddispositivo', 'descripcion', 'Sector', 'Seleccione Sector...') ?>
+        <?php else: ?>
 
 
-                        <label class="control-label"><?= $model->getAttributeLabel('iddispositivo') ?></label>
-                        <p class="form-control-static" style="background: #eee; padding: 6px 12px; border-radius: 4px;">
-                            <?= $model->iddispositivo ? OrganismoDispositivo::findOne($model->iddispositivo)->descripcion : '' ?>
-                        </p>
+            <label class="control-label"><?= $model->getAttributeLabel('iddispositivo') ?></label>
+            <p class="form-control-static" style="background: #eee; padding: 6px 12px; border-radius: 4px;">
+                <?= $model->iddispositivo ? OrganismoDispositivo::findOne($model->iddispositivo)->descripcion : '' ?>
+            </p>
 
-                        <?= $form->field($model, 'iddispositivo')->hiddenInput()->label(false) ?>
+            <?= $form->field($model, 'iddispositivo')->hiddenInput()->label(false) ?>
 
-                    <?php endif; ?>
-        
+        <?php endif; ?>
+
     </div>
 </div>
 <div class="row">
@@ -90,6 +94,27 @@ function asignar_datos_idpersona(data){
     $('#input_documento_idpersona').val(data['documento']);
     let nombre_idpersona = data['apellido'] + ', ' + data['nombre'];
     $('#txt_mensaje_idpersona').html(nombre_idpersona);
+    $('#input_cuil').val(get_cuil(data['documento'], data['genero']));
+    }
+
+function get_cuil(documento,genero){
+    console.log('ingreso a get_cuil con: ' + documento + ' y genero: ' + genero);
+        $('#loading').show();
+        texto = $('#txt_mensaje_idpersona').html();
+        $('#txt_mensaje_idpersona').html('Buscando persona con dni: ' + documento);
+        $.post("index.php?r=persona/get_cuil&dni=" + documento + "&genero=" + genero, function (data) {
+                    //$.post("index.php?r=persona/get_persona_renaper&dni=" + dni_persona + "&genero=F", function (data) {
+                        console.log('data de get_cuil:');
+                        console.log(data);
+
+                        if (data) {
+                            $('#input_cuil').val(data);
+                            $('#txt_mensaje_idpersona').html(texto);
+                        } else {
+                            $('#txt_mensaje_idpersona').html(texto + " - No se encontro cuil en RENAPER");
+                        }
+                        $('#loading').hide();
+                    });
     }
 JS;
 
@@ -100,7 +125,7 @@ $this->registerJs($script);
 
 if (!$model->isNewRecord) {
     $model_persona = Persona::findOne($model->idpersona);
-    
+
     // 1. Convertir los atributos del modelo (PHP) a una cadena JSON
     $modelJson = \yii\helpers\Json::encode($model_persona->attributes);
 

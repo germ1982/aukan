@@ -231,6 +231,46 @@ class PersonaController extends Controller
         return json_encode($result);
     }
 
+    public function actionGet_cuil($dni, $genero)
+    {
+        $genero = ($genero == 20) ? 'F' : 'M'; // Asumiendo que 20 es femenino y 21 es masculino, ajusta según tu lógica
+        $curl = curl_init();
+        $SSLCERT_PATH = env('SSLCERT_PATH');
+        $SSLKEY_PATH = env('SSLKEY_PATH');
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://xroadmingobierno.neuquen.gob.ar/r1/OPTIC/GOB/GOB00001/GP-RENAPER/WS_RENAPER_DOCUMENTO/' . $dni . '/' . $genero,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_SSLCERT => $SSLCERT_PATH,
+            CURLOPT_SSLKEY => $SSLKEY_PATH,
+            CURLOPT_POSTFIELDS => 'servicio=get_persona_renaper&filtro%20=documento%3D' . $dni . '%26sexo%3D' . $genero . '&auditoria=sur&usuario_auditoria=sur&tipo=0',
+            CURLOPT_HTTPHEADER => array(
+                'x-road-client: OPTIC/GOB/GOB00018/GP-SUBSEFAMILIA',
+                'Content-Type: application/x-www-form-urlencoded'
+            ),
+
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => 0,
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        $renaper_data = json_decode($response, true);
+
+        // Si no hay datos válidos, devolvés cadena vacía
+        if (!isset($renaper_data['data']) || empty($renaper_data['data']['apellido'])) {
+            return '';
+        }
+        return $renaper_data['data']['cuil'] ?? '';
+    }
     public function actionGet_persona($dni)
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
