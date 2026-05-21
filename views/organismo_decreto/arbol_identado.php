@@ -4,6 +4,15 @@ use app\models\OrganismoOrgDec;
 use app\models\Organismo;
 use yii\helpers\Html;
 
+// Registrar los paquetes de assets de AjaxCrud y CommonIndex
+\johnitvn\ajaxcrud\CrudAsset::register($this);
+\app\assets\CommonIndexAsset::register($this);
+
+// Registrar el archivo CSS local dependiendo de AppAsset
+$this->registerCssFile('@web/css/css_index_views.css', [
+    'depends' => [\app\assets\AppAsset::class]
+]);
+
 $iddecreto = $iddecreto ?? null;
 
 $relacionRaiz = OrganismoOrgDec::find()
