@@ -1,123 +1,38 @@
 <?php
 
-use app\models\Persona;
+use app\helpers\AppIndexGenericoHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\grid\ActionColumn;
-use yii\bootstrap\Modal;
-use kartik\grid\GridView;
-use johnitvn\ajaxcrud\CrudAsset;
 
-$this->title = 'Edificios';
-$this->params['breadcrumbs'][] = $this->title;
-$clase = 'edificio-index';
+$gridColumns = require(__DIR__ . '/_columns.php');
 
-CrudAsset::register($this);
-?>
+$boton_oficinas = Html::a(
+    '<i class="fa fa-institution"></i> Oficinas',
+    ['edificio_oficina/index'],
+    ['title' => 'Oficinas', 'class' => 'btn btn-primary boton_menu neon','target' => '_blank']
+);
 
-<style>
-    .custom-grid {
-    font-size: 13px; /* Cambia el tamaño según tus necesidades */
-}
+$customButtonsA = "$boton_oficinas"; // o define aquí tus botones HTML::a(...) para la izquierda si es necesario
 
-.kv-grid-toolbar .btn {
-    height: 30px;  /* Ajusta la altura de todos los botones */
-    line-height: 1.42857143;  /* Esto centra el contenido verticalmente */
-}
+$customButtonsB = ''; // o define aquí tus botones HTML::a(...) para la derecha si es necesario
 
-</style>
+$anchoModal = '1200px'; // Ancho del modal en PX
+$tamañoLetra = '10px'; // Tamaño de letra para la grilla
 
-<header class="page-header">
-    <h2><?= $this->title ?></h2>
+$dataProvider = $dataProvider ?? null; // Asegúrate de que $dataProvider esté definido
+$searchModel = $searchModel ?? null; // Asegúrate de que $
 
-    <div class="right-wrapper pull-right">
-        <ol class="breadcrumbs">
-            <li>
-                <a href="index.html">
-                    <i class="neon fa fa-home"></i>
-                </a>
-            </li>
-            <li><span><?= $this->title ?></span></li>
-        </ol>
-
-        <div class="sidebar-right-toggle"></div>
-    </div>
-</header>
-
-
-<div class="row">
-
-    <div class="col-md-12 col-lg-12 col-xl-12">
-        <section class="panel">
-            <div class="panel-body">
-                <div class="<?= $clase ?>">
-                    <div id="ajaxCrudDatatable">
-
-                        <?= GridView::widget([
-                            'id' => 'crud-datatable',
-                            'dataProvider' => $dataProvider,
-                            'tableOptions' => ['class' => 'custom-grid'],
-                            'filterModel' => $searchModel,
-                            'pjax' => false,
-                            'columns' => require(__DIR__ . '/_columns.php'),
-                            'toolbar' => [
-                                ['content' =>
-
-                                Html::a(
-                                    'Accesos',
-                                    ['/edificio_acceso'],
-                                    ['title' => 'accesos', 'class' => 'btn btn-primary neon']
-                                ) .
-
-                                Html::a(
-                                        '<i class="glyphicon glyphicon-plus">lalalala</i>',
-                                        ['create'],
-                                        ['role' => 'modal-remote', 'title' => 'Nuevo', 'class' => 'btn btn-default']
-                                    ) .
-
-                                   
-
-                                Html::a(
-                                    '<i class="glyphicon glyphicon-repeat"></i>',
-                                    [''],
-                                    ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Refrescar Grilla']
-                                ) .
-                                '{toggleData}' .
-                                '{export}'],
-                            ],
-                            'striped' => true,
-                            'condensed' => true,
-                            'responsive' => false,
-                            'panel' => [
-                                'type' => 'primary',
-                                'heading' => false,
-                                'after' => '<div class="clearfix"></div>',
-                            ]
-                        ]); ?>
-
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-</div>
-<?php
-$this->registerJs(
-    "$('#ajaxCrudModal').on('hidden.bs.modal', function() {
-            location.reload();
-        })"
+// 2. Renderizar la vista completa
+echo AppIndexGenericoHelper::renderIndex(
+    $this,                  // Objeto View ($this)
+    'Edificios',      // Título
+    $gridColumns,           // Columnas
+    $dataProvider,          // DataProvider (viene del controlador)
+    $searchModel,           // SearchModel (viene del controlador)
+    $customButtonsA,
+    $customButtonsB,
+    $anchoModal,
+    $tamañoLetra,
 );
 ?>
 
-<?php Modal::begin([
-    "id" => "ajaxCrudModal",
-    'options' => [
-        'tabindex' => false // important for Select2 to work properly
-    ],
-    'size' => Modal::SIZE_LARGE,
-    'clientOptions' => [
-        'backdrop' => 'static'
-    ],
-    "footer" => "", // always need it for jquery plugin
-]) ?>
-<?php Modal::end(); ?>

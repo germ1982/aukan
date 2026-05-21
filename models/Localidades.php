@@ -44,4 +44,13 @@ class Localidades extends \yii\db\ActiveRecord
             'localidad' => 'Localidad',
         ];
     }
+
+    public static function get_localidades($id_provincia = null)
+    {
+        $query = self::find()->select(['id', 'localidad'])->orderBy('localidad');
+        if ($id_provincia !== null) {
+            $query->where(['id_provincia' => $id_provincia]);
+        }
+        return $query->asArray()->all();
+    }
 }

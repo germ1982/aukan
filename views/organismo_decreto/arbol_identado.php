@@ -226,13 +226,13 @@ function renderizarListaEmpleados($empleados, $dispositivo)
 
 <style>
     .df-col-nivel-9 {
-        margin-left: 240px;
+        margin-left: 60px;
     }
 
     .df-nodo-personal-lista {
         background-color: #fcfcfc;
         border-left-color: #2ecc71 !important;
-        min-width: 450px !important;
+        min-width: 530px !important;
     }
 
     .df-lista-empleados {
