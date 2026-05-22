@@ -16,13 +16,21 @@ $mysql_persona = "SELECT e.idempleado, concat(p.apellido,' ',p.nombre) as person
                         where e.activo = 1
                         order by p.apellido, p.nombre";
 
+$columna1 = "0%";
+$columna2 = "20%";
+$columna3 = "20%";
+$columna4 = "10%";
+$columna5 = "10%";
+$columna6 = "30%";
+$columna7 = "5%";
+
 return [
 
-    [
+    /* [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'idInventario',
-        'width' => '5%',
-    ],
+        'width' => $columna1,
+    ], */
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'idarticulo',
@@ -37,7 +45,7 @@ return [
         ],
         'filterInputOptions' => ['placeholder' => 'Articulo...'],
         'format' => 'raw',
-        'width' => '30%',
+        'width' => $columna2,
     ],
     [
         'class' => '\kartik\grid\DataColumn',
@@ -55,7 +63,7 @@ return [
         ],
         'filterInputOptions' => ['placeholder' => 'dispositivo...'],
         'format' => 'raw',
-        'width' => '30%',
+        'width' => $columna3,
     ],
     [
         'class' => '\kartik\grid\DataColumn',
@@ -77,7 +85,7 @@ return [
         ],
         'filterInputOptions' => ['placeholder' => 'Empleado...'],
         'format' => 'raw',
-        'width' => '30%',
+        'width' => $columna4,
     ],
     [
         'class' => '\kartik\grid\DataColumn',
@@ -95,13 +103,19 @@ return [
         ],
         'filterInputOptions' => ['placeholder' => 'estado...'],
         'format' => 'raw',
-        'width' => '30%',
+        'width' => $columna5,
+    ],
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'observacion',
+         'width' => $columna6,
+        
     ],
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
         'template' => '{view} {update} ',
-        'width' => '10%',
+        'width' => $columna7,
         'vAlign' => 'middle',
         'urlCreator' => function ($action, $model, $key, $index) {
             return Url::to([$action, 'id' => $key]);
