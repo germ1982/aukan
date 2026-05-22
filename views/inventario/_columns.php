@@ -112,6 +112,13 @@ return [
         
     ],
     [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'cantidad',
+        
+
+        
+    ],
+    [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
         'template' => '{view} {update} ',
