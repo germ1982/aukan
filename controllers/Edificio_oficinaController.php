@@ -40,7 +40,7 @@ class Edificio_oficinaController extends Controller
      * @return mixed
      */
     public function actionIndex()
-    {    
+    {
         $searchModel = new EdificioOficinaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -124,7 +124,7 @@ class Edificio_oficinaController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
-                    LogPlataforma::registrar(18,1,$model->idoficina);  
+                    LogPlataforma::registrar(18, 1, $model->idoficina);
                     return [
                         'title' => "Nueva Oficina",
                         'content' => '<span class="text-success">Oficina Creada Correctamente</span>',
@@ -148,7 +148,7 @@ class Edificio_oficinaController extends Controller
     {
         $request = Yii::$app->request;
         $model = $this->findModel($id);
-        
+
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
@@ -192,7 +192,7 @@ class Edificio_oficinaController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
-                    LogPlataforma::registrar(18,2,$model->idoficina);  
+                    LogPlataforma::registrar(18, 2, $model->idoficina);
                     return [
                         'title' => "Editar Oficina",
                         'content' => '<span class="text-success">Oficina Editada Correctamente</span>',
@@ -222,25 +222,23 @@ class Edificio_oficinaController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(18,3,$id);  
+        LogPlataforma::registrar(18, 3, $id);
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
             /*
             *   Process for non-ajax request
             */
             return $this->redirect(['index']);
         }
-
-
     }
 
-     /**
+    /**
      * Delete multiple existing EdificioOficina model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
@@ -248,27 +246,26 @@ class Edificio_oficinaController extends Controller
      * @return mixed
      */
     public function actionBulkDelete()
-    {        
+    {
         $request = Yii::$app->request;
-        $pks = explode(',', $request->post( 'pks' )); // Array or selected records primary keys
-        foreach ( $pks as $pk ) {
+        $pks = explode(',', $request->post('pks')); // Array or selected records primary keys
+        foreach ($pks as $pk) {
             $model = $this->findModel($pk);
             $model->delete();
         }
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
             /*
             *   Process for non-ajax request
             */
             return $this->redirect(['index']);
         }
-       
     }
 
     /**
@@ -285,5 +282,42 @@ class Edificio_oficinaController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionGet_oficinas_edificio($idedificio)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $sql = "SELECT idoficina, descripcion 
+                    FROM edificio_oficina 
+                    WHERE idedificio = $idedificio 
+                    ORDER BY descripcion";
+
+        $oficinas = EdificioOficina::findBySql($sql)->asArray()->all();
+
+        return $oficinas;
+    }
+
+    public function actionGet_oficinas()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $sql = "SELECT idoficina, descripcion 
+                    FROM edificio_oficina 
+                    ORDER BY descripcion";
+
+        $oficinas = EdificioOficina::findBySql($sql)->asArray()->all();
+
+        return $oficinas;
+    }
+
+    public function actionGet_edificio($idoficina)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $sql = "SELECT idedificio 
+                    FROM edificio_oficina 
+                    WHERE idoficina = $idoficina";
+
+        $oficinas = EdificioOficina::findBySql($sql)->asArray()->one();
+
+        return $oficinas['idedificio'];
     }
 }

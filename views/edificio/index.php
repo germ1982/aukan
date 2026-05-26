@@ -4,6 +4,15 @@ use app\helpers\AppIndexGenericoHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+$this->registerCssFile(
+    'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
+);
+
+$this->registerJsFile(
+    'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+    ['depends' => [\yii\web\JqueryAsset::class]]
+);
+
 $gridColumns = require(__DIR__ . '/_columns.php');
 
 $boton_oficinas = Html::a(

@@ -23,6 +23,7 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
 {
     public $organismo;
     public $origen_alta;
+    public $idedificio;
 
     public static function tableName()
     {
@@ -36,10 +37,10 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
     {
         return [
             [['descripcion', 'idorganismo', 'alias','idoficina'], 'required'],
-            [['idorganismo', 'es_oficial', 'es_organismo', 'activo', 'idcapaitem','idoficina'], 'integer'],
+            [['idorganismo', 'es_oficial', 'es_organismo', 'activo', 'idcapaitem','idoficina','idedificio'], 'integer'],
             [['descripcion', 'alias', 'telefono'], 'string', 'max' => 100],
             [['idorganismo'], 'exist', 'skipOnError' => true, 'targetClass' => Organismo::className(), 'targetAttribute' => ['idorganismo' => 'idorganismo']],
-            [['organismo', 'origen_alta'], 'safe'],
+            [['organismo', 'origen_alta', 'idedificio'], 'safe'],
         ];
     }
 

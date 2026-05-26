@@ -2,11 +2,20 @@
 // Al principio de index_arbol.php
 johnitvn\ajaxcrud\CrudAsset::register($this);
 
+$this->registerCssFile(
+    'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
+);
+
+$this->registerJsFile(
+    'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+    ['depends' => [\yii\web\JqueryAsset::class]]
+);
+
 use app\models\OrganismoOrgDec;
 use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\helpers\Url;
-
+/** @var mixed $vista */
 /* @var $this yii\web\View */
 /* @var $model app\models\OrganismoDecreto */
 
@@ -72,6 +81,16 @@ $this->title = $title;
                     title="Vista Organigrama (Árbol)">
                     <i class="fa fa-sitemap neon"></i>
                 </a>
+
+                <?= Html::a(
+                '<i class="fa fa-building "></i>',
+                ['edificio/create'],
+                ['role' => 'modal-remote', 
+                'class' => 'btn ',
+                'style'=>"border-radius: 25px;font-size: 20px;",
+                'title'=>"Crear Edificio"]
+            ) ?>
+
             </div>
         <?php endif; ?>
     </div>

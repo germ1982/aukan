@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Edificio;
+use app\models\EdificioOficina;
 use app\models\EdificioSearch;
 use app\models\LogPlataforma;
 use yii\web\Controller;
@@ -60,12 +61,12 @@ class EdificioController extends Controller
         if($request->isAjax){
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                    'title'=> "Edificio #".$id,
+                    'title'=> "Edificio ".$id,
                     'content'=>$this->renderAjax('view', [
                         'model' => $this->findModel($id),
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                            Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
                 ];    
         }else{
             return $this->render('view', [
@@ -92,32 +93,38 @@ class EdificioController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Create new Edificio",
+                    'title'=> "Crear Edificio",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Cerrar',['id'=>'btnCerrar','class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Guardar',['id'=>'btnGuardar','class'=>'btn btn-primary','type'=>"submit"])
         
                 ];         
             }else if($model->load($request->post()) && $model->save()){
+                
                 LogPlataforma::registrar(17,1,$model->idedificio); 
+                $oficina = new EdificioOficina();
+                $oficina->idedificio = $model->idedificio;
+                $oficina->descripcion = 'Oficina 01 - '.$model->descripcion_fija;
+                $oficina->save();
+
                 return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Create new Edificio",
-                    'content'=>'<span class="text-success">Create Edificio success</span>',
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                    //'forceReload'=>'#crud-datatable-pjax',
+                    'title'=> "Crear Edificio",
+                    'content'=>'<span class="text-success">Crear Edificio exitoso</span>',
+                    'footer'=> Html::button('Cerrar',['id'=>'btnCerrar','class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                            Html::a('Crear Más',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
         
                 ];         
             }else{           
                 return [
-                    'title'=> "Create new Edificio",
+                    'title'=> "Crear Edificio",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Cerrar',['id'=>'btnCerrar','class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Guardar',['id'=>'btnGuardar','class'=>'btn btn-primary','type'=>"submit"])
         
                 ];         
             }
@@ -155,32 +162,32 @@ class EdificioController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
-                    'title'=> "Update Edificio #".$id,
+                    'title'=> "Editar Edificio ".$id,
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Cerrar',['id'=>'btnCerrar','class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Guardar',['id'=>'btnGuardar','class'=>'btn btn-primary','type'=>"submit"])
                 ];         
             }else if($model->load($request->post()) && $model->save()){
                 LogPlataforma::registrar(17,2,$model->idedificio); 
                 return [
-                    'forceReload'=>'#crud-datatable-pjax',
+                    //'forceReload'=>'#crud-datatable-pjax',
                     'title'=> "Edificio #".$id,
                     'content'=>$this->renderAjax('view', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                    'footer'=> Html::button('Cerrar',['id'=>'btnCerrar','class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                            Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
                 ];    
             }else{
                  return [
-                    'title'=> "Update Edificio #".$id,
+                    'title'=> "Editar Edificio ".$id,
                     'content'=>$this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
+                    'footer'=> Html::button('Cerrar',['id'=>'btnCerrar','class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Guardar',['id'=>'btnGuardar','class'=>'btn btn-primary','type'=>"submit"])
                 ];        
             }
         }else{
@@ -271,4 +278,6 @@ class EdificioController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+    
 }

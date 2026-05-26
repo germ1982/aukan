@@ -16,23 +16,18 @@ $id_nqn = Provincias::find()
 
 $localidades = Localidades::get_localidades($id_nqn);
 
-// Leaflet
-$this->registerCssFile('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');
-$this->registerJsFile(
-    'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
-    ['position' => \yii\web\View::POS_END]
-);
 ?>
+
 
 <div class="edificio-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-6">
 
             <div class="row">
-                <div class="col-md-7">
+                <div class="col-md-10">
                     <?= $form->field($model, 'descripcion_fija')->textInput(['maxlength' => true]) ?>
                 </div>
 
@@ -44,11 +39,13 @@ $this->registerJsFile(
             </div>
 
             <div class="row">
-                <div class="col-md-7">
+                <div class="col-md-12">
                     <?= $form->field($model, 'descripcion_gestion')->textInput(['maxlength' => true]) ?>
                 </div>
+            </div>
 
-                <div class="col-md-5">
+            <div class="row">
+                <div class="col-md-12">
                     <?= SiteController::actionGet_input_select2(
                         $form,
                         $model,
@@ -61,34 +58,44 @@ $this->registerJsFile(
                 </div>
             </div>
 
+
             <div class="row">
-                <div class="col-md-5">
-                    <?= $form->field($model, 'direccion_calle')->textInput(['maxlength' => true]) ?>
+                <div class="col-md-10">
+                    <?= $form->field($model, 'direccion_calle')->textInput(['id' => 'input_direccion_calle', 'maxlength' => true]) ?>
                 </div>
 
                 <div class="col-md-2">
-                    <?= $form->field($model, 'direccion_altura')->textInput() ?>
+                    <?= $form->field($model, 'direccion_altura')->textInput(['id' => 'input_direccion_altura']) ?>
                 </div>
 
-                <div class="col-md-5">
-                    <?= $form->field($model, 'direccion')->textInput(['maxlength' => true]) ?>
-                </div>
+
             </div>
 
             <div class="row">
                 <div class="col-md-12">
-                    <?= $form->field($model, 'geolocalizacion')->textarea(['rows' => 3]) ?>
+                    <?= $form->field($model, 'direccion')->textInput(['id' => 'input_direccion', 'maxlength' => true]) ?>
                 </div>
+
             </div>
 
         </div>
 
-        <div class="col-md-4">
-            <label>Ubicación Geográfica</label>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Ubicación Geográfica</label>
 
-            <div id="mapa-contenedor"
-                 style="width:100%;height:350px;border:1px solid #ccc;border-radius:4px;">
+                    <div id="mapa-contenedor"
+                        style="width:100%;height:257px;border:1px solid #ccc;border-radius:4px;">
+                    </div>
+                </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <?= $form->field($model, 'geolocalizacion')->textInput() ?>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -96,14 +103,29 @@ $this->registerJsFile(
 
 </div>
 
-<script>
+<?php
 
-document.addEventListener('DOMContentLoaded', function () {
+$js = <<<JS
+
+let mapa;
+let marcador;
+
+function iniciarMapa() {
+
+    if (typeof L === 'undefined') {
+        console.error('Leaflet no cargó');
+        return;
+    }
 
     let lat = -38.9516;
     let lng = -68.0591;
 
     let campoGeo = document.getElementById('edificio-geolocalizacion');
+
+    if (!campoGeo) {
+        console.error('No existe el campo geolocalizacion');
+        return;
+    }
 
     if (campoGeo.value.trim() !== '') {
 
@@ -121,23 +143,26 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    let mapa = L.map('mapa-contenedor').setView([lat, lng], 15);
+    mapa = L.map('mapa-contenedor').setView([lat, lng], 15);
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; OpenStreetMap'
     }).addTo(mapa);
 
-    let marcador = L.marker([lat, lng], {
+    marcador = L.marker([lat, lng], {
         draggable: true
     }).addTo(mapa);
+
+    campoGeo.value = lat.toFixed(6) + ',' + lng.toFixed(6);
 
     marcador.on('dragend', function () {
 
         let pos = marcador.getLatLng();
 
         campoGeo.value =
-            pos.lat.toFixed(6) + ',' + pos.lng.toFixed(6);
+            pos.lat.toFixed(6) + ',' +
+            pos.lng.toFixed(6);
     });
 
     mapa.on('click', function (e) {
@@ -149,6 +174,76 @@ document.addEventListener('DOMContentLoaded', function () {
             e.latlng.lng.toFixed(6);
     });
 
-});
-</script>
+    setTimeout(function () {
+        mapa.invalidateSize();
+    }, 500);
+}
 
+iniciarMapa();
+
+async function buscarDireccion() {
+
+    let calle = $('#input_direccion_calle').val().trim();
+    let altura = $('#input_direccion_altura').val().trim();
+    let localidad = $('#cmb_localidades option:selected').text().trim();
+
+    if (!calle || !altura || !localidad) {
+        return;
+    }
+
+    
+    let direccion =
+    calle + ' ' +
+    altura + ', ' +
+    localidad.replace(' Capital', '') +
+    ', Confluencia, Argentina';
+
+    console.log('Buscando dirección:', direccion);
+
+    let url =
+    'https://nominatim.openstreetmap.org/search?' +
+    'format=json' +
+    '&countrycodes=ar' +
+    '&limit=1' +
+    '&q=' + encodeURIComponent(direccion);
+    try {
+
+        let response = await fetch(url);
+
+        let data = await response.json();
+
+        console.log(data);
+
+        if (data.length === 0) {
+            console.warn('No se encontraron resultados para la dirección');
+            return;
+        }
+
+        let lat = parseFloat(data[0].lat);
+        let lng = parseFloat(data[0].lon);
+
+        console.log('Coordenadas encontradas:', lat, lng);
+
+        marcador.setLatLng([lat, lng]);
+
+        mapa.setView([lat, lng], 17);
+
+        $('#edificio-geolocalizacion').val(
+            lat.toFixed(6) + ',' + lng.toFixed(6)
+        );
+
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+
+$('#input_direccion_calle').on('blur', buscarDireccion);
+
+$('#input_direccion_altura').on('blur', buscarDireccion);
+
+$('#cmb_localidades').on('change', buscarDireccion);
+JS;
+
+$this->registerJs($js, \yii\web\View::POS_END);
+?>

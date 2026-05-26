@@ -58,4 +58,13 @@ class Edificio extends \yii\db\ActiveRecord
             'activo' => 'Activo',
         ];
     }
+
+    public static function get_edificios()
+    {
+        $sql = "SELECT e.idedificio, CONCAT(e.descripcion_fija, ' - ', e.descripcion_gestion, ' - ', l.localidad, ' ',e.direccion_calle, ' ',e.direccion_altura, ' ',e.direccion) as descripcion_fija
+                from edificio e
+                join localidades l on l.id = e.idlocalidad
+                order by e.descripcion_fija";
+        return Edificio::findBySql($sql)->all();
+    }
 }
