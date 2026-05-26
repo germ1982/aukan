@@ -28,7 +28,7 @@ return [
 
     /* [
         'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'idInventario',
+        'attribute' => 'idinventario',
         'width' => $columna1,
     ], */
     [

@@ -113,7 +113,7 @@ class InventarioController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-                      LogPlataforma::registrar(3,1,$model->idInventario); 
+                      LogPlataforma::registrar(3,1,$model->idinventario); 
                       return [
                           'title' => "Nuevo Item",
                           'content' => '<span class="text-success">Inventario Creado Correctamente</span>',
@@ -166,7 +166,7 @@ class InventarioController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-                      LogPlataforma::registrar(3,2,$model->idInventario); 
+                      LogPlataforma::registrar(3,2,$model->idinventario); 
                       return [
                           'title' => "Editar Item",
                           'content' => '<span class="text-success">Item Editado Correctamente</span>',

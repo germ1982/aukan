@@ -100,7 +100,7 @@ $persona = Persona::findOne($empleado->idpersona);
 <!-- <?= DetailView::widget([
             'model' => $model,
             'attributes' => [
-                'idInventario',
+                'idinventario',
                 'idarticulo',
                 'cantidad',
                 'iddispositivo',

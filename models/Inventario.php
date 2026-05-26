@@ -7,7 +7,7 @@ use Yii;
 /**
  * This is the model class for table "inventario".
  *
- * @property int $idInventario
+ * @property int $idinventario
  * @property int|null $idarticulo
  * @property int|null $cantidad
  * @property int|null $iddispositivo
@@ -47,7 +47,7 @@ class Inventario extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'idInventario' => 'Id',
+            'idinventario' => 'Id',
             'idarticulo' => 'Articulo',
             'cantidad' => 'Cantidad',
             'iddispositivo' => 'Dispositivo Deposito',
@@ -57,4 +57,33 @@ class Inventario extends \yii\db\ActiveRecord
             'activo' => 'Activo',
         ];
     }
+
+    public static function get_por_dispositivo($iddispositivo)
+{
+    $sql = "SELECT 
+                a.idarticulo,
+
+                CONCAT(
+                SUM(COALESCE(i.cantidad, 1)), ' - ',
+                    ct.descripcion,' ',
+                    cm.descripcion,' ',
+                    a.modelo,' ',
+                    cum.descripcion,' ',
+                    a.descripcion
+                ) AS descripcion
+            FROM inventario i
+            JOIN articulo a ON a.idarticulo = i.idarticulo
+            JOIN configuracion ct ON ct.id_configuracion = a.idtipo
+            JOIN configuracion cm ON cm.id_configuracion = a.idmarca
+            JOIN configuracion cum ON cum.id_configuracion = a.id_unidad_medida
+            where i.iddispositivo = $iddispositivo and i.activo = 1
+            GROUP BY a.idarticulo
+            ORDER BY ct.descripcion,
+                    cm.descripcion,
+                    a.modelo,
+                    cum.descripcion,
+                    a.descripcion;
+                    ";
+    return Articulo::findBySql($sql)->asArray()->all();
+}
 }

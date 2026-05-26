@@ -111,6 +111,7 @@ function renderizarNodoDispositivo($dispositivo)
 {
     ob_start();
     $empleados = app\models\Empleado::get_por_dispositivo($dispositivo->iddispositivo);
+    $inventario = app\models\Inventario::get_por_dispositivo($dispositivo->iddispositivo);
 ?>
     <li class="df-col-nivel-8">
         <div class="df-nodo-indentado df-nodo-dispositivo"> <span class="df-descripcion">
@@ -137,7 +138,7 @@ function renderizarNodoDispositivo($dispositivo)
 
         <?php if (!empty($empleados)): ?>
             <ul>
-                <?= renderizarListaEmpleados($empleados, $dispositivo) ?>
+                <?= renderizarListaEmpleados($empleados, $dispositivo, $inventario) ?>
             </ul>
         <?php endif; ?>
     </li>
@@ -145,7 +146,7 @@ function renderizarNodoDispositivo($dispositivo)
     return ob_get_clean();
 }
 
-function renderizarListaEmpleados($empleados, $dispositivo)
+function renderizarListaEmpleados($empleados, $dispositivo, $inventario = [])
 {
     ob_start();
 ?>
@@ -219,8 +220,20 @@ function renderizarListaEmpleados($empleados, $dispositivo)
                     </h4>
 
 
-                    <div class="df-contenido-extra" style="font-size: 11px; color: #777; padding-top: 5px;">
-                        <p>hacer listado con la oficina.</p>
+                    <div class="df-lista-interna-empleados" style="max-height: 200px; overflow-y: auto;">
+                        <?php foreach ($inventario as $inv): ?>
+                            <div class="df-item-empleado-linea" style="padding: 4px 0; border-bottom: 1px solid #f9f9f9; font-size: 11px; display: flex; justify-content: space-between; align-items: center;">
+
+                                <div style="flex: 1; min-width: 0; padding-right: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    <i class="fa fa-user-o text-muted" style="font-size: 10px; margin-right: 3px;"></i>
+                                    <span style="color: #666;" title="<?= Html::encode($inv['descripcion']) ?>">
+                                        <?= Html::encode($inv['descripcion']) ?>
+                                    </span>
+                                </div>
+
+
+                            </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
 
