@@ -119,24 +119,35 @@ function renderizarNodoDispositivo($dispositivo)
             </span>
 
             <?= Html::a(
-                '<i class="fa fa-edit"></i><span class="df-btn-text">Editar Dispositivo</span>',
-                ['organismo_dispositivo/update', 'id' => $dispositivo->iddispositivo],
-                ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-warning']
-            ) .
+                    '<i class="fa fa-edit"></i><span class="df-btn-text">Editar Dispositivo</span>',
+                    ['organismo_dispositivo/update', 'id' => $dispositivo->iddispositivo],
+                    ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-warning']
+                ) .
                 Html::a(
                     '<i class="fa fa-eye"></i><span class="df-btn-text">Ver Dispositivo</span>',
                     ['organismo_dispositivo/view', 'id' => $dispositivo->iddispositivo],
                     ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-info']
                 ). 
+                (
+                !empty($empleados) ? '' : 
+                Html::a(
+                    '<i class="fa fa-user" style="color: #0075fa; padding-right: 5px; padding-left: 5px;"></i><span class="df-btn-text">Nuevo Empleado</span>', 
+                    ['empleado/create', 'origen_alta' => 1, 'iddispositivo' => $dispositivo->iddispositivo], 
+                    ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-warning', 'title' => 'Añadir Empleado al Dispositivo']).
+                Html::a(
+                        '<i class="fa fa-box"  style="color: #a8a606;  padding-right: 5px; padding-left: 5px;"></i><span class="df-btn-text">    </span>',
+                        ['inventario/create'],
+                        ['role' => 'modal-remote', 'class' => ' text-warning', 'title' => 'Añadir Articulo a Inventario']
+                    )
+                )
 
-                (!empty($empleados) ? '' : Html::a('<i class="fa fa-user" style="color: #0075fa; padding-right: 5px; padding-left: 5px;"></i><span class="df-btn-text">Nuevo Empleado</span>', ['empleado/create', 'origen_alta' => 1, 'iddispositivo' => $dispositivo->iddispositivo], ['role' => 'modal-remote', 'class' => 'df-btn-expandible text-warning', 'title' => 'Añadir Empleado al Dispositivo']))
 
 
 
             ?>
         </div>
 
-        <?php if (!empty($empleados)): ?>
+        <?php if (!empty($empleados) || !empty($inventario)): ?>
             <ul>
                 <?= renderizarListaEmpleados($empleados, $dispositivo, $inventario) ?>
             </ul>
