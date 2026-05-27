@@ -101,9 +101,16 @@ class EdificioController extends Controller
                                 Html::button('Guardar',['id'=>'btnGuardar','class'=>'btn btn-primary','type'=>"submit"])
         
                 ];         
-            }else if($model->load($request->post()) && $model->save()){
-                
-                LogPlataforma::registrar(17,1,$model->idedificio); 
+            }else if($model->load($request->post())){
+
+                $model->descripcion_fija = ucwords(trim($model->descripcion_fija));
+                $model->descripcion_gestion = ucwords(trim($model->descripcion_gestion));
+                $model->direccion_calle = ucwords(trim($model->direccion_calle));
+                $model->direccion = ucwords(trim($model->direccion));
+                $model->direccion = ucwords(trim($model->direccion));
+
+                if($model->save()){
+                    LogPlataforma::registrar(17,1,$model->idedificio); 
                 $oficina = new EdificioOficina();
                 $oficina->idedificio = $model->idedificio;
                 $oficina->descripcion = 'Oficina 01 - '.$model->descripcion_fija;
@@ -116,7 +123,9 @@ class EdificioController extends Controller
                     'footer'=> Html::button('Cerrar',['id'=>'btnCerrar','class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
                             Html::a('Crear Más',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
         
-                ];         
+                ];
+                }
+                         
             }else{           
                 return [
                     'title'=> "Crear Edificio",
@@ -169,17 +178,26 @@ class EdificioController extends Controller
                     'footer'=> Html::button('Cerrar',['id'=>'btnCerrar','class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
                                 Html::button('Guardar',['id'=>'btnGuardar','class'=>'btn btn-primary','type'=>"submit"])
                 ];         
-            }else if($model->load($request->post()) && $model->save()){
-                LogPlataforma::registrar(17,2,$model->idedificio); 
+            }else if($model->load($request->post())){
+                $model->descripcion_fija = ucwords(trim($model->descripcion_fija));
+                $model->descripcion_gestion = ucwords(trim($model->descripcion_gestion));
+                $model->direccion_calle = ucwords(trim($model->direccion_calle));
+                $model->direccion = ucwords(trim($model->direccion));
+                $model->direccion = ucwords(trim($model->direccion));
+
+                if($model->save()){
+                    LogPlataforma::registrar(17,2,$id); 
                 return [
                     //'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Edificio #".$id,
+                    'title'=> "Edificio ".$id,
                     'content'=>$this->renderAjax('view', [
                         'model' => $model,
                     ]),
                     'footer'=> Html::button('Cerrar',['id'=>'btnCerrar','class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
                             Html::a('Editar',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
+                ];
+                }
+  
             }else{
                  return [
                     'title'=> "Editar Edificio ".$id,

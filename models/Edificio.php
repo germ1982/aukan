@@ -61,10 +61,18 @@ class Edificio extends \yii\db\ActiveRecord
 
     public static function get_edificios()
     {
-        $sql = "SELECT e.idedificio, CONCAT(e.descripcion_fija, ' - ', e.descripcion_gestion, ' - ', l.localidad, ' ',e.direccion_calle, ' ',e.direccion_altura, ' ',e.direccion) as descripcion_fija
-                from edificio e
-                join localidades l on l.id = e.idlocalidad
-                order by e.descripcion_fija";
+        $sql = "SELECT e.idedificio, 
+                    CONCAT(
+                        IFNULL(e.descripcion_fija, ''), ' - ', 
+                        IFNULL(e.descripcion_gestion, ''), ' - ', 
+                        IFNULL(l.localidad, ''), ' ',
+                        IFNULL(e.direccion_calle, ''), ' ',
+                        IFNULL(e.direccion_altura, ''), ' ',
+                        IFNULL(e.direccion, '')
+                    ) as descripcion_fija
+                FROM edificio e
+                JOIN localidades l on l.id = e.idlocalidad
+                ORDER BY e.descripcion_fija;";
         return Edificio::findBySql($sql)->all();
     }
 }
