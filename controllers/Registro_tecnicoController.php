@@ -137,7 +137,7 @@ $this->layout = false;
                         Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
 
                 ];
-            } else if ($model->load($request->post())) {
+            } else if ($model->load($request->post()) && $model->validate()) {
                 $model->idtipo_registro = Yii::$app->request->post('idtipo_registro');
 
                 $model->fecha_solicitud = $model->fecha_solicitud ? ArmarDateParaMySql($model->fecha_solicitud) : null;
@@ -230,7 +230,7 @@ $this->layout = false;
                     'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                         Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
                 ];
-            } else if ($model->load($request->post())) {
+            } else if ($model->load($request->post()) && $model->validate()) {
                 $model->idtipo_registro = Yii::$app->request->post('idtipo_registro');
 
                 $model->fecha_solicitud = $model->fecha_solicitud ? ArmarDateParaMySql($model->fecha_solicitud) : null;
