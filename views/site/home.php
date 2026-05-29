@@ -194,8 +194,8 @@ $this->registerJsFile('@web/js/indicadores_menu.js', ['depends' => 'yii\web\Jque
 $this->registerJs(
     "$(\"#tipo_documento\").change(function() {
         var idtipo = $(\"#tipo_documento\").val();
-        var idcontacto = \"" . ($empleado != null ? $empleado->idcontacto : 0) . "\";
-        $.post(\"index.php?r=empleado/get_documentos&idcontacto=\" + idcontacto + \"&idtipo=\" + idtipo, function(data) {
+        var idempleado = \"" . ($empleado != null ? $empleado->idempleado : 0) . "\";
+        $.post(\"index.php?r=empleado/get_documentos&idempleado=\" + idempleado + \"&idtipo=\" + idtipo, function(data) {
             $(\"#tabla_docs\").html(data);
         });
     });
