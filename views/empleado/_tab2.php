@@ -1,11 +1,36 @@
 <?php
 
+  /** @var mixed $form */
 use app\controllers\SiteController;
 use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
 
+$fechaActual = new DateTime();
+
+// 1. Cálculo de Antigüedad Legal
+if (!empty($model->ingreso_administrativo)) {
+    $fechaIngreso = new DateTime($model->ingreso_administrativo);
+    $model->antiguedad_legal = $fechaIngreso->diff($fechaActual)->y; // <--- Faltaba el ->y
+} else {
+    $model->antiguedad_legal = 0;
+}
+
+// 2. Cálculo de Antigüedad Total
+if (!empty($model->ingreso_real)) {
+    $fechaIngresoReal = new DateTime($model->ingreso_real);
+    $model->antiguedad_total = $fechaIngresoReal->diff($fechaActual)->y; // <--- Faltaba el ->y
+    $model->antiguedad_total = $model->antiguedad_total > 100 ? 0 : $model->antiguedad_total; // Validación para evitar valores mayores a 100
+} else {
+    $model->antiguedad_total = 0;
+}
+
 $model->ingreso_administrativo = date('d/m/Y', strtotime($model->ingreso_administrativo));
 $model->ingreso_real = date('d/m/Y', strtotime($model->ingreso_real));
+
+$model->ingreso_administrativo = $resultado = str_replace('-', '', $model->ingreso_administrativo);
+$model->ingreso_real = $resultado = str_replace('-', '', $model->ingreso_real);
+
+
 
 ?>
 <div class="row">

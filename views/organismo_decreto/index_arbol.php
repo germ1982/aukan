@@ -89,7 +89,16 @@ $this->title = $title;
                 'class' => 'btn ',
                 'style'=>"border-radius: 25px;font-size: 20px;",
                 'title'=>"Crear Edificio"]
-            ) ?>
+            ). 
+            Html::a(
+                '<i class="fa fa-users "></i>',
+                ['empleado/index'],
+                ['target' => '_blank', 
+                'class' => 'btn ',
+                'style'=>"border-radius: 25px;font-size: 20px;",
+                'title'=>"Empleados"]
+            )
+            ?>
 
             </div>
         <?php endif; ?>

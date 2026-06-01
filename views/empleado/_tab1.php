@@ -20,6 +20,12 @@ if (isset($model->idpersona)) {
     //$persona_nombre = "$persona->apellido, $persona->nombre";
 }
 
+if ($model->isNewRecord) {
+    $model->activo = 1; // Por defecto, activo al crear un nuevo registro
+}
+
+
+
 ?>
 
 
@@ -60,7 +66,7 @@ if (isset($model->idpersona)) {
 <div class="row">
     <div class="col-md-12">
         <?php if ($model->origen_alta == 0): ?>
-            <?= SiteController::actionGet_input_select2($form, $model, 'iddispositivo', 'cmb_dispositivos', OrganismoDispositivo::get_dispositivos(), 'iddispositivo', 'descripcion', 'Sector', 'Seleccione Sector...') ?>
+            <?= SiteController::actionGet_input_select2($form, $model, 'iddispositivo', 'cmb_dispositivos', OrganismoDispositivo::get_dispositivos_con_decreto_inverso(), 'iddispositivo', 'descripcion', 'Sector', 'Seleccione Sector...') ?>
         <?php else: ?>
 
 

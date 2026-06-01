@@ -18,8 +18,8 @@ class EmpleadoSearch extends Empleado
     public function rules()
     {
         return [
-            [['idempleado', 'idpersona', 'iddispositivo', 'legajo', 'categoria', 'antiguedad_legal', 'antiguedad_total', 'contratacion', 'cuil', 'funcion', 'afiliacion'], 'integer'],
-            [['email', 'telefono', 'foto', 'activo', 'ingreso_real', 'ingreso_administrativo', 'fichado'], 'safe'],
+            [['idempleado',  'iddispositivo', 'legajo', 'categoria', 'antiguedad_legal', 'antiguedad_total', 'contratacion', 'cuil', 'funcion', 'afiliacion'], 'integer'],
+            [['idpersona', 'email', 'telefono', 'foto', 'activo', 'ingreso_real', 'ingreso_administrativo', 'fichado'], 'safe'],
         ];
     }
 
@@ -57,7 +57,7 @@ class EmpleadoSearch extends Empleado
 
         $query->andFilterWhere([
             'idempleado' => $this->idempleado,
-            'idpersona' => $this->idpersona,
+            //'idpersona' => $this->idpersona,
             'iddispositivo' => $this->iddispositivo,
             'legajo' => $this->legajo,
             'categoria' => $this->categoria,
@@ -76,6 +76,19 @@ class EmpleadoSearch extends Empleado
             ->andFilterWhere(['like', 'foto', $this->foto])
             ->andFilterWhere(['like', 'activo', $this->activo])
             ->andFilterWhere(['like', 'fichado', $this->fichado]);
+
+
+        $query->joinWith(['persona']);
+
+        $palabras = explode(' ', $this->idpersona);
+
+        foreach ($palabras as $palabra) {
+            $query->andWhere([
+                'or',
+                ['like', 'personas.nombre', $palabra],
+                ['like', 'personas.apellido', $palabra],
+            ]);
+        }
 
         return $dataProvider;
     }

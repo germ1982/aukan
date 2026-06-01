@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
+use app\models\Empleado;
 use app\models\LogPlataforma;
 use Yii;
 use app\models\Persona;
@@ -233,6 +234,13 @@ class PersonaController extends Controller
 
     public function actionGet_cuil($dni, $genero)
     {
+        $persona = Persona::find()->where(['documento' => $dni])->one();
+        if ($persona) {
+            $empleado = Empleado::find()->where(['idpersona' => $persona->idpersona])->one();
+            if ($empleado && !empty($empleado->cuil)) {
+                return $empleado->cuil;
+            }
+        }
         $genero = ($genero == 20) ? 'F' : 'M'; // Asumiendo que 20 es femenino y 21 es masculino, ajusta según tu lógica
         $curl = curl_init();
         $SSLCERT_PATH = env('SSLCERT_PATH');
