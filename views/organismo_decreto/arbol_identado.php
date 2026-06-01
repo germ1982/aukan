@@ -218,7 +218,7 @@ function renderizarListaEmpleados($empleados, $dispositivo, $inventario = [])
                         <?=
                         Html::a(
                             '<i class="fa fa-plus"  style="color: #a8a606;  padding-right: 5px; padding-left: 5px;"></i><span class="df-btn-text">    </span>',
-                            ['inventario/create'],
+                            ['inventario/create', 'origen_alta' => 1, 'iddispositivo' => $dispositivo->iddispositivo],
                             ['role' => 'modal-remote', 'class' => ' text-warning', 'title' => 'Añadir Articulo a Inventario']
                         )
                             .

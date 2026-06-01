@@ -21,6 +21,7 @@ use Yii;
 class Inventario extends \yii\db\ActiveRecord
 {
     public $idpersona;
+    public $origen_alta;
     /**
      * {@inheritdoc}
      */
@@ -38,6 +39,7 @@ class Inventario extends \yii\db\ActiveRecord
         return [
             [['idarticulo', 'cantidad', 'iddispositivo', 'idempleado', 'idestado', 'activo','idpersona'], 'integer'],
             [['observacion'], 'string'],
+            [['origen_alta'], 'safe'],
         ];
     }
 

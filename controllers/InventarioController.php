@@ -79,11 +79,17 @@ class InventarioController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($origen_alta = 0, $iddispositivo = null)
     {
         $request = Yii::$app->request;
         $model = new Inventario();
 
+        $model->origen_alta = $origen_alta;
+
+        if ($origen_alta == 1 && $iddispositivo != null) {
+            $model->iddispositivo = $iddispositivo;
+        }
+        
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
