@@ -36,8 +36,8 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['descripcion', 'idorganismo', 'alias','idoficina'], 'required'],
-            [['idorganismo', 'es_oficial', 'es_organismo', 'activo', 'idcapaitem','idoficina','idedificio'], 'integer'],
+            [['descripcion', 'idorganismo', 'alias', 'idoficina'], 'required'],
+            [['idorganismo', 'es_oficial', 'es_organismo', 'activo', 'idcapaitem', 'idoficina', 'idedificio'], 'integer'],
             [['descripcion', 'alias', 'telefono'], 'string', 'max' => 100],
             [['idorganismo'], 'exist', 'skipOnError' => true, 'targetClass' => Organismo::className(), 'targetAttribute' => ['idorganismo' => 'idorganismo']],
             [['organismo', 'origen_alta', 'idedificio'], 'safe'],
@@ -74,10 +74,10 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
     }
 
 
-    public static function get_dispositivos($modulo='')
+    public static function get_dispositivos($modulo = '')
     {
         //modificar para agregar oficina
-        $filtro = $modulo ? " and d.iddispositivo in (SELECT iddispositivo from $modulo)" :'';
+        $filtro = $modulo ? " and d.iddispositivo in (SELECT iddispositivo from $modulo)" : '';
         $sql = "SELECT d.iddispositivo, concat(o.abreviatura,' - ', d.descripcion) as descripcion 
         FROM organismo o 
         join organismo_dispositivo d on o.idorganismo = d.idorganismo
@@ -87,10 +87,10 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
         return $array;
     }
 
-    public static function get_dispositivos_con_decreto($activo=false)
+    public static function get_dispositivos_con_decreto($activo = false)
     {
         //modificar para agregar oficina
-        $filtro = $activo==true ? "where od.activo = 1" :'';
+        $filtro = $activo == true ? "where od.activo = 1" : '';
         $sql = "SELECT d.iddispositivo, CONCAT('DECRETO: ',od.descripcion , ' (', DATE_FORMAT(od.periodo_inicio, '%d/%m/%Y'),') - ',e.descripcion_fija,' - ', eo.descripcion, ' - ',o.abreviatura,' - ', d.descripcion) as descripcion 
         FROM organismo o 
         join organismo_dispositivo d on o.idorganismo = d.idorganismo
@@ -104,10 +104,10 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
         return $array;
     }
 
-    public static function get_dispositivos_con_decreto_inverso($activo=false)
+    public static function get_dispositivos_con_decreto_inverso($activo = false)
     {
         //modificar para agregar oficina
-        $filtro = $activo==true ? "where od.activo = 1" :'';
+        $filtro = $activo == true ? "where od.activo = 1" : '';
         $sql = "SELECT d.iddispositivo, CONCAT(d.descripcion, ' - ' , o.abreviatura, ' - DECRETO: ',od.descripcion) as descripcion 
         FROM organismo o 
         join organismo_dispositivo d on o.idorganismo = d.idorganismo
@@ -131,7 +131,7 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
         $dato = OrganismoDispositivo::findBySql($sql)->one();
         return $dato;
     }
-        public static function get_dispositivo_pro($id)
+    public static function get_dispositivo_pro($id)
     {
         $sql = "SELECT d.iddispositivo, concat('Decreto: ',od.descripcion,' - ' ,e.descripcion_fija,' - ', eo.descripcion, ' - ', o.abreviatura, ' - ', d.descripcion) as descripcion 
         FROM organismo o 
@@ -143,5 +143,15 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
         where d.iddispositivo = $id";
         $dato = OrganismoDispositivo::findBySql($sql)->one();
         return $dato;
+    }
+
+    public static function get_edificio($iddispositivo)
+    {
+        $sql = "SELECT e.* FROM edificio e
+            JOIN edificio_oficina eo ON eo.idedificio = e.idedificio
+            JOIN organismo_dispositivo d ON d.idoficina = eo.idoficina
+            WHERE d.iddispositivo = :id";
+
+        return Edificio::findBySql($sql, [':id' => $iddispositivo])->one();
     }
 }

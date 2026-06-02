@@ -178,4 +178,14 @@ public static function get_por_dispositivo($id)
             ORDER BY p.apellido, p.nombre";
     return self::findBySql($sql)->asArray()->all();
 }
+
+public static function get_por_dispositivo_con_foto($id)
+{
+    $sql = "SELECT e.idempleado, CONCAT(p.apellido, ' ', p.nombre) as descripcion, e.foto
+            FROM empleado e
+            JOIN personas p ON p.idpersona = e.idpersona
+            WHERE e.activo = 1 AND e.iddispositivo = $id
+            ORDER BY p.apellido, p.nombre";
+    return self::findBySql($sql)->asArray()->all();
+}
 }
