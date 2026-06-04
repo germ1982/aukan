@@ -25,7 +25,9 @@ $boton_edificios = Html::a(
 
 $customButtonsA = "$boton_edificios"; // o define aquí tus botones HTML::a(...) para la izquierda si es necesario
 
-$customButtonsB = ''; // o define aquí tus botones HTML::a(...) para la derecha si es necesario
+$customButtonsB = Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''], ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Refrescar Grilla']) .
+                        '{toggleData}'.
+                        '{export}' ;
 
 $anchoModal = '1200px'; // Ancho del modal en PX
 $tamañoLetra = '10px'; // Tamaño de letra para la grilla
