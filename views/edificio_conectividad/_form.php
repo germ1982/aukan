@@ -105,3 +105,15 @@ use app\models\Edificio;
     <?php ActiveForm::end(); ?>
 
 </div>
+
+<?php
+// Script jQuery inyectado de forma nativa en Yii
+$js = <<<JS
+    $('#select-infraestructura').on('change', function() {
+        var valorSeleccionado = $(this).val();
+        $('#select-servicio').val(valorSeleccionado).trigger('change');
+    });
+JS;
+
+$this->registerJs($js, \yii\web\View::POS_READY);
+?>

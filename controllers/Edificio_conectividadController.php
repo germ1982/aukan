@@ -92,7 +92,7 @@ class Edificio_conectividadController extends Controller
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
                 return [
-                    'title' => "Nueva Coneccion para " . Edificio::get_edificio_descripcion($idedificio),
+                    'title' => "Nueva Conexión para " . Edificio::get_edificio_descripcion($idedificio),
                     'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
@@ -100,17 +100,30 @@ class Edificio_conectividadController extends Controller
                         Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
 
                 ];
-            } else if ($model->load($request->post()) && $model->save()) {
-                return [
-                    //'forceReload' => '#crud-datatable-pjax',
-                    'title' => "Nueva Coneccion para " . Edificio::get_edificio_descripcion($idedificio),
-                    'content' => '<span class="text-success">Create EdificioConectividad success</span>',
-                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+            } else if ($model->load($request->post())) {
+                if ($model->validate()) {
+                $model->save();
+                    return [
+                        //'forceReload' => '#crud-datatable-pjax',
+                        'title' => "Nueva Conexión para " . Edificio::get_edificio_descripcion($idedificio),
+                        'content' => '<span class="text-success">Excelente, Conexión Creada Para '. Edificio::get_edificio_descripcion($idedificio).'. </span>',
+                        'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
 
-                ];
+                    ];
+                } else {
+                    // SI FALLA LA VALIDACIÓN: Volvemos a escupir el formulario con los errores cargados
+                    return [
+                        'title' => "Nueva Conexión para " . Edificio::get_edificio_descripcion($idedificio),
+                        'content' => $this->renderAjax('create', [
+                            'model' => $model,
+                        ]),
+                        'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                    ];
+                }
             } else {
                 return [
-                    'title' => "Nueva Coneccion para " . Edificio::get_edificio_descripcion($idedificio),
+                    'title' => "Nueva Conexión para " . Edificio::get_edificio_descripcion($idedificio),
                     'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
@@ -264,4 +277,12 @@ class Edificio_conectividadController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+        public function actionView_indicadores()
+    {
+$this->layout = 'main-login';
+$this->layout = false;
+        return $this->render('view_indicadores', []);
+    }
+
 }

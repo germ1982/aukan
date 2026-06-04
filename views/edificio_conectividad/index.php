@@ -20,10 +20,14 @@ $boton_edificios = Html::a(
     ['edificio/index'],
     ['title' => 'Edificios', 'class' => 'btn btn-primary boton_menu neon']
 );
+$boton_indicadores = Html::a(
+    '<i class="fa fa-users"></i> Indicadores',
+    ['view_indicadores'],
+    ['title' => 'Asistentes', 'class' => 'btn btn-primary boton_menu neon','target' => '_blank']
+);
 
 
-
-$customButtonsA = "$boton_edificios"; // o define aquí tus botones HTML::a(...) para la izquierda si es necesario
+$customButtonsA = "$boton_edificios $boton_indicadores"; // o define aquí tus botones HTML::a(...) para la izquierda si es necesario
 
 $customButtonsB = Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''], ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Refrescar Grilla']) .
                         '{toggleData}'.

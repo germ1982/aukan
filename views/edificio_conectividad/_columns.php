@@ -10,10 +10,10 @@ use app\models\ConfiguracionTipo;
 
 $columna1 = "50%";
 $columna2 = "10%";
-$columna3 = "10%";
+$columna3 = "15%";
 $columna4 = "10%";
 $columna5 = "10%";
-$columna6 = "10%";
+$columna6 = "5%";
 return [
 
     [
