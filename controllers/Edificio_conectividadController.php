@@ -102,11 +102,10 @@ class Edificio_conectividadController extends Controller
                 ];
             } else if ($model->load($request->post()) && $model->save()) {
                 return [
-                    'forceReload' => '#crud-datatable-pjax',
+                    //'forceReload' => '#crud-datatable-pjax',
                     'title' => "Nueva Coneccion para " . Edificio::get_edificio_descripcion($idedificio),
                     'content' => '<span class="text-success">Create EdificioConectividad success</span>',
-                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::a('Crear Otro', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
 
                 ];
             } else {

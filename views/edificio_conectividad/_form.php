@@ -97,7 +97,7 @@ use app\models\Edificio;
 
 
         <div class="col-md-12">
-            <?= $form->field($model, 'observacion')->textInput(['maxlength' => true, 'placeholder' => 'Notas internas...']) ?>
+            <?= $form->field($model, 'observacion')->textarea([['rows' => 4], 'placeholder' => 'Notas internas...']) ?>
         </div>
     </div>
 

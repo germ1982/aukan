@@ -37,7 +37,7 @@ class EdificioConectividad extends \yii\db\ActiveRecord
         return [
             [['idedificio', 'infraestructura', 'servicio'], 'required'],
             [['idedificio', 'infraestructura', 'servicio', 'velocidad_en_mb', 'estado', 'tipo_conexion'], 'integer'],
-            [['observacion'], 'string', 'max' => 45],
+            [['observacion'], 'string'],
             [['edificio_descripcion'], 'safe'], // Asegura que el atributo virtual sea seguro para asignación masiva
 
         ];
