@@ -75,4 +75,39 @@ class Edificio extends \yii\db\ActiveRecord
                 ORDER BY e.descripcion_fija;";
         return Edificio::findBySql($sql)->all();
     }
+
+    public static function get_edificios_con_conexion()
+    {
+        $sql = "SELECT e.idedificio, 
+                    CONCAT(
+                        IFNULL(e.descripcion_fija, ''), ' - ', 
+                        IFNULL(e.descripcion_gestion, ''), ' - ', 
+                        IFNULL(l.localidad, ''), ' ',
+                        IFNULL(e.direccion_calle, ''), ' ',
+                        IFNULL(e.direccion_altura, ''), ' ',
+                        IFNULL(e.direccion, '')
+                    ) as descripcion_fija
+                FROM edificio e
+                JOIN localidades l on l.id = e.idlocalidad
+                JOIN edificio_conectividad ec on ec.idedificio = e.idedificio
+                ORDER BY e.descripcion_fija;";
+        return Edificio::findBySql($sql)->all();
+    }
+
+    public static function get_edificio_descripcion($id)
+    {
+        $sql = "SELECT e.idedificio, 
+                    CONCAT(
+                        IFNULL(e.descripcion_fija, ''), ' - ', 
+                        IFNULL(e.descripcion_gestion, ''), ' - ', 
+                        IFNULL(l.localidad, ''), ' ',
+                        IFNULL(e.direccion_calle, ''), ' ',
+                        IFNULL(e.direccion_altura, ''), ' ',
+                        IFNULL(e.direccion, '')
+                    ) as descripcion_fija
+                FROM edificio e
+                JOIN localidades l on l.id = e.idlocalidad
+                WHERE e.idedificio = $id";
+        return Edificio::findBySql($sql)->one()->descripcion_fija;
+    }
 }

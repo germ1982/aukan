@@ -43,6 +43,9 @@ class ConfiguracionTipo extends \yii\db\ActiveRecord
     const TIPO_MODALIDAD_CURSO = 28 ;
     const TIPO_REGISTRO_TECNICO = 29 ;
     const TIPO_ASISTENCIA_INFORMATICA = 30 ;
+    const TIPO_CONECTIVIDAD_SERVICIO = 31 ;
+    const TIPO_CONECTIVIDAD_ESTADO = 32 ;
+    const TIPO_CONECTIVIDAD_TIPO_CONEXION = 33 ;
 
   
     public static function tableName()

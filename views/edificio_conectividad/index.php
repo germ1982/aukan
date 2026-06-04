@@ -15,19 +15,15 @@ $this->registerJsFile(
 
 $gridColumns = require(__DIR__ . '/_columns.php');
 
-$boton_oficinas = Html::a(
-    '<i class="fa fa-institution"></i> Oficinas',
-    ['edificio_oficina/index'],
-    ['title' => 'Oficinas', 'class' => 'btn btn-primary boton_menu neon','target' => '_blank']
+$boton_edificios = Html::a(
+    '<i class="fa fa-institution"></i> Edificios',
+    ['edificio/index'],
+    ['title' => 'Edificios', 'class' => 'btn btn-primary boton_menu neon']
 );
 
-$boton_conectividad = Html::a(
-    '<i class="fa fa-institution"></i> Conectividad',
-    ['edificio_conectividad/index'],
-    ['title' => 'Conectividad', 'class' => 'btn btn-primary boton_menu neon']
-);
 
-$customButtonsA = "$boton_oficinas $boton_conectividad"; // o define aquí tus botones HTML::a(...) para la izquierda si es necesario
+
+$customButtonsA = "$boton_edificios"; // o define aquí tus botones HTML::a(...) para la izquierda si es necesario
 
 $customButtonsB = ''; // o define aquí tus botones HTML::a(...) para la derecha si es necesario
 
@@ -40,7 +36,7 @@ $searchModel = $searchModel ?? null; // Asegúrate de que $
 // 2. Renderizar la vista completa
 echo AppIndexGenericoHelper::renderIndex(
     $this,                  // Objeto View ($this)
-    'Edificios',      // Título
+    'Conectividad de Edificios',      // Título
     $gridColumns,           // Columnas
     $dataProvider,          // DataProvider (viene del controlador)
     $searchModel,           // SearchModel (viene del controlador)
