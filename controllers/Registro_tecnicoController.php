@@ -66,9 +66,16 @@ class Registro_tecnicoController extends Controller
 
     public function actionView_indicadores()
     {
-$this->layout = 'main-login';
-$this->layout = false;
+        $this->layout = 'main-login';
+        $this->layout = false;
         return $this->render('view_indicadores', []);
+    }
+
+    public function actionView_indicadores_react()
+    {
+        $this->layout = 'main-login';
+        $this->layout = false;
+        return $this->render('view_indicadores_react', []);
     }
 
     public function actionIndex_tipos_registro()

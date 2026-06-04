@@ -66,12 +66,18 @@ $boton_diccionario = Html::a(
 );
 
 $boton_indicadores = Html::a(
-    '<i class="fa fa-users"></i> Indicadores',
+    'Indicadores',
     ['view_indicadores'],
     ['title' => 'Asistentes', 'class' => 'btn btn-primary boton_menu neon','target' => '_blank']
 );
 
-$customButtonsA = "$boton_asistentes . $boton_tipos_registro . $boton_ultimo_decreto . $boton_diccionario.$boton_indicadores"; // o define aquí tus botones HTML::a(...) para la izquierda si es necesario
+$boton_indicadores_react = Html::a(
+    'Indicadores',
+    ['view_indicadores_react'],
+    ['title' => 'Asistentes', 'class' => 'btn btn-primary boton_menu neon','target' => '_blank']
+);
+
+$customButtonsA = "$boton_asistentes . $boton_tipos_registro . $boton_ultimo_decreto . $boton_diccionario.$boton_indicadores $boton_indicadores_react "; // o define aquí tus botones HTML::a(...) para la izquierda si es necesario
 
 $customButtonsB = ''; // o define aquí tus botones HTML::a(...) para la derecha si es necesario
 

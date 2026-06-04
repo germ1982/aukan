@@ -122,6 +122,41 @@ $resueltos = Json::encode(array_column($datosGrafico, 'resueltos'));
             justify-content: space-between;
             margin-bottom: 5px;
         }
+
+        
+        /* =========================================================================
+           5. PERSONALIZACIÓN DEL SCROLLBAR (Estilo React / Dark UI)
+           ========================================================================= */
+        
+        /* Contenedor del scroll (La pista por donde corre) */
+        .card-tecnica::-webkit-scrollbar {
+            width: 6px;               /* Bien finita para que no moleste */
+            height: 6px;
+        }
+
+        /* El fondo del canal del scroll */
+        .card-tecnica::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.01); 
+            border-radius: 9999px;
+        }
+
+        /* El "pulgarcito" (La barra que arrastrás con el mouse) */
+        .card-tecnica::-webkit-scrollbar-thumb {
+            background: rgba(135, 184, 103, 0.3); /* Tu verde SUR con transparencia */
+            border-radius: 9999px;
+            transition: background 0.2s ease;
+        }
+
+        /* Cuando le pasás el mouse por arriba a la barra, se ilumina un toque más */
+        .card-tecnica::-webkit-scrollbar-thumb:hover {
+            background: rgba(135, 184, 103, 0.6); /* Verde SUR más sólido */
+        }
+
+        /* Soporte estándar para navegadores modernos como Firefox */
+        .card-tecnica {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(135, 184, 103, 0.3) rgba(255, 255, 255, 0.01);
+        }
     </style>
 </head>
 
