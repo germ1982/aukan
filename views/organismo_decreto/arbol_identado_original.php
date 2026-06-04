@@ -51,20 +51,9 @@ function renderizarNodoColumnar($nodo, $iddecreto, $nivel)
     ob_start();
     // Determinamos la clase según el nivel (df-nivel-1, df-nivel-2, etc.)
     $claseNivel = "df-col-nivel-" . $nodo->nivel;
-
-    $hijos = app\models\Organismo::find()->where(['padre' => $nodo->idorganismo])->all();
-    $dispositivos = app\models\OrganismoDispositivo::find()->where(['idorganismo' => $nodo->idorganismo])->all();
-    
-    $tieneHijos = (!empty($hijos) || !empty($dispositivos));
 ?>
-    <li class="<?= $claseNivel ?> <?= $tieneHijos ? 'df-nodo-rama' : '' ?>">
+    <li class="<?= $claseNivel ?>">
         <div class="df-nodo-indentado">
-            <?php if ($tieneHijos): ?>
-                <button type="button" class="df-btn-toggle-rama" title="Contraer/Expandir">
-                    <i class="fa fa-chevron-down"></i>
-                </button>
-            <?php endif; ?>
-
             <span class="df-descripcion"><?= Html::encode($nodo->descripcion) ?></span>
 
             <?= Html::a(
@@ -90,15 +79,20 @@ function renderizarNodoColumnar($nodo, $iddecreto, $nivel)
 
         </div>
 
-        <?php if ($tieneHijos): ?>
-            <ul class="df-rama-hijos">
-                <?php foreach ($dispositivos as $disp): ?>
-                    <?= renderizarNodoDispositivo($disp) ?>
-                <?php endforeach; ?>
+        <?php
+        $hijos = app\models\Organismo::find()->where(['padre' => $nodo->idorganismo])->all();
 
+        $dispositivos = app\models\OrganismoDispositivo::find()->where(['idorganismo' => $nodo->idorganismo])->all();
+        if (!empty($hijos) || !empty($dispositivos)): ?>
+            <ul>
                 <?php foreach ($hijos as $hijo): ?>
                     <?= renderizarNodoColumnar($hijo, $iddecreto, $nivel + 1) ?>
                 <?php endforeach; ?>
+                <!-- nuevo -->
+                <?php foreach ($dispositivos as $disp): ?>
+                    <?= renderizarNodoDispositivo($disp) ?>
+                <?php endforeach; ?>
+                <!-- nuevo -->
             </ul>
         <?php endif; ?>
     </li>
@@ -118,18 +112,9 @@ function renderizarNodoDispositivo($dispositivo)
     ob_start();
     $empleados = app\models\Empleado::get_por_dispositivo($dispositivo->iddispositivo);
     $inventario = app\models\Inventario::get_por_dispositivo($dispositivo->iddispositivo);
-
-    $tieneDetalle = (!empty($empleados) || !empty($inventario));
 ?>
-    <li class="df-col-nivel-8 <?= $tieneDetalle ? 'df-nodo-rama' : '' ?>">
-        <div class="df-nodo-indentado df-nodo-dispositivo"> 
-            <?php if ($tieneDetalle): ?>
-                <button type="button" class="df-btn-toggle-rama" title="Contraer/Expandir">
-                    <i class="fa fa-chevron-down"></i>
-                </button>
-            <?php endif; ?>
-
-            <span class="df-descripcion">
+    <li class="df-col-nivel-8">
+        <div class="df-nodo-indentado df-nodo-dispositivo"> <span class="df-descripcion">
                 <?= Html::encode($dispositivo->descripcion)/* .' Telefono: ' .Html::encode($dispositivo->telefono) */  ?>
             </span>
 
@@ -155,11 +140,15 @@ function renderizarNodoDispositivo($dispositivo)
                         ['role' => 'modal-remote', 'class' => ' text-warning', 'title' => 'Añadir Articulo a Inventario']
                     )
                 )
+
+
+
+
             ?>
         </div>
 
-        <?php if ($tieneDetalle): ?>
-            <ul class="df-rama-hijos">
+        <?php if (!empty($empleados) || !empty($inventario)): ?>
+            <ul>
                 <?= renderizarListaEmpleados($empleados, $dispositivo, $inventario) ?>
             </ul>
         <?php endif; ?>
@@ -428,25 +417,44 @@ function renderizarListaEmpleados($empleados, $dispositivo, $inventario = [])
         /* Espacio para que entren las líneas */
     }
 
+
+    /* ============================= */
+    /* LÍNEA VERTICAL (columna del árbol) */
+    /* ============================= */
+
     .df-tree-indentado-columnar li::after {
         content: '';
         position: absolute;
-        top: -5px;
+        top: -5;
+        /* Arranca desde arriba del nodo */
         left: -20px;
+        /* Se ubica a la izquierda del contenido */
         width: 0;
         height: 108%;
+        /* Ocupa todo el alto del nodo */
         border-left: 1px solid #319146;
+        /* Dibuja la línea vertical */
     }
+
+
+    /* ============================= */
+    /* LÍNEA HORIZONTAL (conexión al nodo) */
+    /* ============================= */
 
     .df-tree-indentado-columnar li::before {
         content: '';
         position: absolute;
         top: 20px;
+        /* Altura donde conecta con el nodo (ajustable) */
         left: -20px;
+        /* Parte desde la línea vertical */
         width: 40px;
+        /* Largo de la línea horizontal */
         height: 0;
         border-top: 1px solid #319146;
+        /* Dibuja la línea horizontal */
     }
+
 
     /* ============================= */
     /* CORTE DE LÍNEA EN ÚLTIMO HIJO */
@@ -510,70 +518,4 @@ function renderizarListaEmpleados($empleados, $dispositivo, $inventario = [])
         background-color: #f5dafa;
         border-left-color: #cda2df;
     }
-
-    /* =========================================================================
-       BOTÓN DE TOGGLE MINIMALISTA CÍRCULO
-       ========================================================================= */
-    .df-btn-toggle-rama {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 50%;
-        width: 22px;
-        height: 22px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 12px;
-        cursor: pointer;
-        font-size: 9px;
-        color: #64748b;
-        padding: 0;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        flex-shrink: 0;
-    }
-
-    .df-btn-toggle-rama:hover {
-        background: #f8fafc;
-        color: #1e293b;
-        border-color: #cbd5e1;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-    }
-
-    /* Rotación elegante del chevron */
-    .df-btn-toggle-rama i {
-        transition: transform 0.2s ease;
-    }
-    
-    .df-rama-contraida .df-btn-toggle-rama i {
-        transform: rotate(-90deg);
-    }
-
-    /* Clases lógicas para colapsar */
-    .df-rama-oculta {
-        display: none !important;
-    }
-
-    .df-nodo-rama.df-rama-contraida::after {
-        height: 25px !important;
-    }
 </style>
-
-<?php
-$js = <<<JS
-$(document).on('click', '.df-btn-toggle-rama', function(e) {
-    e.preventDefault();
-    
-    var \$btn = $(this);
-    var \$liContenedor = \$btn.closest('li');
-    var \$ramaHijos = \$liContenedor.find('> .df-rama-hijos');
-    
-    if (\$ramaHijos.length) {
-        \$ramaHijos.toggleClass('df-rama-oculta');
-        \$liContenedor.toggleClass('df-rama-contraida');
-    }
-});
-JS;
-
-$this->registerJs($js, \yii\web\View::POS_READY);
-?>
