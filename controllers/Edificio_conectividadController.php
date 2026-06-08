@@ -282,7 +282,7 @@ class Edificio_conectividadController extends Controller
     {
 $this->layout = 'main-login';
 $this->layout = false;
-        return $this->render('view_indicadores', []);
+        return $this->render('view_indicadores_v2');
     }
 
 }

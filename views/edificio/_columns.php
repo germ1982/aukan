@@ -1,5 +1,7 @@
 <?php
 
+use app\controllers\Edificio_conectividadController;
+use app\models\EdificioConectividad;
 use app\models\Localidades;
 use app\models\Provincias;
 use yii\helpers\Html;
@@ -39,7 +41,18 @@ return [
         'width' => $columna4,
         'label' => 'Direccion',
     ],
-
+[
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'conexion',
+        'value' => function ($model) {
+            $cant = EdificioConectividad::findBySql("SELECT count(*) as conexion FROM edificio_conectividad WHERE idedificio = $model->idedificio")->one()->conexion;
+            $aux = 'NO';
+            if($cant > 0){
+                $aux = "SI ($cant)";
+            } 
+            return $aux;
+        },
+    ],
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,

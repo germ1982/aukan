@@ -21,7 +21,7 @@ class EdificioConectividad extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-
+public $conexion; // Atributo virtual para mostrar la cantidad de conexiones
     public $edificio_descripcion; // Atributo virtual para mostrar la descripción del edificio
 
     public static function tableName()
@@ -38,7 +38,7 @@ class EdificioConectividad extends \yii\db\ActiveRecord
             [['idedificio', 'infraestructura', 'servicio', 'velocidad_en_mb', 'estado', 'tipo_conexion'], 'required'],
             [['idedificio', 'infraestructura', 'servicio', 'velocidad_en_mb', 'estado', 'tipo_conexion'], 'integer'],
             [['observacion'], 'string'],
-            [['edificio_descripcion'], 'safe'], // Asegura que el atributo virtual sea seguro para asignación masiva
+            [['edificio_descripcion', 'conexion'], 'safe'], // Asegura que el atributo virtual sea seguro para asignación masiva
 
         ];
     }

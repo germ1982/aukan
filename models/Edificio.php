@@ -22,6 +22,7 @@ class Edificio extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    public $conexion;
     public static function tableName()
     {
         return 'edificio';
@@ -38,6 +39,7 @@ class Edificio extends \yii\db\ActiveRecord
             [['geolocalizacion'], 'string'],
             [['descripcion_fija', 'descripcion_gestion', 'direccion_calle'], 'string', 'max' => 100],
             [['direccion'], 'string', 'max' => 45],
+            [['conexion'], 'safe'], // Asegura que el atributo virtual sea seguro para asignación masiva
         ];
     }
 

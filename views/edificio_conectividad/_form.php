@@ -10,6 +10,12 @@ use app\models\Edificio;
 /* @var $this yii\web\View */
 /* @var $model app\models\EdificioConectividad */
 /* @var $form yii\widgets\ActiveForm */
+
+if($model->isNewRecord){
+    $model->estado = 546;
+    $model->tipo_conexion = 547;
+    $model->velocidad_en_mb = 0;
+}
 ?>
 
 <div class="edificio-conectividad-form">
@@ -112,6 +118,18 @@ $js = <<<JS
     $('#select-infraestructura').on('change', function() {
         var valorSeleccionado = $(this).val();
         $('#select-servicio').val(valorSeleccionado).trigger('change');
+
+        if(valorSeleccionado == 517){ // Si es optic
+            $('#select-tipo-conexion').val(533).trigger('change');
+        }
+
+        if(valorSeleccionado == 518){ // Si es personal
+            $('#select-tipo-conexion').val(529).trigger('change');
+        }
+
+        if(valorSeleccionado == 521){ // Si es strlink
+            $('#select-tipo-conexion').val(531).trigger('change');
+        }
     });
 JS;
 
