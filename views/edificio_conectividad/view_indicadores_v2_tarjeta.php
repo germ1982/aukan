@@ -11,11 +11,21 @@ use yii\web\View;
 /** @var array $data */
 
 if (!function_exists('renderCryptoDataList')) {
-    function renderCryptoDataList($title, $items)
+    function renderCryptoDataList($title, $items, $sectionId)
     {
         $html = '<div class="react-sub-section">';
-        $html .= '<h4 class="react-list-title">' . htmlspecialchars($title) . '</h4>';
-        $html .= '<div class="react-list-group">';
+
+        // Cabecera con flexbox para tirar el botón a la derecha
+        $html .= '<div class="react-list-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">';
+        $html .= '  <h4 class="react-list-title" style="margin-bottom: 0;">' . htmlspecialchars($title) . '</h4>';
+        // Botón animado Cyberpunk (flecha)
+        $html .= '  <button type="button" class="cyber-toggle-btn" onclick="toggleCyberSection(\'' . $sectionId . '\', this)">';
+        $html .= '    <span class="glyphicon glyphicon-chevron-down toggle-icon"></span>';
+        $html .= '  </button>';
+        $html .= '</div>';
+
+        // Contenedor colapsable con ID único
+        $html .= '<div id="' . $sectionId . '" class="react-list-group cyber-collapsible expanded">';
 
         if (empty($items)) {
             $html .= '<div class="react-list-item empty text-muted">Sin registros activos</div>';
@@ -44,32 +54,41 @@ if (!function_exists('renderCryptoDataList')) {
 
         <div class="row">
             <div class="col-xs-12">
-                <?= renderCryptoDataList('Infraestructura', $data['infraestructura']) ?>
+                <?= renderCryptoDataList('Infraestructura', $data['infraestructura'], $chartId . '-infra') ?>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <?= renderCryptoDataList('Servicio', $data['servicio']) ?>
+                <?= renderCryptoDataList('Servicio', $data['servicio'], $chartId . '-serv') ?>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <?= renderCryptoDataList('Enlace', $data['enlace']) ?>
+                <?= renderCryptoDataList('Enlace', $data['enlace'], $chartId . '-enlace') ?>
             </div>
         </div>
 
         <div class="status-wrapper">
-            <div class="status-legend-container">
-                <div class="react-list-title" style="margin-bottom:4px;">Estado Enlaces</div>
-                <div class="react-status-row"><span class="react-status-dot dot-bueno"></span>Bueno <span class="react-status-value"><?= $data['estados']['bueno'] ?></span></div>
-                <div class="react-status-row"><span class="react-status-dot dot-malo"></span>Malo <span class="react-status-value"><?= $data['estados']['malo'] ?></span></div>
-                <div class="react-status-row"><span class="react-status-dot dot-regular"></span>Regular <span class="react-status-value"><?= $data['estados']['regular'] ?></span></div>
-                <div class="react-status-row"><span class="react-status-dot dot-caido"></span>No Funciona <span class="react-status-value"><?= $data['estados']['caido'] ?></span></div>
-                <div class="react-status-row"><span class="react-status-dot dot-desconocido"></span>Desconocido <span class="react-status-value"><?= $data['estados']['desconocido'] ?></span></div>
+            <div class="react-list-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <div class="react-list-title" style="margin-bottom: 0;">Estado Enlaces</div>
+                <button type="button" class="cyber-toggle-btn" onclick="toggleCyberSection('<?= $chartId ?>-status-block', this)">
+                    <span class="glyphicon glyphicon-chevron-down toggle-icon"></span>
+                </button>
             </div>
-            <div class="chart-box">
-                <div class="canvas-container">
-                    <canvas id="<?= $chartId ?>"></canvas>
+
+            <div id="<?= $chartId ?>-status-block" class="cyber-collapsible expanded">
+                <div class="status-legend-container" style="margin-top: 8px;">
+                    <div class="react-status-row"><span class="react-status-dot dot-bueno"></span>Bueno <span class="react-status-value"><?= $data['estados']['bueno'] ?></span></div>
+                    <div class="react-status-row"><span class="react-status-dot dot-malo"></span>Malo <span class="react-status-value"><?= $data['estados']['malo'] ?></span></div>
+                    <div class="react-status-row"><span class="react-status-dot dot-regular"></span>Regular <span class="react-status-value"><?= $data['estados']['regular'] ?></span></div>
+                    <div class="react-status-row"><span class="react-status-dot dot-caido"></span>No Funciona <span class="react-status-value"><?= $data['estados']['caido'] ?></span></div>
+                    <div class="react-status-row"><span class="react-status-dot dot-desconocido"></span>Desconocido <span class="react-status-value"><?= $data['estados']['desconocido'] ?></span></div>
+                </div>
+
+                <div class="chart-box">
+                    <div class="canvas-container">
+                        <canvas id="<?= $chartId ?>"></canvas>
+                    </div>
                 </div>
             </div>
         </div>

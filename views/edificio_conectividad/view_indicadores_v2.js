@@ -24,3 +24,12 @@ function initDashboardChart(chartId, estadosData) {
         }
     });
 }
+
+function toggleCyberSection(sectionId, btn) {
+    var section = document.getElementById(sectionId);
+    if (!section) return;
+    
+    // Conmutamos las clases animadas
+    section.classList.toggle('collapsed');
+    btn.classList.toggle('collapsed');
+}

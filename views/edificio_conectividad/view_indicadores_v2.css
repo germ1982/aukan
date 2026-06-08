@@ -233,3 +233,58 @@ body {
     width: 110px;
     height: 110px;
 }
+
+
+/* Botón estilo consola */
+.cyber-toggle-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cyber-toggle-btn:hover {
+    color: var(--accent-color, #3b82f6);
+    text-shadow: 0 0 8px var(--accent-color, #3b82f6);
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Animación de rotación del ícono */
+.cyber-toggle-btn .toggle-icon {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 10px;
+}
+
+.cyber-toggle-btn.collapsed .toggle-icon {
+    transform: rotate(-90deg); /* Apunta a la izquierda al cerrarse */
+    color: var(--text-muted) !important;
+}
+
+/* Efecto colapsable Cyberpunk con transición fluida */
+.cyber-collapsible {
+    max-height: 500px; /* Un valor alto para que entre el contenido suelto */
+    opacity: 1;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                opacity 0.3s ease,
+                padding 0.4s ease;
+}
+
+/* Estado oculto: se achica y se desvanece como monitor apagándose */
+.cyber-collapsible.collapsed {
+    max-index: 0;
+    max-height: 0 !important;
+    opacity: 0;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    border-color: transparent !important; /* Esconde el borde sutil */
+}
+
+.status-wrapper {
+    margin-top: 0px!important;
+}
