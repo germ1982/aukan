@@ -1,0 +1,192 @@
+/* Estilos específicos para las tarjetas de desglose de edificios */
+
+.grupo-tarjeta-container {
+    margin-bottom: 20px;
+}
+
+.edificio-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+.edificio-card .component-counter {
+    font-size: 16px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.edificio-card .component-title {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--text-primary);
+}
+
+/* Cuerpo de la tarjeta */
+.edificio-card-body {
+    flex-grow: 1;
+    font-size: 13px;
+}
+
+.edificio-direccion-block {
+    margin-bottom: 10px;
+    display: flex;
+    gap: 6px;
+}
+
+.edificio-direccion-block .glyphicon {
+    margin-top: 3px;
+}
+
+.edificio-direccion-text {
+    color: var(--text-secondary);
+    font-size: 10px;
+    height: 15px;
+    padding-top: 3px;
+    padding-bottom: 22px;
+}
+
+/* Filas técnicas */
+.edificio-tech-row {
+    display: flex;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 6px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    border: 1px solid var(--border-card);
+
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.edificio-tech-row-sub {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 8px;
+    margin-bottom: 10px;
+}
+
+.tech-label {
+    color: var(--text-muted);
+    font-size: 11px;
+
+    text-transform: uppercase;
+}
+
+.tech-value {
+    color: #328cff;;
+
+}
+
+.tech-value-speed {
+    color: #00ffff;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: bold;
+}
+
+/* Bloque de Observaciones */
+.edificio-observaciones {
+    background: rgba(0, 0, 0, 0.15);
+    padding: 6px 8px;
+    border-left: 2px solid var(--text-muted);
+    border-radius: 2px;
+    margin-bottom: 12px;
+}
+
+.edificio-observaciones .obs-label {
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: bold;
+    display: block;
+}
+
+.edificio-observaciones .obs-text {
+    color: var(--text-secondary);
+    font-size: 12px;
+    margin: 2px 0 0 0;
+    font-style: italic;
+}
+
+/* Pie de la tarjeta */
+.edificio-card-footer {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-card);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.edificio-card-footer .label {
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    padding: 3px 6px;
+}
+
+.edificio-status-monitor {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-bullet {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-text {
+    font-weight: bold;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    font-size: 11px;
+}
+
+.card-component-header {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 4px;
+    margin-bottom: 0px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 0px;
+}
+
+.react-card{
+    padding: 15px;
+}
+
+.h1, .h2, .h3, h1, h2, h3 {
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
+.dashboard-header {
+    margin-top: 15px;
+}
+
+/* Color tenue pero tecnológico para los labels (ej: "Infraestructura:") */
+.edificio-tech-row .tech-label {
+    color: #8af; /* Un azul claro/celeste robótico */
+    font-weight: 500;
+}
+
+/* Resaltar los valores para que contrasten con el fondo */
+.edificio-tech-row .tech-value {
+    color: #fff; /* Blanco puro para los datos importantes */
+}
+
+/* Destacar la velocidad en Megabytes */
+.tech-value-speed {
+    color: #00ffff; /* Cian neón brillante */
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.3); /* Efecto de brillo sutil */
+}

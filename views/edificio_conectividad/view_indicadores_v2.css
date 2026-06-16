@@ -288,3 +288,17 @@ body {
 .status-wrapper {
     margin-top: 0px!important;
 }
+
+/* Estilos para el enlace del título de la tarjeta */
+.component-title-link {
+    display: block;
+    transition: all 0.2s ease;
+    color: var(--text-secondary);
+    text-decoration: underline; /* Forzamos el subrayado activo */
+}
+
+.component-title-link:hover .component-title {
+    color: var(--accent-color, #3b82f6) !important;
+    text-shadow: 0 0 10px var(--accent-color, #3b82f6);
+    cursor: pointer;
+}

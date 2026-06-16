@@ -95,3 +95,52 @@ function get_estados_conexiones($text_match, $tarjetas) {
 
     return $estados;
 }
+
+function get_desglose_grupo($text_match, $tarjetas) {
+    // Definimos el WHERE con la misma lógica de REGEXP/LIKE que armamos antes
+    if ($text_match === 'RESTO') {
+        $excluir = implode('|', $tarjetas);
+        $where = "WHERE e.descripcion_fija NOT REGEXP '{$excluir}' 
+                    AND e.descripcion_gestion NOT REGEXP '{$excluir}'";
+    } else {
+        $where = "WHERE e.descripcion_fija LIKE :text 
+                     OR e.descripcion_gestion LIKE :text";
+    }
+
+    $sql = "SELECT 
+                c.idconectividad,
+                e.descripcion_gestion,
+                TRIM(CONCAT_WS(' ', 
+                    IF(l.localidad IS NOT NULL AND l.localidad != '', CONCAT(l.localidad, ','), NULL),
+                    e.direccion_calle, 
+                    e.direccion_altura, 
+                    e.direccion
+                )) AS direccion,
+                e.geolocalizacion,
+                e.activo,
+                ci.descripcion AS infraestructura,
+                cs.descripcion AS servicio,
+                c.velocidad_en_mb,
+                ce.descripcion AS estado,
+                ctc.descripcion AS tipo_conexion,
+                c.observacion
+            FROM familia.edificio e    
+            JOIN familia.edificio_conectividad c ON e.idedificio = c.idedificio
+            JOIN familia.localidades l ON e.idlocalidad = l.id
+            JOIN familia.configuracion ci ON ci.id_configuracion = c.infraestructura
+            JOIN familia.configuracion cs ON cs.id_configuracion = c.servicio
+            JOIN familia.configuracion ce ON ce.id_configuracion = c.estado
+            JOIN familia.configuracion ctc ON ctc.id_configuracion = c.tipo_conexion
+            {$where}
+            ORDER BY e.descripcion_fija";
+
+    $command = Yii::$app->db->createCommand($sql);
+    
+    // Vinculamos el parámetro solo si NO es RESTO
+    if ($text_match !== 'RESTO') {
+        $command->bindValue(':text', "%{$text_match}%");
+    }
+
+    // queryAll() ejecuta el SQL y devuelve un array asociativo rústico estándar de PHP
+    return $command->queryAll();
+}

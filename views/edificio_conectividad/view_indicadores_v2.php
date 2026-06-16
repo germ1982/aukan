@@ -74,6 +74,8 @@ foreach ($tarjetas as $tarjeta) {
             'title' => 'Conexiones de ' . $tarjeta,
             'accentColor' => 'var(--accent-' . strtolower($tarjeta) . ')',
             'chartId' => "chart-" . strtolower($tarjeta),
+            'text_match'  => $tarjeta, // <-- AGREGAMOS ESTA LÍNEA  para renderizar el dashboar por grupo (view_indicadores_grupo_v2.php)
+            'tarjetas'    => $tarjetas, // <-- ¡SÍ! CLAVALE ESTA LÍNEA ACÁ
             'data' => ${$tarjeta . 'Data'}
         ]);
 

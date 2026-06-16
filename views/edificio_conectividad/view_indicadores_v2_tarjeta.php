@@ -2,12 +2,15 @@
 // C:\xampp_datafam\htdocs\datafam\views\edificio_conectividad\view_indicadores_v2_tarjeta.php
 
 use yii\helpers\Json;
+use yii\helpers\Url;
 use yii\web\View;
 
 /** @var yii\web\View $this */
 /** @var string $title */
 /** @var string $accentColor */
 /** @var string $chartId */
+/** @var string $text_match */ // <-- DECLARAMOS LA VARIABLE ACÁ
+/** @var array $tarjetas */ // <-- DECLARAMOS LA VARIABLE ACÁ
 /** @var array $data */
 
 if (!function_exists('renderCryptoDataList')) {
@@ -47,9 +50,13 @@ if (!function_exists('renderCryptoDataList')) {
 <div class="col-md-2 col-sm-4 col-xs-12">
     <div class="react-card" style="--accent-color: <?= $accentColor ?>;">
         <div class="card-component-header">
-            <span class="component-counter " style="text-shadow: 0 0 20px <?= $accentColor ?>26;"><?= $data['total'] ?></span>
-            <span class="component-title"><?= htmlspecialchars($title) ?></span>
+            <span class="component-counter" style="text-shadow: 0 0 20px <?= $accentColor ?>26;"><?= $data['total'] ?></span>
 
+            <a href="<?= Url::to(['edificio_conectividad/view_indicadores_v2_grupo', 'grupo' => $text_match]) ?>"
+                class="component-title-link"
+                target="_blank">
+                <span class="component-title"><?= htmlspecialchars($title) ?></span>
+            </a>
         </div>
 
         <div class="row">

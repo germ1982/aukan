@@ -54,25 +54,8 @@ class Edificio_conectividadController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
-    {
-        $request = Yii::$app->request;
-        if ($request->isAjax) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return [
-                'title' => Edificio::get_edificio_descripcion($id),
-                'content' => $this->renderAjax('view', [
-                    'model' => $this->findModel($id),
-                ]),
-                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                    Html::a('Editar', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
-            ];
-        } else {
-            return $this->render('view', [
-                'model' => $this->findModel($id),
-            ]);
-        }
-    }
+
+    
 
     /**
      * Creates a new EdificioConectividad model.
@@ -153,15 +136,32 @@ class Edificio_conectividadController extends Controller
      * @param integer $id
      * @return mixed
      */
+        public function actionView($id)
+    {
+        $request = Yii::$app->request;
+        
+        if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return [
+                'title' => Edificio::get_edificio_descripcion($id),
+                'content' => $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+                ]),
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::a('Editar', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+            ];
+        } else {
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+        }
+    }
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
         $model = $this->findModel($id);
 
         if ($request->isAjax) {
-            /*
-            *   Process for ajax request
-            */
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
                 return [
@@ -283,6 +283,21 @@ class Edificio_conectividadController extends Controller
 $this->layout = 'main-login';
 $this->layout = false;
         return $this->render('view_indicadores_v2');
+    }
+
+    /**
+     * Renderiza el nuevo dashboard de un grupo específico sin layout general.
+     * @param string $grupo El nombre del grupo (CDI, HOGAR, etc.) recibido por URL
+     */
+    public function actionView_indicadores_v2_grupo()
+    {
+        // Por ahora, solo atrapamos el parámetro y se lo mandamos directo a la vista
+        $grupo  = Yii::$app->request->get('grupo', null);
+        $grupos = Yii::$app->request->get('grupos', []);
+        return $this->render('view_indicadores_v2_grupo', [
+            'grupo' => $grupo,
+            'grupos' => $grupos // <-- Ahora viaja como 'grupos' a la vista
+        ]);
     }
 
 }
