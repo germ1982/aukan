@@ -11,7 +11,7 @@ use app\models\Edificio;
 /* @var $model app\models\EdificioConectividad */
 /* @var $form yii\widgets\ActiveForm */
 
-if($model->isNewRecord){
+if ($model->isNewRecord) {
     $model->estado = 546;
     $model->tipo_conexion = 547;
     $model->velocidad_en_mb = 0;
@@ -20,8 +20,10 @@ if($model->isNewRecord){
 
 <div class="edificio-conectividad-form">
 
-    <?php $form = ActiveForm::begin(); ?>
-
+    <?php $form = ActiveForm::begin([
+        'id' => 'conectividad-form'
+    ]); ?>
+<?= Html::hiddenInput('is_dash', Yii::$app->request->get('dash', 1)) ?>
     <?= $form->field($model, 'idedificio')->hiddenInput()->label(false) ?>
 
     <div class="row">

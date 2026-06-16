@@ -147,6 +147,23 @@ console.log('jquery=', $.fn.jquery);
 $('#ajaxCrudModal').on('hidden.bs.modal', function () {
     location.reload();
 });
+
+
+$(document).on('beforeSubmit', '#conectividad-form', function(e) {
+    e.preventDefault();
+
+    var form = $(this);
+
+    $.post(form.attr('action'), form.serialize(), function(response) {
+
+        $('#ajaxCrudModal .modal-title').html(response.title);
+        $('#ajaxCrudModal .modal-body').html(response.content);
+        $('#ajaxCrudModal .modal-footer').html(response.footer);
+
+    }, 'json');
+
+    return false;
+});
 </script>
 
 </body>

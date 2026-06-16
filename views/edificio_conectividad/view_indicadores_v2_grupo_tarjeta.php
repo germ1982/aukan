@@ -92,22 +92,22 @@ if (strpos($estadoLower, 'bueno') !== false || strpos($estadoLower, 'excelente')
 
 
         </div>
-        <div class="edificio-card-footer" style="display: flex; justify-content: flex-end; gap: 8px; padding-top: 12px; border-top: 1px solid var(--border-card); margin-top: 10px;">
+        <div class="edificio-card-footer" style="display: flex; justify-content: flex-end; gap: 8px; padding-top: 5px; border-top: 1px solid var(--border-card); margin-top: -5px;">
 
             <a href="#"
                 class="btn btn-xs btn-info"
-                onclick="abrirModalDashboard(event, '<?= Url::to(['edificio_conectividad/view', 'id' => $edificio['idconectividad']]) ?>')"
-                title="View"
-                style="font-family: 'JetBrains Mono', monospace; font-weight: bold; padding: 4px 8px;">
-                <span class="glyphicon glyphicon-eye-open"></span> VER
+                onclick="abrirModalDashboard(event, '<?= Url::to(['edificio_conectividad/view', 'id' => $edificio['idconectividad'],'dash' =>true]) ?>')"
+                title="VER"
+                style="font-family: 'JetBrains Mono', monospace; font-weight: bold; ">
+                <span class="glyphicon glyphicon-eye-open"></span> 
             </a>
 
             <a href="#"
                 class="btn btn-xs btn-warning"
-                onclick="abrirModalDashboard(event, '<?= Url::to(['edificio_conectividad/update', 'id' => $edificio['idconectividad']]) ?>')"
-                title="Update"
-                style="font-family: 'JetBrains Mono', monospace; font-weight: bold; padding: 4px 8px; color: #000;">
-                <span class="glyphicon glyphicon-pencil"></span> EDITAR
+                onclick="abrirModalDashboard(event, '<?= Url::to(['edificio_conectividad/update', 'id' => $edificio['idconectividad'],'dash' =>true]) ?>')"
+                title="EDITAR"
+                style="font-family: 'JetBrains Mono', monospace; font-weight: bold;  color: #000;">
+                <span class="glyphicon glyphicon-pencil"></span> 
             </a>
 
         </div>
