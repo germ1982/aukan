@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
+use app\models\LogPlataforma;
 use Yii;
 use app\models\OrganismoDecreto;
 use app\models\OrganismoDecretoSearch;
@@ -100,6 +102,7 @@ class Organismo_decretoController extends Controller
 
                 ];
             } else if ($model->load($request->post()) && $model->save()) {
+                LogPlataforma::registrar(ConstantesGlobales::DECRETO_ORGANISMO,ConstantesGlobales::CREACION,$model->iddecreto);
                 return [
                     'forceReload' => '#crud-datatable-pjax',
                     'title' => "Create new OrganismoDecreto",
@@ -124,6 +127,7 @@ class Organismo_decretoController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
+                LogPlataforma::registrar(ConstantesGlobales::DECRETO_ORGANISMO,ConstantesGlobales::CREACION,$model->iddecreto);
                 return $this->redirect(['view', 'id' => $model->iddecreto]);
             } else {
                 return $this->render('create', [
@@ -160,6 +164,7 @@ class Organismo_decretoController extends Controller
                         Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             } else if ($model->load($request->post()) && $model->save()) {
+                LogPlataforma::registrar(ConstantesGlobales::DECRETO_ORGANISMO,ConstantesGlobales::MODIFICACION,$model->iddecreto);
                 return [
                     'forceReload' => '#crud-datatable-pjax',
                     'title' => "OrganismoDecreto #" . $id,
@@ -184,6 +189,7 @@ class Organismo_decretoController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
+                LogPlataforma::registrar(ConstantesGlobales::DECRETO_ORGANISMO,ConstantesGlobales::MODIFICACION,$model->iddecreto);
                 return $this->redirect(['view', 'id' => $model->iddecreto]);
             } else {
                 return $this->render('update', [
@@ -204,7 +210,7 @@ class Organismo_decretoController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-
+        LogPlataforma::registrar(ConstantesGlobales::DECRETO_ORGANISMO,ConstantesGlobales::ELIMINACION,$id);
         if ($request->isAjax) {
             /*
             *   Process for ajax request

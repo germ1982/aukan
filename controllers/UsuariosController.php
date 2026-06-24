@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\Configuracion;
+use app\models\ConstantesGlobales;
 use app\models\LogPlataforma;
 use app\models\Persona;
 use app\models\UsuarioAsignacionPerfil;
@@ -138,15 +140,18 @@ class UsuariosController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
-                    LogPlataforma::registrar(7, 1, $model->id);
+                    LogPlataforma::registrar(ConstantesGlobales::USUARIOS, ConstantesGlobales::CREACION, $model->id);
 
                     if ($model->perfil) {
+                        $persona = Persona::get_persona_ayn($model->idpersona);
                         foreach ($model->perfil as $p) {
                             $model_perfil = new UsuarioAsignacionPerfil();
                             $model_perfil->idusuario = $model->id;
                             $model_perfil->idperfil = $p;
                             $model_perfil->activo = 1;
                             $model_perfil->save();
+                            $perfil = Configuracion::findOne($p)->descripcion;
+                            LogPlataforma::registrar(ConstantesGlobales::USUARIOS, ConstantesGlobales::MODIFICACION, $model->id, "Se asigno $perfil a $persona");
                         }
                     }
 
@@ -218,17 +223,25 @@ class UsuariosController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
-                    LogPlataforma::registrar(7, 2, $model->id);
+                    $persona = Persona::get_persona_ayn($model->idpersona);
+                    
                     UsuarioAsignacionPerfil::deleteAll(['idusuario' => $model->id]);
+                    LogPlataforma::registrar(ConstantesGlobales::USUARIOS, ConstantesGlobales::MODIFICACION, $model->id, "Inicio de actualizacion de $persona: se eliminaron perfiles existentes");
+
                     if ($model->perfil) {
+
                         foreach ($model->perfil as $p) {
                             $model_perfil = new UsuarioAsignacionPerfil();
                             $model_perfil->idusuario = $model->id;
                             $model_perfil->idperfil = $p;
                             $model_perfil->activo = 1;
                             $model_perfil->save();
+                            $perfil = Configuracion::findOne($p)->descripcion;
+                            LogPlataforma::registrar(ConstantesGlobales::USUARIOS, ConstantesGlobales::MODIFICACION, $model->id, "Se asigno perfil $perfil a $persona");
                         }
                     }
+
+                    LogPlataforma::registrar(ConstantesGlobales::USUARIOS, ConstantesGlobales::MODIFICACION, $model->id, "Se finalizo Actualizacion de $persona");
 
                     return [
                         'title' => "Editar Usuario",
@@ -257,7 +270,7 @@ class UsuariosController extends Controller
         //$model->password = Yii::$app->getSecurity()->generatePasswordHash($model_persona->documento);
         $model->password = hash('sha256', $model_persona->documento);
         $contenido = $model->save() ? "Se ah reseteado la contraseña" : "Hubo un error al resetear la contraseña";
-        LogPlataforma::registrar(7, 6, $id);
+        LogPlataforma::registrar(ConstantesGlobales::USUARIOS, ConstantesGlobales::RESET_PASSWORD, $id);
 
         Yii::$app->response->format = Response::FORMAT_JSON;
         return [
@@ -278,6 +291,7 @@ class UsuariosController extends Controller
         if ($this->findModel($id)->delete()) {
             LogPlataforma::registrar(7, 3, $id);
             Yii::$app->response->format = Response::FORMAT_JSON;
+            LogPlataforma::registrar(ConstantesGlobales::USUARIOS, ConstantesGlobales::ELIMINACION, $id);
             return [
                 'title' => "Eliminado",
                 'content' => '<span class="text-success">Usuario Eliminado Correctamente</span>',
@@ -344,27 +358,25 @@ class UsuariosController extends Controller
                 if (!$model->validate()) {
                     $guardado = false;
                 }
-                
+
 
 
                 if ($guardado) {
                     $model->password = hash('sha256', $model->password_nueva);
                     if ($model->save()) {
-
-                    LogPlataforma::registrar(7, 7, $model->id);
-                    return [
-                        'title' => 'Cambiar Contraseña',
-                        'content' => '<span class="text-success">Contraseña cambiada correctamente.</span>',
-                        'footer' => Html::a('Aceptar', ['/site/logout'], ['role' => "menuitem",'class' => 'btn btn-default pull-left']),
-                    ];
+                        LogPlataforma::registrar(ConstantesGlobales::USUARIOS, ConstantesGlobales::CAMBIO_PASSWORD, $model->id);
+                        return [
+                            'title' => 'Cambiar Contraseña',
+                            'content' => '<span class="text-success">Contraseña cambiada correctamente.</span>',
+                            'footer' => Html::a('Aceptar', ['/site/logout'], ['role' => "menuitem", 'class' => 'btn btn-default pull-left']),
+                        ];
                     }
-                    
                 }
             }
 
             return [
                 'title' => "Cambiar Contraseña ",
-                'content' => $error.$this->renderAjax('update_password', [
+                'content' => $error . $this->renderAjax('update_password', [
                     'model' => $model,
                 ]),
                 'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .

@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
 use Yii;
 use app\models\InfIps;
 use app\models\InfIpsSearch;
@@ -107,7 +108,7 @@ class Inf_ipsController extends Controller
 
                         if ($guardado && $model->save()) {
                               $transaction->commit();
-                              LogPlataforma::registrar(2,1,$model->idip); 
+                              LogPlataforma::registrar(ConstantesGlobales::REGISTRO_DE_IPS,ConstantesGlobales::CREACION,$model->idip);
                               return [
                                     'title' => "Nueva Ip",
                                     'content' => '<span class="text-success">Nueva Ip Creada Correctamente</span>',
@@ -161,7 +162,7 @@ class Inf_ipsController extends Controller
 
                         if ($guardado && $model->save()) {
                               $transaction->commit();
-                              LogPlataforma::registrar(2,2,$model->idip); 
+                              LogPlataforma::registrar(ConstantesGlobales::REGISTRO_DE_IPS,ConstantesGlobales::MODIFICACION,$model->idip);
                               return [
                                     'title' => "Editar Ip",
                                     'content' => '<span class="text-success">Ip Editada Correctamente</span>',
@@ -186,7 +187,7 @@ class Inf_ipsController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(2,3,$id); 
+        LogPlataforma::registrar(ConstantesGlobales::REGISTRO_DE_IPS,ConstantesGlobales::ELIMINACION,$id);
         if($request->isAjax){
             /*
             *   Process for ajax request
@@ -258,7 +259,7 @@ class Inf_ipsController extends Controller
         $model->idoficina = null;
         $model->observacion = null;
         $model->save();
-        LogPlataforma::registrar(2,2,$model->idip); 
+        LogPlataforma::registrar(ConstantesGlobales::REGISTRO_DE_IPS,ConstantesGlobales::MODIFICACION,$id,'Se Liberó Ip');
         Yii::$app->response->format = Response::FORMAT_JSON;
         return [
             //'forceReload'=>'#crud-datatable-pjax',

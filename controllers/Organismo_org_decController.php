@@ -235,7 +235,7 @@ class Organismo_org_decController extends Controller
      */
     public function actionBulkDelete()
     {        
-        $request = Yii::$app->request;
+        /* $request = Yii::$app->request;
         $pks = explode(',', $request->post( 'pks' )); // Array or selected records primary keys
         foreach ( $pks as $pk ) {
             $model = $this->findModel($pk);
@@ -243,18 +243,14 @@ class Organismo_org_decController extends Controller
         }
 
         if($request->isAjax){
-            /*
-            *   Process for ajax request
-            */
+ 
             Yii::$app->response->format = Response::FORMAT_JSON;
             return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
         }else{
-            /*
-            *   Process for non-ajax request
-            */
+
             return $this->redirect(['index']);
         }
-       
+        */
     }
 
     /**

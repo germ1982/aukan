@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
+use app\models\ConstantesGlobales;
 use app\models\Empleado;
 use app\models\LogPlataforma;
 use Yii;
@@ -116,7 +117,7 @@ class PersonaController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-                      LogPlataforma::registrar(4,1,$model->idpersona); 
+                      LogPlataforma::registrar(ConstantesGlobales::PERSONAS,ConstantesGlobales::CREACION,$model->idpersona);
                       return [
                           'title' => "Nueva Persona",
                           'content' => '<span class="text-success">Nodo Creada Correctamente</span>',
@@ -169,7 +170,7 @@ class PersonaController extends Controller
                   /* var_dump($model->conviviente); die; // <-- agregá esto temporalmente */
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-                      LogPlataforma::registrar(4,2,$model->idpersona); 
+                      LogPlataforma::registrar(ConstantesGlobales::PERSONAS,ConstantesGlobales::MODIFICACION,$model->idpersona);
                       return [
                           'title' => "Editar Persona",
                           'content' => '<span class="text-success">Persona Editada Correctamente</span>',
@@ -199,7 +200,7 @@ class PersonaController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(4,3,$id); 
+        LogPlataforma::registrar(ConstantesGlobales::PERSONAS,ConstantesGlobales::ELIMINACION,$id);
 
         return $this->redirect(['index']);
     }
@@ -356,6 +357,7 @@ class PersonaController extends Controller
 
 
         if ($model->save()) {
+            LogPlataforma::registrar(ConstantesGlobales::PERSONAS,ConstantesGlobales::CREACION,$model->idpersona,"Se trajo de RENAPER");
             return $model;
         } else {
             // Log de errores si querés investigar

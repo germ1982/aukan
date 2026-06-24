@@ -2,10 +2,13 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
 use Yii;
 use app\models\Empleado;
 use app\models\EmpleadoSearch;
 use app\models\LogPlataforma;
+use app\models\Organismo;
+use app\models\OrganismoDispositivo;
 use yii\web\UploadedFile;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -140,7 +143,7 @@ class EmpleadoController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
-                    LogPlataforma::registrar(5, 1, $model->idempleado);
+                    LogPlataforma::registrar(ConstantesGlobales::EMPLEADOS, ConstantesGlobales::CREACION, $model->idempleado);
                     return [
                         'title' => "Nuevo Empleado",
                         'content' => '<span class="text-success">Empleado Creado Correctamente</span>',
@@ -219,7 +222,7 @@ class EmpleadoController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
-                    LogPlataforma::registrar(5, 2, $model->idempleado);
+                    LogPlataforma::registrar(ConstantesGlobales::EMPLEADOS, ConstantesGlobales::MODIFICACION, $model->idempleado);
                     return [
                         'title' => "Editar Empleado",
                         'content' => '<span class="text-success">Empleado Editado Correctamente</span>',
@@ -249,7 +252,7 @@ class EmpleadoController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(5, 3, $id);
+        LogPlataforma::registrar(ConstantesGlobales::EMPLEADOS, ConstantesGlobales::ELIMINACION, $id);
         if ($request->isAjax) {
             /*
             *   Process for ajax request
@@ -364,7 +367,7 @@ class EmpleadoController extends Controller
         ];
     }
 
-    public function actionMigrar_empleados_old($iddispositivo_viejo, $iddispositivo_nuevo)
+    /*     public function actionMigrar_empleados_old($iddispositivo_viejo, $iddispositivo_nuevo)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -383,57 +386,75 @@ class EmpleadoController extends Controller
                 'data-dismiss' => 'modal',
             ])
         ];
-    }
+    } */
     public function actionMigrar_empleados($iddispositivo_viejo)
-{
-    $request = Yii::$app->request;
-    Yii::$app->response->format = Response::FORMAT_JSON;
+    {
+        $request = Yii::$app->request;
+        Yii::$app->response->format = Response::FORMAT_JSON;
 
-    if ($request->isGet) {
-        return [
-            'title' => 'Migrar Empleados',
-            'content' => $this->renderAjax('migrar_empleados', [
-                'iddispositivo_viejo' => $iddispositivo_viejo,
-            ]),
-            'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal']) .
-                        Html::button('Migrar', ['id' => 'btnMigrar', 'class' => 'btn btn-primary', 'type' => 'submit']),
-        ];
-    } 
-
-    if ($request->isPost) {
-        // Capturamos el ID del combo Select2
-        $iddispositivo_nuevo = $request->post('iddispositivo_nuevo');
-
-
-        if (!$iddispositivo_nuevo) {
+        if ($request->isGet) {
             return [
-                'title' => 'Error',
-                'content' => '<span class="text-danger">Debe seleccionar un dispositivo de destino.</span>',
-                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default', 'data-dismiss' => 'modal'])
+                'title' => 'Migrar Empleados',
+                'content' => $this->renderAjax('migrar_empleados', [
+                    'iddispositivo_viejo' => $iddispositivo_viejo,
+                ]),
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal']) .
+                    Html::button('Migrar', ['id' => 'btnMigrar', 'class' => 'btn btn-primary', 'type' => 'submit']),
             ];
         }
 
-        try {
-            $sql = "UPDATE empleado SET iddispositivo = :nuevo WHERE iddispositivo = :viejo";
-            Yii::$app->db->createCommand($sql)
-                ->bindValue(':nuevo', $iddispositivo_nuevo)
-                ->bindValue(':viejo', $iddispositivo_viejo)
-                ->execute();
+        if ($request->isPost) {
+            // Capturamos el ID del combo Select2
+            $iddispositivo_nuevo = $request->post('iddispositivo_nuevo');
 
-            return [
-                'title' => 'Empleados Migrados',
-                'content' => "<span class='text-success'>Empleados del dispositivo migrados correctamente.</span>",
-                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default', 'data-dismiss' => 'modal'])
-            ];
-        } catch (\Exception $e) {
-            return [
-                'title' => 'Error en la Base de Datos',
-                'content' => '<span class="text-danger">No se pudo realizar la migración: ' . $e->getMessage() . '</span>',
-                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default', 'data-dismiss' => 'modal'])
-            ];
+
+            if (!$iddispositivo_nuevo) {
+                return [
+                    'title' => 'Error',
+                    'content' => '<span class="text-danger">Debe seleccionar un dispositivo de destino.</span>',
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default', 'data-dismiss' => 'modal'])
+                ];
+            }
+
+            try {
+                $empleados = Empleado::get_por_dispositivo($iddispositivo_viejo);
+                $lista_nombres = implode(', ', array_column($empleados, 'descripcion'));
+                $sector_viejo = OrganismoDispositivo::get_dispositivo_pro($iddispositivo_viejo)->descripcion;
+                $sector_nuevo = OrganismoDispositivo::get_dispositivo_pro($iddispositivo_nuevo)->descripcion;
+
+                /* $txt_viejo = "Se retiraron de $sector_viejo los siguientes empleados: $lista_nombres";
+            $txt_nuevo = "Se ingresaron a $sector_viejo los siguientes empleados: $lista_nombres"; */
+
+                $sql = "UPDATE empleado SET iddispositivo = :nuevo WHERE iddispositivo = :viejo";
+                Yii::$app->db->createCommand($sql)
+                    ->bindValue(':nuevo', $iddispositivo_nuevo)
+                    ->bindValue(':viejo', $iddispositivo_viejo)
+                    ->execute();
+
+                LogPlataforma::registrar(ConstantesGlobales::DISPOSITIVOS,ConstantesGlobales::MIGRACION_EGRESA_DATOS,$iddispositivo_viejo,"Migracion Saliente"); 
+
+                foreach ($empleados as $e) {
+                    // Acceso como array porque viene de asArray()
+                    //$txt = "Se migró a {$e['descripcion']} de <b>$sector_viejo</b> a <b>$sector_nuevo</b>";
+
+                    LogPlataforma::registrar(ConstantesGlobales::EMPLEADOS,ConstantesGlobales::MODIFICACION,$e['idempleado'],"Migracion");
+                }
+
+                LogPlataforma::registrar(ConstantesGlobales::DISPOSITIVOS,ConstantesGlobales::MIGRACION_INGRESA_DATOS,$iddispositivo_nuevo,"Migracion Entrante"); 
+                return [
+                    'title' => 'Empleados Migrados',
+                    'content' => "<span class='text-success'>Empleados del dispositivo migrados correctamente.</span>",
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default', 'data-dismiss' => 'modal'])
+                ];
+            } catch (\Exception $e) {
+                return [
+                    'title' => 'Error en la Base de Datos',
+                    'content' => '<span class="text-danger">No se pudo realizar la migración: ' . $e->getMessage() . '</span>',
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default', 'data-dismiss' => 'modal'])
+                ];
+            }
         }
     }
-}
 }
 
 

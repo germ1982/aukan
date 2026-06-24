@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
+use app\models\LogPlataforma;
 use Yii;
 use app\models\RunneuLegajo;
 use app\models\RunneuLegajoSearch;
@@ -94,6 +96,7 @@ class Runneu_legajoController extends Controller
                 if ($guardado && $model->save()) {
 
                     $transaction->commit();
+                    LogPlataforma::registrar(ConstantesGlobales::LEGAJOS_RUNNEU,ConstantesGlobales::CREACION,$model->id);
                     $tmpfile = UploadedFile::getInstance($model, 'archivo_adjunto_file');
 
                     if (isset($tmpfile)) {
@@ -157,6 +160,8 @@ class Runneu_legajoController extends Controller
                 if ($guardado && $model->save()) {
 
                     $transaction->commit();
+
+                    LogPlataforma::registrar(ConstantesGlobales::LEGAJOS_RUNNEU,ConstantesGlobales::MODIFICACION,$model->id);
                     return [
                         'forceReload' => '#crud-datatable-pjax',
                         'title' => "Editar Legajo Dni " . $id,
@@ -181,6 +186,7 @@ class Runneu_legajoController extends Controller
     {
         if ($this->findModel($id)->delete()) {
             Yii::$app->response->format = Response::FORMAT_JSON;
+            LogPlataforma::registrar(ConstantesGlobales::LEGAJOS_RUNNEU,ConstantesGlobales::ELIMINACION,$id);
             return [
                 'title' => "Eliminado",
                 'content' => '<span class="text-success">Legajo Eliminado Correctamente</span>',

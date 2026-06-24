@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
 use app\models\LogPlataforma;
 use Yii;
 use app\models\OrganismoDispositivo;
@@ -124,7 +125,7 @@ class Organismo_dispositivoController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-                      LogPlataforma::registrar(9,1,$model->iddispositivo); 
+                      LogPlataforma::registrar(ConstantesGlobales::DISPOSITIVOS,ConstantesGlobales::CREACION,$model->iddispositivo);
                       return [
                           'title' => "Nuevo Dispositivo",
                           'content' => '<span class="text-success">Dispositivo Creado Correctamente</span>',
@@ -177,7 +178,7 @@ class Organismo_dispositivoController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-                      LogPlataforma::registrar(9,2,$model->iddispositivo); 
+                      LogPlataforma::registrar(ConstantesGlobales::DISPOSITIVOS,ConstantesGlobales::MODIFICACION,$model->iddispositivo);
                       return [
                           'title' => "Editar Dispositivo",
                           'content' => '<span class="text-success">Dispositivo Editado Correctamente</span>',
@@ -200,7 +201,7 @@ class Organismo_dispositivoController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(9,3,$id); 
+        LogPlataforma::registrar(ConstantesGlobales::DISPOSITIVOS,ConstantesGlobales::ELIMINACION,$id);
         if($request->isAjax){
             /*
             *   Process for ajax request

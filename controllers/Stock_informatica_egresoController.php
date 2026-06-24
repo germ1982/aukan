@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
 use app\models\LogPlataforma;
 use Yii;
 use app\models\StockInformaticaEgreso;
@@ -152,7 +153,7 @@ class Stock_informatica_egresoController extends Controller
                     }
 
                     $transaction->commit();
-                    LogPlataforma::registrar(24,1,$model->idegreso); 
+                    LogPlataforma::registrar(ConstantesGlobales::STOCK_INFORMATICA_EGRESO,ConstantesGlobales::CREACION,$model->idegreso); 
                     return [
                         'title' => "Nuevo Egreso",
                         'content' => '<span class="text-success">Egreso Creado Correctamente</span>',
@@ -267,7 +268,7 @@ class Stock_informatica_egresoController extends Controller
                         }
                     }
                     $transaction->commit();
-                    LogPlataforma::registrar(24,2,$model->idegreso); 
+                    LogPlataforma::registrar(ConstantesGlobales::STOCK_INFORMATICA_EGRESO,ConstantesGlobales::MODIFICACION,$model->idegreso); 
                     return [
                         'title' => "Editar Egreso",
                         'content' => '<span class="text-success">Egreso editado Correctamente</span>',
@@ -322,7 +323,7 @@ class Stock_informatica_egresoController extends Controller
                 'SetFooter' => null,
             ],
         ]);
-
+    LogPlataforma::registrar(ConstantesGlobales::STOCK_INFORMATICA_EGRESO,ConstantesGlobales::EXPORTACION,$idegreso,'Acta de Entrega');
         return $pdf->render();
     }
 
@@ -356,7 +357,7 @@ class Stock_informatica_egresoController extends Controller
         ]
 
     ]);
-
+    LogPlataforma::registrar(ConstantesGlobales::STOCK_INFORMATICA_EGRESO,ConstantesGlobales::EXPORTACION,$idegreso,'Acta de Entrega 2026');
     return $pdf->render();
 }
 
@@ -365,6 +366,7 @@ class Stock_informatica_egresoController extends Controller
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
         LogPlataforma::registrar(24,3,$id); 
+        LogPlataforma::registrar(ConstantesGlobales::STOCK_INFORMATICA_EGRESO,ConstantesGlobales::ELIMINACION,$id);
         if ($request->isAjax) {
             /*
             *   Process for ajax request

@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
 use app\models\LogPlataforma;
 use Yii;
 use app\models\VehiculoOficialMovimiento;
@@ -88,53 +89,53 @@ class Vehiculo_oficial_movimientoController extends Controller
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
-                  return [
-                        'title' => 'Nuevo Movimiento',
-                        'content' => $this->renderAjax('create', [
-                              'model' => $model,
+                return [
+                    'title' => 'Nuevo Movimiento',
+                    'content' => $this->renderAjax('create', [
+                        'model' => $model,
+                    ]),
+                    'footer' =>
+                    Html::button('Cerrar', [
+                        'id' => 'btnCerrar',
+                        'class' => 'btn btn-default pull-left',
+                        'data-dismiss' => 'modal',
+                    ]) .
+                        Html::button('Guardar', [
+                            'id' => 'btnGuardar',
+                            'class' => 'btn btn-primary',
+                            'type' => 'submit',
                         ]),
-                        'footer' =>
-                        Html::button('Cerrar', [
-                              'id' => 'btnCerrar',
-                              'class' => 'btn btn-default pull-left',
-                              'data-dismiss' => 'modal',
-                        ]) .
-                              Html::button('Guardar', [
-                                    'id' => 'btnGuardar',
-                                    'class' => 'btn btn-primary',
-                                    'type' => 'submit',
-                              ]),
-                  ];
+                ];
             } else if ($model->load($request->post())) {
-                  $transaction = Yii::$app->db->beginTransaction();
-                  $guardado = true;
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
 
 
-                  $fecha = ArmarDateParaMySql($model->fecha);
-                  $fecha = date_create($fecha);
-                  $fecha = date_format($fecha, 'Y-m-d');
-                  $model->fecha = $fecha;
+                $fecha = ArmarDateParaMySql($model->fecha);
+                $fecha = date_create($fecha);
+                $fecha = date_format($fecha, 'Y-m-d');
+                $model->fecha = $fecha;
 
-                  if ($guardado && $model->save()) {
-                        $transaction->commit();
-                        LogPlataforma::registrar(29,1,$model->idmovimiento); 
+                if ($guardado && $model->save()) {
+                    $transaction->commit();
+                    LogPlataforma::registrar(ConstantesGlobales::MOVIMIENTOS_DE_VEHICULOS_OFICIALES, ConstantesGlobales::CREACION, $model->idmovimiento);
 
-                        return [
-                              'title' => "Nuevo Movimiento",
-                              'content' => '<span class="text-success">Movimiento Creado Correctamente</span>',
-                              'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
-                        ];
-                  }
+                    return [
+                        'title' => "Nuevo Movimiento",
+                        'content' => '<span class="text-success">Movimiento Creado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
+                    ];
+                }
             }
             return [
-                  'title' => "Nuevo Movimiento, Faltan datos!!! Complete Los datos Faltantes!!!",
-                  'content' => $this->renderAjax('create', [
-                        'model' => $model,
-                  ]),
-                  'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+                'title' => "Nuevo Movimiento, Faltan datos!!! Complete Los datos Faltantes!!!",
+                'content' => $this->renderAjax('create', [
+                    'model' => $model,
+                ]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
             ];
-      }
+        }
     }
 
     /**
@@ -152,53 +153,52 @@ class Vehiculo_oficial_movimientoController extends Controller
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
-                  return [
-                        'title' => 'Editar Movimiento',
-                        'content' => $this->renderAjax('create', [
-                              'model' => $model,
+                return [
+                    'title' => 'Editar Movimiento',
+                    'content' => $this->renderAjax('create', [
+                        'model' => $model,
+                    ]),
+                    'footer' =>
+                    Html::button('Cerrar', [
+                        'id' => 'btnCerrar',
+                        'class' => 'btn btn-default pull-left',
+                        'data-dismiss' => 'modal',
+                    ]) .
+                        Html::button('Guardar', [
+                            'id' => 'btnGuardar',
+                            'class' => 'btn btn-primary',
+                            'type' => 'submit',
                         ]),
-                        'footer' =>
-                        Html::button('Cerrar', [
-                              'id' => 'btnCerrar',
-                              'class' => 'btn btn-default pull-left',
-                              'data-dismiss' => 'modal',
-                        ]) .
-                              Html::button('Guardar', [
-                                    'id' => 'btnGuardar',
-                                    'class' => 'btn btn-primary',
-                                    'type' => 'submit',
-                              ]),
-                  ];
+                ];
             } else if ($model->load($request->post())) {
-                  $transaction = Yii::$app->db->beginTransaction();
-                  $guardado = true;
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
 
 
-                  $fecha = ArmarDateParaMySql($model->fecha);
-                  $fecha = date_create($fecha);
-                  $fecha = date_format($fecha, 'Y-m-d');
-                  $model->fecha = $fecha;
+                $fecha = ArmarDateParaMySql($model->fecha);
+                $fecha = date_create($fecha);
+                $fecha = date_format($fecha, 'Y-m-d');
+                $model->fecha = $fecha;
 
-                  if ($guardado && $model->save()) {
-                        $transaction->commit();
-                        LogPlataforma::registrar(29,2,$model->idmovimiento); 
-
-                        return [
-                              'title' => "Editar Movimiento",
-                              'content' => '<span class="text-success">Movimiento Creado Correctamente</span>',
-                              'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
-                        ];
-                  }
+                if ($guardado && $model->save()) {
+                    $transaction->commit();
+                    LogPlataforma::registrar(ConstantesGlobales::MOVIMIENTOS_DE_VEHICULOS_OFICIALES, ConstantesGlobales::MODIFICACION, $model->idmovimiento);
+                    return [
+                        'title' => "Editar Movimiento",
+                        'content' => '<span class="text-success">Movimiento Creado Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]),
+                    ];
+                }
             }
             return [
-                  'title' => "Editar Movimiento, Faltan datos!!! Complete Los datos Faltantes!!!",
-                  'content' => $this->renderAjax('create', [
-                        'model' => $model,
-                  ]),
-                  'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+                'title' => "Editar Movimiento, Faltan datos!!! Complete Los datos Faltantes!!!",
+                'content' => $this->renderAjax('create', [
+                    'model' => $model,
+                ]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
             ];
-      }
+        }
     }
 
     /**
@@ -212,7 +212,7 @@ class Vehiculo_oficial_movimientoController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(29,3,$id); 
+        LogPlataforma::registrar(ConstantesGlobales::MOVIMIENTOS_DE_VEHICULOS_OFICIALES,ConstantesGlobales::ELIMINACION, $id);
         if ($request->isAjax) {
             /*
             *   Process for ajax request

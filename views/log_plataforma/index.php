@@ -2,6 +2,8 @@
     use app\helpers\AppIndexGenericoHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
+/** @var array $dataProvider  */
+/** @var array $searchModel */
 
     $gridColumns = require(__DIR__ . '/_columns.php');
     $customButtonsA = ""; // o define aquí tus botones HTML::a(...) para la izquierda si es necesario

@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
 use Yii;
 use app\models\EdificioAcceso;
 use app\models\EdificioAccesoSearch;
@@ -12,6 +13,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 use yii\web\UploadedFile;
 use app\models\Edificio;
+use app\models\LogPlataforma;
 
 /**
  * Edificio_accesoController implements the CRUD actions for EdificioAcceso model.
@@ -107,7 +109,7 @@ class Edificio_accesoController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
-
+                    LogPlataforma::registrar(ConstantesGlobales::EDIFICIO_ACCESO,ConstantesGlobales::CREACION,$model->id_edificio_acceso); 
                     return [
                         'title' => 'Nuevo Accesso',
                         'content' => '<span class="text-success">Acceso Creado Correctamente</span>',
@@ -160,7 +162,7 @@ class Edificio_accesoController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
-
+                    LogPlataforma::registrar(ConstantesGlobales::EDIFICIO_ACCESO,ConstantesGlobales::MODIFICACION,$model->id_edificio_acceso);
                     return [
                         'title' => 'Editar Acceso Id: ' . $id,
                         'content' => '<span class="text-success">Acceso Editado Correctamente</span>',
@@ -192,7 +194,7 @@ class Edificio_accesoController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-
+        LogPlataforma::registrar(ConstantesGlobales::EDIFICIO_ACCESO,ConstantesGlobales::ELIMINACION,$id);
         if ($request->isAjax) {
             /*
             *   Process for ajax request

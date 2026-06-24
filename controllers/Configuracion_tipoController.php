@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\ConfiguracionTipo;
 use app\models\ConfiguracionTipoSearch;
+use app\models\ConstantesGlobales;
 use app\models\LogPlataforma;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -115,7 +116,7 @@ class Configuracion_tipoController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-                      LogPlataforma::registrar(13,1,$model->id_configuracion_tipo);  
+                      LogPlataforma::registrar(ConstantesGlobales::TIPO_DE_DATOS,ConstantesGlobales::CREACION,$model->id_configuracion_tipo);              
 
                       return [
                           'title' => 'Nuevo Tipo De Dato',
@@ -176,7 +177,7 @@ class Configuracion_tipoController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-                      LogPlataforma::registrar(13,2,$model->id_configuracion_tipo);  
+                      LogPlataforma::registrar(ConstantesGlobales::TIPO_DE_DATOS,ConstantesGlobales::MODIFICACION,$model->id_configuracion_tipo);  
                       return [
                           'title' => 'Editar Tipo De Dato Id: '.$id,
                           'content' => '<span class="text-success">Tipo de Dato Editado Correctamente</span>',

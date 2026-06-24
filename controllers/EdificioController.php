@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
 use Yii;
 use app\models\Edificio;
 use app\models\EdificioOficina;
@@ -110,7 +111,7 @@ class EdificioController extends Controller
                 $model->direccion = ucwords(trim($model->direccion));
 
                 if($model->save()){
-                    LogPlataforma::registrar(17,1,$model->idedificio); 
+                    LogPlataforma::registrar(ConstantesGlobales::EDIFICIOS, ConstantesGlobales::CREACION, $model->idedificio);
                 $oficina = new EdificioOficina();
                 $oficina->idedificio = $model->idedificio;
                 $oficina->descripcion = 'Oficina 01 - '.$model->descripcion_fija;
@@ -186,7 +187,7 @@ class EdificioController extends Controller
                 $model->direccion = ucwords(trim($model->direccion));
 
                 if($model->save()){
-                    LogPlataforma::registrar(17,2,$id); 
+                    LogPlataforma::registrar(ConstantesGlobales::EDIFICIOS,ConstantesGlobales::CREACION,$id); 
                 return [
                     //'forceReload'=>'#crud-datatable-pjax',
                     'title'=> "Edificio ".$id,
@@ -233,7 +234,7 @@ class EdificioController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(17,3,$id); 
+        LogPlataforma::registrar(ConstantesGlobales::EDIFICIOS,ConstantesGlobales::ELIMINACION,$id); 
         if($request->isAjax){
             /*
             *   Process for ajax request

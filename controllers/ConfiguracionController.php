@@ -6,6 +6,7 @@ use Yii;
 use app\models\Configuracion;
 use app\models\ConfiguracionSearch;
 use app\models\ConfiguracionTipo;
+use app\models\ConstantesGlobales;
 use app\models\LogPlataforma;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -117,7 +118,7 @@ class ConfiguracionController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
-                    LogPlataforma::registrar(12, 1, $model->id_configuracion); // Asegúrate de que id_configuracion tenga un valor válido aquí
+                    LogPlataforma::registrar(ConstantesGlobales::DATOS,ConstantesGlobales::CREACION,$model->id_configuracion); 
                     return [
                         //'forceReload' => '#crud-datatable-pjax', // Recarga el GridView en el modal
                         'title' => 'Nuevo Dato',
@@ -184,6 +185,7 @@ class ConfiguracionController extends Controller
                 if ($guardado && $model->save()) {
                     $transaction->commit();
                     //LogPlataforma::registrar(12, 1, $model->id_configuracion); // Asegúrate de que id_configuracion tenga un valor válido aquí
+                    LogPlataforma::registrar(ConstantesGlobales::DATOS,ConstantesGlobales::CREACION,$model->id_configuracion); 
                     return [
                         //'forceReload' => '#crud-datatable-pjax', // Recarga el GridView en el modal
                         'title' => 'Nuevo ' . $model_tipo->descripcion,
@@ -247,7 +249,7 @@ class ConfiguracionController extends Controller
                     try {
                         if ($model->save()) {
                             $transaction->commit();
-                            LogPlataforma::registrar(12, 2, $model->id_configuracion);
+                            LogPlataforma::registrar(ConstantesGlobales::DATOS,ConstantesGlobales::MODIFICACION,$model->id_configuracion); 
                             return [
                                 'forceReload' => '#crud-datatable-pjax', // Recarga el GridView
                                 'title' => 'Editar Dato Id: ' . $id,
@@ -288,7 +290,7 @@ class ConfiguracionController extends Controller
             }
         } else { // Si no es una solicitud AJAX
             if ($model->load($request->post()) && $model->save()) {
-                LogPlataforma::registrar(12, 2, $model->id_configuracion);
+                LogPlataforma::registrar(ConstantesGlobales::DATOS,ConstantesGlobales::MODIFICACION,$model->id_configuracion); 
                 return $this->redirect(['view', 'id' => $model->id_configuracion]);
             } else {
                 return $this->render('update', [ // Aquí deberías renderizar 'update' no 'create'
@@ -331,7 +333,7 @@ public function actionUpdate_tipo($id)
                     try {
                         if ($model->save()) {
                             $transaction->commit();
-                            //LogPlataforma::registrar(12, 2, $model->id_configuracion);
+                            LogPlataforma::registrar(ConstantesGlobales::DATOS,ConstantesGlobales::MODIFICACION,$model->id_configuracion); 
                             return [
                                 //'forceReload' => '#crud-datatable-pjax', // Recarga el GridView
                                 'title' => 'Editar Dato Id: ' . $id,
@@ -372,7 +374,7 @@ public function actionUpdate_tipo($id)
             }
         } else { // Si no es una solicitud AJAX
             if ($model->load($request->post()) && $model->save()) {
-                LogPlataforma::registrar(12, 2, $model->id_configuracion);
+                LogPlataforma::registrar(ConstantesGlobales::DATOS,ConstantesGlobales::MODIFICACION,$model->id_configuracion); 
                 return $this->redirect(['view', 'id' => $model->id_configuracion]);
             } else {
                 return $this->render('create_tipo', [ // Aquí deberías renderizar 'update' no 'create'
@@ -392,7 +394,7 @@ public function actionUpdate_tipo($id)
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(12, 3, $id);
+        LogPlataforma::registrar(ConstantesGlobales::DATOS,ConstantesGlobales::ELIMINACION,$id); 
         if ($request->isAjax) {
             /*
             *   Process for ajax request
@@ -470,6 +472,7 @@ public function actionUpdate_tipo($id)
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             // guardás y devolvés mensaje
             if($model->save()){
+                LogPlataforma::registrar(ConstantesGlobales::DATOS,ConstantesGlobales::CREACION,$model->id_configuracion); 
                 Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
                 return [
                     'success' => true,

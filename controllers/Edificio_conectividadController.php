@@ -2,10 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
 use app\models\Edificio;
 use Yii;
 use app\models\EdificioConectividad;
 use app\models\EdificioConectividadSearch;
+use app\models\LogPlataforma;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -86,6 +88,7 @@ class Edificio_conectividadController extends Controller
             } else if ($model->load($request->post())) {
                 if ($model->validate()) {
                     $model->save();
+                    LogPlataforma::registrar(ConstantesGlobales::EDIFICIO_CONECTIVIDAD,ConstantesGlobales::CREACION,$model->idconectividad);
                     return [
                         //'forceReload' => '#crud-datatable-pjax',
                         'title' => "Nueva Conexión para " . Edificio::get_edificio_descripcion($idedificio),
@@ -177,6 +180,7 @@ class Edificio_conectividadController extends Controller
                         ])
                 ];
             } else if ($model->load($request->post()) && $model->save()) {
+                LogPlataforma::registrar(ConstantesGlobales::EDIFICIO_CONECTIVIDAD,ConstantesGlobales::MODIFICACION,$model->idconectividad);
                 if ($dash == true) {
 
                     // ESTO REPLICA EL F5 TECLADO EXACTO MANTENIENDO TU URL LARGA
@@ -238,7 +242,7 @@ class Edificio_conectividadController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-
+        LogPlataforma::registrar(ConstantesGlobales::EDIFICIO_CONECTIVIDAD,ConstantesGlobales::ELIMINACION,$id);
         if ($request->isAjax) {
             /*
             *   Process for ajax request

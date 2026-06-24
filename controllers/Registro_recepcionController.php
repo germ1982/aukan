@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
 use app\models\LogPlataforma;
 use Yii;
 use app\models\RegistroRecepcion;
@@ -191,11 +192,11 @@ class Registro_recepcionController extends Controller
                     if (!$noHomo->save()) {
                         Yii::error($noHomo->getErrors(), 'app');
                     } else {
-                        LogPlataforma::registrar(32, 1, $noHomo->idpersona_no_homologada);
+                        LogPlataforma::registrar(ConstantesGlobales::PERSONAS_NO_HOMOLOGADAS,ConstantesGlobales::CREACION,$noHomo->idpersona_no_homologada);
                     }
                 }
 
-                LogPlataforma::registrar(31, 1, $model->id_registro_recepcion);
+                LogPlataforma::registrar(ConstantesGlobales::RECEPCION,ConstantesGlobales::CREACION,$model->id_registro_recepcion);
 
                 // Si se presionó el botón "Crear Otro"
                 if ($request->post('create-another')) {
@@ -230,6 +231,7 @@ class Registro_recepcionController extends Controller
 
         // Si no es AJAX
         if ($model->load($request->post()) && $model->save()) {
+            LogPlataforma::registrar(ConstantesGlobales::RECEPCION,ConstantesGlobales::CREACION,$model->id_registro_recepcion);
             return $this->redirect(['view', 'id' => $model->id_registro_recepcion]);
         }
 
@@ -280,12 +282,12 @@ class Registro_recepcionController extends Controller
                     if (!$noHomo->save()) {
                         Yii::error($noHomo->getErrors(), 'app');
                     } else {
-                        LogPlataforma::registrar(32, 1, $noHomo->idpersona_no_homologada);
+                        LogPlataforma::registrar(ConstantesGlobales::PERSONAS_NO_HOMOLOGADAS,ConstantesGlobales::CREACION,$noHomo->idpersona_no_homologada);
                     }
                 }
 
                 // Registrar la acción
-                LogPlataforma::registrar(31, 2, $model->id_registro_recepcion);
+                LogPlataforma::registrar(ConstantesGlobales::RECEPCION,ConstantesGlobales::MODIFICACION,$model->id_registro_recepcion);
 
                 // Responder en formato JSON para que el modal se cierre
                 return [
@@ -302,6 +304,7 @@ class Registro_recepcionController extends Controller
 
         // Si la petición no es AJAX
         if ($model->load($request->post()) && $model->save()) {
+            LogPlataforma::registrar(ConstantesGlobales::RECEPCION,ConstantesGlobales::CREACION,$model->id_registro_recepcion);
             return $this->redirect(['view', 'id' => $model->id_registro_recepcion]);
         } else {
             return $this->render('update', [
@@ -322,7 +325,7 @@ class Registro_recepcionController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-
+        LogPlataforma::registrar(ConstantesGlobales::RECEPCION,ConstantesGlobales::ELIMINACION,$id);
         if ($request->isAjax) {
             /*
             *   Process for ajax request
@@ -388,6 +391,7 @@ class Registro_recepcionController extends Controller
             $persona->genero = '';
             $persona->fecha_nacimiento = '';
             $persona->save(false);
+            LogPlataforma::registrar(ConstantesGlobales::PERSONAS_NO_HOMOLOGADAS,ConstantesGlobales::CREACION,$persona->idpersona_no_homologada);
             return [
                 'existe' => false,
                 'mensaje' => 'Persona no encontrada. Se cargó como no homologada.'
@@ -526,6 +530,7 @@ class Registro_recepcionController extends Controller
 
     public function actionExportar($fecha_inicio, $fecha_final)
     {
+        LogPlataforma::registrar(ConstantesGlobales::RECEPCION,ConstantesGlobales::EXPORTACION);
         $this->layout = false;
 
         $mysql = "SELECT concat(o.abreviatura,' - ', od.descripcion) as descripcion, count(*) as visitas

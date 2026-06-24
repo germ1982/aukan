@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use app\models\ConstantesGlobales;
+
 
 /**
  * This is the model class for table "log_plataforma".
@@ -15,8 +17,9 @@ use Yii;
  * @property int|null $idaccion
  * @property int|null $idregistro
  */
-class LogPlataforma extends \yii\db\ActiveRecord
+class LogPlataforma extends \yii\db\ActiveRecord 
 {
+
     //se agregan estas dos variables para que funcione el filtro por fechas
     public $fdesde;
     public $fhasta;
@@ -36,6 +39,7 @@ class LogPlataforma extends \yii\db\ActiveRecord
             [['idlog', 'idusuario', 'idmodulo', 'idaccion', 'idregistro'], 'integer'],
             [['fecha', 'hora', 'fdesde', 'fhasta'], 'safe'], //se agregan estas dos variables para que funcione el filtro por fechas
             [['idlog'], 'unique'],
+            [['observacion'], 'string', 'max' => 200],
         ];
     }
 
@@ -52,13 +56,15 @@ class LogPlataforma extends \yii\db\ActiveRecord
             'idmodulo' => 'Modulo',
             'idaccion' => 'Accion',
             'idregistro' => 'ID Registro',
+            'observacion' => 'Observación'
         ];
     }
 
-    const MODULOS = [
+
+    /* const MODULOS = [
         1 => [
             'nombre' => 'Registro Técnico Informática',
-            'modelo' => '\app\models\MODELO::class'
+            'modelo' => \app\models\RegistroTecnico::class
         ],
         2 => [
             'nombre' => 'Registro de IPS',
@@ -185,43 +191,52 @@ class LogPlataforma extends \yii\db\ActiveRecord
             'modelo' => \app\models\PersonasNoHomologadas::class
         ],
         
-    ];
+    ]; */
 
 
 
-    const ACCIONES = [
-        1 => 'Creación',
-        2 => 'Modificación',
-        3 => 'Eliminación',
-        4 => 'Visualización',
-        5 => 'Exportación',
-        6 => 'Reseteo Password',
-        7 => 'Cambio Password',
-        // más acciones si querés
-    ];
+        /*     const ACCIONES = [
+            1 => 'Creación',
+            2 => 'Modificación',
+            3 => 'Eliminación',
+            4 => 'Visualización',
+            5 => 'Exportación',
+            6 => 'Reseteo Password',
+            7 => 'Cambio Password',
+            // más acciones si querés
+            ]; 
+        */
 
 
     public static function getModuloNombre($id)
     {
-        return self::MODULOS[$id]['nombre'] ?? 'Desconocido';
+        //return self::MODULOS[$id]['nombre'] ?? 'Desconocido';
+        $mapeo = array_column(ConstantesGlobales::MODULOS, 'nombre', 'id');
+        return $mapeo[$id] ?? 'Desconocido';
     }
 
     public static function getModuloModelo($id)
-{
-    return self::MODULOS[$id]['modelo'] ?? null;
-}
+    {
+        //return self::MODULOS[$id]['modelo'] ?? null;
+        $mapeo = array_column(ConstantesGlobales::MODULOS, 'modelo', 'id');
+        return $mapeo[(int)$id] ?? 'Desconocida';
+    }
 
     public static function getAccionNombre($id)
     {
-        return self::ACCIONES[$id] ?? 'Desconocida';
+        //return self::ACCIONES[$id] ?? 'Desconocida';
+        $mapeo = array_column(ConstantesGlobales::ACCIONES, 'nombre', 'id');
+        return $mapeo[(int)$id] ?? 'Desconocida';
     }
 
     public static function getModulosLista()
     {
-        $lista = [];
+        /* $lista = [];
         foreach (self::MODULOS as $id => $info) {
             $lista[$id] = $info['nombre'];
-        }
+        } */
+        // Extraemos el mapa [id => nombre] de una sola vez
+        $lista = array_column(ConstantesGlobales::MODULOS, 'nombre', 'id');
     
         asort($lista); // ordena por el nombre del módulo
         return $lista;
@@ -229,10 +244,11 @@ class LogPlataforma extends \yii\db\ActiveRecord
 
     public static function getAccionesLista()
     {
-        return self::ACCIONES;
+        //return self::ACCIONES;
+        return array_column(ConstantesGlobales::ACCIONES, 'nombre', 'id');
     }
 
-    public static function registrar($idmodulo, $idaccion, $idregistro)
+    public static function registrar($idmodulo, $idaccion, $idregistro = 0, $observacion = '')
     {
         $usuario_id = Yii::$app->user->identity->id;
         $log = new self();
@@ -242,6 +258,7 @@ class LogPlataforma extends \yii\db\ActiveRecord
         $log->idregistro = $idregistro;
         $log->fecha = date('Y-m-d H:i:s');
         $log->hora = date('H:i:s');
+        $log->observacion = $observacion;
         $log->save(false); // false si no querés validar (más rápido)
     }
 }

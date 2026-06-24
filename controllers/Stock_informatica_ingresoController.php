@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
 use app\models\LogPlataforma;
 use Yii;
 use app\models\StockInformaticaIngreso;
@@ -112,8 +113,8 @@ class Stock_informatica_ingresoController extends Controller
                             $detalleModel->save();
                         }
                     
-                    $transaction->commit();
-                    LogPlataforma::registrar(25,1,$model->idingreso); 
+                    $transaction->commit(); 
+                    LogPlataforma::registrar(ConstantesGlobales::STOCK_INFORMATICA_INGRESO,ConstantesGlobales::CREACION,$model->idingreso);
                     return [
                         'title' => "Nuevo Ingreso",
                         'content' => '<span class="text-success">Ingreso Creado Correctamente</span>',
@@ -215,7 +216,7 @@ class Stock_informatica_ingresoController extends Controller
                         }
                     }
                     $transaction->commit();
-                    LogPlataforma::registrar(25,2,$model->idingreso); 
+                    LogPlataforma::registrar(ConstantesGlobales::STOCK_INFORMATICA_INGRESO,ConstantesGlobales::MODIFICACION,$model->idingreso);
                     return [
                         'title' => "Editar Ingreso",
                         'content' => '<span class="text-success">Ingreso Editado Correctamente</span>',
@@ -238,7 +239,7 @@ class Stock_informatica_ingresoController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(25,3,$id); 
+        LogPlataforma::registrar(ConstantesGlobales::STOCK_INFORMATICA_INGRESO,ConstantesGlobales::ELIMINACION,$id);
         if ($request->isAjax) {
 
             Yii::$app->response->format = Response::FORMAT_JSON;

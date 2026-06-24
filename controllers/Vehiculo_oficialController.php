@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
 use app\models\LogPlataforma;
 use Yii;
 use app\models\VehiculoOficial;
@@ -101,7 +102,7 @@ class Vehiculo_oficialController extends Controller
         
                 ];         
             }else if($model->load($request->post()) && $model->save()){
-                LogPlataforma::registrar(28,1,$model->idvehiculo); 
+                LogPlataforma::registrar(ConstantesGlobales::VEHICULOS_OFICIALES,ConstantesGlobales::CREACION, $model->idvehiculo);
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
                     'title'=> "Create new VehiculoOficial",
@@ -126,6 +127,7 @@ class Vehiculo_oficialController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
+                LogPlataforma::registrar(ConstantesGlobales::VEHICULOS_OFICIALES,ConstantesGlobales::CREACION, $model->idvehiculo);
                 return $this->redirect(['view', 'id' => $model->idvehiculo]);
             } else {
                 return $this->render('create', [
@@ -176,7 +178,7 @@ class Vehiculo_oficialController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-                      LogPlataforma::registrar(28,2,$model->idvehiculo); 
+                      LogPlataforma::registrar(ConstantesGlobales::VEHICULOS_OFICIALES,ConstantesGlobales::MODIFICACION, $model->idvehiculo);
                       return [
                           'title' => "Editar Vehiculo",
                           'content' => '<span class="text-success">Vehiculo Editado Correctamente</span>',
@@ -207,7 +209,7 @@ class Vehiculo_oficialController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(28,3,$id); 
+        LogPlataforma::registrar(ConstantesGlobales::VEHICULOS_OFICIALES,ConstantesGlobales::ELIMINACION, $id);
         if($request->isAjax){
             /*
             *   Process for ajax request

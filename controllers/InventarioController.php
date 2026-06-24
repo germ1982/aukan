@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
 use Yii;
 use app\models\Inventario;
 use app\models\InventarioSearch;
@@ -119,7 +120,7 @@ class InventarioController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-                      LogPlataforma::registrar(3,1,$model->idinventario); 
+                      LogPlataforma::registrar(ConstantesGlobales::INVENTARIO_INFORMATICA,ConstantesGlobales::CREACION,$model->idinventario);
                       return [
                           'title' => "Nuevo Item",
                           'content' => '<span class="text-success">Inventario Creado Correctamente</span>',
@@ -172,7 +173,7 @@ class InventarioController extends Controller
                   
                   if ($guardado && $model->save()) {
                       $transaction->commit();
-                      LogPlataforma::registrar(3,2,$model->idinventario); 
+                      LogPlataforma::registrar(ConstantesGlobales::INVENTARIO_INFORMATICA,ConstantesGlobales::MODIFICACION,$model->idinventario);
                       return [
                           'title' => "Editar Item",
                           'content' => '<span class="text-success">Item Editado Correctamente</span>',
@@ -203,7 +204,7 @@ class InventarioController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(3,3,$id); 
+        LogPlataforma::registrar(ConstantesGlobales::INVENTARIO_INFORMATICA,ConstantesGlobales::ELIMINACION,$id);
         if($request->isAjax){
             /*
             *   Process for ajax request

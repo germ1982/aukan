@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
+use app\models\LogPlataforma;
 use Yii;
 use app\models\PersonasNoHomologadas;
 use app\models\PersonasNoHomologadasSearch;
@@ -100,6 +102,7 @@ class Personas_no_homologadasController extends Controller
         
                 ];         
             }else if($model->load($request->post()) && $model->save()){
+                LogPlataforma::registrar(ConstantesGlobales::PERSONAS_NO_HOMOLOGADAS,ConstantesGlobales::CREACION,$model->idpersona_no_homologada);
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
                     'title'=> "Create new PersonasNoHomologadas",
@@ -124,6 +127,7 @@ class Personas_no_homologadasController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
+                LogPlataforma::registrar(ConstantesGlobales::PERSONAS_NO_HOMOLOGADAS,ConstantesGlobales::CREACION,$model->idpersona_no_homologada);
                 return $this->redirect(['view', 'id' => $model->idpersona_no_homologada]);
             } else {
                 return $this->render('create', [
@@ -161,6 +165,7 @@ class Personas_no_homologadasController extends Controller
                                 Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
                 ];         
             }else if($model->load($request->post()) && $model->save()){
+                LogPlataforma::registrar(ConstantesGlobales::PERSONAS_NO_HOMOLOGADAS,ConstantesGlobales::MODIFICACION,$model->idpersona_no_homologada);
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
                     'title'=> "PersonasNoHomologadas #".$id,
@@ -185,6 +190,7 @@ class Personas_no_homologadasController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
+                LogPlataforma::registrar(ConstantesGlobales::PERSONAS_NO_HOMOLOGADAS,ConstantesGlobales::MODIFICACION,$model->idpersona_no_homologada);
                 return $this->redirect(['view', 'id' => $model->idpersona_no_homologada]);
             } else {
                 return $this->render('update', [
@@ -205,7 +211,7 @@ class Personas_no_homologadasController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-
+        LogPlataforma::registrar(ConstantesGlobales::PERSONAS_NO_HOMOLOGADAS,ConstantesGlobales::ELIMINACION,$id);
         if($request->isAjax){
             /*
             *   Process for ajax request

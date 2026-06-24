@@ -5,6 +5,8 @@ namespace app\controllers;
 use Yii;
 use app\models\ConfiguracionDiccionario;
 use app\models\ConfiguracionDiccionarioSearch;
+use app\models\ConstantesGlobales;
+use app\models\LogPlataforma;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -100,6 +102,7 @@ class Configuracion_diccionarioController extends Controller
         
                 ];         
             }else if($model->load($request->post()) && $model->save()){
+                LogPlataforma::registrar(ConstantesGlobales::DICCIONARIO,ConstantesGlobales::CREACION,$model->idcorreccion);              
                 return [
                     //'forceReload'=>'#crud-datatable-pjax',
                     'title'=> "Crear Nueva Correcion",
@@ -161,6 +164,7 @@ class Configuracion_diccionarioController extends Controller
                                 Html::button('Guardar',['class'=>'btn btn-primary','type'=>"submit"])
                 ];         
             }else if($model->load($request->post()) && $model->save()){
+                LogPlataforma::registrar(ConstantesGlobales::DICCIONARIO,ConstantesGlobales::MODIFICACION,$model->idcorreccion);              
                 return [
                     //'forceReload'=>'#crud-datatable-pjax',
                     'title'=> "Editar Correcion ".$id,
@@ -206,6 +210,7 @@ class Configuracion_diccionarioController extends Controller
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
 
+        LogPlataforma::registrar(ConstantesGlobales::DICCIONARIO,ConstantesGlobales::ELIMINACION,$id);              
         if($request->isAjax){
             /*
             *   Process for ajax request

@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
 use app\models\LogPlataforma;
 use Yii;
 use app\models\Organismo;
@@ -138,7 +139,7 @@ class OrganismoController extends Controller
                 $relacion->iddecreto = $model->iddecreto;
                 $relacion->save();
 
-                LogPlataforma::registrar(6, 1, $model->idorganismo);
+                LogPlataforma::registrar(ConstantesGlobales::ORGANISMOS,ConstantesGlobales::CREACION,$model->idorganismo);
                 return [
                     //'forceReload' => '#crud-datatable-pjax',
                     'title' => "Nuevo Organismo",
@@ -163,6 +164,7 @@ class OrganismoController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
+                LogPlataforma::registrar(ConstantesGlobales::ORGANISMOS,ConstantesGlobales::CREACION,$model->idorganismo);
                 return $this->redirect(['view', 'id' => $model->idorganismo]);
             } else {
                 return $this->render('create', [
@@ -199,7 +201,7 @@ class OrganismoController extends Controller
                         Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             } else if ($model->load($request->post()) && $model->save()) {
-                LogPlataforma::registrar(6, 2, $model->idorganismo);
+                LogPlataforma::registrar(ConstantesGlobales::ORGANISMOS,ConstantesGlobales::MODIFICACION,$model->idorganismo);
                 return [
                     //'forceReload' => '#crud-datatable-pjax',
                     'title' => "Organismo " . $id,
@@ -224,6 +226,7 @@ class OrganismoController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
+                LogPlataforma::registrar(ConstantesGlobales::ORGANISMOS,ConstantesGlobales::MODIFICACION,$model->idorganismo);
                 return $this->redirect(['view', 'id' => $model->idorganismo]);
             } else {
                 return $this->render('update', [
@@ -244,7 +247,8 @@ class OrganismoController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(6, 3, $id);
+
+        LogPlataforma::registrar(ConstantesGlobales::ORGANISMOS,ConstantesGlobales::ELIMINACION,$id);
         if ($request->isAjax) {
             /*
             *   Process for ajax request

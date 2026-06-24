@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\Configuracion;
 use app\models\ConfiguracionSearch;
 use app\models\ConfiguracionTipo;
+use app\models\ConstantesGlobales;
 use app\models\LogPlataforma;
 use Yii;
 use app\models\RegistroTecnico;
@@ -174,6 +175,7 @@ class Registro_tecnicoController extends Controller
                         $registroAsistencia->idtecnico = $idempleado;
                         $registroAsistencia->save();
                     }
+                    LogPlataforma::registrar(ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA,ConstantesGlobales::CREACION,$model->idregistro);
                     return [
                         //'forceReload' => '#crud-datatable-pjax',
                         'title' => "Nuevo Registro Tecnico",
@@ -199,6 +201,7 @@ class Registro_tecnicoController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
+                LogPlataforma::registrar(ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA,ConstantesGlobales::CREACION,$model->idregistro);
                 return $this->redirect(['view', 'id' => $model->idregistro]);
             } else {
                 return $this->render('create', [
@@ -267,7 +270,7 @@ class Registro_tecnicoController extends Controller
                         $registroAsistencia->idtecnico = $idempleado;
                         $registroAsistencia->save();
                     }
-
+                    LogPlataforma::registrar(ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA,ConstantesGlobales::MODIFICACION,$model->idregistro);
                     return [
                         //'forceReload' => '#crud-datatable-pjax',
                         'title' => "RegistroTecnico #" . $id,
@@ -293,6 +296,7 @@ class Registro_tecnicoController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
+                LogPlataforma::registrar(ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA,ConstantesGlobales::MODIFICACION,$model->idregistro);
                 return $this->redirect(['view', 'id' => $model->idregistro]);
             } else {
                 return $this->render('update', [
@@ -313,7 +317,7 @@ class Registro_tecnicoController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-
+        LogPlataforma::registrar(ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA,ConstantesGlobales::ELIMINACION,$id);
         if ($request->isAjax) {
             /*
             *   Process for ajax request
@@ -399,7 +403,7 @@ class Registro_tecnicoController extends Controller
 
                 if ($model->save()) {
                     $transaction->commit();
-                    LogPlataforma::registrar(12, 1, $model->id_configuracion);
+                    LogPlataforma::registrar(ConstantesGlobales::DATOS,ConstantesGlobales::CREACION,$model->id_configuracion,"Asistente de Registro Tecnico");
                     return [
                         'title' => 'Nuevo ' . $model_tipo->descripcion,
                         'content' => '<span class="text-success">Asistente Creado Correctamente</span>',
@@ -450,7 +454,7 @@ class Registro_tecnicoController extends Controller
 
                 if ($model->save()) {
                     $transaction->commit();
-                    //LogPlataforma::registrar(12, 1, $model->id_configuracion);
+                    LogPlataforma::registrar(ConstantesGlobales::DATOS,ConstantesGlobales::MODIFICACION,$model->id_configuracion,"Asistente de Registro Tecnico");
                     return [
                         'title' => 'Actualizar ' . $model_tipo->descripcion,
                         'content' => '<span class="text-success">Asistente Actualizado Correctamente</span>',
@@ -477,6 +481,8 @@ class Registro_tecnicoController extends Controller
         $model->activo = 1;
         $model->save();
 
+       LogPlataforma::registrar(ConstantesGlobales::DATOS,ConstantesGlobales::ACTIVAR,$model->id_configuracion,"Tipo de Registro Tecnico");
+
         Yii::$app->response->format = Response::FORMAT_JSON;
         return [
             'title' => 'Activar',
@@ -495,7 +501,7 @@ class Registro_tecnicoController extends Controller
         $model = Configuracion::findOne($id);
         $model->activo = 0;
         $model->save();
-
+        LogPlataforma::registrar(ConstantesGlobales::DATOS,ConstantesGlobales::DESACTIVAR,$model->id_configuracion,"Tipo de Registro Tecnico");
         Yii::$app->response->format = Response::FORMAT_JSON;
         return [
             'title' => 'Desactivar',

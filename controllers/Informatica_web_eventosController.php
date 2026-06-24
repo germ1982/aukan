@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
 use Yii;
 use app\models\InformaticaWebEventos;
 use app\models\InformaticaWebEventosSearch;
@@ -118,7 +119,7 @@ class Informatica_web_eventosController extends Controller
 
                         if ($guardado && $model->save()) {
                               $transaction->commit();
-                              LogPlataforma::registrar(20,1,$model->idevento); 
+                              LogPlataforma::registrar(ConstantesGlobales::INFORMATICA_WEB_EVENTOS,ConstantesGlobales::CREACION,$model->idevento);
                               $imageFiles = UploadedFile::getInstances($model, 'imageFile');
                               $imageNames = [];
 
@@ -215,7 +216,7 @@ class Informatica_web_eventosController extends Controller
                         $model->save();
                         if ($guardado && $model->save()) {
                               $transaction->commit();
-                              LogPlataforma::registrar(20,2,$model->idevento); 
+                              LogPlataforma::registrar(ConstantesGlobales::INFORMATICA_WEB_EVENTOS,ConstantesGlobales::MODIFICACION,$model->idevento);
 
                               return [
                                     'title' => "Editar Evento",
@@ -239,7 +240,7 @@ class Informatica_web_eventosController extends Controller
       {
             $request = Yii::$app->request;
             $this->findModel($id)->delete();
-            LogPlataforma::registrar(20,3,$id); 
+            LogPlataforma::registrar(ConstantesGlobales::INFORMATICA_WEB_EVENTOS,ConstantesGlobales::ELIMINACION,$id);
             if ($request->isAjax) {
                   /*
             *   Process for ajax request

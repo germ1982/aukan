@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
 use app\models\LogPlataforma;
 use Yii;
 use app\models\StockDepositoEgreso;
@@ -152,7 +153,7 @@ class Stock_deposito_egresoController extends Controller
                     }
 
                     $transaction->commit();
-                    LogPlataforma::registrar(26,1,$model->idegreso); 
+                    LogPlataforma::registrar(ConstantesGlobales::STOCK_DEPOSITO_EGRESO,ConstantesGlobales::CREACION,$model->idegreso); 
                     return [
                         'title' => "Nuevo Egreso",
                         'content' => '<span class="text-success">Egreso Creado Correctamente</span>',
@@ -215,7 +216,7 @@ class Stock_deposito_egresoController extends Controller
                 $detallesArray = Json::decode($request->post('detallesArray')); // Deserializas el array JSON
 
                 if ($guardado && $model->save()) {
-
+                    
                     $boton_acta = Html::button(
                         'Imprimir Acta de Entrega',
                         [
@@ -267,7 +268,7 @@ class Stock_deposito_egresoController extends Controller
                         }
                     }
                     $transaction->commit();
-                    LogPlataforma::registrar(26,2,$model->idegreso); 
+                    LogPlataforma::registrar(ConstantesGlobales::STOCK_DEPOSITO_EGRESO,ConstantesGlobales::MODIFICACION,$model->idegreso); 
                     return [
                         'title' => "Editar Egreso",
                         'content' => '<span class="text-success">Egreso editado Correctamente</span>',
@@ -322,7 +323,7 @@ class Stock_deposito_egresoController extends Controller
                 'SetFooter' => null,
             ],
         ]);
-
+        LogPlataforma::registrar(ConstantesGlobales::STOCK_DEPOSITO_EGRESO,ConstantesGlobales::EXPORTACION,$idegreso,'Acta de Entrega');
         return $pdf->render();
     }
 
@@ -331,7 +332,7 @@ class Stock_deposito_egresoController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(26,3,$id); 
+        LogPlataforma::registrar(ConstantesGlobales::STOCK_DEPOSITO_EGRESO,ConstantesGlobales::ELIMINACION,$id); 
         if ($request->isAjax) {
             /*
             *   Process for ajax request

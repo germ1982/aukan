@@ -19,7 +19,7 @@ class LogPlataformaSearch extends LogPlataforma
     {
         return [
             [['idlog', 'idusuario', 'idmodulo', 'idaccion', 'idregistro'], 'integer'],
-            [['fecha', 'hora', 'fdesde', 'fhasta'], 'safe'],
+            [['fecha', 'hora', 'fdesde', 'fhasta','observacion'], 'safe'],
         ];
     }
 
@@ -86,8 +86,11 @@ class LogPlataformaSearch extends LogPlataforma
             'idregistro' => $this->idregistro,
         ]);
 
+        $query->andFilterWhere(['like', 'observacion', $this->observacion]);
+
         $query->andWhere($sql_desde)//se agrega para el filtrado por fechas
-        ->andWhere($sql_hasta)//se agrega para el filtrado por fechas
+        ->andWhere($sql_hasta)
+        //se agrega para el filtrado por fechas
         ;
 
         return $dataProvider;

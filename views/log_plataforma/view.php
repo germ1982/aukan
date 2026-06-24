@@ -3,6 +3,7 @@
 use app\models\LogPlataforma;
 use app\models\Persona;
 use app\models\Articulo;
+use app\models\ConstantesGlobales;
 use app\models\Usuarios;
 use kartik\helpers\Html;
 use yii\widgets\DetailView;
@@ -14,8 +15,8 @@ $usuario = Usuarios::findOne($model->idusuario);
 $persona = Persona::findOne($usuario->idpersona);
 
 
-$moduloInfo = LogPlataforma::MODULOS[$model->idmodulo];
-$modeloClase = $moduloInfo['modelo'];
+$modeloClase = LogPlataforma::getModuloModelo($model->idmodulo);
+
 $registro = $modeloClase::findOne($model->idregistro);
 $detalle = '';
 //$rutaVistaParcial = "@app/views/" . strtolower((new \ReflectionClass($registro))->getShortName()) . "/view";
@@ -26,7 +27,10 @@ if (is_file(Yii::getAlias($rutaVistaParcial) . ".php")) {
 
 
 if (!function_exists('campo')) {
-
+    /**
+     * @param int|string $id
+     * @return string|null
+     */
     function campo($titulo, $contenido)
     {
         echo "<h5><b>$titulo: </b></h5>

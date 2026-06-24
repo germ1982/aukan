@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Configuracion;
+use app\models\ConstantesGlobales;
 use app\models\LogPlataforma;
 use Yii;
 use app\models\RegistroFamiliaLegajo;
@@ -115,7 +116,7 @@ class Registro_familia_legajoController extends Controller
                 if ($guardado && $model->save()) {
 
                     $transaction->commit();
-                    LogPlataforma::registrar(23,1,$model->id); 
+                    LogPlataforma::registrar(ConstantesGlobales::LEGAJOS_DE_REGISTRO_DE_FAMILIA,ConstantesGlobales::CREACION,$model->id);
 
                     $tmpfile = UploadedFile::getInstance($model, 'archivo_adjunto_file');
 
@@ -200,7 +201,7 @@ class Registro_familia_legajoController extends Controller
                 if ($guardado && $model->save()) {
 
                     $transaction->commit();
-                    LogPlataforma::registrar(23,2,$model->id); 
+                    LogPlataforma::registrar(ConstantesGlobales::LEGAJOS_DE_REGISTRO_DE_FAMILIA,ConstantesGlobales::MODIFICACION,$model->id);
                     return [
                         'forceReload' => '#crud-datatable-pjax',
                         'title' => "Editar Legajo Id: " . $id,
@@ -222,7 +223,7 @@ class Registro_familia_legajoController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(23,3,$id); 
+        LogPlataforma::registrar(ConstantesGlobales::LEGAJOS_DE_REGISTRO_DE_FAMILIA,ConstantesGlobales::CREACION,$id);
         if ($request->isAjax) {
             /*
             *   Process for ajax request
@@ -290,6 +291,7 @@ class Registro_familia_legajoController extends Controller
         $ruta = RegistroFamiliaLegajo::getRutaUploads() . $archivo;
 
         if (file_exists($ruta)) {
+            LogPlataforma::registrar(ConstantesGlobales::LEGAJOS_DE_REGISTRO_DE_FAMILIA,ConstantesGlobales::DESCARGA,0,"$archivo");
             return Yii::$app->response->sendFile($ruta, $archivo, [
                 'inline' => false // Forzar descarga directa
             ]);
@@ -335,7 +337,7 @@ class Registro_familia_legajoController extends Controller
                 error_log("Archivo no encontrado: " . $ruta_completa);
             }
         }
-
+        LogPlataforma::registrar(ConstantesGlobales::LEGAJOS_DE_REGISTRO_DE_FAMILIA,ConstantesGlobales::EXPORTACION,0);
         // Generar el PDF y enviarlo al navegador
         $mpdf->Output('archivo_unido.pdf', 'I'); // 'I' para mostrar en una pestaña
         // Liberar el buffer de salida para evitar problemas

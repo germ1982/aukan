@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
 use app\models\LogPlataforma;
 use app\models\Menu;
 use app\models\MenuSearch;
@@ -123,7 +124,7 @@ class MenuController extends Controller
 
                         if ($guardado && $model->save()) {
                               $transaction->commit();
-                              LogPlataforma::registrar(8,1,$model->id); 
+                              LogPlataforma::registrar(ConstantesGlobales::MENU,ConstantesGlobales::CREACION,$model->id);
 
                               $this->actionReacomodar_orden($model->id, true);
 
@@ -187,7 +188,7 @@ class MenuController extends Controller
 
                         if ($guardado && $model->save()) {
                               $transaction->commit();
-                              LogPlataforma::registrar(8,2,$model->id); 
+                              LogPlataforma::registrar(ConstantesGlobales::MENU,ConstantesGlobales::MODIFICACION,$model->id);
                               $this->actionReacomodar_orden($model->id, true);
                               return [
                                     'title' => "Editar Nodo de Menu",
@@ -219,7 +220,7 @@ class MenuController extends Controller
       {
 
             if ($this->findModel($id)->delete()) {
-                  LogPlataforma::registrar(8,3,$id); 
+                  LogPlataforma::registrar(ConstantesGlobales::MENU,ConstantesGlobales::ELIMINACION,$id);
                   Yii::$app->response->format = Response::FORMAT_JSON;
                   return [
                         'title' => "Eliminado",
@@ -251,6 +252,7 @@ class MenuController extends Controller
             if ($model !== null) {
                   $model->orden--;
                   $model->save();
+                  LogPlataforma::registrar(ConstantesGlobales::MENU,ConstantesGlobales::MODIFICACION,$model->id,"Reubicacion");
             }
 
             $this->actionReacomodar_orden($model->id);

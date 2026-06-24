@@ -2,9 +2,11 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
 use Yii;
 use app\models\Localidades;
 use app\models\LocalidadesSearch;
+use app\models\LogPlataforma;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -101,7 +103,7 @@ class LocalidadesController extends Controller
 
                 ];
             } else if ($model->load($request->post()) && $model->save()) {
-                
+                LogPlataforma::registrar(ConstantesGlobales::LOCALIDADES,ConstantesGlobales::CREACION,$model->id);
                 return [
                     'forceReload' => '#crud-datatable-pjax',
                     'title' => "Create new Localidades",
@@ -126,6 +128,7 @@ class LocalidadesController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
+                LogPlataforma::registrar(ConstantesGlobales::LOCALIDADES,ConstantesGlobales::CREACION,$model->id);
                 return $this->redirect(['view', 'id' => $model->id]);
             } else {
                 return $this->render('create', [
@@ -162,6 +165,7 @@ class LocalidadesController extends Controller
                         Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             } else if ($model->load($request->post()) && $model->save()) {
+                LogPlataforma::registrar(ConstantesGlobales::LOCALIDADES,ConstantesGlobales::MODIFICACION,$model->id);
                 return [
                     'forceReload' => '#crud-datatable-pjax',
                     'title' => "Localidades #" . $id,
@@ -186,6 +190,7 @@ class LocalidadesController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
+                LogPlataforma::registrar(ConstantesGlobales::LOCALIDADES,ConstantesGlobales::MODIFICACION,$model->id);
                 return $this->redirect(['view', 'id' => $model->id]);
             } else {
                 return $this->render('update', [
@@ -206,7 +211,7 @@ class LocalidadesController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-
+        LogPlataforma::registrar(ConstantesGlobales::LOCALIDADES,ConstantesGlobales::ELIMINACION,$id);
         if ($request->isAjax) {
             /*
             *   Process for ajax request

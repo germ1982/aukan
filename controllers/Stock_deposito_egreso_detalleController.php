@@ -3,6 +3,8 @@
 namespace app\controllers;
 
 use app\models\Articulo;
+use app\models\ConstantesGlobales;
+//use app\models\LogPlataforma;
 use Yii;
 use app\models\StockDepositoEgresoDetalle;
 use app\models\StockDepositoEgresoDetalleSearch;
@@ -104,6 +106,7 @@ class Stock_deposito_egreso_detalleController extends Controller
         
                 ];         
             }else if($model->load($request->post()) && $model->save()){
+                //LogPlataforma::registrar(ConstantesGlobales::STOCK_DEPOSITO_EGRESO,ConstantesGlobales::CREACION,$model->idegreso);
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
                     'title'=> "Create new StockDepositoEgresoDetalle",
@@ -128,6 +131,7 @@ class Stock_deposito_egreso_detalleController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
+                //LogPlataforma::registrar(ConstantesGlobales::STOCK_DEPOSITO_EGRESO,ConstantesGlobales::CREACION,$model->idegreso);
                 return $this->redirect(['view', 'id' => $model->iddetalle]);
             } else {
                 return $this->render('create', [
@@ -165,6 +169,7 @@ class Stock_deposito_egreso_detalleController extends Controller
                                 Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
                 ];         
             }else if($model->load($request->post()) && $model->save()){
+                //LogPlataforma::registrar(ConstantesGlobales::STOCK_DEPOSITO_EGRESO,ConstantesGlobales::MODIFICACION,$model->idegreso);
                 return [
                     'forceReload'=>'#crud-datatable-pjax',
                     'title'=> "StockDepositoEgresoDetalle #".$id,
@@ -189,6 +194,7 @@ class Stock_deposito_egreso_detalleController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
+                //LogPlataforma::registrar(ConstantesGlobales::STOCK_DEPOSITO_EGRESO,ConstantesGlobales::MODIFICACION,$model->idegreso);
                 return $this->redirect(['view', 'id' => $model->iddetalle]);
             } else {
                 return $this->render('update', [
@@ -205,7 +211,7 @@ class Stock_deposito_egreso_detalleController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-
+        //LogPlataforma::registrar(ConstantesGlobales::STOCK_DEPOSITO_EGRESO,ConstantesGlobales::ELIMINACION,$id);
         if($request->isAjax){
             /*
             *   Process for ajax request

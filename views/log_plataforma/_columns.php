@@ -9,6 +9,8 @@ use kartik\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
+/** @var array $searchModel */
+
 $layoutDate = <<< HTML
     {input1}
     {input2}
@@ -18,13 +20,14 @@ $layoutDate = <<< HTML
 HTML;
 
 $columna_1 = '5%';//id
-$columna_2 = '25%';//usuario
-$columna_3 = '10%';//fecha
-$columna_4 = '7%';//hora
-$columna_5 = '25%';//modulo
-$columna_6 = '10%';//accion
+$columna_2 = '14%';//modulo
+$columna_3 = '15%';//accion
+$columna_4 = '7%';//fecha
+$columna_5 = '7%';//hora
+$columna_6 = '15%';//usuario
 $columna_7 = '7%';//id registro
-$columna_8 = '5%';//accion
+$columna_8 = '25%';//observacion
+$columna_9 = '5%';//accion
 
 $mysql_personas = "SELECT DISTINCT l.idusuario as id, CONCAT(p.apellido, ' ', p.nombre) AS nombre
                     FROM log_plataforma l
@@ -48,7 +51,7 @@ return [
         'filterWidgetOptions' => ['pluginOptions' => ['allowClear' => true],],
         'filterInputOptions' => ['placeholder' => 'Modulo...'],
         'format' => 'raw',
-        'width' => $columna_5,
+        'width' => $columna_2,
     ],
     [
         'class' => '\kartik\grid\DataColumn',
@@ -59,12 +62,12 @@ return [
         'filterWidgetOptions' => ['pluginOptions' => ['allowClear' => true],],
         'filterInputOptions' => ['placeholder' => 'Accion...'],
         'format' => 'raw',
-        'width' => $columna_6,
+        'width' => $columna_3,
     ],
     
     [
         'attribute' => 'fecha',
-        'width' => $columna_3,
+        'width' => $columna_4,
         'label' => 'Fecha',
         'value' => function ($model) {
             $fc = date_create($model->fecha);
@@ -91,7 +94,7 @@ return [
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'hora',
-        'width' => $columna_4,
+        'width' => $columna_5,
 
     ],
     [
@@ -113,16 +116,25 @@ return [
         'filterInputOptions' => ['placeholder' => 'Usuario...'],
         'format' => 'raw',
         'label'  => 'Usuario',
-        'width' => $columna_2,
-  ],
+        'width' => $columna_6,
+    ],
     [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'idregistro',
         'width' => $columna_7,
     ],
+        [
+        'class'=>'\kartik\grid\DataColumn',
+        'attribute'=>'observacion',
+        'width' => $columna_8,
+        'value' => function ($model) {
+            return $model->observacion ?? '';
+        },
+        'format' => 'raw', // <--- ESTO es clave para que procese el <b>
+    ],
     [
         'class' => 'kartik\grid\ActionColumn',
-        'width' => $columna_8,
+        'width' => $columna_9,
         'template' => '{view}',
         'dropdown' => false,
         'vAlign'=>'middle',

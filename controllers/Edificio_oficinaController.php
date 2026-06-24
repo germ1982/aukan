@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
 use app\models\Edificio;
 use Yii;
 use app\models\EdificioOficina;
@@ -124,7 +125,7 @@ class Edificio_oficinaController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
-                    LogPlataforma::registrar(18, 1, $model->idoficina);
+                    LogPlataforma::registrar(ConstantesGlobales::OFICINAS, ConstantesGlobales::CREACION, $model->idoficina);
                     return [
                         'title' => "Nueva Oficina",
                         'content' => '<span class="text-success">Oficina Creada Correctamente</span>',
@@ -192,7 +193,7 @@ class Edificio_oficinaController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
-                    LogPlataforma::registrar(18, 2, $model->idoficina);
+                    LogPlataforma::registrar(ConstantesGlobales::OFICINAS, ConstantesGlobales::MODIFICACION, $model->idoficina);
                     return [
                         'title' => "Editar Oficina",
                         'content' => '<span class="text-success">Oficina Editada Correctamente</span>',
@@ -222,7 +223,8 @@ class Edificio_oficinaController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(18, 3, $id);
+        LogPlataforma::registrar(ConstantesGlobales::OFICINAS, ConstantesGlobales::ELIMINACION, $id);
+
 
         if ($request->isAjax) {
             /*
