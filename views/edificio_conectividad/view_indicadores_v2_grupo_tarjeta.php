@@ -67,7 +67,7 @@ if (strpos($estadoLower, 'bueno') !== false || strpos($estadoLower, 'excelente')
                     <strong class="tech-value"><?= htmlspecialchars($edificio['infraestructura']) ?></strong>
                 </div>
                 <div>
-                    <span class="tech-label">Enlace: </span>
+                    <span class="tech-label">Conexión: </span>
                     <strong class="tech-value"><?= htmlspecialchars($edificio['tipo_conexion']) ?></strong>
                 </div>
 
