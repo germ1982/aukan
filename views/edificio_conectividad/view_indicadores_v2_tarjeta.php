@@ -9,35 +9,105 @@ use yii\web\View;
 /** @var string $title */
 /** @var string $accentColor */
 /** @var string $chartId */
-/** @var string $text_match */ // <-- DECLARAMOS LA VARIABLE ACÁ
-/** @var array $tarjetas */ // <-- DECLARAMOS LA VARIABLE ACÁ
+/** @var string $text_match */ 
+/** @var array $tarjetas */ 
 /** @var array $data */
 
 if (!function_exists('renderCryptoDataList')) {
-    function renderCryptoDataList($title, $items, $sectionId)
+    function renderCryptoDataList($title, $items, $sectionId, $agrupar = false)
     {
         $html = '<div class="react-sub-section">';
 
-        // Cabecera con flexbox para tirar el botón a la derecha
+        // Cabecera principal (Infraestructura / Servicio / Enlace)
         $html .= '<div class="react-list-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">';
         $html .= '  <h4 class="react-list-title" style="margin-bottom: 0;">' . htmlspecialchars($title) . '</h4>';
-        // Botón animado Cyberpunk (flecha)
         $html .= '  <button type="button" class="cyber-toggle-btn" onclick="toggleCyberSection(\'' . $sectionId . '\', this)">';
         $html .= '    <span class="glyphicon glyphicon-chevron-down toggle-icon"></span>';
         $html .= '  </button>';
         $html .= '</div>';
 
-        // Contenedor colapsable con ID único
+        // Contenedor principal de la tarjeta
         $html .= '<div id="' . $sectionId . '" class="react-list-group cyber-collapsible expanded">';
 
         if (empty($items)) {
             $html .= '<div class="react-list-item empty text-muted">Sin registros activos</div>';
         } else {
-            foreach ($items as $name => $count) {
-                $html .= '<div class="react-list-item">';
-                $html .= '  <span class="react-item-name">' . htmlspecialchars($name) . '</span>';
-                $html .= '  <span class="react-item-badge">' . $count . '</span>';
-                $html .= '</div>';
+            if ($agrupar) {
+                $grupoContador = 0;
+                $grupoItems = [];
+                $itemSueltoNombre = '';
+                $itemSueltoContador = null;
+
+                foreach ($items as $name => $count) {
+                    $nameClean = strtolower(trim($name));
+                    // Detectamos si es el caso "Sin Servicio" o "Desconocida"
+                    if ($nameClean === 'sin servicio' || $nameClean === 'desconocida') {
+                        $itemSueltoNombre = $name; // Mantiene el formato original (Sin Servicio o Desconocida)
+                        $itemSueltoContador = $count;
+                    } else {
+                        $grupoContador += $count;
+                        $grupoItems[$name] = $count;
+                    }
+                }
+
+                // 1. Si existe el elemento suelto (Sin Servicio / Desconocida), sale arriba directo
+                if ($itemSueltoContador !== null) {
+                    $html .= '<div class="react-list-item">';
+                    $html .= '  <span class="react-item-name">' . htmlspecialchars($itemSueltoNombre) . '</span>';
+                    $html .= '  <span class="react-item-badge">' . $itemSueltoContador . '</span>';
+                    $html .= '</div>';
+                }
+
+                // 2. Todo lo demás se agrupa acá abajo con el colapsable por CSS
+                if ($grupoContador > 0) {
+                    $subSectionId = $sectionId . '-sub-grupo';
+                    // Definimos el título del grupo según la sección
+                    $tituloGrupo = (strtolower($title) == 'conexion') ? 'Con Conexión' : 'Con Servicio';
+                    
+                    $html .= '<div class="react-list-item" style="display: flex; flex-direction: column; align-items: stretch; padding: 0;">';
+                    
+                    // Input invisible para el estado
+                    $html .= '  <input type="checkbox" id="check-' . $subSectionId . '" style="display: none;" />';
+                    
+                    // Fila del encabezado agrupado
+                    $html .= '  <div style="display: flex; align-items: center; padding: 6px 3px; width: 100%; gap: 8px;">';
+                    $html .= '    <span class="react-item-name" style="margin-right: auto;">' . $tituloGrupo . '</span>';
+                    
+                    // Flechita (Label del checkbox)
+                    $html .= '    <label for="check-' . $subSectionId . '" class="cyber-toggle-btn sub-toggle" style="padding: 2px 0px; font-size: 10px; margin-right: 4px; cursor: pointer; margin-bottom: 0;">';
+                    $html .= '      <span class="glyphicon glyphicon-chevron-down toggle-icon"></span>';
+                    $html .= '    </label>';
+                    
+                    $html .= '    <span class="react-item-badge">' . $grupoContador . '</span>';
+                    $html .= '  </div>';
+
+                    // Subcontenedor interno desplegable
+                    $html .= '  <div class="sub-cyber-content" style="padding-left: 0px; background: rgba(0,0,0,0.15); border-radius: 4px; margin: 0px 0px 6px 0px;">';
+                    foreach ($grupoItems as $subName => $subCount) {
+                        $html .= '<div class="react-list-item" style="padding: 4px 12px; border-bottom: 1px solid rgba(255,255,255,0.03);">';
+                        $html .= '  <span class="react-item-name" style="font-size: 0.95em; opacity: 0.85;">' . htmlspecialchars($subName) . '</span>';
+                        $html .= '  <span class="react-item-badge" style="opacity: 0.85;">' . $subCount . '</span>';
+                        $html .= '</div>';
+                    }
+                    $html .= '  </div>';
+                    
+                    // CSS inline para controlar la magia del toggle limpio
+                    $html .= '<style>';
+                    $html .= '  #check-' . $subSectionId . ' ~ .sub-cyber-content { display: none; }';
+                    $html .= '  #check-' . $subSectionId . ':checked ~ .sub-cyber-content { display: block; }';
+                    $html .= '  #check-' . $subSectionId . ':checked ~ div .toggle-icon { transform: rotate(180deg); }';
+                    $html .= '</style>';
+                    
+                    $html .= '</div>';
+                }
+            } else {
+                // Modo plano clásico por si alguna tarjeta no usa agrupación
+                foreach ($items as $name => $count) {
+                    $html .= '<div class="react-list-item">';
+                    $html .= '  <span class="react-item-name">' . htmlspecialchars($name) . '</span>';
+                    $html .= '  <span class="react-item-badge">' . $count . '</span>';
+                    $html .= '</div>';
+                }
             }
         }
 
@@ -61,17 +131,17 @@ if (!function_exists('renderCryptoDataList')) {
 
         <div class="row">
             <div class="col-xs-12">
-                <?= renderCryptoDataList('Infraestructura', $data['infraestructura'], $chartId . '-infra') ?>
+                <?= renderCryptoDataList('Infraestructura', $data['infraestructura'], $chartId . '-infra',true) ?>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <?= renderCryptoDataList('Servicio', $data['servicio'], $chartId . '-serv') ?>
+                <?= renderCryptoDataList('Servicio', $data['servicio'], $chartId . '-serv',true) ?>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <?= renderCryptoDataList('Enlace', $data['enlace'], $chartId . '-enlace') ?>
+                <?= renderCryptoDataList('Conexion', $data['enlace'], $chartId . '-enlace',true) ?>
             </div>
         </div>
 

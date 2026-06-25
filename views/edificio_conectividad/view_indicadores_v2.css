@@ -142,7 +142,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 2px 10px;                            /* Líneas más juntas */
+    padding: 2px 3px;                            /* Líneas más juntas */
     font-size: 13px;
     background-color: transparent !important;     /* Le sacamos el fondo individual */
     border: none !important;                      /* Le sacamos el borde individual */
