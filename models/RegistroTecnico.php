@@ -25,6 +25,7 @@ class RegistroTecnico extends \yii\db\ActiveRecord
     public $fhasta;
     public $asistentes_informaticos;
     public $solicitante;
+    public $usuario_carga;
     public static function tableName()
     {
         return 'registro_tecnico';
@@ -38,7 +39,7 @@ class RegistroTecnico extends \yii\db\ActiveRecord
         return [
             [['fecha_solicitud', 'idsolicitante'], 'required'],
             [['fecha_solicitud','hora_solicitud', 'fecha_solucion', 'hora_solucion', 'asistentes_informaticos', 'solicitante'], 'safe'],
-            [['idsolicitante', 'iddispositivo', 'idtipo_registro', 'estado'], 'integer'],
+            [['idsolicitante', 'iddispositivo', 'idtipo_registro', 'estado','usuario_carga'], 'integer'],
             [['problema', 'solucion'], 'string'],
         ];
     }
@@ -60,6 +61,7 @@ class RegistroTecnico extends \yii\db\ActiveRecord
             'asistentes_informaticos' => 'Asistencia',
             'hora_solicitud' => 'Hora Solicitud',
             'hora_solucion' => 'Hora Solución',
+            'usuario_carga' => 'Carga',
         ];
     }
 

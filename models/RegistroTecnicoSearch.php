@@ -19,10 +19,10 @@ class RegistroTecnicoSearch extends RegistroTecnico
     {
         return [
             // Quitá 'estado' de la regla de 'integer'
-            [['idregistro', 'idsolicitante', 'iddispositivo', 'idtipo_registro'], 'integer'],
+            [['idregistro', 'idsolicitante', 'iddispositivo', 'idtipo_registro','usuario_carga'], 'integer'],
 
             // Agregalo a la regla de 'safe' para que permita recibir el array de checkboxes
-            [['estado', 'fecha_solicitud', 'problema', 'solucion', 'fdesde', 'fhasta', 'solicitante'], 'safe'],
+            [['estado', 'fecha_solicitud', 'problema', 'solucion', 'fdesde', 'fhasta', 'solicitante','usuario_carga'], 'safe'],
         ];
     }
 

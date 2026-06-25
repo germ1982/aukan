@@ -2,6 +2,7 @@
 
 use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
+use app\models\ConstantesGlobales;
 use app\models\Empleado;
 use app\models\OrganismoDispositivo;
 use app\models\RegistroTecnico;
@@ -38,10 +39,11 @@ $sectores = OrganismoDispositivo::findBySql($sectores_sql)->all();
 $columna_1 = '10%';
 $columna_2 = '30%';
 $columna_3 = '15%';
-$columna_4 = '12%';
-$columna_5 = '18%';
-$columna_6 = '8%';
-$columna_7 = '7%';
+$columna_4 = '3%';
+$columna_5 = '12%';
+$columna_6 = '13%';
+$columna_7 = '8%';
+$columna_8 = '5%';
 return [
 
     [
@@ -131,8 +133,50 @@ return [
 
     [
         'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'idtipo_registro',
+        'attribute' => 'usuario_carga',
+        'headerOptions' => [
+            'style' => 'color: #87b867; ',
+        ],
+        'format' => 'raw',
+        'value' => function ($model) {
+            $modulo = ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA;
+            $accion = ConstantesGlobales::CREACION;
+            $sql = "SELECT e.idempleado as idempleado, concat(p.apellido,' ',p.nombre) as nombre, e.foto as foto
+                    FROM registro_tecnico r
+                    join log_plataforma l on r.idregistro = l.idregistro
+                    join usuarios u on l.idusuario = u.id
+                    join empleado e on e.idpersona = u.idpersona
+                    join personas p on p.idpersona = u.idpersona
+                    where l.idmodulo = $modulo and r.idregistro = $model->idregistro and l.idaccion = $accion;";
+
+            $iniciante = \Yii::$app->db->createCommand($sql)->queryOne();
+
+            if (!$iniciante) return ''; // Corregido el empty para arrays planos
+
+            $html = '<div style="display:flex; gap:4px; flex-wrap:wrap;">';
+
+                $src = $iniciante['foto']
+                    ? \yii\helpers\Url::base(true) . '/img/empleados-fotos/' . $iniciante['foto']
+                    : \yii\helpers\Url::base(true) . '/img/empleados-fotos/default.jpg';
+                // Creamos la URL hacia la vista del empleado
+                $urlView = \yii\helpers\Url::to(['empleado/view', 'id' => $iniciante['idempleado']]);
+                //$html .= '<img src="' . $src . '" title="' . $a['nombre'] . '" style="width:28px; height:28px; border-radius:50%; object-fit:cover; border:2px solid #ddd;">';
+                //$html .= '<img src="' . $src . '" title="' . $a['nombre'] . '" class="imagen-avatar-grilla" style="width:20px; height:20px; border-radius:50%; object-fit:cover; ">';
+                $html .= '<a href="' . $urlView . '" role="modal-remote" title="' . $iniciante['nombre'] . '">';
+                $html .= '<img src="' . $src . '" class="imagen-avatar-grilla" style="width:22px; height:22px; border-radius:50%; object-fit:cover; border: 1px solid #ccc; cursor:pointer;">';
+                $html .= '</a>';
+          
+            $html .= '</div>';
+            return $html;
+        },
+        'filter' => false, // <-- ACÁ LE DECÍS QUE NO FILTRE
         'width' => $columna_4,
+    ],
+
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'idtipo_registro',
+        'width' => $columna_5,
         'value' => function ($model) {
             if ($model->idtipo_registro) {
                 $tipo = Configuracion::findOne($model->idtipo_registro)->descripcion;
@@ -182,7 +226,7 @@ return [
             $html .= '</div>';
             return $html;
         },
-        'width' => $columna_5,
+        'width' => $columna_6,
     ],
 
     [
@@ -211,7 +255,7 @@ return [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
         'vAlign' => 'middle',
-        'width' => $columna_7,
+        'width' => $columna_8,
         'template' => '{view} {update} ',
         'urlCreator' => function ($action, $model, $key, $index) {
             return Url::to([$action, 'id' => $key]);
