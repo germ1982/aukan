@@ -115,7 +115,7 @@ if (!isset($id) || $id == null) {
             <header class="fondo header ">
                   <div class="logo fondo neon">
                         <a href="index.php?r=site%2Findex" class="logo fondo" style="margin-top:1px;margin-left:20px">
-                              <img src="img/datafam-rolo-style.jpg" alt="Logo" class=" logo neon">
+                              <img src="img/logo_aukan.png" alt="Logo" class=" logo neon">
                         </a>
                         <div class="visible-xs toggle-sidebar-left fondo" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened">
                               <i class="fa fa-bars" aria-label="Toggle sidebar"></i>

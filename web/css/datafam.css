@@ -85,13 +85,7 @@ box-shadow: 0 0 30px rgba(255, 255, 255, 1.0), 0 0 60px rgba(255, 255, 255, 0.8)
 
 }
 
-.logo {
-    margin: 3px !important;
-    width: 150px;
-    /* Ajusta el ancho según sea necesario */
-    height: auto;
-    /* Esto mantiene la proporción de la imagen */
-}
+
 
 .neon {
 
