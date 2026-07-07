@@ -23,8 +23,9 @@ foreach ($diccionarioDB as $fila) {
 AppAsset::register($this);
 //$this->registerCssFile("@web/css/datafam.css", ['depends' => [\yii\web\YiiAsset::className(), \yii\bootstrap\BootstrapAsset::className()]]);
 $this->registerCssFile("@web/css/rolo.css", ['depends' => [\yii\web\YiiAsset::className(), \yii\bootstrap\BootstrapAsset::className()]]);
+//$this->registerCssFile("@web/css/aukan.css", ['depends' => [\yii\web\YiiAsset::className(), \yii\bootstrap\BootstrapAsset::className()]]);
 $this->registerJs("var diccPersonalizado = " . Json::encode($comunes) . ";", \yii\web\View::POS_HEAD);
-$this->title = "DATAFAM | INFORMACION";
+$this->title = "AUKAN | INFORMACION";
 
 $usuario = Yii::$app->user->identity;
 $empleado = Empleado::find()->where(['idpersona' => $usuario->idpersona])->one();

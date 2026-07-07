@@ -11,6 +11,8 @@ use kartik\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
+/** @var  app\models\PersonaSearch $searchModel*/
+
 $layoutDate = <<< HTML
     {input1}
     {input2}
@@ -157,6 +159,22 @@ return [
             'data-confirm-message' => 'Are you sure want to delete this item'
         ],
         'width' => $columna7,
+        'buttons' => [
+            'conectividad' => function ($url, $model) {
+
+
+            return Html::a(
+                '<i class="fas fa-plus"></i>',
+                ['persona/create','idedificio' => $model->idpersona],
+                [
+                    'data-pjax' => 1,
+                    'class' => '',
+                    'role' => 'modal-remote',
+                    'title' => 'Nueva Conectividad'
+                ]
+            );
+        },
+        ],
     ],
 
 ];

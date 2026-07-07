@@ -407,6 +407,12 @@ class PersonaController extends Controller
         return $response;
     }
 
+    public function actionActualizar_persona_renaper($idpersona){
+
+    $model = $this->findModel($idpersona);
+    
+    }
+
     public static function get_nacionalidad($nacionalidad)
     {
         $nac = Configuracion::find()
@@ -416,4 +422,6 @@ class PersonaController extends Controller
 
         return $nac->id_configuracion ?? null;
     }
+
+
 }

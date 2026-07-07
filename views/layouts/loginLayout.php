@@ -6,7 +6,7 @@ use yii\helpers\Html;
 use app\assets\AppAsset;
 
 AppAsset::register($this);
-$this->title="DATAFAM";
+$this->title="AUKAN";
 ?>
 <?php $this->beginPage() ?>
 

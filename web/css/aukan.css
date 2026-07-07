@@ -1,0 +1,154 @@
+/* Paleta de colores AUKAN (Estilo Dark-Tech / Cyber) */
+/* Fondo oscuro base: #0b1622 */
+/* Destello Cian/Celeste: #6cd6f5 y #00d4ff */
+/* Texto de contraste: #dcf5ff */
+
+.table>thead>tr>td.info,
+.table>tbody>tr>td.info,
+.table>tfoot>tr>td.info,
+.table>thead>tr>th.info,
+.table>tbody>tr>th.info,
+.table>tfoot>tr>th.info,
+.table>thead>tr.info>td,
+.table>tbody>tr.info>td,
+.table>tfoot>tr.info>td,
+.table>thead>tr.info>th,
+.table>tbody>tr.info>th,
+.table>tfoot>tr.info>th {
+    color: #dcf5ff;
+    background-color: #0e1e2e !important; /* Fila info integrada al fondo oscuro */
+}
+
+.panel-primary .panel-heading {
+    background: #122438 !important; /* Azul panel corporativo */
+    border-color: #6cd6f5 !important; /* Borde cian sutil */
+}
+
+.custom-grid {
+    font-size: 13px!important;
+}
+
+/* Modales estilo Interfaz Tecnológica */
+.modal-header {
+    background: linear-gradient(135deg, #0b1622 0%, #172f47 50%, #0b1622 100%);
+    color: #6cd6f5; /* Texto principal en cian */
+    padding: 12px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom: 2px solid #00d4ff; /* Línea de división LED */
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2);
+    font-family: 'Orbitron', 'Roboto', sans-serif;
+    align-items: center;
+    height: 45px!important;
+}
+
+.modal-header .close {
+    margin-top: -4px;
+    color: #6cd6f5;
+    opacity: 1;
+    font-size: 3.5rem;
+    position: relative;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(108, 214, 245, 0.2) 0%, rgba(108, 214, 245, 0.05) 60%, rgba(0,0,0,0) 70%);
+    box-shadow: 0 0 10px rgba(108, 214, 245, 0.4);
+    transition: background 0.3s, box-shadow 0.3s;
+}
+
+.modal-header .close:hover {
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.5) 0%, rgba(0, 212, 255, 0.2) 60%, rgba(0,0,0,0) 70%);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.8);
+    color: #fff;
+}
+
+.content-body {
+    padding: 0px !important;
+}
+
+#loading-gif {
+    background: url('img/sur.gif') no-repeat center center;
+    position: fixed;
+    background-size: 100%;
+    z-index: 9999999;
+    height: 100px;
+    width: 100px;
+    top: 40%;
+    left: 47%;
+}
+
+#loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 9999998;
+    background-color: rgba(11, 22, 34, 0.6); /* Capa oscura azulada */
+}
+
+.logo {
+    margin: 1px !important;
+    width: 120px;
+    height: 50px;
+    margin-left: 12px !important;
+}
+
+/* Iconos de la interfaz con brillo de neón celeste */
+.neon {
+    text-shadow:
+          0 0 2px #00d4ff,
+          0 0 4px #00d4ff,
+          0 0 8px #00d4ff,
+          0 0 12px rgba(0, 212, 255, 0.5);
+    color: #dcf5ff !important;
+}
+
+.neon-border {
+    position: relative;
+    color: #fff;
+}
+
+.neon-border::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    bottom: -5px;
+    left: -5px;
+    z-index: -1;
+    background: transparent;
+    box-shadow:
+          0 0 2px #fff,
+          0 0 4px #6cd6f5,
+          0 0 8px #6cd6f5,
+          0 0 12px #00d4ff,
+          0 0 20px rgba(0, 212, 255, 0.4);
+}
+
+/* Avatares en grilla con destello cian moderno */
+.imagen-avatar-grilla {
+    border-radius: 50%;
+    margin-right: 10px;
+    box-shadow:
+          0 0 4px #6cd6f5,
+          0 0 8px rgba(0, 212, 255, 0.6);
+    transition: transform 0.3s ease;
+    z-index: 1;
+}
+  
+.imagen-avatar-grilla:hover {
+    transform: scale(3);
+    box-shadow: 0 0 15px #00d4ff;
+}
+
+.fondo {
+    background-color: #0b1622 !important; /* Azul oscuro ciberpunk */
+}
+
+.letra {
+    color: #dcf5ff !important; /* Blanco azulado de alta legibilidad */
+}
