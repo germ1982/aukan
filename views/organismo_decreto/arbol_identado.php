@@ -52,8 +52,8 @@ function renderizarNodoColumnar($nodo, $iddecreto, $nivel)
     // Determinamos la clase según el nivel (df-nivel-1, df-nivel-2, etc.)
     $claseNivel = "df-col-nivel-" . $nodo->nivel;
 
-    $hijos = app\models\Organismo::find()->where(['padre' => $nodo->idorganismo])->all();
-    $dispositivos = app\models\OrganismoDispositivo::find()->where(['idorganismo' => $nodo->idorganismo])->all();
+    $hijos = app\models\Organismo::find()->where(['padre' => $nodo->idorganismo, 'activo' => 1])->all();
+    $dispositivos = app\models\OrganismoDispositivo::find()->where(['idorganismo' => $nodo->idorganismo, 'activo' => 1])->all();
     
     $tieneHijos = (!empty($hijos) || !empty($dispositivos));
 ?>
