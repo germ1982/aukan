@@ -5,6 +5,18 @@ namespace app\models; // O el namespace de la carpeta donde esté guardado
 class ConstantesGlobales
 {
     // ==========================================
+    // CONSTANTES PARA MEMBRETES
+    // 
+
+    const MEMBRETE_RUTA_HEADER = "img/MEMBRETE_2026_MINISTERIO_DE_TRABAJO_Y_RRHH.png";
+    const MEMBRETE_FOOTER = '<hr style="border: 0; border-top: 1px solid #ccc; margin-bottom: 5px;">
+    <p style="text-align: center; font-size: 9px; color: #666; font-family: sans-serif; margin: 0; padding: 0;">
+        Documento generado digitalmente por Plataforma <strong>&gt;&gt;&gt;-AUKAN--&gt;</strong> Centro de Información <br> 
+        Dirección de Informática y Asistencias Desarrollo Comunitario — Ministerio de Gobierno
+    </p>';
+
+
+    // ==========================================
     // CONSTANTES DE MÓDULOS (Para Autocompletado)
     // ==========================================
     const REGISTRO_TECNICO_INFORMATICA      = 1;
@@ -178,12 +190,12 @@ class ConstantesGlobales
         'STOCK_DEPOSITO_EGRESO' => [
             'id' => self::STOCK_DEPOSITO_EGRESO,
             'nombre' => 'Stock Depósito Egreso',
-            'modelo' => \app\models\StockDepositoEgreso::class
+            'modelo' => '\app\models\StockDepositoEgreso::class'
         ],
         'STOCK_DEPOSITO_INGRESO' => [
             'id' => self::STOCK_DEPOSITO_INGRESO,
             'nombre' => 'Stock Depósito Ingreso',
-            'modelo' => \app\models\StockDepositoIngreso::class
+            'modelo' => '\app\models\StockDepositoIngreso::class'
         ],
         'VEHICULOS_OFICIALES' => [
             'id' => self::VEHICULOS_OFICIALES,
@@ -315,6 +327,32 @@ class ConstantesGlobales
         'DESCARGA' => [
             'id' => self::DESCARGA,
             'nombre' => 'Descarga de Archivo'
+        ],
+    ];
+
+
+    // ==========================================
+    // CONSTANTES DE ESTADOS
+    // ==========================================
+    const ESTADO_ELIMINADO  = 0;
+    const ESTADO_ACTIVO     = 1;
+    const ESTADO_PROCESADO  = 2; // Por si el egreso/ingreso requiere confirmación final
+
+    // ==========================================
+    // MAPA MULTIDIMENSIONAL DE ESTADOS
+    // ==========================================
+    const ESTADOS = [
+        self::ESTADO_ELIMINADO => [
+            'id' => self::ESTADO_ELIMINADO,
+            'nombre' => 'Eliminado/Inactivo'
+        ],
+        self::ESTADO_ACTIVO => [
+            'id' => self::ESTADO_ACTIVO,
+            'nombre' => 'Activo'
+        ],
+        self::ESTADO_PROCESADO => [
+            'id' => self::ESTADO_PROCESADO,
+            'nombre' => 'Procesado/Cerrado'
         ],
     ];
 }
