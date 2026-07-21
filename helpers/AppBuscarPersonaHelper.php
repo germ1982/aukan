@@ -113,6 +113,7 @@ class AppBuscarPersonaHelper
                 'class' => 'form-control', // Clase de Bootstrap para estilos
                 //'onkeyup' => 'ValidarIngresoDni(' . $inputDocumento . ', ' . $inputIdPersona . ', ' . $nombreDivMensaje . ');'
                 'onkeyup' => "ValidarIngresoDni('$inputDocumento', '$inputIdPersona', '$nombreDivMensaje','$funcionAsignarDatos');",
+                'onblur' => "if (this.value.trim() !== '') { get_datos_persona('$inputDocumento', '$inputIdPersona', '$nombreDivMensaje','$funcionAsignarDatos'); }",
             ]
         );
         $html .= '</div>'; // Cierre del form-group
