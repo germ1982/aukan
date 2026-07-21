@@ -129,7 +129,7 @@ return [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
         'width' => $columna_8,
-        'template' => '{view} {update}{imprimir_acta_entrega} {imprimir_acta_entrega_2026}',
+        'template' => '{view} {update}{imprimir_acta_entrega_2026}',
         'vAlign' => 'middle',
         'urlCreator' => function ($action, $model, $key, $index) {
             return Url::to([$action, 'id' => $key]);

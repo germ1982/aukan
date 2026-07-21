@@ -1,6 +1,7 @@
 <?php
 
 use app\models\Configuracion;
+use app\models\ConstantesGlobales;
 use app\models\Empleado;
 use app\models\OrganismoDispositivo;
 use app\models\Persona;
@@ -21,7 +22,6 @@ $config = Configuracion::findOne($persona->documento_tipo);
 <html lang="es">
 
 
-
 <body style="
     font-family: Arial, sans-serif;
     font-size:11px;
@@ -30,14 +30,17 @@ $config = Configuracion::findOne($persona->documento_tipo);
     padding:0 25px;
 ">
 
+<!-- DECLARAMOS EL FOOTER (No se va a mostrar acá, queda guardado) -->
+<htmlpagefooter name="myFooter"><?= ConstantesGlobales::MEMBRETE_FOOTER ?></htmlpagefooter>
+
+<!-- INSTRUCCIÓN OBLIGATORIA: Le dice a mPDF "che, clavá el footer que declaré recién en todas las hojas" -->
+<sethtmlpagefooter name="myFooter" value="on" />
+
 <!-- MEMBRETE -->
 
-<div style="text-align:center; margin-top:10px;">
+<div style="text-align:center; margin: 0 -40px 15px -40px;">
 
-    <img
-        src="img/membrete_subsecretaria_familia_2025.png"
-        width="100%"
-    >
+    <img src=<?= ConstantesGlobales::MEMBRETE_RUTA_HEADER ?> width="100%">
 
 </div>
 
@@ -399,6 +402,8 @@ $personaDespacha = Persona::findOne($idpersona2);
 
 </table>
 
+
 </body>
 
 </html>
+
