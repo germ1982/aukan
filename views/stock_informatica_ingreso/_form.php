@@ -3,13 +3,17 @@
 use app\controllers\SiteController;
 use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
+use app\models\ConstantesGlobales;
 use app\models\Empleado;
 use app\models\StockInformaticaIngresoDetalle;
 use app\models\StockInformaticaIngresoDetalleSearch;
 use yii\helpers\Json;
 use yii\widgets\ActiveForm;
 
+/** @var \app\models\StockInformaticaIngreso $model */
 $model->fecha = $model->isNewRecord ? date('d/m/Y') : date('d/m/Y', strtotime($model->fecha));
+
+$model->estado = $model->isNewRecord ? ConstantesGlobales::ESTADO_ACTIVO : $model->estado;
 
 $array_detalles = $model->isNewRecord
     ? []
@@ -42,6 +46,10 @@ $model->idusuario_edicion = $idUsuario;
         </div>
         <div class="col-md-6">
             <?= SiteController::actionGet_input_select2($form, $model, 'idempleado_recepcion', 'cmb_idempleado_recepcion', Empleado::get_empleados(), 'idempleado', 'descripcion', 'Recepcion') ?>
+        </div>
+
+        <div class="col-md-3">
+            <?= SiteController::actionGet_input_select($form, $model, 'estado', 'cmb_estado',ConstantesGlobales::ESTADOS,'id','nombre','Estado') ?>
         </div>
     </div>
 

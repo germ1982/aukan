@@ -32,9 +32,9 @@ class StockInformaticaIngreso extends \yii\db\ActiveRecord
         return [
             [['fecha', 'idorigen', 'idempleado_recepcion'], 'required'],
             [['fecha', 'fdesde', 'fhasta'], 'safe'],
-            [['idorigen', 'idempleado_recepcion', 'idusuario_carga','idusuario_edicion'], 'integer'],
+            [['idorigen', 'idempleado_recepcion', 'idusuario_carga','idusuario_edicion','estado'], 'integer'],
             [['origen_referencia'], 'string', 'max' => 100],
-            [['observacion'], 'string', 'max' => 45],
+
         ];
     }
 

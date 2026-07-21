@@ -18,8 +18,8 @@ class StockInformaticaIngresoSearch extends StockInformaticaIngreso
     public function rules()
     {
         return [
-            [['idingreso', 'idorigen',  'idusuario_carga'], 'integer'],
-            [['fecha', 'origen_referencia', 'observacion', 'fdesde', 'fhasta','idempleado_recepcion'], 'safe'],
+            [['idingreso', 'idorigen',  'idusuario_carga', 'estado'], 'integer'],
+            [['fecha', 'origen_referencia', 'observacion', 'fdesde', 'fhasta', 'idempleado_recepcion'], 'safe'],
         ];
     }
 
@@ -45,7 +45,18 @@ class StockInformaticaIngresoSearch extends StockInformaticaIngreso
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            // 1. Seteamos el orden descendente por ID de ingreso por defecto
+            'sort' => [
+                'defaultOrder' => [
+                    'idingreso' => SORT_DESC,
+                ]
+            ],
         ]);
+
+        // 1. Seteamos "Activo" como estado por defecto si no se envió una búsqueda específica
+        if (!isset($params['StockInformaticaIngresoSearch']['estado'])) {
+            $this->estado = ConstantesGlobales::ESTADO_ACTIVO;
+        }
 
         $this->load($params);
 
@@ -69,12 +80,15 @@ class StockInformaticaIngresoSearch extends StockInformaticaIngreso
         $query->leftJoin('empleado e', 'stock_informatica_ingreso.idempleado_recepcion = e.idempleado');
         $query->leftJoin('personas p', 'e.idpersona = p.idpersona');
 
+
+
         $query->andFilterWhere([
             'idingreso' => $this->idingreso,
             'fecha' => $this->fecha,
             'idorigen' => $this->idorigen,
             //'idempleado_recepcion' => $this->idempleado_recepcion,
             'idusuario_carga' => $this->idusuario_carga,
+            'stock_informatica_ingreso.estado' => $this->estado, // Especificamos la tabla para evitar ambigüedad en el JOIN
         ]);
 
         $query->andFilterWhere(['like', 'origen_referencia', $this->origen_referencia])

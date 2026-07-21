@@ -2,13 +2,14 @@
 
 use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
+use app\models\ConstantesGlobales;
 use app\models\Empleado;
 use app\models\Persona;
 use kartik\date\DatePicker;
 use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
-
+/** @var \app\models\StockInformaticaEgreso\SearchModel $searchModel */
 
 $layoutDate = <<< HTML
     {input1}
@@ -102,6 +103,22 @@ return [
         // 'class'=>'\kartik\grid\DataColumn',
         // 'attribute'=>'observacion',
     // ],
+    [
+    'attribute' => 'estado',
+    'value' => function ($model) {
+        // Obtenemos el nombre descriptivo usando el array de constantes
+        return isset(ConstantesGlobales::ESTADOS[$model->estado]) 
+            ? ConstantesGlobales::ESTADOS[$model->estado]['nombre'] 
+            : 'Desconocido';
+    },
+    // Mapea automáticamente todo tu array de estados: [0 => 'Eliminado/Inactivo', 1 => 'Activo', 2 => 'Procesado/Cerrado']
+    'filter' => ArrayHelper::map(ConstantesGlobales::ESTADOS, 'id', 'nombre'),
+    'filterInputOptions' => [
+        'class' => 'form-control', 
+        'id' => null, 
+        'prompt' => 'Todos'
+    ],
+],
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
