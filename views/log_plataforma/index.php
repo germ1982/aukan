@@ -16,7 +16,7 @@ use yii\helpers\Url;
     // 2. Renderizar la vista completa
     echo AppIndexGenericoHelper::renderIndex(
         $this,                  // Objeto View ($this)
-        'Logs de DATAFAM',      // Título
+        'Logs de AUKAN',      // Título
         $gridColumns,           // Columnas
         $dataProvider,          // DataProvider (viene del controlador)
         $searchModel,           // SearchModel (viene del controlador)

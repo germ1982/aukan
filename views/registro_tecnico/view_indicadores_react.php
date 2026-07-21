@@ -37,7 +37,7 @@ $resueltos = Json::encode(array_column($datosGrafico, 'resueltos'));
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MONITOR GENERAL - DATAFAM</title>
+    <title>MONITOR GENERAL - AUKAN</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,7 +57,7 @@ $resueltos = Json::encode(array_column($datosGrafico, 'resueltos'));
             --text-secondary: #9ca3af;
             --text-muted: #6b7280;
             
-            /* Tu Paleta SUR / DATAFAM Integrada en la semántica */
+            /* Tu Paleta SUR / AUKAN Integrada en la semántica */
             --sur-dark: #2b3e4c;
             --sur-green: #87b867;
             --sur-yellow: #f4dfb9;
@@ -247,7 +247,7 @@ $resueltos = Json::encode(array_column($datosGrafico, 'resueltos'));
         <div class="row">
             <div class="col-xs-12">
                 <div class="dashboard-header">
-                    <h2 class="dashboard-title">Centro de Monitoreo Informático / <span>DATAFAM</span></h2>
+                    <h2 class="dashboard-title">Centro de Monitoreo Informático / <span>AUKAN</span></h2>
                 </div>
             </div>
         </div>

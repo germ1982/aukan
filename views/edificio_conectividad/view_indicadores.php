@@ -120,7 +120,7 @@ function renderCryptoDataList($title, $items) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Conectividad - DATAFAM</title>
+    <title>Dashboard Conectividad - AUKAN</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -348,7 +348,7 @@ function renderCryptoDataList($title, $items) {
         <div class="row">
             <div class="col-xs-12">
                 <div class="dashboard-header">
-                    <h2 class="dashboard-title">Centro de Monitoreo de Conectividad / <span>DATAFAM</span></h2>
+                    <h2 class="dashboard-title">Centro de Monitoreo de Conectividad / <span>AUKAN</span></h2>
                 </div>
             </div>
         </div>

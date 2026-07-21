@@ -124,5 +124,5 @@ foreach ($registros as $registro) {
 </div>
 
 <div class="footer">
-    Informe generado automáticamente por DATAFAM comprometidos con la excelencia. Fecha: <?= date('d/m/Y H:i') ?>
+    Informe generado automáticamente por AUKAN comprometidos con la excelencia. Fecha: <?= date('d/m/Y H:i') ?>
 </div>

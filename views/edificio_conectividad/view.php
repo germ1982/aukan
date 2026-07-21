@@ -80,7 +80,7 @@ $tipoConexion = Configuracion::findOne($model->tipo_conexion);
 
     /* Detalles decorativos de las esquinas estilo HUD de laboratorio */
     .tech-view::before {
-        content: "[ SYS_DATAFAM ]";
+        content: "[ SYS_AUKAN ]";
         position: absolute;
         top: 4px;
         right: 12px;
@@ -253,7 +253,7 @@ $tipoConexion = Configuracion::findOne($model->tipo_conexion);
 </div>
 
 <div class="tech-view" style="padding: 2px; background-color: #e0e6e8;">
-    <div class="tech-grid-deco">▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞ SYSTEMA_DATAFAM_CONNECTADO ▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞</div>
+    <div class="tech-grid-deco">▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞ SYSTEMA_AUKAN_CONNECTADO ▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞▞</div>
 </div>
 
 <div class="tech-view">

@@ -36,7 +36,7 @@ $resueltos = Json::encode(array_column($datosGrafico, 'resueltos'));
 
 <head>
     <meta charset="UTF-8">
-    <title>MONITOR GENERAL - DATAFAM</title>
+    <title>MONITOR GENERAL - AUKAN</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -239,7 +239,7 @@ $resueltos = Json::encode(array_column($datosGrafico, 'resueltos'));
 
     <div class="container-fluid">
         <h2 class="text-center" style="margin-bottom: 40px; font-weight: 400;">
-            CENTRO DE MONITOREO INFORMATICO // <span style="font-weight: 800; color: #00ffaa; text-shadow: 0 0 8px #00ffaa;">DATAFAM</span>
+            CENTRO DE MONITOREO INFORMATICO // <span style="font-weight: 800; color: #00ffaa; text-shadow: 0 0 8px #00ffaa;">AUKAN</span>
         </h2>
 
         <div class="row">
