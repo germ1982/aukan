@@ -128,11 +128,8 @@ $qrData = implode(' | ', array_filter([
                     <span class="pv-value muted">No especificado</span>
                 <?php endif; ?>
             </div>
-        </div>
 
-        <div class="card">
-            <div class="card-title t-teal"><i class="fa fa-building" style="font-size:12px;"></i> Sector</div>
-            <div class="card-body">
+                        <div class="card-body">
                 <?php if ($dispositivo): ?>
                     <div style="display:flex;align-items:center;gap:10px;padding:6px 0;">
                         <div style="width:36px;height:36px;border-radius:8px;background:#E6F1FB;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
@@ -146,19 +143,16 @@ $qrData = implode(' | ', array_filter([
             </div>
         </div>
 
-        <div class="card rt-full">
+
+
+        <div class="card">
             <div class="card-title t-amber"><i class="fa fa-exclamation-circle" style="font-size:12px;"></i> Problema</div>
             <div class="card-body">
                 <p class="problema-box"><?= $model->problema ? Html::encode($model->problema) : '<span class="muted" style="color:#aaa;font-style:italic;">Sin descripción</span>' ?></p>
             </div>
         </div>
 
-        <div class="card rt-full">
-            <div class="card-title t-green"><i class="fa fa-check-circle" style="font-size:12px;"></i> Solución</div>
-            <div class="card-body">
-                <p class="problema-box"><?= $model->solucion ? Html::encode($model->solucion) : '<span style="color:#aaa;font-style:italic;">Sin solución registrada</span>' ?></p>
-            </div>
-        </div>
+        
 
         <div class="card">
             <div class="card-title t-purple"><i class="fa fa-users" style="font-size:12px;"></i> Asistentes</div>
@@ -187,14 +181,13 @@ $qrData = implode(' | ', array_filter([
         </div>
 
         <div class="card">
-            <div class="card-title t-coral"><i class="fa fa-qrcode" style="font-size:12px;"></i> QR del registro</div>
+            <div class="card-title t-green"><i class="fa fa-check-circle" style="font-size:12px;"></i> Solución</div>
             <div class="card-body">
-                <div class="qr-wrap">
-                    <div id="qrcode"></div>
-                    <p style="font-size:11px;color:#888;text-align:center;">Escaneá para ver el registro completo</p>
-                </div>
+                <p class="problema-box"><?= $model->solucion ? Html::encode($model->solucion) : '<span style="color:#aaa;font-style:italic;">Sin solución registrada</span>' ?></p>
             </div>
         </div>
+
+
 
     </div>
 </div>
