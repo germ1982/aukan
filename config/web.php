@@ -22,8 +22,12 @@ $config = [
         }
     }, */
     'modules' => [
-        'gridview' => ['class' => 'kartik\grid\Module']
+        'gridview' => ['class' => 'kartik\grid\Module'],
+        'api' => [
+            'class' => 'app\modules\api\Module',
+        ]
     ],
+
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
