@@ -44,7 +44,7 @@ class PersonaController extends Controller
     {
         $searchModel = new PersonaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $dataProvider->pagination->pageSize=50;
+        $dataProvider->pagination->pageSize = 50;
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -107,34 +107,33 @@ class PersonaController extends Controller
                             'type' => 'submit',
                         ]),
                 ];
-            }
-            else if ($model->load($request->post())) {
-                  $transaction = Yii::$app->db->beginTransaction();
-                  $guardado = true;
+            } else if ($model->load($request->post())) {
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
 
-                    $model->padre = null;
-                    $model->conviviente=0;
-                  
-                  if ($guardado && $model->save()) {
-                      $transaction->commit();
-                      LogPlataforma::registrar(ConstantesGlobales::PERSONAS,ConstantesGlobales::CREACION,$model->idpersona);
-                      return [
-                          'title' => "Nueva Persona",
-                          'content' => '<span class="text-success">Nodo Creada Correctamente</span>',
-                          'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
-                      ];
-                  }
-              }
-              return [
-                  'title' => "Nueva Persona Faltan datos!!! Complete Los datos Faltantes!!!",
-                  'content' => $this->renderAjax('create', [
-                      'model' => $model,
-                  ]),
-                  'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                      Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
-  
-              ];
-          }
+                $model->padre = null;
+                $model->conviviente = 0;
+
+                if ($guardado && $model->save()) {
+                    $transaction->commit();
+                    LogPlataforma::registrar(ConstantesGlobales::PERSONAS, ConstantesGlobales::CREACION, $model->idpersona);
+                    return [
+                        'title' => "Nueva Persona",
+                        'content' => '<span class="text-success">Nodo Creada Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                    ];
+                }
+            }
+            return [
+                'title' => "Nueva Persona Faltan datos!!! Complete Los datos Faltantes!!!",
+                'content' => $this->renderAjax('create', [
+                    'model' => $model,
+                ]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+
+            ];
+        }
     }
 
     public function actionUpdate($id)
@@ -162,32 +161,31 @@ class PersonaController extends Controller
                             'type' => 'submit',
                         ]),
                 ];
-            }
-            else if ($model->load($request->post())) {
-                  $transaction = Yii::$app->db->beginTransaction();
-                  $guardado = true;
+            } else if ($model->load($request->post())) {
+                $transaction = Yii::$app->db->beginTransaction();
+                $guardado = true;
 
-                  /* var_dump($model->conviviente); die; // <-- agregá esto temporalmente */
-                  if ($guardado && $model->save()) {
-                      $transaction->commit();
-                      LogPlataforma::registrar(ConstantesGlobales::PERSONAS,ConstantesGlobales::MODIFICACION,$model->idpersona);
-                      return [
-                          'title' => "Editar Persona",
-                          'content' => '<span class="text-success">Persona Editada Correctamente</span>',
-                          'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
-                      ];
-                  }
-              }
-              return [
-                  'title' => "Editar Persona Faltan datos!!! Complete Los datos Faltantes!!!",
-                  'content' => $this->renderAjax('create', [
-                      'model' => $model,
-                  ]),
-                  'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                      Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
-  
-              ];
-          }
+                /* var_dump($model->conviviente); die; // <-- agregá esto temporalmente */
+                if ($guardado && $model->save()) {
+                    $transaction->commit();
+                    LogPlataforma::registrar(ConstantesGlobales::PERSONAS, ConstantesGlobales::MODIFICACION, $model->idpersona);
+                    return [
+                        'title' => "Editar Persona",
+                        'content' => '<span class="text-success">Persona Editada Correctamente</span>',
+                        'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                    ];
+                }
+            }
+            return [
+                'title' => "Editar Persona Faltan datos!!! Complete Los datos Faltantes!!!",
+                'content' => $this->renderAjax('create', [
+                    'model' => $model,
+                ]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
+
+            ];
+        }
     }
 
     /**
@@ -200,7 +198,7 @@ class PersonaController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(ConstantesGlobales::PERSONAS,ConstantesGlobales::ELIMINACION,$id);
+        LogPlataforma::registrar(ConstantesGlobales::PERSONAS, ConstantesGlobales::ELIMINACION, $id);
 
         return $this->redirect(['index']);
     }
@@ -307,8 +305,8 @@ class PersonaController extends Controller
                 $guardar = $this->actionGuardar_persona_desde_renaper($data);
 
                 if ($guardar !== null) {
-                        return $guardar->toArray();
-                    }          
+                    return $guardar->toArray();
+                }
 
                 return '';
             }
@@ -317,17 +315,17 @@ class PersonaController extends Controller
         return '';
     }
 
-    
+
     public function actionGuardar_persona_desde_renaper($data)
     {
 
         $model = new Persona();
-        
+
         $model->apellido = $data['apellido'] ?? null;
-        
+
         $model->nombre = $data['nombres'] ?? null;
         $model->documento = $data['documento'] ?? null;
-        
+
         // Corrección para fecha de nacimiento
         if (isset($data['fecha_nacimiento']) && !empty($data['fecha_nacimiento'])) {
             $model->fecha_nacimiento = \DateTime::createFromFormat('d/m/Y', $data['fecha_nacimiento'])->format('Y-m-d');
@@ -341,7 +339,7 @@ class PersonaController extends Controller
         } else {
             $model->fecha_fallecimiento = null;
         }
-        
+
         $model->documento_tipo = 2; // valor por defecto
         $model->nacionalidad = $this->get_nacionalidad($data['nacionalidad']);   // Argentina, por ejemplo
         $model->genero = $data['genero'] ?? null;         // Masculino/Femenino, según el contexto
@@ -357,7 +355,7 @@ class PersonaController extends Controller
 
 
         if ($model->save()) {
-            LogPlataforma::registrar(ConstantesGlobales::PERSONAS,ConstantesGlobales::CREACION,$model->idpersona,"Se trajo de RENAPER");
+            LogPlataforma::registrar(ConstantesGlobales::PERSONAS, ConstantesGlobales::CREACION, $model->idpersona, "Se trajo de RENAPER");
             return $model;
         } else {
             // Log de errores si querés investigar
@@ -407,10 +405,82 @@ class PersonaController extends Controller
         return $response;
     }
 
-    public function actionActualizar_persona_renaper($idpersona){
 
-    $model = $this->findModel($idpersona);
-    
+
+    public function actionActualizar_persona_renaper($idpersona)
+    {
+        $request = Yii::$app->request;
+
+        if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+
+            // 1. Chequeo de conexión/enlace
+            if (!$this->actionChequear_estado_renaper()) {
+                return [
+                    'title' => "Estado de RENAPER",
+                    'content' => '<div class="alert alert-danger" role="alert">El servicio de RENAPER/X-Road se encuentra temporalmente fuera de servicio.</div>',
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                ];
+            }
+
+            $model = $this->findModel($idpersona);
+
+            $generoPrimario = ($model->genero == 20) ? 'F' : 'M';
+            $generoSecundario = ($generoPrimario === 'F') ? 'M' : 'F';
+
+            // Intento 1: Género guardado
+            $renaper_response = $this->actionGet_persona_renaper($model->documento, $generoPrimario);
+            $renaper_data = json_decode($renaper_response, true);
+
+            // Intento 2: Género alternativo (Fallback por rectificación registral)
+            if (empty($renaper_data['data']) || empty($renaper_data['data']['apellido'])) {
+                $renaper_response = $this->actionGet_persona_renaper($model->documento, $generoSecundario);
+                $renaper_data = json_decode($renaper_response, true);
+                $generoEfectivo = $generoSecundario;
+            } else {
+                $generoEfectivo = $generoPrimario;
+            }
+
+            // Si encontramos datos
+            if (isset($renaper_data['data']) && !empty($renaper_data['data']['apellido'])) {
+                $data = $renaper_data['data'];
+
+                $model->apellido = $data['apellido'] ?? $model->apellido;
+                $model->nombre = $data['nombres'] ?? $model->nombre;
+                $model->genero = ($generoEfectivo === 'F') ? 20 : 21;
+
+                if (isset($data['nacionalidad'])) {
+                    $model->nacionalidad = $this->get_nacionalidad($data['nacionalidad']);
+                }
+
+                $model->domicilio_calle = $data['calle'] ?? $model->domicilio_calle;
+                $model->domicilio_numero = !empty($data['numero']) ? $data['numero'] : '0';
+
+                $domicilioExtra = array_filter([
+                    $data['monoblock'] ?? null,
+                    $data['piso'] ?? null,
+                    $data['depto'] ?? null
+                ]);
+                $model->domicilio = implode(' ', $domicilioExtra);
+
+                if ($model->save()) {
+                    LogPlataforma::registrar(ConstantesGlobales::PERSONAS, ConstantesGlobales::MODIFICACION, $model->idpersona, "Actualización desde RENAPER");
+                    return [
+                        'forceReload' => '#crud-datatable-pjax', // Reemplazá por el ID de tu contenedor Pjax si es distinto
+                        'title' => "Actualización RENAPER",
+                        'content' => '<div class="alert alert-success" role="alert">Los datos de <strong>' . Html::encode($model->nombre . ' ' . $model->apellido) . '</strong> se actualizaron correctamente desde RENAPER.</div>',
+                        'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                    ];
+                }
+            }
+
+            // Si la persona no existe en RENAPER
+            return [
+                'title' => "Actualización RENAPER",
+                'content' => '<div class="alert alert-warning" role="alert">No se encontraron datos oficiales en RENAPER para el DNI especificado.</div>',
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+            ];
+        }
     }
 
     public static function get_nacionalidad($nacionalidad)
@@ -423,5 +493,41 @@ class PersonaController extends Controller
         return $nac->id_configuracion ?? null;
     }
 
+    public function actionChequear_estado_renaper()
+    {
+        $SSLCERT_PATH = env('SSLCERT_PATH');
+        $SSLKEY_PATH = env('SSLKEY_PATH');
 
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            // Consultamos la URL base del servicio sin pasar parámetros
+            CURLOPT_URL => 'https://xroadmingobierno.neuquen.gob.ar/r1/OPTIC/GOB/GOB00001/GP-RENAPER/WS_RENAPER_DOCUMENTO/',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_NOBODY => true, // HACE UN "HEAD": Solo pide cabeceras, no procesa ni trae body
+            CURLOPT_TIMEOUT => 3, // Si en 3 segundos no contesta, asumimos que se cayó
+            CURLOPT_SSLCERT => $SSLCERT_PATH,
+            CURLOPT_SSLKEY => $SSLKEY_PATH,
+            CURLOPT_HTTPHEADER => array(
+                'x-road-client: OPTIC/GOB/GOB00018/GP-SUBSEFAMILIA'
+            ),
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => 0,
+        ));
+
+        curl_exec($curl);
+
+        // Obtenemos el código de estado HTTP (Ej: 200, 400, 404, 500, 502)
+        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $curlError = curl_errno($curl);
+
+        curl_close($curl);
+
+        // Si hubo error de cURL (timeout, DNS) o un error de servidor (5xx), la conexión está caída
+        if ($curlError || $httpCode >= 500 || $httpCode === 0) {
+            return false; // Conexión/Servicio caído
+        }
+
+        return true; // El nodo de la X-Road y el servicio responden
+    }
 }
