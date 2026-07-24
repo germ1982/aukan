@@ -96,12 +96,61 @@ if ($model->isNewRecord) {
 <?php
 $script = <<< JS
 
-function asignar_datos_idpersona(data){
-    $('#input_documento_idpersona').val(data['documento']);
-    let nombre_idpersona = data['apellido'] + ', ' + data['nombre'];
-    $('#txt_mensaje_idpersona').html(nombre_idpersona);
-    $('#input_cuil').val(get_cuil(data['documento'], data['genero']));
+
+
+function asignar_datos_idpersona(data, esNuevo = true) {
+    console.log('asignar_datos_idpersona:', data);
+    
+    // Si NO es un nuevo alta (ej: carga inicial del update), solo seteamos los campos y salimos
+    if (!esNuevo) {
+        $('#input_documento_idpersona').val(data['documento']);
+        let nombre_idpersona = data['apellido'] + ', ' + data['nombre'];
+        $('#txt_mensaje_idpersona').html(nombre_idpersona);
+        return;
     }
+
+    // Si es un alta o una nueva búsqueda en el buscador, validamos en la BD
+    $.ajax({
+        url: 'index.php?r=empleado/check-empleado',
+        type: 'POST',
+        data: { idpersona: data['idpersona'], documento: data['documento'] },
+        success: function(response) {
+            if (response.esEmpleado) {
+                
+                let texto = '<div style="text-align:center"><h2>AH!!! AH!!! AH!!!</h2></div><br><div style="text-align:center"><img src="https://c.tenor.com/0bn7ZRzdNpkAAAAd/nope-not-a-chance.gif" alt="gif" style="width:150px; height:100px;"><br><h4>El empleado ya existe! Redirigiendo a edición...</h4></div>';
+                
+                $.alert({
+                    title: '',
+                    content: texto,
+                    type: 'orange',
+                    onClose: function() {
+                        let urlUpdate = 'index.php?r=empleado/update&id=' + response.idempleado;
+                        
+                        let instance = $('#ajaxCrudModal').data('modalRemoteInstance') || window.modalRemote;
+                        
+                        if (instance && typeof instance.doRemote === 'function') {
+                            instance.doRemote(urlUpdate, 'GET');
+                        } else {
+                            $('<a>', {
+                                'href': urlUpdate,
+                                'role': 'modal-remote'
+                            }).appendTo('body').trigger('click').remove();
+                        }
+                    }
+                });
+
+            } else {
+                // Si NO es empleado, completamos el alta normalmente
+                $('#input_documento_idpersona').val(data['documento']);
+                let nombre_idpersona = data['apellido'] + ', ' + data['nombre'];
+                $('#txt_mensaje_idpersona').html(nombre_idpersona);
+                get_cuil(data['documento'], data['genero']);
+            }
+        }
+    });
+}
+
+
 
 function get_cuil(documento,genero){
     console.log('ingreso a get_cuil con: ' + documento + ' y genero: ' + genero);
@@ -128,21 +177,13 @@ JS;
 $this->registerJs($script);
 
 
-
 if (!$model->isNewRecord) {
     $model_persona = Persona::findOne($model->idpersona);
-
-    // 1. Convertir los atributos del modelo (PHP) a una cadena JSON
     $modelJson = \yii\helpers\Json::encode($model_persona->attributes);
 
+    // Evitamos declarar variables JS con let/const que choquen en re-renders
     $this->registerJs(<<<JS_UPDATE
-        // Esta función se ejecuta solo al cargar la página en modo UPDATE
-        let datosModelo = $modelJson; 
-        console.log(datosModelo);
-        
-        // Llamamos a la función centralizada para rellenar los campos
-        asignar_datos_idpersona(datosModelo); 
-    JS_UPDATE, WebView::POS_READY); // POS_READY asegura que el DOM esté listo
+        asignar_datos_idpersona($modelJson, false); 
+    JS_UPDATE, WebView::POS_READY);
 }
 
-$this->registerJs($script);
