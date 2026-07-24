@@ -142,7 +142,7 @@ return [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
         'vAlign' => 'middle',
-        'template' => '{view} {update} ',
+        'template' => '{view} {update} {renaper}',
         'urlCreator' => function ($action, $model, $key, $index) {
             return Url::to([$action, 'id' => $key]);
         },
@@ -160,17 +160,16 @@ return [
         ],
         'width' => $columna7,
         'buttons' => [
-            'conectividad' => function ($url, $model) {
-
-
+            'renaper' => function ($url, $model) {
             return Html::a(
-                '<i class="fas fa-plus"></i>',
-                ['persona/create','idedificio' => $model->idpersona],
+                '<i class="fas fa-sync-alt"></i>', 
+                ['persona/actualizar_persona_renaper', 'idpersona' => $model->idpersona],
                 [
-                    'data-pjax' => 1,
-                    'class' => '',
                     'role' => 'modal-remote',
-                    'title' => 'Nueva Conectividad'
+                    'title' => 'Actualizar datos desde RENAPER',
+                    'data-toggle' => 'tooltip',
+                    'data-request-method' => 'post',
+                    'class' => 'btn btn-xs btn-outline-info'
                 ]
             );
         },

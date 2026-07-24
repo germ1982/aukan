@@ -103,6 +103,8 @@ function asignar_datos_idpersona_solicitante(data) {
     // Muestra el nombre en el div de estado
     let nombre = data['apellido'] + ', ' + data['nombre'];
     $('#txt_mensaje_idpersona_solicitante').html(nombre);
+
+    asignar_datos_idpersona_recibe(data);
 }
 
 // Callback automático para el Receptor (Persona que recibe)

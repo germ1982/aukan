@@ -64,11 +64,28 @@ class AppBuscarPersonaHelper
                                 console.warn('La función ' + funcionAsignarDatos + ' no está definida.');
                             }
                         } else {
-                            $('#' + mensajeDivId).html("No se encontraron datos de Persona con DNI " + dni_persona + " en SUR ni RENAPER");
+                            if (chequear_estado_renaper == true){
+                                $('#' + mensajeDivId).html("No se encontraron datos de Persona con DNI " + dni_persona + " en AUKAN ni RENAPER");
+                            }
+                            else{
+                                $('#' + mensajeDivId).html("No se encontraron datos de Persona con DNI " + dni_persona + " en AUKAN, <span style='color: red;'>RENAPER no respondió</div>");
+                            }
+                            
                         }
                         $('#loading').hide();
                     });
                      
+                }
+
+                function chequear_estado_renaper(){
+                    $('#' + mensajeDivId).html("Buscando datos de Persona con DNI " + dni_persona);
+                    $.post("index.php?r=persona/chequear_estado_renaper", function (data) {
+                    //$.post("index.php?r=persona/get_persona_renaper&dni=" + dni_persona + "&genero=F", function (data) {
+                        console.log('data de chequear_estado_renaper:');
+                        console.log(data);
+
+                        return data;
+                    });
                 }
 
                 function ValidarIngresoDni(inputDocumentoId, inputIdPersonaId, mensajeDivId,funcionAsignarDatos) {
