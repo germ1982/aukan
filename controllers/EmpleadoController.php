@@ -431,16 +431,16 @@ class EmpleadoController extends Controller
                     ->bindValue(':viejo', $iddispositivo_viejo)
                     ->execute();
 
-                LogPlataforma::registrar(ConstantesGlobales::DISPOSITIVOS,ConstantesGlobales::MIGRACION_EGRESA_DATOS,$iddispositivo_viejo,"Migracion Saliente"); 
+                LogPlataforma::registrar(ConstantesGlobales::DISPOSITIVOS, ConstantesGlobales::MIGRACION_EGRESA_DATOS, $iddispositivo_viejo, "Migracion Saliente");
 
                 foreach ($empleados as $e) {
                     // Acceso como array porque viene de asArray()
                     //$txt = "Se migró a {$e['descripcion']} de <b>$sector_viejo</b> a <b>$sector_nuevo</b>";
 
-                    LogPlataforma::registrar(ConstantesGlobales::EMPLEADOS,ConstantesGlobales::MODIFICACION,$e['idempleado'],"Migracion");
+                    LogPlataforma::registrar(ConstantesGlobales::EMPLEADOS, ConstantesGlobales::MODIFICACION, $e['idempleado'], "Migracion");
                 }
 
-                LogPlataforma::registrar(ConstantesGlobales::DISPOSITIVOS,ConstantesGlobales::MIGRACION_INGRESA_DATOS,$iddispositivo_nuevo,"Migracion Entrante"); 
+                LogPlataforma::registrar(ConstantesGlobales::DISPOSITIVOS, ConstantesGlobales::MIGRACION_INGRESA_DATOS, $iddispositivo_nuevo, "Migracion Entrante");
                 return [
                     'title' => 'Empleados Migrados',
                     'content' => "<span class='text-success'>Empleados del dispositivo migrados correctamente.</span>",
@@ -454,6 +454,29 @@ class EmpleadoController extends Controller
                 ];
             }
         }
+    }
+
+    public function actionCheckEmpleado()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $idpersona = Yii::$app->request->post('idpersona');
+
+        // Buscamos si existe el empleado vinculado a esa persona (por ID o por Documento)
+        $empleado = Empleado::find()
+            ->where(['idpersona' => $idpersona])
+            ->one();
+
+        if ($empleado !== null) {
+            return [
+                'esEmpleado' => true,
+                'idempleado' => $empleado->idempleado // ID de la tabla empleado
+            ];
+        }
+
+        return [
+            'esEmpleado' => false
+        ];
     }
 }
 
