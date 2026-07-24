@@ -117,7 +117,7 @@ function asignar_datos_idpersona(data, esNuevo = true) {
         success: function(response) {
             if (response.esEmpleado) {
                 
-                let texto = '<div style="text-align:center"><h2>AH!!! AH!!! AH!!!</h2></div><br><div style="text-align:center"><img src="https://c.tenor.com/0bn7ZRzdNpkAAAAd/nope-not-a-chance.gif" alt="gif" style="width:150px; height:100px;"><br><h4>El empleado ya existe! Redirigiendo a edición...</h4></div>';
+                let texto = '<div style="text-align:center"><h2>El empleado ya existe</h2></div><br><div style="text-align:center"><img src="https://c.tenor.com/AacEyKSHWx4AAAAd/tenor.gif" alt="gif" style="width:150px; height:100px;"><br><h4>Ir a edición...</h4></div>';
                 
                 $.alert({
                     title: '',
