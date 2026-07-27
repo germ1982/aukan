@@ -157,7 +157,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="overlay-div">
     <div class="login-box">
-        <?= Html::img('@web/img/logo.png', ['alt' => 'Logo']) ?>
+        <?= yii\helpers\Html::img('@web/img/logo_aukan.png', ['alt' => 'Logo', 'class' => 'logo']) ?>
 
         <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
