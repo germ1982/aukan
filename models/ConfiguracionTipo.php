@@ -53,6 +53,7 @@ class ConfiguracionTipo extends \yii\db\ActiveRecord
     const TIPO_TECNOLOGIA_SEÑAL = 38 ;
     const TIPO_MASCARA_RED = 39 ;
     const TIPO_PUERTA_ENLACE_RED = 40 ;
+    const TIPO_DNS_RED = 41 ;
 
     public static function tableName()
     {
