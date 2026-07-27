@@ -7,6 +7,7 @@ use app\models\Empleado;
 use app\models\OrganismoDispositivo;
 use app\models\ConfiguracionTipo;
 use app\models\ConstantesGlobales;
+use app\models\InformaticaIp;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -40,6 +41,14 @@ $articulosRedIds = (new \yii\db\Query())
 
 $articulosCpuJson = json_encode($articulosCpuIds);
 $articulosRedJson = json_encode($articulosRedIds);
+
+$señales = Configuracion::get_configuraciones(ConfiguracionTipo::TIPO_SEÑAL);
+$tecnologias_señal = Configuracion::get_configuraciones(ConfiguracionTipo::TIPO_TECNOLOGIA_SEÑAL);
+$mascaras_red = Configuracion::get_configuraciones(ConfiguracionTipo::TIPO_MASCARA_RED);
+$puertas_enlace = Configuracion::get_configuraciones(ConfiguracionTipo::TIPO_PUERTA_ENLACE_RED);
+$dns_red = Configuracion::get_configuraciones(ConfiguracionTipo::TIPO_DNS_RED);
+$ipsData = InformaticaIp::get_ips();
+$ipsJson = json_encode($ipsData);
 ?>
 
 <div class="inventario-form">
@@ -47,6 +56,7 @@ $articulosRedJson = json_encode($articulosRedIds);
     <?php $form = ActiveForm::begin(); ?>
     <?= $form->field($model, 'es_cpu')->hiddenInput(['id' => 'input_es_cpu'])->label(false) ?>
     <?= $form->field($model, 'tiene_red')->hiddenInput(['id' => 'input_tiene_red'])->label(false) ?>
+    <?= $form->field($model, 'tiene_ip')->hiddenInput(['id' => 'input_tiene_ip'])->label(false) ?>
 
     <div class="row">
         <div class="col-md-5">
@@ -101,7 +111,42 @@ $articulosRedJson = json_encode($articulosRedIds);
 
     <!-- Div Red -->
     <div class="row" id="div_caracteristicas_red" style="display: <?= $model->tiene_red ? 'block' : 'none' ?>; margin-top: 15px;">
-        chorizo de red
+        <div class="col-md-2">
+            <?= SiteController::actionGet_input_select2($form, $model, 'idseñal', 'cmb_señal', $señales, 'id_configuracion', 'descripcion', 'Señal', 'seleccione Señal...') ?>
+        </div>
+        <div class="col-md-2">
+            <?= SiteController::actionGet_input_select2($form, $model, 'idtecnologia_señal', 'cmb_tecnologia_señal', $tecnologias_señal, 'id_configuracion', 'descripcion', 'Tecnología de Señal', 'seleccione Tecnología de Señal...') ?>
+        </div>
+
+        <!-- Interruptor para habilitar IP -->
+        <div class="col-md-3" style="padding-top: 30px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <label for="chk_tiene_ip" style="margin-bottom: 0; cursor: pointer;">¿Tiene IP?</label>
+                <label class="switch" style="margin-bottom: 0;">
+                    <?= Html::activeCheckbox($model, 'tiene_ip', [
+                        'id' => 'chk_tiene_ip',
+                        'label' => false,
+                        'checked' => (bool)$model->tiene_ip
+                    ]) ?>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="div_caracteristicas_ip" style="display: <?= $model->tiene_ip ? 'block' : 'none' ?>; margin-top: 15px;">
+        <div class="col-md-3">
+            <?= SiteController::actionGet_input_select2($form, $model, 'idip', 'cmb_ip', $ipsData, 'idip', 'ip', 'IP', 'seleccione IP...') ?>
+        </div>
+        <div class="col-md-3">
+            <?= SiteController::actionGet_input_select2($form, $model, 'idmascara_red', 'cmb_mascara_red', $mascaras_red, 'id_configuracion', 'descripcion', 'Máscara de Red', 'seleccione Máscara de Red...') ?>
+        </div>
+        <div class="col-md-3">
+            <?= SiteController::actionGet_input_select2($form, $model, 'idpuerta_enlace', 'cmb_puerta_enlace', $puertas_enlace, 'id_configuracion', 'descripcion', 'Puerta de Enlace', 'seleccione Puerta de Enlace...') ?>
+        </div>
+        <div class="col-md-3">
+            <?= SiteController::actionGet_input_select2($form, $model, 'iddns_red', 'cmb_dns_red', $dns_red, 'id_configuracion', 'descripcion', 'DNS de Red', 'seleccione DNS de Red...') ?>
+        </div>
     </div>
 
     <div class="row">
@@ -113,36 +158,20 @@ $articulosRedJson = json_encode($articulosRedIds);
     <?php ActiveForm::end(); ?>
 
 </div>
-
 <?php
-$js = <<<JS
-const articulosCpu = {$articulosCpuJson};
-const articulosRed = {$articulosRedJson};
+use yii\web\View;
 
-$('#cmb_articulo').on('change', function() {
-    let idArticulo = $(this).val();
-    let esInt = parseInt(idArticulo);
-
-    // Evaluamos la propiedad CPU
-    if (articulosCpu.includes(idArticulo) || articulosCpu.includes(esInt)) {
-        $('#div_caracteristicas_cpu').slideDown();
-        $('#input_es_cpu').val(1);
-    } else {
-        $('#div_caracteristicas_cpu').slideUp();
-        $('#input_es_cpu').val(0);
-        $('#cmb_micro, #cmb_ram, #cmb_disco, #cmb_so').val('').trigger('change');
-    }
-
-    // Evaluamos la propiedad RED
-    if (articulosRed.includes(idArticulo) || articulosRed.includes(esInt)) {
-        $('#div_caracteristicas_red').slideDown();
-        $('#input_tiene_red').val(1);
-    } else {
-        $('#div_caracteristicas_red').slideUp();
-        $('#input_tiene_red').val(0);
-        // Acá podemos limpiar los combos de red cuando los agregues
-    }
-});
+// 1. Inyectamos los datos del servidor a variables globales JS
+$jsData = <<<JS
+window.articulosCpu = {$articulosCpuJson};
+window.articulosRed = {$articulosRedJson};
+window.ipsMap = {$ipsJson};
 JS;
-$this->registerJs($js);
+$this->registerJs($jsData, View::POS_HEAD);
+
+$cssUrl = Yii::$app->assetManager->publish(__DIR__ . '/_form.css')[1];
+$jsUrl = Yii::$app->assetManager->publish(__DIR__ . '/_form.js')[1];
+
+$this->registerCssFile($cssUrl);
+$this->registerJsFile($jsUrl, ['depends' => [\yii\web\JqueryAsset::class]]);
 ?>

@@ -28,6 +28,13 @@ class Inventario extends \yii\db\ActiveRecord
     public $idso;
     public $tiene_red;
     public $es_cpu;
+    public $idseñal;
+    public $idtecnologia_señal;
+    public $tiene_ip;
+    public $idip;
+    public $idpuerta_enlace;
+    public $idmascara_red;
+    public $iddns_red;
     /**
      * {@inheritdoc}
      */
@@ -45,7 +52,7 @@ class Inventario extends \yii\db\ActiveRecord
         return [
             [['idarticulo', 'cantidad', 'iddispositivo', 'idempleado', 'idestado', 'activo','idpersona'], 'integer'],
             [['observacion'], 'string'],
-            [['origen_alta', 'iddisco', 'idram', 'idmicro', 'idso', 'tiene_red', 'es_cpu'], 'safe'],
+            [['origen_alta', 'iddisco', 'idram', 'idmicro', 'idso', 'tiene_red', 'es_cpu', 'idseñal', 'idtecnologia_señal', 'tiene_ip', 'idip', 'idpuerta_enlace', 'idmascara_red', 'iddns_red'], 'safe'],
         ];
     }
 
@@ -69,6 +76,13 @@ class Inventario extends \yii\db\ActiveRecord
             'idso' => 'Sistema Operativo',
             'tiene_red' => 'Red',
             'es_cpu' => 'CPU',
+            'idseñal' => 'Señal',
+            'idtecnologia_señal' => 'Tecnologia',
+            'tiene_ip' => 'Tiene IP',
+            'idip' => 'IP',
+            'idpuerta_enlace' => 'Puerta de Enlace',
+            'idmascara_red' => 'Máscara de Red',
+            'iddns_red' => 'DNS de Red',
         ];
     }
 
