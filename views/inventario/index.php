@@ -20,7 +20,13 @@ $boton_nuevo_articulo = Html::a(
     ['title' => 'Nuevo Artículo', 'class' => 'btn btn-primary boton_menu neon','role' => 'modal-remote']
 );
 
-$customButtonsA = "$boton_articulos. $boton_nuevo_articulo"; // o define aquí tus botones HTML::a(...) para la izquierda si es necesario
+$boton_articulos_red = Html::a(
+    '<i class="fas fa-network-wired"></i> Artículos especiales',
+    ['inventario/index_articulos_especiales'], // Ajustá el controller según corresponda
+    ['title' => 'Configuración de Artículos especiales', 'class' => 'btn btn-primary boton_menu neon', 'target' => '_blank']
+);
+
+$customButtonsA = "$boton_articulos $boton_nuevo_articulo $boton_articulos_red";// o define aquí tus botones HTML::a(...) para la izquierda si es necesario
 
 $customButtonsB = ''; // o define aquí tus botones HTML::a(...) para la derecha si es necesario
 

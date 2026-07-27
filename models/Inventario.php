@@ -22,6 +22,12 @@ class Inventario extends \yii\db\ActiveRecord
 {
     public $idpersona;
     public $origen_alta;
+    public $iddisco;
+    public $idram;
+    public $idmicro;
+    public $idso;
+    public $tiene_red;
+    public $es_cpu;
     /**
      * {@inheritdoc}
      */
@@ -39,7 +45,7 @@ class Inventario extends \yii\db\ActiveRecord
         return [
             [['idarticulo', 'cantidad', 'iddispositivo', 'idempleado', 'idestado', 'activo','idpersona'], 'integer'],
             [['observacion'], 'string'],
-            [['origen_alta'], 'safe'],
+            [['origen_alta', 'iddisco', 'idram', 'idmicro', 'idso', 'tiene_red', 'es_cpu'], 'safe'],
         ];
     }
 
@@ -57,6 +63,12 @@ class Inventario extends \yii\db\ActiveRecord
             'idestado' => 'Estado',
             'observacion' => 'Observacion',
             'activo' => 'Activo',
+            'iddisco' => 'Disco',
+            'idram' => 'RAM',
+            'idmicro' => 'Micro',
+            'idso' => 'Sistema Operativo',
+            'tiene_red' => 'Red',
+            'es_cpu' => 'CPU',
         ];
     }
 

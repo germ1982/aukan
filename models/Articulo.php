@@ -191,4 +191,18 @@ class Articulo extends \yii\db\ActiveRecord
      {
          return $this->hasOne(Configuracion::class, ['id_configuracion' => 'id_unidad_medida']);
      }
+
+     public static function get_articulos_por_tipo($idtipo)
+     {
+        $sql = "SELECT  a.idarticulo,concat( ct.descripcion ,' ', cm.descripcion ,' ' ,a.modelo ,' ' , cum.descripcion ,' ', a.descripcion) as descripcion
+                               from articulo a 
+                               join configuracion ct on ct.id_configuracion=a.idtipo
+                               join configuracion cm on cm.id_configuracion=a.idmarca
+                               join configuracion cum on cum.id_configuracion=a.id_unidad_medida
+                               where a.activo=1 and a.idtipo = $idtipo
+                               order by ct.descripcion,cm.descripcion,a.modelo,cum.descripcion,a.descripcion";
+        $articulos = Articulo::findBySql($sql)->all();
+        return $articulos;
+     }
 }
+

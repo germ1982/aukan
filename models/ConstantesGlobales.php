@@ -355,4 +355,12 @@ class ConstantesGlobales
             'nombre' => 'Procesado/Cerrado'
         ],
     ];
+
+    // ==========================================
+    // Constantes para inventario
+    // 
+    const ARTICULO_TIPO_DISCO = 446;
+    const ARTICULO_TIPO_RAM = 127;
+    const ARTICULO_TIPO_PROCESADOR = 571;
+
 }
