@@ -157,7 +157,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="overlay-div">
     <div class="login-box">
-        <img src="img/logo_aukan.png" alt="Logo" class="logo">
+        <?= Html::img('@web/img/logo.png', ['alt' => 'Logo']) ?>
 
         <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
