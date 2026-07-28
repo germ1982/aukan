@@ -47,8 +47,14 @@ class ConfiguracionTipo extends \yii\db\ActiveRecord
     const TIPO_CONECTIVIDAD_ESTADO = 32 ;
     const TIPO_CONECTIVIDAD_TIPO_CONEXION = 33 ;
     const TIPO_ARTICULO_RED = 34 ; // este no es un tipo de articulo, sino un pivot para definir si tipos de articulos son de red o no, es para el modulo de inventario de red
+    const TIPO_ARTICULO_CPU = 35 ; // este no es un tipo de articulo, sino un pivot para definir si tipos de articulos son CPU o no, es para el modulo de inventario de red
+    const SISTEMA_OPERATIVO = 36 ;
+    const TIPO_SEÑAL = 37 ;
+    const TIPO_TECNOLOGIA_SEÑAL = 38 ;
+    const TIPO_MASCARA_RED = 39 ;
+    const TIPO_PUERTA_ENLACE_RED = 40 ;
+    const TIPO_DNS_RED = 41 ;
 
-  
     public static function tableName()
     {
         return 'configuracion_tipo';
