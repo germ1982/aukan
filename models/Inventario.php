@@ -37,7 +37,7 @@ class Inventario extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    
+
     public static function tableName()
     {
         return 'inventario';
@@ -49,7 +49,7 @@ class Inventario extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['idarticulo', 'iddispositivo', 'idempleado', 'idestado', 'activo','idpersona'], 'integer'],
+            [['idarticulo', 'iddispositivo', 'idempleado', 'idestado', 'activo', 'idpersona'], 'integer'],
             [['observacion'], 'string'],
             [['origen_alta', 'iddisco', 'idram', 'idmicro', 'idso', 'tiene_red', 'es_cpu', 'idseñal', 'idtecnologia_señal', 'tiene_ip', 'idip', 'idpuerta_enlace', 'idmascara_red', 'iddns_red'], 'safe'],
         ];
@@ -85,8 +85,8 @@ class Inventario extends \yii\db\ActiveRecord
     }
 
     public static function get_por_dispositivo($iddispositivo)
-{
-    $sql = "SELECT 
+    {
+        $sql = "SELECT 
                 a.idarticulo,
 
                 CONCAT(ct.descripcion,' ',
@@ -108,6 +108,41 @@ class Inventario extends \yii\db\ActiveRecord
                     cum.descripcion,
                     a.descripcion;
                     ";
-    return Articulo::findBySql($sql)->asArray()->all();
-}
+        return Articulo::findBySql($sql)->asArray()->all();
+    }
+
+    // En app\models\Inventario.php
+
+    public static function getArticulosCpuIds()
+    {
+        return (new \yii\db\Query())
+            ->select(['a.idarticulo'])
+            ->from(['a' => 'articulo'])
+            ->innerJoin(['c' => 'configuracion'], 'c.descripcion = CAST(a.idtipo AS CHAR)')
+            ->where(['c.id_configuracion_tipo' => ConfiguracionTipo::TIPO_ARTICULO_CPU])
+            ->column();
+    }
+
+    public static function getArticulosRedIds()
+    {
+        return (new \yii\db\Query())
+            ->select(['a.idarticulo'])
+            ->from(['a' => 'articulo'])
+            ->innerJoin(['c' => 'configuracion'], 'c.descripcion = CAST(a.idtipo AS CHAR)')
+            ->where(['c.id_configuracion_tipo' => ConfiguracionTipo::TIPO_ARTICULO_RED])
+            ->column();
+    }
+
+    // En app\models\Inventario.php
+    public static function obtenerIpAsignada($idinventario)
+    {
+        if (empty($idinventario)) return null;
+
+        return (new \yii\db\Query())
+            ->select(['i.idip'])
+            ->from(['idr' => 'inventario_dispositivo_red'])
+            ->innerJoin(['i' => 'informatica_ip'], 'i.iddispositivo_red = idr.iddispositivo_red')
+            ->where(['idr.idinventario' => $idinventario])
+            ->scalar() ?: null;
+    }
 }
