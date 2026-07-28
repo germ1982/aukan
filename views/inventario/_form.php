@@ -8,6 +8,7 @@ use app\models\OrganismoDispositivo;
 use app\models\ConfiguracionTipo;
 use app\models\ConstantesGlobales;
 use app\models\InformaticaIp;
+use app\models\Inventario;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -20,24 +21,31 @@ $procesadores = Articulo::get_articulos_por_tipo(ConstantesGlobales::ARTICULO_TI
 $ram = Articulo::get_articulos_por_tipo(ConstantesGlobales::ARTICULO_TIPO_RAM);
 $sistemas_operativos = Configuracion::get_configuraciones(ConfiguracionTipo::SISTEMA_OPERATIVO);
 
-$model->es_cpu = $model->es_cpu ?? 0;
-$model->tiene_red = $model->tiene_red ?? 0;
+
 
 // Traemos los IDs de ARTÍCULO cuyo `idtipo` esté registrado como CPU/DVR
-$articulosCpuIds = (new \yii\db\Query())
-    ->select(['a.idarticulo'])
-    ->from(['a' => 'articulo'])
-    ->innerJoin(['c' => 'configuracion'], 'c.descripcion = CAST(a.idtipo AS CHAR)')
-    ->where(['c.id_configuracion_tipo' => ConfiguracionTipo::TIPO_ARTICULO_CPU])
-    ->column();
+$articulosCpuIds = Inventario::getArticulosCpuIds();
 
 // Traemos los IDs de ARTÍCULO cuyo `idtipo` esté registrado como RED
-$articulosRedIds = (new \yii\db\Query())
-    ->select(['a.idarticulo'])
-    ->from(['a' => 'articulo'])
-    ->innerJoin(['c' => 'configuracion'], 'c.descripcion = CAST(a.idtipo AS CHAR)')
-    ->where(['c.id_configuracion_tipo' => ConfiguracionTipo::TIPO_ARTICULO_RED])
-    ->column();
+$articulosRedIds = Inventario::getArticulosRedIds();
+
+// Evaluamos si el artículo actual pertenece a la categoría CPU o RED
+$model->es_cpu = !empty($model->idarticulo) && in_array($model->idarticulo, $articulosCpuIds) ? 1 : 0;
+$model->tiene_red = !empty($model->idarticulo) && in_array($model->idarticulo, $articulosRedIds) ? 1 : 0;
+
+// Consultamos si existe relación de IP a través de inventario_dispositivo_red
+if (!$model->isNewRecord) {
+    $ipAsignada = Inventario::obtenerIpAsignada($model->idinventario);
+
+    if ($ipAsignada) {
+        $model->tiene_ip = 1;
+        $model->idip = $ipAsignada; // Seteamos el atributo para que el combo lo seleccione
+    } else {
+        $model->tiene_ip = 0;
+    }
+} else {
+    $model->tiene_ip = $model->tiene_ip ?? 0;
+}
 
 $articulosCpuJson = json_encode($articulosCpuIds);
 $articulosRedJson = json_encode($articulosRedIds);
@@ -159,6 +167,7 @@ $ipsJson = json_encode($ipsData);
 
 </div>
 <?php
+
 use yii\web\View;
 
 // 1. Inyectamos los datos del servidor a variables globales JS
