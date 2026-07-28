@@ -63,7 +63,7 @@ $ipsJson = json_encode($ipsData);
             <?= SiteController::actionGet_input_select2($form, $model, 'idarticulo', 'cmb_articulo', Articulo::get_articulos(), 'idarticulo', 'descripcion', 'Articulo', 'seleccione articulo...') ?>
         </div>
         <div class="col-md-2">
-            <?= $form->field($model, 'cantidad')->textInput() ?>
+            <?= $form->field($model, 'matricula')->textInput() ?>
         </div>
 
         <div class="col-md-3">

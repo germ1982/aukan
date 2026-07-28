@@ -18,7 +18,7 @@ class InventarioSearch extends Inventario
     public function rules()
     {
         return [
-            [['idinventario', 'idarticulo', 'cantidad', 'iddispositivo', 'idempleado', 'idestado', 'activo'], 'integer'],
+            [['idinventario', 'idarticulo', 'iddispositivo', 'idempleado', 'idestado', 'activo'], 'integer'],
             [['observacion'], 'safe'],
         ];
     }
@@ -58,7 +58,6 @@ class InventarioSearch extends Inventario
         $query->andFilterWhere([
             'idinventario' => $this->idinventario,
             'idarticulo' => $this->idarticulo,
-            'cantidad' => $this->cantidad,
             'iddispositivo' => $this->iddispositivo,
             'idempleado' => $this->idempleado,
             'idestado' => $this->idestado,

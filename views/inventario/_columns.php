@@ -111,13 +111,7 @@ return [
          'width' => $columna6,
         
     ],
-    [
-        'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'cantidad',
-        
 
-        
-    ],
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,

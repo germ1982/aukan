@@ -12,7 +12,7 @@ use app\models\Persona;
 
 function campo($titulo, $contenido)
 {
-    echo "<h5><b>$titulo: </b></h5>
+    return "<h5><b>$titulo: </b></h5>
       <p class='campo'>
           $contenido
       </p>";
@@ -56,7 +56,7 @@ $persona = Persona::findOne($empleado->idpersona);
             <?= campo('Articulo', "$articulo->descripcion") ?>
         </div>
         <div class="col-md-2">
-            <?= campo('Cantidad', "$model->cantidad") ?>
+            <?= campo('MMatricula', "$model->matricula") ?>
         </div>
 
         <div class="col-md-2">
@@ -102,7 +102,7 @@ $persona = Persona::findOne($empleado->idpersona);
             'attributes' => [
                 'idinventario',
                 'idarticulo',
-                'cantidad',
+
                 'iddispositivo',
                 'idempleado',
                 'idestado',
