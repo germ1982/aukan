@@ -109,6 +109,7 @@ function asignar_datos_idpersona_solicitante(data) {
 
 // Callback automático para el Receptor (Persona que recibe)
 function asignar_datos_idpersona_recibe(data) {
+    $('#input_idpersona_recibe').val(data['idpersona']);
     // Setea el DNI en el buscador
     $('#input_documento_idpersona_recibe').val(data['documento']);
     
