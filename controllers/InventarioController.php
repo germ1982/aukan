@@ -116,19 +116,23 @@ class InventarioController extends Controller
                 ];
             } else if ($model->load($request->post())) {
                 $transaction = Yii::$app->db->beginTransaction();
-                $guardado = true;
 
 
 
-                if ($guardado && $model->save()) {
+                // 3. Confirmamos o revertimos la transacción
+                if ($model->save() && $model->guardarRelacionesSecundarias($request->post())) {
                     $transaction->commit();
                     LogPlataforma::registrar(ConstantesGlobales::INVENTARIO_INFORMATICA, ConstantesGlobales::CREACION, $model->idinventario);
+
                     return [
                         'title' => "Nuevo Item",
                         'content' => '<span class="text-success">Inventario Creado Correctamente</span>',
                         'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
                     ];
                 }
+
+                $transaction->rollBack();
+                
             }
             return [
                 'title' => "Nuevo Item Faltan datos!!! Complete Los datos Faltantes!!!",
@@ -269,9 +273,9 @@ class InventarioController extends Controller
     // Carga la vista principal con la lista de tipos de artículos
 
     public function actionIndex_articulos_especiales()
-{
-    // Consulta con doble JOIN para evaluar Red y CPU al mismo tiempo
-    $sql = "SELECT 
+    {
+        // Consulta con doble JOIN para evaluar Red y CPU al mismo tiempo
+        $sql = "SELECT 
                 c.id_configuracion,
                 c.descripcion,
                 IF(cr.id_configuracion IS NOT NULL, 1, 0) AS tiene_red,
@@ -286,29 +290,29 @@ class InventarioController extends Controller
             WHERE c.id_configuracion_tipo = :tipoArticulo
             ORDER BY c.descripcion ASC";
 
-    $articulosRaw = Yii::$app->db->createCommand($sql, [
-        ':tipoArticulo' => ConfiguracionTipo::TIPO_ARTICULO,
-        ':tipoRed'      => ConfiguracionTipo::TIPO_ARTICULO_RED,
-        ':tipoCpu'      => ConfiguracionTipo::TIPO_ARTICULO_CPU,
-    ])->queryAll();
+        $articulosRaw = Yii::$app->db->createCommand($sql, [
+            ':tipoArticulo' => ConfiguracionTipo::TIPO_ARTICULO,
+            ':tipoRed'      => ConfiguracionTipo::TIPO_ARTICULO_RED,
+            ':tipoCpu'      => ConfiguracionTipo::TIPO_ARTICULO_CPU,
+        ])->queryAll();
 
-    // Mapeo a objetos para el helper
-    $articulos = array_map(function($item) {
-        return (object)$item;
-    }, $articulosRaw);
+        // Mapeo a objetos para el helper
+        $articulos = array_map(function ($item) {
+            return (object)$item;
+        }, $articulosRaw);
 
-    $dataProvider = new ArrayDataProvider([
-        'allModels' => $articulos,
-        'key' => function ($model) {
-            return $model->id_configuracion;
-        },
-        'pagination' => false,
-    ]);
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $articulos,
+            'key' => function ($model) {
+                return $model->id_configuracion;
+            },
+            'pagination' => false,
+        ]);
 
-    return $this->render('index_articulos_especiales', [
-        'dataProvider' => $dataProvider,
-    ]);
-}
+        return $this->render('index_articulos_especiales', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
 
     // Endpoint AJAX que guarda o elimina el registro pivote según el checkbox
     public function actionToggle_articulo_red()
@@ -350,44 +354,44 @@ class InventarioController extends Controller
     }
 
     public function actionToggle_articulo_cpu()
-{
-    Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-    // Recepción de parámetros POST
-    $idConfiguracion = Yii::$app->request->post('id_configuracion');
-    $estado = Yii::$app->request->post('estado');
+        // Recepción de parámetros POST
+        $idConfiguracion = Yii::$app->request->post('id_configuracion');
+        $estado = Yii::$app->request->post('estado');
 
-    if (!$idConfiguracion) {
-        return ['success' => false, 'message' => 'Falta el ID de configuración.'];
-    }
-
-    try {
-        if ($estado == 1) {
-            // Se activa: Si no existe el registro en la tabla configuracion, lo creamos
-            $existe = Configuracion::find()
-                ->where([
-                    'descripcion' => (string)$idConfiguracion,
-                    'id_configuracion_tipo' => ConfiguracionTipo::TIPO_ARTICULO_CPU,
-                ])->exists();
-
-            if (!$existe) {
-                $model = new Configuracion();
-                $model->descripcion = (string)$idConfiguracion;
-                $model->id_configuracion_tipo = ConfiguracionTipo::TIPO_ARTICULO_CPU;
-                $model->activo = 1;
-                $model->save(false);
-            }
-        } else {
-            // Se desactiva: Eliminamos el registro asociado
-            Configuracion::deleteAll([
-                'descripcion' => (string)$idConfiguracion,
-                'id_configuracion_tipo' => ConfiguracionTipo::TIPO_ARTICULO_CPU,
-            ]);
+        if (!$idConfiguracion) {
+            return ['success' => false, 'message' => 'Falta el ID de configuración.'];
         }
 
-        return ['success' => true];
-    } catch (\Exception $e) {
-        return ['success' => false, 'message' => $e->getMessage()];
+        try {
+            if ($estado == 1) {
+                // Se activa: Si no existe el registro en la tabla configuracion, lo creamos
+                $existe = Configuracion::find()
+                    ->where([
+                        'descripcion' => (string)$idConfiguracion,
+                        'id_configuracion_tipo' => ConfiguracionTipo::TIPO_ARTICULO_CPU,
+                    ])->exists();
+
+                if (!$existe) {
+                    $model = new Configuracion();
+                    $model->descripcion = (string)$idConfiguracion;
+                    $model->id_configuracion_tipo = ConfiguracionTipo::TIPO_ARTICULO_CPU;
+                    $model->activo = 1;
+                    $model->save(false);
+                }
+            } else {
+                // Se desactiva: Eliminamos el registro asociado
+                Configuracion::deleteAll([
+                    'descripcion' => (string)$idConfiguracion,
+                    'id_configuracion_tipo' => ConfiguracionTipo::TIPO_ARTICULO_CPU,
+                ]);
+            }
+
+            return ['success' => true];
+        } catch (\Exception $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
     }
-}
 }

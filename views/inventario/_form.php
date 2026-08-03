@@ -20,6 +20,9 @@ $discos = Articulo::get_articulos_por_tipo(ConstantesGlobales::ARTICULO_TIPO_DIS
 $procesadores = Articulo::get_articulos_por_tipo(ConstantesGlobales::ARTICULO_TIPO_PROCESADOR);
 $ram = Articulo::get_articulos_por_tipo(ConstantesGlobales::ARTICULO_TIPO_RAM);
 $sistemas_operativos = Configuracion::get_configuraciones(ConfiguracionTipo::SISTEMA_OPERATIVO);
+$mothers = Articulo::get_articulos_por_tipo(ConstantesGlobales::ARTICULO_TIPO_MOTHERBOARD);
+$fuentes = Articulo::get_articulos_por_tipo(ConstantesGlobales::ARTICULO_TIPO_FUENTE);
+$placas_video = Articulo::get_articulos_por_tipo(ConstantesGlobales::ARTICULO_TIPO_PLACA_VIDEO);
 
 
 
@@ -101,61 +104,8 @@ $ipsJson = json_encode($ipsData);
         </div>
     </div>
 
-    <!-- Div CPU -->
-    <div class="row" id="div_caracteristicas_cpu" style="display: <?= $model->es_cpu ? 'block' : 'none' ?>; margin-top: 15px;">
-        <div class="col-md-3">
-            <?= SiteController::actionGet_input_select2($form, $model, 'idmicro', 'cmb_micro', $procesadores, 'idarticulo', 'descripcion', 'Micro', 'seleccione Micro...') ?>
-        </div>
-        <div class="col-md-3">
-            <?= SiteController::actionGet_input_select2($form, $model, 'idram', 'cmb_ram', $ram, 'idarticulo', 'descripcion', 'RAM', 'seleccione RAM...') ?>
-        </div>
-        <div class="col-md-3">
-            <?= SiteController::actionGet_input_select2($form, $model, 'iddisco', 'cmb_disco', $discos, 'idarticulo', 'descripcion', 'Disco', 'seleccione Disco...') ?>
-        </div>
-        <div class="col-md-3">
-            <?= SiteController::actionGet_input_select2($form, $model, 'idso', 'cmb_so', $sistemas_operativos, 'id_configuracion', 'descripcion', 'Sistema Operativo', 'seleccione Sistema Operativo...') ?>
-        </div>
-    </div>
-
-    <!-- Div Red -->
-    <div class="row" id="div_caracteristicas_red" style="display: <?= $model->tiene_red ? 'block' : 'none' ?>; margin-top: 15px;">
-        <div class="col-md-2">
-            <?= SiteController::actionGet_input_select2($form, $model, 'idseñal', 'cmb_señal', $señales, 'id_configuracion', 'descripcion', 'Señal', 'seleccione Señal...') ?>
-        </div>
-        <div class="col-md-2">
-            <?= SiteController::actionGet_input_select2($form, $model, 'idtecnologia_señal', 'cmb_tecnologia_señal', $tecnologias_señal, 'id_configuracion', 'descripcion', 'Tecnología de Señal', 'seleccione Tecnología de Señal...') ?>
-        </div>
-
-        <!-- Interruptor para habilitar IP -->
-        <div class="col-md-3" style="padding-top: 30px;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <label for="chk_tiene_ip" style="margin-bottom: 0; cursor: pointer;">¿Tiene IP?</label>
-                <label class="switch" style="margin-bottom: 0;">
-                    <?= Html::activeCheckbox($model, 'tiene_ip', [
-                        'id' => 'chk_tiene_ip',
-                        'label' => false,
-                        'checked' => (bool)$model->tiene_ip
-                    ]) ?>
-                    <span class="slider round"></span>
-                </label>
-            </div>
-        </div>
-    </div>
-
-    <div class="row" id="div_caracteristicas_ip" style="display: <?= $model->tiene_ip ? 'block' : 'none' ?>; margin-top: 15px;">
-        <div class="col-md-3">
-            <?= SiteController::actionGet_input_select2($form, $model, 'idip', 'cmb_ip', $ipsData, 'idip', 'ip', 'IP', 'seleccione IP...') ?>
-        </div>
-        <div class="col-md-3">
-            <?= SiteController::actionGet_input_select2($form, $model, 'idmascara_red', 'cmb_mascara_red', $mascaras_red, 'id_configuracion', 'descripcion', 'Máscara de Red', 'seleccione Máscara de Red...') ?>
-        </div>
-        <div class="col-md-3">
-            <?= SiteController::actionGet_input_select2($form, $model, 'idpuerta_enlace', 'cmb_puerta_enlace', $puertas_enlace, 'id_configuracion', 'descripcion', 'Puerta de Enlace', 'seleccione Puerta de Enlace...') ?>
-        </div>
-        <div class="col-md-3">
-            <?= SiteController::actionGet_input_select2($form, $model, 'iddns_red', 'cmb_dns_red', $dns_red, 'id_configuracion', 'descripcion', 'DNS de Red', 'seleccione DNS de Red...') ?>
-        </div>
-    </div>
+    <?php include '_form_caracteristicas_cpu.php'; ?>
+    <?php include '_form_caracteristicas_red.php'; ?>
 
     <div class="row">
         <div class="col-md-12">

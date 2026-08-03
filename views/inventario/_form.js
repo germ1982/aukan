@@ -10,7 +10,7 @@ $('#cmb_articulo').on('change', function() {
     } else {
         $('#div_caracteristicas_cpu').slideUp();
         $('#input_es_cpu').val(0);
-        $('#cmb_micro, #cmb_ram, #cmb_disco, #cmb_so').val('').trigger('change');
+        $('#cmb_micro, #cmb_ram_uno, #cmb_ram_dos, #cmb_disco, #cmb_so').val('').trigger('change');
     }
 
     // Evaluamos la propiedad RED
@@ -57,3 +57,51 @@ $('#cmb_ip').on('change', function() {
         $('#cmb_mascara_red, #cmb_puerta_enlace, #cmb_dns_red').val('').trigger('change');
     }
 });
+
+
+// Agregar nuevo combo de RAM
+$(document).on('click', '.btn-agregar-ram', function () {
+    let primeraFila = $('#contenedor_rams .fila-componente-ram').first();
+    let nuevaFila = primeraFila.clone();
+    
+    // Reseteamos el valor seleccionado en el nuevo combo
+    nuevaFila.find('select').val('');
+    $('#contenedor_rams').append(nuevaFila);
+    actualizarNumeracionComponentes();
+});
+
+// Agregar nuevo combo de Disco
+$(document).on('click', '.btn-agregar-disco', function () {
+    let primeraFila = $('#contenedor_discos .fila-componente-disco').first();
+    let nuevaFila = primeraFila.clone();
+    
+    // Reseteamos el valor seleccionado en el nuevo combo
+    nuevaFila.find('select').val('');
+    $('#contenedor_discos').append(nuevaFila);
+    actualizarNumeracionComponentes();
+});
+
+// Eliminar combo (RAM o Disco)
+$(document).on('click', '.btn-quitar-componente', function () {
+    let contenedorPadre = $(this).closest('#contenedor_rams, #contenedor_discos');
+    
+    // Permitimos borrar solo si hay más de una fila
+    if (contenedorPadre.children('.row').length > 1) {
+        $(this).closest('.row').remove();
+        actualizarNumeracionComponentes();
+    } else {
+        // Si es la única fila, solo limpiamos el valor seleccionado
+        $(this).closest('.row').find('select').val('');
+    }
+});
+
+// Función para enumerar automáticamente los labels de Memoria y Disco
+function actualizarNumeracionComponentes() {
+    $('#contenedor_rams .fila-componente-ram').each(function (index) {
+        $(this).find('.label-ram').text('Memoria ' + (index + 1));
+    });
+
+    $('#contenedor_discos .fila-componente-disco').each(function (index) {
+        $(this).find('.label-disco').text('Disco ' + (index + 1));
+    });
+}
