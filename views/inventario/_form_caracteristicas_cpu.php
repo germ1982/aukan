@@ -13,6 +13,28 @@ use yii\helpers\Html;
 /** @var array $ram */
 /** @var array $discos */
 /** @var array $placas_video */
+
+// Separar los componentes cargados según su tipo de artículo
+$componentesIds = $model->componentes_cpu ?? [];
+
+// Identificar la placa de video seleccionada (si existe)
+$placaVideoSel = null;
+foreach ($placas_video as $pv) {
+    if (in_array($pv['idarticulo'], $componentesIds)) {
+        $placaVideoSel = $pv['idarticulo'];
+        break;
+    }
+}
+
+// Filtrar las RAMs seleccionadas
+$ramsSel = array_values(array_filter($componentesIds, function ($id) use ($ram) {
+    return in_array($id, array_column($ram, 'idarticulo'));
+}));
+
+// Filtrar los Discos seleccionados
+$discosSel = array_values(array_filter($componentesIds, function ($id) use ($discos) {
+    return in_array($id, array_column($discos, 'idarticulo'));
+}));
 ?>
 
 <div class="row" id="div_caracteristicas_cpu" style="display: <?= $model->es_cpu ? 'block' : 'none' ?>; margin-top: 15px;">
@@ -43,12 +65,12 @@ use yii\helpers\Html;
         <!-- Placa de Video (Combo estático que postea al array de componentes) -->
         <div class="row">
             <div class="col-md-12">
-                    <label class="control-label">Placa de Video</label>
-                    <?= Html::dropDownList('Inventario[componentes_cpu][]', null, ArrayHelper::map($placas_video, 'idarticulo', 'descripcion'), [
-                        'id' => 'cmb_placa_video',
-                        'class' => 'form-control',
-                        'prompt' => 'Sin Placa / Integrada'
-                    ]) ?>
+                <label class="control-label">Placa de Video</label>
+                <?= Html::dropDownList('Inventario[componentes_cpu][]', $placaVideoSel, ArrayHelper::map($placas_video, 'idarticulo', 'descripcion'), [
+                    'id' => 'cmb_placa_video',
+                    'class' => 'form-control',
+                    'prompt' => 'Sin Placa / Integrada'
+                ]) ?>
 
             </div>
         </div>
@@ -69,21 +91,39 @@ use yii\helpers\Html;
 
         <!-- Contenedor donde se agregan los combos de RAM -->
         <div id="contenedor_rams">
-            <!-- Fila inicial por defecto -->
-            <div class="row fila-componente-ram">
-                <div class="col-md-10">
-                    <label class="control-label label-ram">Memoria 1</label>
-                    <?= Html::dropDownList('Inventario[componentes_cpu][]', null, \yii\helpers\ArrayHelper::map($ram, 'idarticulo', 'descripcion'), [
-                        'class' => 'form-control select-ram-dinamico',
-                        'prompt' => 'Seleccione RAM...'
-                    ]) ?>
+            <?php if (empty($ramsSel)): ?>
+                <div class="row fila-componente-ram">
+                    <div class="col-md-10">
+                        <label class="control-label label-ram">Memoria 1</label>
+                        <?= Html::dropDownList('Inventario[componentes_cpu][]', null, ArrayHelper::map($ram, 'idarticulo', 'descripcion'), [
+                            'class' => 'form-control select-ram-dinamico',
+                            'prompt' => 'Seleccione RAM...'
+                        ]) ?>
+                    </div>
+                    <div class="col-md-2" style="margin-top: 25px;">
+                        <button type="button" class="btn btn-danger btn-sm btn-quitar-componente" title="Quitar">
+                            <i class="glyphicon glyphicon-minus"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="col-md-2" style="margin-top: 25px;">
-                    <button type="button" class="btn btn-danger btn-sm btn-quitar-componente" title="Quitar">
-                        <i class="glyphicon glyphicon-minus"></i>
-                    </button>
-                </div>
-            </div>
+            <?php else: ?>
+                <?php foreach ($ramsSel as $i => $idRamSel): ?>
+                    <div class="row fila-componente-ram">
+                        <div class="col-md-10">
+                            <label class="control-label label-ram">Memoria <?= $i + 1 ?></label>
+                            <?= Html::dropDownList('Inventario[componentes_cpu][]', $idRamSel, ArrayHelper::map($ram, 'idarticulo', 'descripcion'), [
+                                'class' => 'form-control select-ram-dinamico',
+                                'prompt' => 'Seleccione RAM...'
+                            ]) ?>
+                        </div>
+                        <div class="col-md-2" style="margin-top: 25px;">
+                            <button type="button" class="btn btn-danger btn-sm btn-quitar-componente" title="Quitar">
+                                <i class="glyphicon glyphicon-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -102,21 +142,39 @@ use yii\helpers\Html;
 
         <!-- Contenedor donde se agregan los combos de Discos -->
         <div id="contenedor_discos">
-            <!-- Fila inicial por defecto -->
-            <div class="row fila-componente-ram">
-                <div class="col-md-10">
-                    <label class="control-label label-disco">Disco 1</label>
-                    <?= Html::dropDownList('Inventario[componentes_cpu][]', null, \yii\helpers\ArrayHelper::map($discos, 'idarticulo', 'descripcion'), [
-                        'class' => 'form-control select-disco-dinamico',
-                        'prompt' => 'Seleccione Disco...'
-                    ]) ?>
+            <?php if (empty($discosSel)): ?>
+                <div class="row fila-componente-disco">
+                    <div class="col-md-10">
+                        <label class="control-label label-disco">Disco 1</label>
+                        <?= Html::dropDownList('Inventario[componentes_cpu][]', null, ArrayHelper::map($discos, 'idarticulo', 'descripcion'), [
+                            'class' => 'form-control select-disco-dinamico',
+                            'prompt' => 'Seleccione Disco...'
+                        ]) ?>
+                    </div>
+                    <div class="col-md-2" style="margin-top: 25px;">
+                        <button type="button" class="btn btn-danger btn-sm btn-quitar-componente" title="Quitar">
+                            <i class="glyphicon glyphicon-minus"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="col-md-2" style="margin-top: 25px;">
-                    <button type="button" class="btn btn-danger btn-sm btn-quitar-componente" title="Quitar">
-                        <i class="glyphicon glyphicon-minus"></i>
-                    </button>
-                </div>
-            </div>
+            <?php else: ?>
+                <?php foreach ($discosSel as $i => $idDiscoSel): ?>
+                    <div class="row fila-componente-disco">
+                        <div class="col-md-10">
+                            <label class="control-label label-disco">Disco <?= $i + 1 ?></label>
+                            <?= Html::dropDownList('Inventario[componentes_cpu][]', $idDiscoSel, ArrayHelper::map($discos, 'idarticulo', 'descripcion'), [
+                                'class' => 'form-control select-disco-dinamico',
+                                'prompt' => 'Seleccione Disco...'
+                            ]) ?>
+                        </div>
+                        <div class="col-md-2" style="margin-top: 25px;">
+                            <button type="button" class="btn btn-danger btn-sm btn-quitar-componente" title="Quitar">
+                                <i class="glyphicon glyphicon-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 

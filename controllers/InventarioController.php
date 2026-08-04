@@ -132,7 +132,6 @@ class InventarioController extends Controller
                 }
 
                 $transaction->rollBack();
-                
             }
             return [
                 'title' => "Nuevo Item Faltan datos!!! Complete Los datos Faltantes!!!",
@@ -146,6 +145,8 @@ class InventarioController extends Controller
         }
     }
 
+    // app/controllers/InventarioController.php
+
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
@@ -153,7 +154,11 @@ class InventarioController extends Controller
 
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
+
             if ($request->isGet) {
+                // Cargar los datos guardados en las tablas secundarias
+                $model->cargarRelaciones();
+
                 return [
                     'title' => 'Editar Item',
                     'content' => $this->renderAjax('update', [
@@ -173,10 +178,8 @@ class InventarioController extends Controller
                 ];
             } else if ($model->load($request->post())) {
                 $transaction = Yii::$app->db->beginTransaction();
-                $guardado = true;
 
-
-                if ($guardado && $model->save()) {
+                if ($model->save() && $model->guardarRelacionesSecundarias($request->post())) {
                     $transaction->commit();
                     LogPlataforma::registrar(ConstantesGlobales::INVENTARIO_INFORMATICA, ConstantesGlobales::MODIFICACION, $model->idinventario);
                     return [
@@ -185,15 +188,17 @@ class InventarioController extends Controller
                         'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
                     ];
                 }
+
+                $transaction->rollBack();
             }
+
             return [
                 'title' => "Editar Item Faltan datos!!! Complete Los datos Faltantes!!!",
-                'content' => $this->renderAjax('create', [
+                'content' => $this->renderAjax('update', [
                     'model' => $model,
                 ]),
                 'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                     Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
-
             ];
         }
     }

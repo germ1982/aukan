@@ -297,6 +297,7 @@ class Inventario extends \yii\db\ActiveRecord
         $ip->iddispositivo_red = $iddispositivo_red;
         $ip->mascara           = $postData['Inventario']['idmascara_red'] ?? null;
         $ip->puerta_enlace     = $postData['Inventario']['idpuerta_enlace'] ?? null;
+        $ip->dns               = $postData['Inventario']['iddns_red'] ?? null; // <-- Asignar DNS
 
         if (!$ip->save()) {
             $this->addErrors($ip->getErrors());
@@ -305,4 +306,44 @@ class Inventario extends \yii\db\ActiveRecord
 
         return true;
     }
+    // app/models/Inventario.php
+
+public function cargarRelaciones()
+{
+    // 1. Cargar datos de CPU
+    $cpu = InventarioCpu::findOne(['idinventario' => $this->idinventario]);
+    if ($cpu) {
+        $this->idmother       = $cpu->idmother;
+        $this->idmicro        = $cpu->idmicro;
+        $this->idso           = $cpu->idso;
+        $this->idfuente       = $cpu->idfuente;
+        $this->total_ram_gb   = $cpu->total_ram_gb;
+        $this->total_disco_gb = $cpu->total_disco_gb;
+
+        // Cargar componentes vinculados (RAMs, Discos, Placa de Video)
+        $componentes = InventarioCpuComponente::find()
+            ->select(['idarticulo'])
+            ->where(['idcpu' => $cpu->idcpu])
+            ->column();
+
+        $this->componentes_cpu = $componentes;
+    }
+
+    // 2. Cargar datos de Red
+    $red = InventarioDispositivoRed::findOne(['idinventario' => $this->idinventario]);
+    if ($red) {
+        $this->idseñal            = $red->tipo_senal;
+        $this->idtecnologia_señal = $red->tipo_tecnologia;
+
+        // Cargar datos de IP asociada
+        $ip = InformaticaIp::findOne(['iddispositivo_red' => $red->iddispositivo_red]);
+        if ($ip) {
+            $this->tiene_ip        = 1;
+            $this->idip            = $ip->idip;
+            $this->idmascara_red   = $ip->mascara;
+            $this->idpuerta_enlace = $ip->puerta_enlace;
+            $this->iddns_red       = $ip->dns; // <-- Cargar DNS
+        }
+    }
+}
 }
