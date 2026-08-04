@@ -2,6 +2,8 @@
 
 namespace app\models; // O el namespace de la carpeta donde esté guardado
 
+use yii\base\Component;
+
 class ConstantesGlobales
 {
     // ==========================================
@@ -362,5 +364,13 @@ class ConstantesGlobales
     const ARTICULO_TIPO_DISCO = 446;
     const ARTICULO_TIPO_RAM = 127;
     const ARTICULO_TIPO_PROCESADOR = 571;
+    const ARTICULO_TIPO_MOTHERBOARD = 584;
+    const ARTICULO_TIPO_FUENTE = 129;
+    const ARTICULO_TIPO_PLACA_VIDEO = 587;
+
+    const COMPONENTE_CPU_RAM = 1;
+    const COMPONENTE_CPU_DISCO = 2;
+    const COMPONENTE_CPU_VIDEO= 3;
+    
 
 }

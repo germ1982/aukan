@@ -1,7 +1,8 @@
 <?php
 
 namespace app\models;
-use app\models\Configuracion; 
+
+use app\models\Configuracion;
 use Yii;
 
 /**
@@ -22,7 +23,7 @@ class Articulo extends \yii\db\ActiveRecord
     public $imageFile;
 
     // Agregamos una propiedad pública para el campo de búsqueda global
-    public $busquedaGlobal; 
+    public $busquedaGlobal;
 
     public static function tableName()
     {
@@ -42,10 +43,13 @@ class Articulo extends \yii\db\ActiveRecord
             [['imagen'], 'string', 'max' => 100],
             // Agregamos la regla 'safe' para la nueva propiedad de búsqueda
             [['busquedaGlobal'], 'safe'],
-            [['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'], 'unique', 
-                'targetAttribute' => ['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'], 
-                'message' => 'Ya existe un artículo con la misma combinación de Tipo, Marca, Modelo, Rubro y Unidad de Medida.'],
-            
+            [
+                ['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'],
+                'unique',
+                'targetAttribute' => ['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'],
+                'message' => 'Ya existe un artículo con la misma combinación de Tipo, Marca, Modelo, Rubro y Unidad de Medida.'
+            ],
+
             /* [['idtipo'], 'unique', 'targetAttribute' => ['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'], 'message' => 'Ya existe un artículo con la misma combinación de Tipo, Marca, Modelo, Rubro y Unidad de Medida.'],
             [['idmarca'], 'unique', 'targetAttribute' => ['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'], 'message' => 'Ya existe un artículo con la misma combinación de Tipo, Marca, Modelo, Rubro y Unidad de Medida.'],
             [['modelo'], 'unique', 'targetAttribute' => ['idtipo', 'idmarca', 'modelo', 'idrubro', 'id_unidad_medida'], 'message' => 'Ya existe un artículo con la misma combinación de Tipo, Marca, Modelo, Rubro y Unidad de Medida.'],
@@ -169,31 +173,41 @@ class Articulo extends \yii\db\ActiveRecord
         $articulo = Articulo::findBySql($sql)->one();
         return $articulo;
     }
+    public static function get_articulo_descripcion($id)
+    {
+        $sql = "SELECT  concat( ct.descripcion ,' ', cm.descripcion ,' ' ,a.modelo ,' ' , a.descripcion) as descripcion
+                               from articulo a 
+                               join configuracion ct on ct.id_configuracion=a.idtipo
+                               join configuracion cm on cm.id_configuracion=a.idmarca
+                               where a.activo=1 and a.idarticulo = $id
+                               order by ct.descripcion,cm.descripcion,a.modelo,a.descripcion";
+        $articulo = Articulo::findBySql($sql)->one();
+        return $articulo->descripcion;
+    }
 
+    // Relaciones:
+    public function getIdtipo0() // Este nombre es común si Gii lo autogenera. Puedes cambiarlo a getTipo()
+    {
+        return $this->hasOne(Configuracion::class, ['id_configuracion' => 'idtipo']);
+    }
 
-     // Relaciones:
-     public function getIdtipo0() // Este nombre es común si Gii lo autogenera. Puedes cambiarlo a getTipo()
-     {
-         return $this->hasOne(Configuracion::class, ['id_configuracion' => 'idtipo']);
-     }
- 
-     public function getIdmarca0() // O getMarca()
-     {
-         return $this->hasOne(Configuracion::class, ['id_configuracion' => 'idmarca']);
-     }
- 
-     public function getIdrubro0() // O getRubro()
-     {
-         return $this->hasOne(Configuracion::class, ['id_configuracion' => 'idrubro']);
-     }
- 
-     public function getIdUnidadMedida() // O getUnidadMedida()
-     {
-         return $this->hasOne(Configuracion::class, ['id_configuracion' => 'id_unidad_medida']);
-     }
+    public function getIdmarca0() // O getMarca()
+    {
+        return $this->hasOne(Configuracion::class, ['id_configuracion' => 'idmarca']);
+    }
 
-     public static function get_articulos_por_tipo($idtipo)
-     {
+    public function getIdrubro0() // O getRubro()
+    {
+        return $this->hasOne(Configuracion::class, ['id_configuracion' => 'idrubro']);
+    }
+
+    public function getIdUnidadMedida() // O getUnidadMedida()
+    {
+        return $this->hasOne(Configuracion::class, ['id_configuracion' => 'id_unidad_medida']);
+    }
+
+    public static function get_articulos_por_tipo($idtipo)
+    {
         $sql = "SELECT  a.idarticulo,concat( ct.descripcion ,' ', cm.descripcion ,' ' ,a.modelo ,' ' , cum.descripcion ,' ', a.descripcion) as descripcion
                                from articulo a 
                                join configuracion ct on ct.id_configuracion=a.idtipo
@@ -203,6 +217,5 @@ class Articulo extends \yii\db\ActiveRecord
                                order by ct.descripcion,cm.descripcion,a.modelo,cum.descripcion,a.descripcion";
         $articulos = Articulo::findBySql($sql)->all();
         return $articulos;
-     }
+    }
 }
-
