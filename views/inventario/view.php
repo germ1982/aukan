@@ -82,7 +82,8 @@ if ($red) {
                                 'value' => function ($model) {
                                     $oficina = EdificioOficina::findOne(['idoficina' => $model->iddispositivo]);
                                     if ($oficina) {
-                                        $edificio = Edificio::findOne($oficina->idedificio)->descripcion_fija;
+                                        $edificioModel = Edificio::findOne($oficina->idedificio);
+                                        $edificio = $edificioModel ? $edificioModel->descripcion_fija : null;
                                         
                                         if ($edificio) {
                                             $direccion = Edificio::get_direccion($oficina->idedificio);
@@ -102,7 +103,9 @@ if ($red) {
                                 'attribute' => 'idestado',
                                 'format' => 'raw',
                                 'value' => function ($model) {
-                                    $estado = Configuracion::findOne($model->idestado)->descripcion;
+                                    // Control null-safe para evitar que explote si no encuentra la configuración
+                                    $confEstado = $model->idestado ? Configuracion::findOne($model->idestado) : null;
+                                    $estado = $confEstado ? $confEstado->descripcion : '(Sin estado)';
 
                                     // Punto/LED estilo semáforo
                                     $color = $model->activo ? '#00ff66' : '#ff0055';
@@ -185,14 +188,16 @@ if ($red) {
                             [
                                 'label' => 'Sistema Operativo',
                                 'value' => function ($cpu) {
-                                    return $cpu->idso ? \app\models\Configuracion::findOne($cpu->idso)->descripcion : '(Sin SO)';
+                                    if (!$cpu->idso) return '(Sin SO)';
+                                    $so = \app\models\Configuracion::findOne($cpu->idso);
+                                    return $so ? $so->descripcion : '(Sin SO)';
                                 },
                             ],
                             [
                                 'label' => 'Componentes',
                                 'format' => 'raw',
                                 'value' => function ($model) use ($componentesCpu, $cpu) {
-                                    if (empty($componentesCpu)) {
+                                    if (empty($componentesCpu) && !$cpu->idmother && !$cpu->idmicro && !$cpu->idfuente) {
                                         return '<em>Sin componentes</em>';
                                     }
 
@@ -233,12 +238,11 @@ if ($red) {
                 <?php endif; ?>
             </div>
             <div class="inventario-card-body">
-                <?php if ($cpu): ?>
+                <?php if ($red): ?>
                     <div class="row">
                         <!-- Columna 1: IP y Configuración Básica -->
                         <div class="col-md-6">
                             <?= DetailView::widget([
-                                // Si $ipModel es null, usamos $red para que DetailView no explote
                                 'model' => $ipModel ?? $red,
                                 'attributes' => [
                                     [
@@ -268,7 +272,6 @@ if ($red) {
                         <!-- Columna 2: Físicos, DNS y Tecnología -->
                         <div class="col-md-6">
                             <?= DetailView::widget([
-                                // Si $ipModel es null, usamos $red para evitar el crash
                                 'model' => $ipModel ?? $red,
                                 'attributes' => [
                                     [
@@ -295,3 +298,4 @@ if ($red) {
             </div>
         </div>
     <?php endif; ?>
+</div>
