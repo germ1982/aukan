@@ -105,3 +105,41 @@ function actualizarNumeracionComponentes() {
         $(this).find('.label-disco').text('Disco ' + (index + 1));
     });
 }
+
+$(document).ready(function () {
+    var $cmbEdificio = $('#cmb_edificio');
+    var $cmbOficina = $('#cmb_oficina');
+
+    // Estado inicial: Si no hay edificio seleccionado, deshabilitar el combo de oficinas
+    if (!$cmbEdificio.val()) {
+        $cmbOficina.prop('disabled', true);
+    }
+
+    // Evento al cambiar el edificio
+    $cmbEdificio.on('change', function () {
+        var idEdificio = $(this).val();
+
+        // Limpiar el combo de oficinas
+        $cmbOficina.val(null).trigger('change');
+        $cmbOficina.empty();
+
+        if (idEdificio) {
+            // Habilitar y cargar oficinas pertenecientes al edificio
+            $cmbOficina.prop('disabled', false);
+
+            $.ajax({
+                url: 'index.php?r=inventario/get-oficinas-por-edificio',
+                type: 'GET',
+                data: { idedificio: idEdificio },
+                dataType: 'json',
+                success: function (data) {
+                    $cmbOficina.html(data.options).trigger('change');
+                }
+            });
+        } else {
+            // Si vuelve a "seleccione edificio...", se deshabilita
+            $cmbOficina.append('<option value="">seleccione oficina...</option>');
+            $cmbOficina.prop('disabled', true).trigger('change');
+        }
+    });
+});

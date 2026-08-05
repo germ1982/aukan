@@ -68,11 +68,11 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
+
     public function getIdorganismo0()
     {
-        return $this->hasOne(Organismo::className(), ['idorganismo' => 'idorganismo']);
+        return $this->hasOne(Organismo::class, ['idorganismo' => 'idorganismo']);
     }
-
 
     public static function get_dispositivos($modulo = '')
     {
@@ -121,6 +121,18 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
         return $array;
     }
 
+    public static function get_organismo_dispositivo($id)
+    {
+        $dispositivo = OrganismoDispositivo::findOne($id);
+        $organismo = Organismo::findOne($dispositivo->idorganismo);
+        if ($dispositivo->descripcion == $organismo->descripcion) {
+            $dato = $dispositivo->descripcion;
+        } else {
+            $dato = $organismo->descripcion . ' - ' . $dispositivo->descripcion;
+        }
+        return $dato;
+    }
+
     public static function get_dispositivo($id)
     {
         $sql = "SELECT d.iddispositivo, concat(o.abreviatura,' - ', d.descripcion) as descripcion 
@@ -131,6 +143,7 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
         $dato = OrganismoDispositivo::findBySql($sql)->one();
         return $dato;
     }
+
     public static function get_dispositivo_pro($id)
     {
         $sql = "SELECT d.iddispositivo, concat('Decreto: ',od.descripcion,' - ' ,e.descripcion_fija,' - ', eo.descripcion, ' - ', o.abreviatura, ' - ', d.descripcion) as descripcion 
@@ -153,5 +166,10 @@ class OrganismoDispositivo extends \yii\db\ActiveRecord
             WHERE d.iddispositivo = :id";
 
         return Edificio::findBySql($sql, [':id' => $iddispositivo])->one();
+    }
+
+    public function getIdoficina0()
+    {
+        return $this->hasOne(EdificioOficina::class, ['idoficina' => 'idoficina']);
     }
 }

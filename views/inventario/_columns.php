@@ -31,7 +31,7 @@ return [
         'attribute' => 'idinventario',
         'width' => $columna1,
     ], */
-    [
+/*     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'idarticulo',
         'value' => function ($model) {
@@ -46,8 +46,21 @@ return [
         'filterInputOptions' => ['placeholder' => 'Articulo...'],
         'format' => 'raw',
         'width' => $columna2,
-    ],
+    ], */
     [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'idarticulo',
+        'value' => function ($model) {
+            return Articulo::get_articulo_descripcion($model->idarticulo);
+            
+        },
+        'filterInputOptions' => [
+            'class' => 'form-control',
+            'placeholder' => 'Buscar artículo...'
+        ],
+        'format' => 'raw',
+    ],
+/*     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'iddispositivo',
         'value' => function ($model) {
@@ -64,8 +77,22 @@ return [
         'filterInputOptions' => ['placeholder' => 'dispositivo...'],
         'format' => 'raw',
         'width' => $columna3,
-    ],
+    ], */
     [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'iddispositivo',
+        'value' => function ($model) {
+             $iddispositivo = $model->iddispositivo;
+            $dispositivo = OrganismoDispositivo::get_dispositivo_pro($iddispositivo);
+            return   "$dispositivo->descripcion";
+        },
+        'filterInputOptions' => [
+            'class' => 'form-control',
+            'placeholder' => 'Buscar dispositivo...'
+        ],
+        'format' => 'raw',
+    ],
+   /*  [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'idempleado',
         'value' => function ($model) {
@@ -86,6 +113,21 @@ return [
         'filterInputOptions' => ['placeholder' => 'Empleado...'],
         'format' => 'raw',
         'width' => $columna4,
+    ], */
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'idempleado',
+        'value' => function ($model) {
+            if ($model->empleado && $model->empleado->persona) {
+                return $model->empleado->persona->apellido . ' ' . $model->empleado->persona->nombre;
+            }
+            return '(sin asignar)';
+        },
+        'filterInputOptions' => [
+            'class' => 'form-control',
+            'placeholder' => 'Buscar empleado...'
+        ],
+        'format' => 'raw',
     ],
     [
         'class' => '\kartik\grid\DataColumn',

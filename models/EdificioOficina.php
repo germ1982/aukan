@@ -49,4 +49,34 @@ class EdificioOficina extends \yii\db\ActiveRecord
             'activo' => 'Activo',
         ];
     }
+
+    public static function get_ubicacion_oficina($idoficina)
+    {
+        $oficina = self::findOne($idoficina);
+        if ($oficina) {
+            $edificio = Edificio::findOne($oficina->idedificio);
+            return $edificio ? $edificio->descripcion . ' - ' . $oficina->descripcion : $oficina->descripcion;
+        }
+        return null;
+    }
+
+    // En app\models\EdificioOficina.php
+
+    public static function get_oficinas_por_edificio($idedificio)
+    {
+        if (empty($idedificio)) {
+            return [];
+        }
+
+        return self::find()
+            ->where(['idedificio' => $idedificio, 'activo' => 1])
+            ->orderBy(['descripcion' => SORT_ASC])
+            ->all();
+    }
+
+    public function getIdedificio0()
+    {
+        // Define la relación de uno a uno/muchos a uno con la tabla Edificio
+        return $this->hasOne(Edificio::class, ['idedificio' => 'idedificio']);
+    }
 }

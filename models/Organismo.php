@@ -102,4 +102,10 @@ class Organismo extends \yii\db\ActiveRecord
         $dato = Organismo::findBySql($sql)->one();
         return $dato;
     }
+
+    public function getIddecretos()
+    {
+        return $this->hasMany(OrganismoDecreto::class, ['iddecreto' => 'iddecreto'])
+            ->viaTable('organismo_org_dec', ['idorganismo' => 'idorganismo']);
+    }
 }
