@@ -71,7 +71,13 @@ class OrganismoDecreto extends \yii\db\ActiveRecord
      * @return \yii\db\ActiveQuery
      */
     public function getIdorganismos()
-    {
-        return $this->hasMany(Organismo::className(), ['idorganismo' => 'idorganismo'])->viaTable('organismo_org_dec', ['iddecreto' => 'iddecreto']);
-    }
+{
+    return $this->hasMany(Organismo::class, ['idorganismo' => 'idorganismo'])
+        ->viaTable('organismo_org_dec', ['iddecreto' => 'iddecreto']);
+}
+    public function getIddecretos()
+{
+    // Reemplazá 'id_organismo' por el nombre exacto de la columna FK en la tabla organismo_decreto
+    return $this->hasMany(OrganismoDecreto::class, ['id_organismo' => 'idorganismo']);
+}
 }

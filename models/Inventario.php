@@ -42,6 +42,7 @@ class Inventario extends \yii\db\ActiveRecord
     public $idpuerta_enlace;
     public $idmascara_red;
     public $iddns_red;
+    public $idedificio;
     /**
      * {@inheritdoc}
      */
@@ -59,7 +60,7 @@ class Inventario extends \yii\db\ActiveRecord
         return [
 
             // Atributos auxiliares/virtuales
-            [['es_cpu', 'tiene_red', 'tiene_ip', 'total_ram_gb', 'total_disco_gb', 'idmother', 'idfuente'], 'integer'],
+            [['es_cpu', 'tiene_red', 'tiene_ip', 'total_ram_gb', 'total_disco_gb', 'idmother', 'idfuente','idoficina'], 'integer'],
 
             // Validamos campos base de CPU solo si es_cpu == 1
             [['idmicro', 'idso'], 'required', 'when' => function ($model) {
@@ -80,7 +81,7 @@ class Inventario extends \yii\db\ActiveRecord
             [['observacion'], 'string'],
 
             // Se agregan componentes_cpu, total_ram_gb y total_disco_gb a safe; se quitan idram_uno, idram_dos e iddisco viejos
-            [['origen_alta', 'idmother', 'idfuente', 'idmicro', 'idso', 'total_ram_gb', 'total_disco_gb', 'componentes_cpu', 'tiene_red', 'es_cpu', 'idseñal', 'idtecnologia_señal', 'tiene_ip', 'idip', 'idpuerta_enlace', 'idmascara_red', 'iddns_red'], 'safe'],
+            [['origen_alta', 'idmother', 'idfuente', 'idmicro', 'idso', 'total_ram_gb', 'total_disco_gb', 'componentes_cpu', 'tiene_red', 'es_cpu', 'idseñal', 'idtecnologia_señal', 'tiene_ip', 'idip', 'idpuerta_enlace', 'idmascara_red', 'iddns_red','idedificio','idoficina'], 'safe'],
         ];
     }
 
@@ -113,6 +114,7 @@ class Inventario extends \yii\db\ActiveRecord
             'idpuerta_enlace' => 'Puerta de Enlace',
             'idmascara_red' => 'Máscara de Red',
             'iddns_red' => 'DNS de Red',
+            'idedificio' => 'Edificio',
         ];
     }
 
@@ -163,6 +165,52 @@ class Inventario extends \yii\db\ActiveRecord
             ->innerJoin(['c' => 'configuracion'], 'c.descripcion = CAST(a.idtipo AS CHAR)')
             ->where(['c.id_configuracion_tipo' => ConfiguracionTipo::TIPO_ARTICULO_RED])
             ->column();
+    }
+
+    /**
+     * Verifica si un artículo específico es de tipo CPU.
+     *
+     * @param int|null $idarticulo
+     * @return bool
+     */
+    public static function esCpu($idarticulo)
+    {
+        // Si no hay ID, retornamos false inmediatamente sin consultar la BD
+        if (empty($idarticulo)) {
+            return false;
+        }
+
+        return (new \yii\db\Query())
+            ->from(['a' => 'articulo'])
+            ->innerJoin(['c' => 'configuracion'], 'c.descripcion = CAST(a.idtipo AS CHAR)')
+            ->where([
+                'a.idarticulo' => $idarticulo,
+                'c.id_configuracion_tipo' => ConfiguracionTipo::TIPO_ARTICULO_CPU,
+            ])
+            ->exists(); // Devuelve true/false ejecutando un SELECT 1 muy rápido
+    }
+
+    /**
+     * Verifica si un artículo específico es de tipo Red.
+     *
+     * @param int|null $idarticulo
+     * @return bool
+     */
+    public static function tieneRed($idarticulo)
+    {
+        // Si no hay ID, retornamos false inmediatamente sin consultar la BD
+        if (empty($idarticulo)) {
+            return false;
+        }
+
+        return (new \yii\db\Query())
+            ->from(['a' => 'articulo'])
+            ->innerJoin(['c' => 'configuracion'], 'c.descripcion = CAST(a.idtipo AS CHAR)')
+            ->where([
+                'a.idarticulo' => $idarticulo,
+                'c.id_configuracion_tipo' => ConfiguracionTipo::TIPO_ARTICULO_RED,
+            ])
+            ->exists(); // Devuelve true/false ejecutando un SELECT 1 muy rápido
     }
 
     // En app\models\Inventario.php
@@ -345,5 +393,37 @@ public function cargarRelaciones()
             $this->iddns_red       = $ip->dns; // <-- Cargar DNS
         }
     }
+}
+
+public function afterFind()
+{
+    parent::afterFind();
+
+    // Si tiene oficina cargada, deducimos su edificio
+    if ($this->idoficina) {
+        $oficina = EdificioOficina::findOne($this->idoficina);
+        if ($oficina) {
+            $this->idedificio = $oficina->idedificio;
+        }
+    }
+}
+
+public function getArticulo()
+{
+    return $this->hasOne(Articulo::class, ['idarticulo' => 'idarticulo']);
+}
+
+
+
+public function getDispositivo()
+{
+    // Relación con el modelo OrganismoDispositivo
+    return $this->hasOne(OrganismoDispositivo::class, ['iddispositivo' => 'iddispositivo']);
+}
+
+public function getEmpleado()
+{
+    // Relación con el modelo Empleado
+    return $this->hasOne(Empleado::class, ['idempleado' => 'idempleado']);
 }
 }

@@ -4,17 +4,24 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\models\Articulo;
 use app\models\Configuracion;
+use app\models\Edificio;
+use app\models\EdificioOficina;
 use app\models\Empleado;
 use app\models\OrganismoDispositivo;
 use app\models\InventarioCpu;
 use app\models\InventarioCpuComponente;
 use app\models\InventarioDispositivoRed;
 use app\models\InformaticaIp;
+use app\models\Inventario;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Inventario */
 
 $this->title = 'Detalle de Inventario #' . $model->idinventario;
+
+// Evaluación directa usando los nuevos métodos del modelo
+$esCpu = Inventario::esCpu($model->idarticulo);
+$tieneRed = Inventario::tieneRed($model->idarticulo);
 
 // 1. Datos de Artículo y Empleado desde sus métodos estáticos
 $articuloModel = $model->idarticulo ? Articulo::get_articulo($model->idarticulo) : null;
@@ -64,8 +71,26 @@ if ($red) {
                             ],
                             'matricula',
                             [
-                                'label' => 'Dispositivo / Sector',
-                                'value' => $dispositivo ? $dispositivo->descripcion : '(Sin dispositivo)',
+                                'label' => 'Sector',
+                                'value' => function ($model) {
+                                    return OrganismoDispositivo::get_organismo_dispositivo($model->iddispositivo);
+                                }
+                            ],
+
+                            [
+                                'label' => 'Ubicacion',
+                                'value' => function ($model) {
+                                    $oficina = EdificioOficina::findOne(['idoficina' => $model->iddispositivo]);
+                                    if ($oficina) {
+                                        $edificio = Edificio::findOne($oficina->idedificio)->descripcion_fija;
+                                        
+                                        if ($edificio) {
+                                            $direccion = Edificio::get_direccion($oficina->idedificio);
+                                            return $direccion . " - $edificio - " . $oficina->descripcion;
+                                        }
+                                    }
+                                    return '(Sin ubicación asignada)';
+                                }
                             ],
 
                             [
@@ -133,130 +158,140 @@ if ($red) {
         </div>
     </div>
 
-    <?php if ($cpu): ?>
+    <?php if ($esCpu): ?>
         <div class="inventario-card">
             <div class="inventario-card-header">
-                <i class="fas fa-microchip"></i> Especificaciones
+                <i class="fas fa-microchip"></i>
+                <?php if ($cpu): ?>
+                    Especificaciones
+                <?php else: ?>
+                    Especificaciones:
+                    <span style="padding: 20px; color: rgba(0, 255, 255, 0.5);">
+                        <em>Sin datos</em>
+                    </span>
+                <?php endif; ?>
             </div>
             <div class="inventario-card-body">
-                <?= DetailView::widget([
-                    'model' => $cpu,
-                    'attributes' => [
-                        [
-                            'label' => 'Capacidad',
-                            'value' => function ($model) {
-                                return 'RAM: ' . $model->total_ram_gb . ' GB // Espacio en Disco: ' . $model->total_disco_gb . ' GB';
-                            },
-                        ],
-                        [
-                            'label' => 'Componentes',
-                            'format' => 'raw',
-                            'value' => function ($model) use ($componentesCpu) {
-                                if (empty($componentesCpu)) {
-                                    return '<em>Sin componentes</em>';
-                                }
-
-                                $items = '';
-                                foreach ($componentesCpu as $comp) {
-                                    $compArt = \app\models\Articulo::get_articulo($comp->idarticulo);
-                                    $nombre = $compArt ? \yii\helpers\Html::encode($compArt->descripcion) : 'Componente #' . $comp->idarticulo;
-                                    $items .= '<li>' . $nombre . '</li>';
-                                }
-
-                                return '<ul style="margin: 0; padding-left: 18px;">' . $items . '</ul>';
-                            },
-                        ],
-                    ],
-                ]) ?>
-
-
-            </div>
-        </div>
-    <?php else: ?>
-        <div class="inventario-card">
-            <div class="inventario-card-header">
-                <i class="fas fa-microchip"></i> Especificaciones:
-                <span style="padding: 20px; color: rgba(0, 255, 255, 0.5);">
-                    <em>Sin datos</em>
-                </span>
-            </div>
-
-        </div><br>
-    <?php endif; ?>
-
-    <?php if ($red): ?>
-        <div class="inventario-card-header">
-            <i class="fas fa-microchip"></i> Especificaciones De Red
-        </div>
-        <div class="inventario-card-body">
-            <div class="row">
-                <!-- Columna 1: IP y Configuración Básica -->
-                <div class="col-md-6">
+                <?php if ($cpu): ?>
                     <?= DetailView::widget([
-                        // Si $ipModel es null, usamos $red para que DetailView no explote
-                        'model' => $ipModel ?? $red,
+                        'model' => $cpu,
                         'attributes' => [
                             [
-                                'label' => 'IP Asignada',
-                                'value' => $ipModel && $ipModel->ip ? $ipModel->ip : '(Sin IP)',
+                                'label' => 'Capacidad',
+                                'value' => function ($model) {
+                                    return 'RAM: ' . $model->total_ram_gb . ' GB // Espacio en Disco: ' . $model->total_disco_gb . ' GB';
+                                },
                             ],
                             [
-                                'label' => 'Máscara de Subred',
-                                'value' => $ipModel && $ipModel->mascara ? $ipModel->mascara : '-',
+                                'label' => 'Sistema Operativo',
+                                'value' => function ($cpu) {
+                                    return $cpu->idso ? \app\models\Configuracion::findOne($cpu->idso)->descripcion : '(Sin SO)';
+                                },
                             ],
                             [
-                                'label' => 'Puerta de Enlace',
-                                'value' => $ipModel && $ipModel->puerta_enlace ? $ipModel->puerta_enlace : '-',
-                            ],
-                            [
-                                'label' => 'Tipo de Señal',
-                                'value' => function () use ($red) {
-                                    if (!$red || !$red->tipo_senal) return '-';
-                                    $conf = Configuracion::findOne($red->tipo_senal);
-                                    return $conf ? $conf->descripcion : $red->tipo_senal;
+                                'label' => 'Componentes',
+                                'format' => 'raw',
+                                'value' => function ($model) use ($componentesCpu, $cpu) {
+                                    if (empty($componentesCpu)) {
+                                        return '<em>Sin componentes</em>';
+                                    }
+
+                                    $items = '';
+                                    $items .= $cpu->idmother ? '<li>' . Articulo::get_articulo_descripcion($cpu->idmother) . '</li>' : '';
+                                    $items .= $cpu->idmicro ? '<li>' . Articulo::get_articulo_descripcion($cpu->idmicro) . '</li>' : '';
+
+
+                                    foreach ($componentesCpu as $comp) {
+                                        $compArt = \app\models\Articulo::get_articulo($comp->idarticulo);
+                                        $nombre = $compArt ? \yii\helpers\Html::encode($compArt->descripcion) : 'Componente #' . $comp->idarticulo;
+                                        $items .= '<li>' . $nombre . '</li>';
+                                    }
+
+                                    $items .= $cpu->idfuente ? '<li>' . Articulo::get_articulo_descripcion($cpu->idfuente) . '</li>' : '';
+
+                                    return '<ul style="margin: 0; padding-left: 18px;">' . $items . '</ul>';
                                 },
                             ],
                         ],
                     ]) ?>
-                </div>
-
-                <!-- Columna 2: Físicos, DNS y Tecnología -->
-                <div class="col-md-6">
-                    <?= DetailView::widget([
-                        // Si $ipModel es null, usamos $red para evitar el crash
-                        'model' => $ipModel ?? $red,
-                        'attributes' => [
-                            [
-                                'label' => 'Dirección MAC',
-                                'value' => $ipModel && $ipModel->mac ? $ipModel->mac : '-',
-                            ],
-                            [
-                                'label' => 'Servidor DNS',
-                                'value' => $ipModel && $ipModel->dns ? $ipModel->dns : '-',
-                            ],
-                            [
-                                'label' => 'Tipo de Tecnología',
-                                'value' => function () use ($red) {
-                                    if (!$red || !$red->tipo_tecnologia) return '-';
-                                    $conf = Configuracion::findOne($red->tipo_tecnologia);
-                                    return $conf ? $conf->descripcion : $red->tipo_tecnologia;
-                                },
-                            ],
-                        ],
-                    ]) ?>
-                </div>
+                <?php endif; ?>
             </div>
         </div>
-    <?php else: ?>
-        <div class="inventario-card">
-            <div class="inventario-card-header">
-                <i class="fas fa-microchip"></i> Especificaciones De Red:
-                <span style="padding: 20px; color: rgba(0, 255, 255, 0.5);">
-                    <em>Sin datos</em>
-                </span>
-            </div>
-
-        </div><br>
     <?php endif; ?>
 
-</div>
+    <?php if ($tieneRed): ?>
+        <div class="inventario-card">
+            <div class="inventario-card-header">
+                <i class="fas fa-microchip"></i>
+                <?php if ($red): ?>
+                    Especificaciones De Red
+                <?php else: ?>
+                    Especificaciones De Red:
+                    <span style="padding: 20px; color: rgba(0, 255, 255, 0.5);">
+                        <em>Sin datos</em>
+                    </span>
+                <?php endif; ?>
+            </div>
+            <div class="inventario-card-body">
+                <?php if ($cpu): ?>
+                    <div class="row">
+                        <!-- Columna 1: IP y Configuración Básica -->
+                        <div class="col-md-6">
+                            <?= DetailView::widget([
+                                // Si $ipModel es null, usamos $red para que DetailView no explote
+                                'model' => $ipModel ?? $red,
+                                'attributes' => [
+                                    [
+                                        'label' => 'IP Asignada',
+                                        'value' => $ipModel && $ipModel->ip ? $ipModel->ip : '(Sin IP)',
+                                    ],
+                                    [
+                                        'label' => 'Máscara de Subred',
+                                        'value' => $ipModel && $ipModel->mascara ? $ipModel->mascara : '-',
+                                    ],
+                                    [
+                                        'label' => 'Puerta de Enlace',
+                                        'value' => $ipModel && $ipModel->puerta_enlace ? $ipModel->puerta_enlace : '-',
+                                    ],
+                                    [
+                                        'label' => 'Tipo de Señal',
+                                        'value' => function () use ($red) {
+                                            if (!$red || !$red->tipo_senal) return '-';
+                                            $conf = Configuracion::findOne($red->tipo_senal);
+                                            return $conf ? $conf->descripcion : $red->tipo_senal;
+                                        },
+                                    ],
+                                ],
+                            ]) ?>
+                        </div>
+
+                        <!-- Columna 2: Físicos, DNS y Tecnología -->
+                        <div class="col-md-6">
+                            <?= DetailView::widget([
+                                // Si $ipModel es null, usamos $red para evitar el crash
+                                'model' => $ipModel ?? $red,
+                                'attributes' => [
+                                    [
+                                        'label' => 'Dirección MAC',
+                                        'value' => $ipModel && $ipModel->mac ? $ipModel->mac : '-',
+                                    ],
+                                    [
+                                        'label' => 'Servidor DNS',
+                                        'value' => $ipModel && $ipModel->dns ? $ipModel->dns : '-',
+                                    ],
+                                    [
+                                        'label' => 'Tipo de Tecnología',
+                                        'value' => function () use ($red) {
+                                            if (!$red || !$red->tipo_tecnologia) return '-';
+                                            $conf = Configuracion::findOne($red->tipo_tecnologia);
+                                            return $conf ? $conf->descripcion : $red->tipo_tecnologia;
+                                        },
+                                    ],
+                                ],
+                            ]) ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php endif; ?>

@@ -197,3 +197,88 @@
     right: -1px;
     border-width: 0 2px 2px 0;
 }
+
+/* HEADER DEL MODAL */
+/* HEADER DEL MODAL */
+.modal-header {
+    background: linear-gradient(90deg, #020813 0%, #63a1a1 50%, #020813 100%) !important;
+    
+    border-bottom: 1px solid #00ffff !important;
+    padding: 12px 20px !important;
+    box-shadow: 0 4px 15px rgba(0, 255, 255, 0.15) !important;
+    position: relative !important;
+}
+
+/* TÍTULO CON GLOW */
+.modal-title {
+    color: #00ffff !important;
+    font-family: 'Courier New', Courier, monospace !important;
+    font-weight: bold !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase !important;
+    font-size: 14px !important;
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.6) !important;
+}
+
+/* BOTÓN CERRAR (X) */
+.modal-header .close {
+    color: #00ffff !important;
+    /* text-shadow: 0 0 10px rgba(0, 255, 255, 0.8) !important; */
+    opacity: 0.8 !important;
+    font-size: 20px !important;
+
+        background: transparent !important;
+    color: rgba(0, 255, 255, 0.7) !important;
+    border: 1px solid rgba(0, 255, 255, 0.4) !important;
+
+    transition: all 0.2s ease !important;
+}
+
+.modal-header .close:hover {
+    opacity: 1 !important;
+    text-shadow: 0 0 15px #00ffff !important;
+}
+
+/* FOOTER DEL MODAL Y BOTONES */
+.modal-footer {
+    border-top: 1px solid rgba(0, 255, 255, 0.2) !important;
+    padding: 12px 20px !important;
+}
+
+/* BOTÓN DE CERRAR (SECUNDARIO) */
+.modal-footer .btn-default {
+    background: transparent !important;
+    color: rgba(0, 255, 255, 0.7) !important;
+    border: 1px solid rgba(0, 255, 255, 0.4) !important;
+    border-radius: 0px !important;
+    font-family: 'Courier New', Courier, monospace !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    transition: all 0.2s ease !important;
+}
+
+.modal-footer .btn-default:hover {
+    background: rgba(0, 255, 255, 0.1) !important;
+    color: #00ffff !important;
+    border-color: #00ffff !important;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3) !important;
+}
+
+/* BOTÓN DE EDITAR (PRIMARIO NEÓN) */
+.modal-footer .btn-primary {
+    background: #00ffff !important;
+    color: #020813 !important;
+    border: 1px solid #00ffff !important;
+    border-radius: 0px !important;
+    font-family: 'Courier New', Courier, monospace !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.4) !important;
+    transition: all 0.2s ease !important;
+}
+
+.modal-footer .btn-primary:hover {
+    background: #00cccc !important;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.8) !important;
+}

@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
 use app\models\ConstantesGlobales;
+use app\models\EdificioOficina;
 use Yii;
 use app\models\Inventario;
 use app\models\InventarioSearch;
@@ -398,5 +399,19 @@ class InventarioController extends Controller
         } catch (\Exception $e) {
             return ['success' => false, 'message' => $e->getMessage()];
         }
+    }
+
+    public function actionGetOficinasPorEdificio($idedificio)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $oficinas = EdificioOficina::get_oficinas_por_edificio($idedificio);
+        $options = '<option value="">seleccione oficina...</option>';
+
+        foreach ($oficinas as $oficina) {
+            $options .= Html::tag('option', Html::encode($oficina->descripcion), ['value' => $oficina->idoficina]);
+        }
+
+        return ['options' => $options];
     }
 }

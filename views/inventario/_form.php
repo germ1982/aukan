@@ -104,6 +104,45 @@ $ipsJson = json_encode($ipsData);
         </div>
     </div>
 
+
+    <!-- NUEVA FILA: Edificio y Oficina -->
+<!-- FILA: Edificio y Oficina -->
+    <div class="row">
+        <div class="col-md-6">
+            <?= SiteController::actionGet_input_select2(
+                $form, 
+                $model, 
+                'idedificio', 
+                'cmb_edificio', 
+                \app\models\Edificio::get_edificios_fijo_direccion(), 
+                'idedificio', 
+                'descripcion_fija', 
+                'Edificio', 
+                'seleccione edificio...'
+            ) ?>
+        </div>
+
+        <div class="col-md-6">
+            <?php 
+            // Si ya tenemos edificio (por el afterFind), cargamos las oficinas correspondientes
+            $oficinasData = !empty($model->idedificio) 
+                ? \app\models\EdificioOficina::get_oficinas_por_edificio($model->idedificio) 
+                : [];
+            ?>
+            <?= SiteController::actionGet_input_select2(
+                $form, 
+                $model, 
+                'idoficina', 
+                'cmb_oficina', 
+                $oficinasData, 
+                'idoficina', 
+                'descripcion', 
+                'Oficina', 
+                'seleccione oficina...'
+            ) ?>
+        </div>
+    </div>
+
     <?php include '_form_caracteristicas_cpu.php'; ?>
     <?php include '_form_caracteristicas_red.php'; ?>
 
