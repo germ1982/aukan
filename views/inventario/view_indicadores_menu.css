@@ -1,0 +1,502 @@
+/* =========================================================================
+   1. BASE Y VIDEO DE FONDO
+   ========================================================================= */
+body {
+     background-color: #121212;
+     color: #00bfff;
+     font-family: Arial, sans-serif;
+     margin: 0;
+     padding: 0;
+     overflow: hidden;
+}
+
+.video-background-container {
+     position: fixed;
+     top: 0;
+     left: 0;
+     width: 100vw;
+     height: 100vh;
+     z-index: 1;
+     overflow: hidden;
+     transform: scale(1.05);
+     pointer-events: none;
+}
+
+.video-background-container iframe {
+     width: 100vw;
+     height: 56.25vw;
+     min-height: 100vh;
+     min-width: 177.77vh;
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%) translateZ(0);
+     will-change: transform;
+     image-rendering: -webkit-optimize-contrast;
+     image-rendering: crisp-edges;
+}
+
+.overlay-div {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     background-color: rgba(0, 0, 0, 0.4);
+     z-index: 2;
+}
+
+/* =========================================================================
+   2. CAJA Y COMPONENTES DEL LOGIN
+   ========================================================================= */
+.login-box {
+     background: rgba(0, 20, 40, 0.4);
+     backdrop-filter: blur(8px);
+     -webkit-backdrop-filter: blur(8px);
+     border: 1px solid #00bfff;
+     border-radius: 10px;
+     padding: 40px;
+     padding-top: 20px;
+     box-shadow: 0 0 25px rgba(0, 191, 255, 0.6);
+     width: 320px;
+}
+
+.logo {
+     display: block;
+     width: 225px;
+     height: auto;
+     margin: 0 auto 25px auto;
+}
+
+.box-title {
+     text-transform: uppercase;
+     letter-spacing: 4px;
+     font-size: 0.6rem;
+     color: #a2c8ff;
+     text-align: center;
+     margin-bottom: 20px;
+     border-bottom: 1px solid rgba(0, 191, 255, 0.3);
+     padding-bottom: 10px;
+}
+
+/* =========================================================================
+   3. SPLASH INTRO MAGICO
+   ========================================================================= */
+#intro-splash-overlay {
+     position: fixed;
+     top: 0;
+     left: 0;
+     width: 100vw;
+     height: 100vh;
+     z-index: 100;
+     background: rgba(5, 10, 20, 0.85);
+     backdrop-filter: blur(12px);
+     -webkit-backdrop-filter: blur(12px);
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     opacity: 1;
+     visibility: visible;
+     transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                 visibility 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#intro-splash-overlay.fade-out {
+     opacity: 0;
+     visibility: hidden;
+     pointer-events: none;
+}
+
+.intro-card-frame {
+     position: relative;
+     width: 70vw;
+     max-width: 850px;
+     height: 70vh;
+     max-height: 500px;
+     padding: 12px;
+     background: rgba(0, 15, 30, 0.7);
+     border-radius: 16px;
+     border: 2px solid #00bfff;
+     box-shadow: 0 0 20px rgba(0, 191, 255, 0.6),
+                 inset 0 0 15px rgba(0, 191, 255, 0.4),
+                 0 0 40px rgba(138, 43, 226, 0.4);
+     animation: introEntrada 0.8s ease-out forwards, marcoPulso 2.5s ease-in-out infinite alternate;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     overflow: hidden;
+}
+
+.intro-card-frame::before {
+     content: '';
+     position: absolute;
+     top: -4px; left: -4px; right: -4px; bottom: -4px;
+     border: 2px solid #8a2be2;
+     border-radius: 18px;
+     clip-path: polygon(0 0, 8% 0, 8% 100%, 0 100%, 0 92%, 100% 92%, 100% 100%, 92% 100%, 92% 0, 100% 0);
+     pointer-events: none;
+}
+
+.intro-media {
+     width: 100%;
+     height: 100%;
+     object-fit: contain;
+     border-radius: 8px;
+}
+
+@keyframes introEntrada {
+     0% {
+          transform: scale(0.7);
+          opacity: 0;
+          filter: brightness(2);
+     }
+     100% {
+          transform: scale(1);
+          opacity: 1;
+          filter: brightness(1);
+     }
+}
+
+@keyframes marcoPulso {
+     0% {
+          box-shadow: 0 0 20px rgba(0, 191, 255, 0.6), inset 0 0 15px rgba(0, 191, 255, 0.4);
+          border-color: #00bfff;
+     }
+     100% {
+          box-shadow: 0 0 35px rgba(0, 225, 255, 0.9), inset 0 0 25px rgba(138, 43, 226, 0.6);
+          border-color: #00ffff;
+     }
+}
+
+/* =========================================================================
+   4. DASHBOARD ESTRUCTURA Y GRILLA DE TARJETAS
+   ========================================================================= */
+.overlay-div-dashboard {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.dashboard-header-bar {
+    background: rgba(0, 20, 40, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 2px solid #00bfff;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 191, 255, 0.4);
+    padding: 5px 25px;
+    box-sizing: border-box;
+    margin: 10px 25px;
+}
+
+.header-content-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.header-logo {
+    width: 70px;
+    height: auto;
+}
+
+.header-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: #a2c8ff;
+    margin: 0;
+    text-shadow: 0 0 8px rgba(0, 191, 255, 0.6);
+}
+.dashboard-body-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px 25px;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    flex: 1;
+    box-sizing: border-box;
+}
+
+.data-card {
+    background: rgba(0, 20, 40, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid #00bfff;
+    border-radius: 10px;
+    box-shadow: 0 0 25px rgba(0, 191, 255, 0.6);
+    padding: 20px;
+    width: 380px;
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.data-card .box-title {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.6rem;
+    color: #a2c8ff;
+    text-align: center;
+    margin-bottom: 8px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 191, 255, 0.3);
+    white-space: normal;
+        margin-top: 0px;
+}
+
+/* view_indicadores_menu.css - Ajuste del body para habilitar scroll vertical */
+body {
+     background-color: #121212;
+     color: #00bfff;
+     font-family: Arial, sans-serif;
+     margin: 0;
+     padding: 0;
+     overflow-y: auto; /* Permitir scroll vertical en toda la página */
+}
+
+.overlay-div-dashboard {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    height: auto; /* Evita que corte el contenido si hay muchas tarjetas */
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* =========================================================================
+   5. AJUSTES DE TARJETAS Y NAVEGACIÓN INTERNA
+   ========================================================================= */
+.data-card {
+    position: relative;
+}
+
+.data-card .card-header-flex {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 191, 255, 0.3);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    gap: 10px;
+}
+
+.btn-volver-custom {
+    background: rgba(0, 15, 30, 0.7);
+    color: #6b8681;
+    border: 1px solid #00bfff;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 8px rgba(0, 191, 255, 0.2);
+}
+
+.btn-volver-custom:hover {
+    background: rgba(0, 191, 255, 0.2);
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(0, 255, 204, 0.5);
+    border-color: #00ffcc;
+}
+
+/* =========================================================================
+   6. ANIMACIONES DE TRANSICIÓN (Efecto "High-Tech")
+   ========================================================================= */
+.data-card {
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    animation: tarjetaEntrada 0.5s ease-out forwards;
+}
+
+@keyframes tarjetaEntrada {
+    0% { transform: scale(0.9); opacity: 0; filter: blur(5px); }
+    100% { transform: scale(1); opacity: 1; filter: blur(0); }
+}
+
+.card-out {
+    animation: tarjetaSalida 0.3s ease-in forwards;
+}
+
+@keyframes tarjetaSalida {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0.8); opacity: 0; }
+}
+
+/* =========================================================================
+   BARRA GLOBAL DE CONTROLES
+   ========================================================================= */
+.dashboard-toolbar-container {
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 83px;
+    box-sizing: border-box;
+    min-height: 35px; /* Mantiene el espacio alineado */
+}
+
+.toolbar-content-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-titles-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.header-title {
+    margin: 0;
+    line-height: 1.2;
+}
+
+.header-breadcrumb {
+    font-size: 0.55rem;
+    color: #30c5a7;
+    opacity: 0.85;
+    margin-top: 2px;
+}
+
+
+.search-select-container {
+    margin-left: 10px;
+}
+
+/* Personalización rápida de Select2 para acoplarlo al estilo */
+.select2-container--default .select2-selection--single {
+    background-color: rgba(0, 15, 30, 0.7) !important;
+    border: 1px solid #00bfff !important;
+    border-radius: 10px !important;
+    height: 32px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #00ffcc !important;
+    font-size: 0.8rem !important;
+    line-height: 30px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border-color: #00ffcc transparent transparent transparent !important;
+}
+
+.select2-dropdown {
+    background-color: #031424 !important;
+    border: 1px solid #00bfff !important;
+    color: #ffffff !important;
+}
+
+.select2-results__option--highlighted[aria-selected] {
+    background-color: rgba(0, 191, 255, 0.3) !important;
+    color: #00ffcc !important;
+}
+
+
+/* =========================================================================
+   AJUSTES ESTÉTICOS AVANZADOS DE SELECT2
+   ========================================================================= */
+
+/* 1. Fondo del dropdown desplegable */
+.select2-dropdown {
+    background-color: rgba(0, 15, 30, 0.95) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid #00bfff !important;
+}
+
+/* 2. Caja del buscador interno (Input de búsqueda dentro del despliegue) */
+.select2-search--dropdown {
+    background-color: transparent !important;
+    padding: 6px !important;
+}
+
+.select2-search--dropdown .select2-search__field {
+    background-color: rgba(0, 15, 30, 0.7) !important;
+    border: 1px solid #00bfff !important;
+    color: #00bfff !important;
+    border-radius: 4px !important;
+    font-size: 0.75rem !important;
+    outline: none !important;
+}
+
+/* 3. Opciones de la lista: texto más chico, color cyan y hover acorde */
+.select2-results__option {
+    color: #00bfff !important;
+    font-size: 0.75rem !important;
+    padding: 6px 10px !important;
+}
+
+/* Hover/Seleccionado (remueve el verde por un azul neón con transparencia) */
+.select2-results__option--highlighted[aria-selected] {
+    background-color: rgba(0, 191, 255, 0.25) !important;
+    color: #00ffcc !important;
+}
+
+/* 4. Scrollbar estilizado (WebKit) */
+.select2-results__options::-webkit-scrollbar {
+    width: 6px;
+}
+
+.select2-results__options::-webkit-scrollbar-track {
+    background: rgba(0, 15, 30, 0.5);
+}
+
+.select2-results__options::-webkit-scrollbar-thumb {
+    background: #00bfff;
+    border-radius: 3px;
+    box-shadow: 0 0 5px rgba(0, 191, 255, 0.8);
+}
+
+.select2-results__options::-webkit-scrollbar-thumb:hover {
+    background: #00ffcc;
+}
+
+/* Ancho base cuando está cerrado (solo para mostrar "Buscar sector...") */
+.search-select-container .select2-container {
+    width: 160px !important;
+    transition: width 0.3s ease;
+}
+
+/* Ancho dinámico del desplegable (se adapta al contenido más largo) */
+.select2-dropdown {
+    width: auto !important;
+    min-width: 350px !important;
+    max-width: 600px !important;
+}
+
+.contenedor-padre-banner {
+    display: inline-block;
+    padding: 8px 20px;
+    margin-top: 12px;
+    background: rgba(10, 25, 47, 0.65); /* Fondo oscuro semitransparente */
+    backdrop-filter: blur(8px);          /* Desenfoque del video detrás */
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 191, 255, 0.3); /* Borde neón sutil */
+    border-radius: 20px;                 /* Bordes redondeados */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    color: #e0f0ff;
+    font-size: 1.0rem;
+    font-weight: 600;
+    text-shadow: 0 0 6px rgba(0, 191, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.contenedor-padre-banner span {
+    color: #00ffcc; /* Resaltamos el nombre en cian */
+}

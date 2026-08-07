@@ -25,7 +25,7 @@ $filtros_html = '<div style="display: inline-block; vertical-align: middle; marg
 . '</div>';
 
 $customButtonsA = $boton_volver . $filtros_html;
-$customButtonsB = '';
+$customButtonsB = ' ';
 
 $gridColumns = [
     [
