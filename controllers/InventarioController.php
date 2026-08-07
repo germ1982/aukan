@@ -414,4 +414,12 @@ class InventarioController extends Controller
 
         return ['options' => $options];
     }
+
+
+    public function actionView_indicadores()
+    {
+        $this->layout = 'main-login';
+        $this->layout = false;
+        return $this->render('view_indicadores_menu');
+    }
 }

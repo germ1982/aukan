@@ -26,7 +26,13 @@ $boton_articulos_red = Html::a(
     ['title' => 'Configuración de Artículos especiales', 'class' => 'btn btn-primary boton_menu neon', 'target' => '_blank']
 );
 
-$customButtonsA = "$boton_articulos $boton_nuevo_articulo $boton_articulos_red";// o define aquí tus botones HTML::a(...) para la izquierda si es necesario
+$boton_indicadores = Html::a(
+    '<i class="fa fa-eye"></i> Indicadores',
+    ['view_indicadores'],
+    ['title' => 'Indicadores', 'class' => 'btn btn-primary boton_menu neon','target' => '_blank']
+);
+
+$customButtonsA = "$boton_articulos $boton_nuevo_articulo $boton_articulos_red $boton_indicadores";// o define aquí tus botones HTML::a(...) para la izquierda si es necesario
 
 $customButtonsB = ''; // o define aquí tus botones HTML::a(...) para la derecha si es necesario
 
