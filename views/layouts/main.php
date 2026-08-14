@@ -7,6 +7,7 @@ use yii\bootstrap\Modal;
 use yii\helpers\Url;
 use yii\helpers\Json;
 use app\models\ConfiguracionDiccionario;
+use app\helpers\AppMensajeHelper;
 
 /** @var string $content */
 
@@ -21,6 +22,8 @@ foreach ($diccionarioDB as $fila) {
 }
 
 AppAsset::register($this);
+AppMensajeHelper::registerJs();
+
 //$this->registerCssFile("@web/css/datafam.css", ['depends' => [\yii\web\YiiAsset::className(), \yii\bootstrap\BootstrapAsset::className()]]);
 $this->registerCssFile("@web/css/rolo.css", ['depends' => [\yii\web\YiiAsset::className(), \yii\bootstrap\BootstrapAsset::className()]]);
 //$this->registerCssFile("@web/css/aukan.css", ['depends' => [\yii\web\YiiAsset::className(), \yii\bootstrap\BootstrapAsset::className()]]);
