@@ -419,11 +419,17 @@ class PersonaController extends Controller
 
             // 1. Chequeo de conexión/enlace
             if (!$this->actionChequear_estado_renaper()) {
+
                 return [
+                    'title' => "Estado de RENAPER",
+                    'content' => 'El servicio de RENAPER/X-Road se encuentra temporalmente fuera de servicio.',
+                    'respuesta' => 1
+                ];
+                /* return [
                     'title' => "Estado de RENAPER",
                     'content' => '<div class="alert alert-danger" role="alert">El servicio de RENAPER/X-Road se encuentra temporalmente fuera de servicio.</div>',
                     'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
-                ];
+                ]; */
             }
 
             $model = $this->findModel($idpersona);
@@ -469,22 +475,32 @@ class PersonaController extends Controller
 
                 if ($model->save()) {
                     LogPlataforma::registrar(ConstantesGlobales::PERSONAS, ConstantesGlobales::MODIFICACION, $model->idpersona, "Actualización desde RENAPER");
-                    
+
                     return [
+                        'title' => "Actualización RENAPER",
+                        'content' => 'Los datos de ' . $model->nombre . ' ' . $model->apellido . ' se actualizaron correctamente desde RENAPER.',
+                        'respuesta' => 2
+                    ];
+                    /* return [
                         //'forceReload' => '#crud-datatable-pjax', // Reemplazá por el ID de tu contenedor Pjax si es distinto
                         'title' => "Actualización RENAPER",
                         'content' => '<div class="alert alert-success" role="alert">Los datos de <strong>' . Html::encode($model->nombre . ' ' . $model->apellido) . '</strong> se actualizaron correctamente desde RENAPER.</div>',
                         'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
-                    ];
+                    ]; */
                 }
             }
 
             // Si la persona no existe en RENAPER
             return [
                 'title' => "Actualización RENAPER",
+                'content' => 'No se encontraron datos oficiales en RENAPER para el DNI especificado.',
+                'respuesta' => 3
+            ];
+            /* return [
+                'title' => "Actualización RENAPER",
                 'content' => '<div class="alert alert-warning" role="alert">No se encontraron datos oficiales en RENAPER para el DNI especificado.</div>',
                 'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
-            ];
+            ]; */
         }
     }
 
