@@ -9,6 +9,19 @@ use app\models\Provincias;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+$localidadesList = [];
+
+if ($model->idlocalidad) {
+    $localidad = Localidades::findOne($model->idlocalidad);
+    if ($localidad) {
+        $model->idprovincia = $localidad->id_provincia;
+        // Cargamos las localidades de esa provincia
+        $localidadesList = Localidades::find()
+            ->where(['id_provincia' => $model->idprovincia])
+            ->orderBy('localidad')
+            ->all();
+    }
+}
 ?>
 
 <div class="persona-form">
@@ -49,7 +62,7 @@ use yii\widgets\ActiveForm;
             </div>
 
             <div class="col-md-6">
-                  <?= SiteController::actionGet_input_select2($form, $model, 'idlocalidad', 'cmb_localidad', [], 'id', 'localidad', 'Localidad', 'seleccione localidad...') ?>
+                  <?= SiteController::actionGet_input_select2($form, $model, 'idlocalidad', 'cmb_localidad', $localidadesList, 'id', 'localidad', 'Localidad', 'seleccione localidad...') ?>
             </div>
       </div>
 
