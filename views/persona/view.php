@@ -21,8 +21,8 @@ $localidadTexto = 'Desconocida';
 if (!empty($model->idlocalidad)) {
     $localidad = Localidades::findOne($model->idlocalidad);
     if ($localidad) {
-        $provincia = Provincias::findOne($localidad->idprovincia);
-        $localidadTexto = $localidad->descripcion . ($provincia ? ' — ' . $provincia->descripcion : '');
+        $provincia = Provincias::findOne($localidad->id_provincia);
+        $localidadTexto = $localidad->localidad . ($provincia ? ' — ' . $provincia->provincia : '');
     }
 }
 
