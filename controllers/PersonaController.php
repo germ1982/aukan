@@ -412,6 +412,7 @@ class PersonaController extends Controller
     public function actionActualizar_persona_renaper($idpersona)
     {
         $request = Yii::$app->request;
+        Yii::$app->response->format = Response::FORMAT_JSON;
 
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -450,6 +451,7 @@ class PersonaController extends Controller
                 $model->apellido = $data['apellido'] ?? $model->apellido;
                 $model->nombre = $data['nombres'] ?? $model->nombre;
                 $model->genero = ($generoEfectivo === 'F') ? 20 : 21;
+                $model->fecha_nacimiento = \DateTime::createFromFormat('d/m/Y', $data['fecha_nacimiento'])->format('Y-m-d');
 
                 if (isset($data['nacionalidad'])) {
                     $model->nacionalidad = $this->get_nacionalidad($data['nacionalidad']);
@@ -467,8 +469,9 @@ class PersonaController extends Controller
 
                 if ($model->save()) {
                     LogPlataforma::registrar(ConstantesGlobales::PERSONAS, ConstantesGlobales::MODIFICACION, $model->idpersona, "Actualización desde RENAPER");
+                    
                     return [
-                        'forceReload' => '#crud-datatable-pjax', // Reemplazá por el ID de tu contenedor Pjax si es distinto
+                        //'forceReload' => '#crud-datatable-pjax', // Reemplazá por el ID de tu contenedor Pjax si es distinto
                         'title' => "Actualización RENAPER",
                         'content' => '<div class="alert alert-success" role="alert">Los datos de <strong>' . Html::encode($model->nombre . ' ' . $model->apellido) . '</strong> se actualizaron correctamente desde RENAPER.</div>',
                         'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
