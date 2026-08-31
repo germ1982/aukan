@@ -59,6 +59,7 @@ class ConstantesGlobales
     const LOCALIDADES                       = 36;
     const DECRETO_ORGANISMO                 = 37;
     const LEGAJOS_RUNNEU                    = 38;
+    const CONTROL_INSUMO_EVENTO             = 40;
 
     // ==========================================
     // MAPA MULTIDIMENSIONAL DE MÓDULOS
@@ -257,6 +258,11 @@ class ConstantesGlobales
             'nombre' => 'Legajos de RUNNEU',
             'modelo' => \app\models\RunneuLegajo::class
         ],
+        'CONTROL_INSUMO_EVENTO' => [
+            'id' => self::CONTROL_INSUMO_EVENTO,
+            'nombre' => 'Control de Prestamo de Insumos',
+            'modelo' => \app\models\InformaticaControlInsumosEventos::class
+        ],
     ];
 
 
@@ -370,7 +376,5 @@ class ConstantesGlobales
 
     const COMPONENTE_CPU_RAM = 1;
     const COMPONENTE_CPU_DISCO = 2;
-    const COMPONENTE_CPU_VIDEO= 3;
-    
-
+    const COMPONENTE_CPU_VIDEO = 3;
 }
