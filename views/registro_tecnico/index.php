@@ -2,7 +2,7 @@
 
 use app\helpers\AppIndexGenericoHelper;
 use yii\helpers\Html;
-use yii\helpers\Url;
+use app\models\InformaticaControlInsumosEventos;
 
 $gridColumns = require(__DIR__ . '/_columns.php');
 
@@ -34,14 +34,14 @@ $boton_ultimo_decreto = Html::a(
         'title' => 'Ultimo Decreto',
         'class' => 'btn btn-primary boton_menu neon',
         'style' => '
-            background-image: url("img/datafam_estructura.jpg"); /* Asegúrate de que la ruta sea correcta */
+            background-image: url("img/datafam_estructura.jpg");
             background-size: cover;
             background-position: center;
             color: white; 
             border: none;
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-            padding: 15px 60px; /* Ajustalo según el tamaño que quieras */
+            padding: 15px 60px;
         '
     ]
 );
@@ -53,14 +53,14 @@ $boton_diccionario = Html::a(
         'title' => 'Diccionario',
         'class' => 'btn btn-primary boton_menu neon',
         'style' => '
-            background-image: url("img/diccionario.jpg"); /* Asegúrate de que la ruta sea correcta */
+            background-image: url("img/diccionario.jpg");
             background-size: cover;
             background-position: center;
             color: white; 
             border: none;
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-            padding: 15px 60px; /* Ajustalo según el tamaño que quieras */
+            padding: 15px 60px;
         '
     ]
 );
@@ -77,23 +77,57 @@ $boton_indicadores_react = Html::a(
     ['title' => 'Asistentes', 'class' => 'btn btn-primary boton_menu neon','target' => '_blank']
 );
 
-$customButtonsA = "$boton_asistentes . $boton_tipos_registro . $boton_ultimo_decreto . $boton_diccionario.$boton_indicadores $boton_indicadores_react "; // o define aquí tus botones HTML::a(...) para la izquierda si es necesario
+// 1. Evaluación de estados en la base de datos
+$hayPrestamo = InformaticaControlInsumosEventos::find()
+    ->where(['estado' => InformaticaControlInsumosEventos::ESTADO_EN_PRESTAMO])
+    ->exists();
 
-$customButtonsB = ''; // o define aquí tus botones HTML::a(...) para la derecha si es necesario
+$haySolicitado = InformaticaControlInsumosEventos::find()
+    ->where(['estado' => InformaticaControlInsumosEventos::ESTADO_SOLICITADO])
+    ->exists();
 
-$anchoModal = '1200px'; // Ancho del modal en PX
-$tamañoLetra = '10px'; // Tamaño de letra para la grilla
+// 2. Criterio de color y texto dinámico
+if ($hayPrestamo) {
+    $claseAlerta = 'btn-alerta-naranja';
+    $textoIndicador = '<i class="fa fa-warning"></i> ALERTA!!';
+    $funcion = "mostrar_alerta('roja')";
+} elseif ($haySolicitado) {
+    $claseAlerta = 'btn-alerta-amarillo';
+    $textoIndicador = '<i class="fa fa-warning"></i> ALERTA';
+    $funcion = "mostrar_alerta('amarilla')";
+} else {
+    $claseAlerta = 'btn-alerta-verde';
+    $textoIndicador = '<i class="fa fa-check-circle"></i> Insumos en Casa';
+    $funcion = "mostrar_alerta('verde')";
+}
 
-$dataProvider = $dataProvider ?? null; // Asegúrate de que $dataProvider esté definido
-$searchModel = $searchModel ?? null; // Asegúrate de que $
+// 3. Render con Html::button
+$boton_alerta_insumos_prestamos = Html::button(
+    $textoIndicador,
+    [
+        'title' => 'Préstamo Insumos',
+        'class' => 'btn boton_menu ' . $claseAlerta,
+        'onclick' => $funcion,
+    ]
+);
 
-// 2. Renderizar la vista completa
+$customButtonsA = "$boton_asistentes . $boton_tipos_registro . $boton_ultimo_decreto . $boton_diccionario.$boton_alerta_insumos_prestamos $boton_indicadores_react ";
+
+$customButtonsB = '';
+
+$anchoModal = '1200px';
+$tamañoLetra = '10px';
+
+$dataProvider = $dataProvider ?? null;
+$searchModel = $searchModel ?? null;
+
+// Renderizar la vista completa
 echo AppIndexGenericoHelper::renderIndex(
-    $this,                  // Objeto View ($this)
-    'Registro Tecnico',      // Título
-    $gridColumns,           // Columnas
-    $dataProvider,          // DataProvider (viene del controlador)
-    $searchModel,           // SearchModel (viene del controlador)
+    $this,
+    'Registro Tecnico',
+    $gridColumns,
+    $dataProvider,
+    $searchModel,
     $customButtonsA,
     $customButtonsB,
     $anchoModal,
@@ -101,99 +135,64 @@ echo AppIndexGenericoHelper::renderIndex(
 );
 ?>
 <style>
-    .form-control {
-        font-size: 11px !important;
-        height: 30px !important;
-        padding: 5px 5px !important;
-    }
-
-    .select2-container--krajee .select2-selection {
-        height: 30px !important;
-        padding: 5px 5px !important;
-        font-size: 11px !important;
-    }
-
-    .select2-container--krajee .select2-selection--single .select2-selection__arrow {
-        height: 28px !important;
-    }
-
-    /* Tamaño de la letra de las opciones en el desplegable */
-    .select2-results__option {
-        font-size: 10px !important;
-    }
-
-    /* Tamaño de la letra de la opción seleccionada */
-    .select2-selection__rendered {
-        font-size: 10px !important;
-    }
-
-    textarea.form-control {
-        height: auto !important;
-    }
-
-    label {
-        margin-bottom: 0px !important;
-    }
+    <?php include __DIR__ . '/index.css'; ?>
 </style>
 
 
 <?php
-/** * PASO 1: Generar la URL de consulta 
- * Usamos el helper de Yii2 para que la ruta sea dinámica y no falle si cambia el dominio.
- */
 $url = \yii\helpers\Url::to(['registro_tecnico/check_alerta']);
 
-/** * PASO 2: Registrar el bloque de JavaScript
- * El <<<JS le indica a PHP que todo lo que sigue es código de cliente.
- */
 $this->registerJs(
     <<<JS
     // A. CONFIGURACIÓN INICIAL
-    // Guardamos la URL del audio en una variable de texto.
     var urlSonido = "https://tmpfiles.org/dl/wtw0A5zfVOP7/registro.wav";
-    
-    // Convertimos ese texto en un "Objeto de Audio" real para que tenga funciones como .play()
     var sonido = new Audio(urlSonido); 
-    // Función para desbloquear el audio con el primer clic del usuario
+
     document.addEventListener('click', function() {
-        // Reproducimos un segundo y pausamos para "pedir permiso" al navegador
-
         sonido.play().catch(err => {
-                        console.log("Audio bloqueado: El usuario debe hacer clic en la página al menos una vez.");
-                    });
-
-    }, { once: true }); // El 'once: true' hace que esto se ejecute SOLO una vez
+            console.log("Audio bloqueado: El usuario debe hacer clic en la página al menos una vez.");
+        });
+    }, { once: true });
 
     // B. EL TEMPORIZADOR (LOOP)
-    // Definimos una función que se ejecute sola cada X cantidad de tiempo.
     setInterval(function() {
-        
-        // C. LA CONSULTA AL SERVIDOR (FETCH / AJAX)
-        // El navegador "viaja" a la URL que definimos arriba en PHP.
         fetch('{$url}')
-            .then(response => response.json()) // Intentamos convertir la respuesta en un objeto JSON
+            .then(response => response.json())
             .then(data => {
-                
-                // D. LA CONDICIÓN DE DISPARO
-                // Si el controlador mandó un "disparar: true", procedemos.
                 if (data.disparar) {
-                    
-                    // E. EJECUCIÓN DEL SONIDO
-                    // Intentamos reproducir. Usamos .catch por si el navegador bloquea el autoplay.
                     sonido.play().catch(err => {
                         console.log("Audio bloqueado: El usuario debe hacer clic en la página al menos una vez.");
                     });
-
-                    // F. INTERFAZ DE USUARIO
-                    // Si tenías un spinner o cartel de carga, lo ocultamos.
-                    //$('#loading').hide();
                 }
             })
-            // G. CONTROL DE ERRORES DE RED
-            // Si el servidor está caído o no hay internet, te avisa por consola.
             .catch(err => console.error("Error en la petición de alerta:", err));
+    }, 120000);
 
-    }, 120000); // 120000 milisegundos = 2 minutos
+    // C. FUNCIÓN GLOBAL DE ALERTA
+    window.mostrar_alerta = function(tipo) {
+        let contenido = "Sin Insumos Prestados";
+        let titulo = 'Sin Insumos de eventos Prestados <br> Todo es Paz....';
+        let color = 'blue';
+        let gif = 'https://i.giphy.com/pa42oCzjwtVQc.webp';
+
+        switch (tipo) {
+            case 'roja':
+                contenido = "Insumos Prestados";
+                titulo = 'ALERTA!!! <br> Hay insumos Prestados';
+                color = 'red';
+                gif = 'https://i.giphy.com/3ov9k9Ss9N3wO6FQ7C.webp';
+                break;
+
+            case 'amarilla':
+                contenido = "Insumos Solicitados";
+                titulo = 'Atencion!!! <br> Hay Solicitudes para el prestamo de insumos de eventos';
+                color = 'yellow';
+                gif = 'https://i.giphy.com/hqmfJ2HdlyU6jEJBcH.gif';
+                break;
+        }
+
+        mostrarAlerta(titulo, contenido, null, color, gif);
+    };
 JS
 );
 ?>
