@@ -1,0 +1,118 @@
+/* =========================================================================
+   ESTILOS BASE PARA TARJETAS (.data-card)
+   ========================================================================= */
+.data-card {
+    background: rgba(0, 15, 30, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid #00bfff;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);
+    padding: 15px;
+    box-sizing: border-box;
+    position: relative;
+    
+    /* Altura fija estándar obligatoria */
+    height: 400px;
+    max-height: 400px;
+    
+    /* Manejo de desborde y scroll interno */
+    overflow-y: auto;
+    overflow-x: hidden;
+    
+    /* Soporte de scrollbar para Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: #00bfff rgba(0, 15, 30, 0.5);
+    
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    animation: tarjetaEntrada 0.5s ease-out forwards;
+    color: #e0f0ff;
+}
+
+/* Excepción para la tarjeta de fútbol u otras que necesiten crecer según contenido */
+.data-card.auto-height {
+    height: auto;
+    max-height: none;
+    overflow-y: visible;
+}
+
+.data-card .box-title {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #00ffcc;
+    text-shadow: 0 0 8px rgba(0, 255, 204, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0, 191, 255, 0.4);
+    white-space: normal;
+}
+
+/* Ajuste para imágenes internas en tarjeta estándar */
+.data-card img {
+    max-width: 100%;
+    max-height: 280px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+
+/* =========================================================================
+   SCROLLBAR NEÓN ULTRADELGADO (Chrome, Edge, Safari, WebKit)
+   Aplica a la tarjeta y a cualquier contenedor interno (como el iframe/div)
+   ========================================================================= */
+.data-card::-webkit-scrollbar,
+.data-card *::-webkit-scrollbar {
+    width: 5px !important;
+    height: 5px !important;
+}
+
+.data-card::-webkit-scrollbar-track,
+.data-card *::-webkit-scrollbar-track {
+    background: rgba(0, 10, 25, 0.6) !important;
+    border-radius: 10px !important;
+}
+
+.data-card::-webkit-scrollbar-thumb,
+.data-card *::-webkit-scrollbar-thumb {
+    background: #00bfff !important;
+    border-radius: 10px !important;
+    box-shadow: 0 0 10px #00bfff !important;
+}
+
+.data-card::-webkit-scrollbar-thumb:hover,
+.data-card *::-webkit-scrollbar-thumb:hover {
+    background: #00ffcc !important;
+    box-shadow: 0 0 12px #00ffcc !important;
+}
+
+.contenedor-tarjetas {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* Divide en 5 columnas de igual tamaño */
+    gap: 15px;                            /* Espacio entre tarjetas */
+    width: 100%;
+}
+
+.col-5-tarjeta {
+    flex: 0 0 20%;
+    max-width: 20%;
+    padding-left: 7.5px;
+    padding-right: 7.5px;
+}
+
+.data-card {
+    /* Desactiva el scroll horizontal */
+    overflow-x: hidden !important; 
+    
+    /* Reduce el padding lateral para ganar espacio interno */
+    padding: 10px 8px !important; 
+}
+
+/* Fuerza a que cualquier elemento interno no supere el ancho de la tarjeta */
+.data-card * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
