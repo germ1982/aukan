@@ -8,8 +8,14 @@ use yii\web\Response;
 
 class BaseApiController extends Controller
 {
+    /**
+     * La API no utiliza CSRF porque es consumida por otros sistemas.
+     */
     public $enableCsrfValidation = false;
 
+    /**
+     * Fuerza todas las respuestas en formato JSON.
+     */
     public function beforeAction($action)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -18,17 +24,20 @@ class BaseApiController extends Controller
     }
 
     /**
-     * Devuelve una respuesta estándar.
+     * Respuesta exitosa estándar.
      */
     protected function success($data = null, $message = 'OK')
     {
         return [
             'success' => true,
             'message' => $message,
-            'data' => $data
+            'data'    => $data
         ];
     }
 
+    /**
+     * Respuesta de error estándar.
+     */
     protected function error($message, $code = 400)
     {
         Yii::$app->response->statusCode = $code;
@@ -38,6 +47,10 @@ class BaseApiController extends Controller
             'message' => $message
         ];
     }
+
+    /**
+     * Endpoint de prueba.
+     */
     public function actionPing()
     {
         return $this->success([
