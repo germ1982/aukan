@@ -412,17 +412,24 @@ class PersonaController extends Controller
     public function actionActualizar_persona_renaper($idpersona)
     {
         $request = Yii::$app->request;
+        Yii::$app->response->format = Response::FORMAT_JSON;
 
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
 
             // 1. Chequeo de conexión/enlace
             if (!$this->actionChequear_estado_renaper()) {
+
                 return [
+                    'title' => "Estado de RENAPER",
+                    'content' => 'El servicio de RENAPER/X-Road se encuentra temporalmente fuera de servicio.',
+                    'respuesta' => 1
+                ];
+                /* return [
                     'title' => "Estado de RENAPER",
                     'content' => '<div class="alert alert-danger" role="alert">El servicio de RENAPER/X-Road se encuentra temporalmente fuera de servicio.</div>',
                     'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
-                ];
+                ]; */
             }
 
             $model = $this->findModel($idpersona);
@@ -450,6 +457,7 @@ class PersonaController extends Controller
                 $model->apellido = $data['apellido'] ?? $model->apellido;
                 $model->nombre = $data['nombres'] ?? $model->nombre;
                 $model->genero = ($generoEfectivo === 'F') ? 20 : 21;
+                $model->fecha_nacimiento = \DateTime::createFromFormat('d/m/Y', $data['fecha_nacimiento'])->format('Y-m-d');
 
                 if (isset($data['nacionalidad'])) {
                     $model->nacionalidad = $this->get_nacionalidad($data['nacionalidad']);
@@ -467,21 +475,32 @@ class PersonaController extends Controller
 
                 if ($model->save()) {
                     LogPlataforma::registrar(ConstantesGlobales::PERSONAS, ConstantesGlobales::MODIFICACION, $model->idpersona, "Actualización desde RENAPER");
+
                     return [
-                        'forceReload' => '#crud-datatable-pjax', // Reemplazá por el ID de tu contenedor Pjax si es distinto
+                        'title' => "Actualización RENAPER",
+                        'content' => 'Los datos de ' . $model->nombre . ' ' . $model->apellido . ' se actualizaron correctamente desde RENAPER.',
+                        'respuesta' => 2
+                    ];
+                    /* return [
+                        //'forceReload' => '#crud-datatable-pjax', // Reemplazá por el ID de tu contenedor Pjax si es distinto
                         'title' => "Actualización RENAPER",
                         'content' => '<div class="alert alert-success" role="alert">Los datos de <strong>' . Html::encode($model->nombre . ' ' . $model->apellido) . '</strong> se actualizaron correctamente desde RENAPER.</div>',
                         'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
-                    ];
+                    ]; */
                 }
             }
 
             // Si la persona no existe en RENAPER
             return [
                 'title' => "Actualización RENAPER",
+                'content' => 'No se encontraron datos oficiales en RENAPER para el DNI especificado.',
+                'respuesta' => 3
+            ];
+            /* return [
+                'title' => "Actualización RENAPER",
                 'content' => '<div class="alert alert-warning" role="alert">No se encontraron datos oficiales en RENAPER para el DNI especificado.</div>',
                 'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
-            ];
+            ]; */
         }
     }
 

@@ -1,0 +1,159 @@
+/* Importación de fuente futurista para los títulos */
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap");
+
+/* Contenedor principal del cuerpo de la página */
+.content-body {
+     padding: 5px 10px 20px 17px; /* Margen interno general */
+}
+
+/* Banner principal de bienvenida translúcido */
+.banner {
+     position: relative; /* Base para posicionar elementos absolutos internos */
+     height: 80px; /* Altura visible del banner */
+     background: rgba(0, 20, 40, 0.5); /* Fondo oscuro semitransparente estilo indicadores */
+     backdrop-filter: blur(8px); /* Desenfoque del video que pasa por detrás */
+     -webkit-backdrop-filter: blur(8px); /* Compatibilidad con Safari/Webkit */
+     text-align: center; /* Alineación de texto centrada */
+     justify-content: center; /* Centrado en eje principal Flexbox */
+     align-items: center; /* Centrado en eje secundario Flexbox */
+     overflow: hidden; /* Oculta recortes de video o elementos sobrantes */
+     border: 2px solid #00bfff; /* Borde cian neón característico de indicadores */
+     border-radius: 15px; /* Bordes redondeados */
+     margin: 10px 5px 5px 5px; /* Margen externo */
+     box-shadow: 0 4px 20px rgba(0, 191, 255, 0.4); /* Sombra con resplandor neón */
+     z-index: 1; /* Nivel de capa base */
+}
+
+/* Video de fondo dentro del banner */
+.banner video {
+     position: absolute; /* Posicionamiento flotante sobre el banner */
+     top: 50%; /* Centrado vertical */
+     left: 6%; /* Desplazamiento horizontal inicial */
+     width: auto; /* Ancho automático proporcional */
+     height: 140%; /* Escala de altura sobrepasando el contenedor */
+     transform: translate(-50%, -50%); /* Centrado exacto desde su punto medio */
+     object-fit: cover; /* Recorta y llena el área sin deformar */
+}
+
+/* Capa de contenido interno sobre el banner */
+.contenido-banner {
+     position: absolute; /* Posicionamiento flotante */
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     z-index: 4; /* Capa superior por encima del video y efectos */
+     display: flex; /* Maquetación flexible */
+     align-items: center; /* Alinea contenido verticalmente al centro */
+     justify-content: flex-start; /* Alinea contenido al inicio (izquierda) */
+     padding: 0 56px; /* Espaciado lateral para evitar bordes */
+     box-sizing: border-box; /* Incluye padding dentro del cálculo del ancho */
+}
+
+/* Video secundario o miniatura dentro del contenido del banner */
+.contenido-banner video {
+     height: 90%; /* Ocupa casi todo el alto del contenedor */
+     object-fit: contain; /* Contiene el video sin recortarlo */
+     border-radius: 10px; /* Esquinas suavizadas */
+     box-shadow: 
+          0px 0px 6px rgb(67, 70, 252), 
+          0px 0px 10px rgba(108, 214, 245, 0.3); /* Resplandor de neón azul/celeste */
+}
+
+/* Estilo del texto principal de bienvenida */
+.texto-bienvenida {
+     font-family: "Arial Black", "Impact", sans-serif; /* Tipografía gruesa original */
+     font-size: 36px; /* Tamaño destacado */
+     font-weight: 900; /* Máximo grosor */
+     text-transform: uppercase; /* Texto en mayúsculas */
+     letter-spacing: 1px; /* Espaciado entre letras */
+     margin-top: 8px; /* Margen superior */
+     background: linear-gradient(to bottom, #dcf5ff 20%, #6cd6f5 80%); /* Degradado de color interno */
+     -webkit-background-clip: text; /* Aplica el degradado únicamente al texto */
+     -webkit-text-fill-color: transparent; /* Hace el texto transparente para ver el degradado */
+     -webkit-text-stroke: 1.5px #071624; /* Borde oscuro para dar contraste */
+     text-shadow: 
+          0px 2px 4px rgba(0, 0, 0, 0.3), 
+          0px 0px 10px rgba(108, 214, 245, 0.3); /* Sombra y brillo celeste */
+     animation: brilloTexto 3s ease-in-out infinite alternate; /* Animación de respiración */
+     flex: 1; /* Ocupa el espacio disponible en la barra flex */
+}
+
+/* Alineaciones específicas para párrafos o variantes del texto de bienvenida */
+.contenido-banner .texto-bienvenida:first-of-type {
+     text-align: right; /* Primer elemento alineado a la derecha */
+}
+
+.contenido-banner .texto-bienvenida:last-of-type {
+     padding-left: 20px; /* Segundo elemento con sangría izquierda */
+}
+
+/* Animación para el efecto resplandor pulsante del texto */
+@keyframes brilloTexto {
+     0% {
+          filter: drop-shadow(0 0 2px rgba(0, 212, 255, 0.2)); /* Brillo bajo */
+     }
+     100% {
+          filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.6)); /* Brillo intenso */
+     }
+}
+
+/* =========================================================================
+   VIDEO DE FONDO GLOBAL
+   ========================================================================= */
+.video-background-container {
+     position: fixed;
+     top: 0;
+     left: 0;
+     width: 100vw;
+     height: 100vh;
+     z-index: 0; /* Por detrás de todo el contenido */
+     overflow: hidden;
+     transform: scale(1.05);
+     pointer-events: none;
+}
+
+.video-background-container iframe {
+     width: 100vw;
+     height: 56.25vw;
+     min-height: 100vh;
+     min-width: 177.77vh;
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%) translateZ(0);
+     will-change: transform;
+     image-rendering: -webkit-optimize-contrast;
+     image-rendering: crisp-edges;
+}
+
+/* Asegura que el contenido de home flote por encima del fondo */
+.site-index {
+     position: relative;
+     z-index: 1;
+}
+
+/* =========================================================================
+   GRILLA PERSONALIZADA DE 5 COLUMNAS (20% DE ANCHO CADA UNA)
+   ========================================================================= */
+.col-5-tarjeta {
+     position: relative;
+     min-height: 1px;
+     padding-left: 5px;
+     padding-right: 5px;
+     float: left;
+     width: 20%; /* 100% / 5 columnas */
+     box-sizing: border-box;
+}
+
+@media (max-width: 1200px) {
+     .col-5-tarjeta {
+          width: 33.333%; /* Pasa a 3 columnas en pantallas medianas */
+     }
+}
+
+@media (max-width: 768px) {
+     .col-5-tarjeta {
+          width: 100%; /* Pasa a 1 columna en pantallas chicas */
+     }
+}

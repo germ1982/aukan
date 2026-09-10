@@ -1,73 +1,48 @@
 <style>
+    <?= include 'tarjeta_base.css'; ?>
+
+    /* Ajustes específicos para el contenido interno de fútbol */
     .text_titulo_fobal {
-        font-size: 12px;
-        color: #2b3e4c;
+        font-size: 13px;
+        font-weight: bold;
+        color: #00ffcc;
+        display: block;
+        margin-bottom: 8px;
+        text-shadow: 0 0 6px rgba(0, 255, 204, 0.4);
     }
 
     .text_descripcion_fobal {
-        color: #2b3e4c;
+        color: #e0f0ff;
         text-align: justify;
         font-size: 11px;
-    }
-
-    .panel_contenido {
-        /* background-color: #f4dfb9; */
-
-   }
-
-    .contenedor {
-        padding-left: 20px;
-        padding-right: 20px;
-        padding-bottom: 5px;
-        padding-top: 5px;
-        width: 100%;
-        /* Ajusta el ancho del contenedor */
-        max-width: 100%!important;
-        /* Tamaño máximo del contenedor */
-
-    }
-
-    .contenedor iframe {
-        width: 100%;
-        /* Hace que el GIF se ajuste al ancho del contenedor */
-        height: auto;
-        /* Mantiene la proporción del GIF */
+        line-height: 1.4;
         display: block;
-        /* Elimina el espacio inferior del GIF */
     }
 
-    .contenedor img {
+    .contenedor-fobal {
+        padding: 5px 10px;
         width: 100%;
-        /* Hace que el GIF se ajuste al ancho del contenedor */
+    }
+
+    .contenedor-fobal img {
+        width: 100%;
         height: auto;
-        /* Mantiene la proporción del GIF */
         display: block;
-        /* Elimina el espacio inferior del GIF */
         border-radius: 5px;
-        padding-top: 10px;
-        padding-bottom: 10px;
+        margin: 10px 0;
+        border: 1px solid rgba(0, 191, 255, 0.3);
     }
 </style>
-<section class="panel panel-featured-left panel-featured-primary">
-    <header class="panel-heading ">
-        <div class="panel-actions">
-            <!-- onclick="javascript:editarPerfil();" -->
-        </div>
-        <h2 class="panel-title text-center neon" style="color: #f4dfb9; font-size: 16px;">Un equipo que nos llena de orgullo</h2>
-    </header>
-    <div class="panel_contenido">
-        <div class="row justify-content-between">
-            <div class="contenedor">
-                <span class="text_titulo_fobal ">Semifinalistas con Corazón y Determinación</span><br>
-                <img src='img\random\equipo_futbol.jpg'>
-                <span class="text_descripcion_fobal">En un ejemplo inspirador de compañerismo, esfuerzo y dedicación, el equipo de fútbol de la Subsecretaría de Familia alcanzó la semifinal del prestigioso Torneo Interministerial de la Provincia de Neuquén. Ayer, en un emocionante encuentro contra Recursos Hídricos, nuestro equipo dejó todo en la cancha, demostrando no solo su talento deportivo, sino también la unidad y el espíritu que caracteriza a nuestro personal.
 
-                    Llegar hasta esta instancia no es solo una hazaña deportiva, es un reflejo de los altos estándares de compromiso y trabajo en equipo que distinguen a nuestra institución entre las reparticiones del Estado. Este logro posiciona a la Subsecretaría de Familia como un ejemplo de unión y esfuerzo compartido, tanto dentro como fuera de la cancha.
-
-                    Agradecemos profundamente a cada integrante del equipo por representarnos con tanta pasión y por llevar en alto los valores de nuestra Subsecretaría. ¡Felicitaciones por este logro que es de todos!</span>
-                
-            </div>
-
-        </div>
+<div class="data-card auto-height">
+    <h2 class="box-title">Un equipo que nos llena de orgullo</h2>
+    <div class="contenedor-fobal">
+        <span class="text_titulo_fobal">Semifinalistas con Corazón y Determinación</span>
+        <img src="img/random/equipo_futbol.jpg" alt="Equipo de Fútbol">
+        <span class="text_descripcion_fobal">
+            En un ejemplo inspirador de compañerismo, esfuerzo y dedicación, el equipo de fútbol de la Subsecretaría de Familia alcanzó la semifinal del prestigioso Torneo Interministerial de la Provincia de Neuquén. Ayer, en un emocionante encuentro contra Recursos Hídricos, nuestro equipo dejó todo en la cancha, demostrando no solo su talento deportivo, sino también la unidad y el espíritu que caracteriza a nuestro personal.<br><br>
+            Llegar hasta esta instancia no es solo una hazaña deportiva, es un reflejo de los altos estándares de compromiso y trabajo en equipo que distinguen a nuestra institución entre las reparticiones del Estado. Este logro posiciona a la Subsecretaría de Familia como un ejemplo de unión y esfuerzo compartido, tanto dentro como fuera de la cancha.<br><br>
+            Agradecemos profundamente a cada integrante del equipo por representarnos con tanta pasión y por llevar en alto los valores de nuestra Subsecretaría. ¡Felicitaciones por este logro que es de todos!
+        </span>
     </div>
-</section>
+</div>

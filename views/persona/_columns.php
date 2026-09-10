@@ -35,7 +35,7 @@ $columna4 = "10%";
 $columna5 = "10%";
 $columna6 = "25%";
 $columna7 = "10%";
-                    
+
 
 return [
     [
@@ -161,18 +161,18 @@ return [
         'width' => $columna7,
         'buttons' => [
             'renaper' => function ($url, $model) {
-            return Html::a(
-                '<i class="fas fa-sync-alt"></i>', 
-                ['persona/actualizar_persona_renaper', 'idpersona' => $model->idpersona],
-                [
-                    'role' => 'modal-remote',
-                    'title' => 'Actualizar datos desde RENAPER',
-                    'data-toggle' => 'tooltip',
-                    'data-request-method' => 'post',
-                    'class' => 'btn btn-xs btn-outline-info'
-                ]
-            );
-        },
+                return Html::a(
+                    '<i class="fas fa-sync-alt"></i>',
+                    ['persona/actualizar_persona_renaper', 'idpersona' => $model->idpersona],
+                    [
+                        'class' => 'btn btn-xs btn-outline-info',
+                        'title' => 'Actualizar datos desde RENAPER',
+                        'data-toggle' => 'tooltip',
+                        //'role' => 'modal-remote-custom', // O sacale el role para que no lo agarre la librería vieja
+                        'onclick' => 'actualizarRenaperConSpinner(' . $model->idpersona . '); return false;'
+                    ]
+                );
+            },
         ],
     ],
 
