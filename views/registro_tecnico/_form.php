@@ -13,7 +13,7 @@ use yii\widgets\ActiveForm;
 
 
 $solicitantes = Empleado::get_empleados();
-$decreto_activo = $model->isNewRecord ? true:false;
+$decreto_activo = $model->isNewRecord ? true : false;
 $sectores = OrganismoDispositivo::get_dispositivos_con_decreto($decreto_activo);
 $tipos_registros = Configuracion::get_configuraciones(ConfiguracionTipo::TIPO_REGISTRO_TECNICO);
 
@@ -118,6 +118,15 @@ if (!$model->isNewRecord) {
                     <?= $form->field($model, 'solucion')->textarea(['rows' => 5]) ?>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <?= $this->render('_form_imagenes', [
+                        'model' => $model,
+                    ]) ?>
+                </div>
+            </div>
+
+
 
         </div>
     </div>
