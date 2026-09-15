@@ -1,7 +1,9 @@
 <?php
 
 use app\models\Configuracion;
+use app\models\ConstantesGlobales;
 use app\models\Empleado;
+use app\models\Imagenes;
 use app\models\OrganismoDispositivo;
 use app\models\RegistroTecnico;
 use app\models\RegistroTecnicoAsistencia;
@@ -23,6 +25,14 @@ $asistentes_sql = "SELECT e.idempleado, e.foto, CONCAT(p.apellido, ' ', p.nombre
                    JOIN personas p ON p.idpersona = e.idpersona
                    WHERE a.idregistro = {$model->idregistro}";
 $asistentes = Yii::$app->db->createCommand($asistentes_sql)->queryAll();
+
+// Buscar imágenes asociadas a este registro mediante idregistro
+$imagenes = Imagenes::find()
+    ->where([
+        'idmodulo'   => ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA,
+        'idregistro' => $model->idregistro,
+    ])
+    ->all();
 
 $estados = [
     RegistroTecnico::ESTADO_PENDIENTE   => ['label' => 'Pendiente',      'bg' => '#FAEEDA', 'color' => '#633806'],
@@ -74,6 +84,9 @@ $qrData = implode(' | ', array_filter([
 .qr-wrap { display:flex; flex-direction:column; align-items:center; gap:8px; padding:4px 0; }
 .btn-pdf { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; background:#fff; border:0.5px solid #ccc; border-radius:8px; font-size:12px; font-weight:500; color:#333; cursor:pointer; text-decoration:none; }
 .btn-pdf:hover { background:#f5f5f5; }
+.galeria-wrap { display:flex; flex-wrap:wrap; gap:10px; padding:6px 0; }
+.galeria-img { width:80px; height:80px; object-fit:cover; border-radius:6px; border:1px solid #ddd; transition:transform 0.2s; }
+.galeria-img:hover { transform:scale(1.05); }
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -129,7 +142,7 @@ $qrData = implode(' | ', array_filter([
                 <?php endif; ?>
             </div>
 
-                        <div class="card-body">
+            <div class="card-body">
                 <?php if ($dispositivo): ?>
                     <div style="display:flex;align-items:center;gap:10px;padding:6px 0;">
                         <div style="width:36px;height:36px;border-radius:8px;background:#E6F1FB;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
@@ -143,16 +156,12 @@ $qrData = implode(' | ', array_filter([
             </div>
         </div>
 
-
-
         <div class="card">
             <div class="card-title t-amber"><i class="fa fa-exclamation-circle" style="font-size:12px;"></i> Problema</div>
             <div class="card-body">
                 <p class="problema-box"><?= $model->problema ? Html::encode($model->problema) : '<span class="muted" style="color:#aaa;font-style:italic;">Sin descripción</span>' ?></p>
             </div>
         </div>
-
-        
 
         <div class="card">
             <div class="card-title t-purple"><i class="fa fa-users" style="font-size:12px;"></i> Asistentes</div>
@@ -187,7 +196,24 @@ $qrData = implode(' | ', array_filter([
             </div>
         </div>
 
-
+        <!-- Se añade la tarjeta para renderizar las imágenes guardadas -->
+        <div class="card rt-full">
+            <div class="card-title t-teal"><i class="fa fa-camera" style="font-size:12px;"></i> Imágenes Adjuntas</div>
+            <div class="card-body">
+                <?php if (empty($imagenes)): ?>
+                    <span style="color:#aaa;font-style:italic;font-size:12px;">Sin imágenes adjuntas</span>
+                <?php else: ?>
+                    <div class="galeria-wrap">
+                        <?php foreach ($imagenes as $img): ?>
+                            <?php $srcImagen = $base . '/img/registros_tecnicos/' . $img->archivo; ?>
+                            <a href="<?= $srcImagen ?>" target="_blank" title="Ver imagen completa">
+                                <img src="<?= $srcImagen ?>" class="galeria-img" alt="Imagen de registro">
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
 
     </div>
 </div>

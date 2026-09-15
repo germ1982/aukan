@@ -16,6 +16,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
+use app\models\Imagenes;
+use yii\web\UploadedFile;
 
 /**
  * Registro_tecnicoController implements the CRUD actions for RegistroTecnico model.
@@ -175,7 +177,11 @@ class Registro_tecnicoController extends Controller
                         $registroAsistencia->idtecnico = $idempleado;
                         $registroAsistencia->save();
                     }
-                    LogPlataforma::registrar(ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA,ConstantesGlobales::CREACION,$model->idregistro);
+
+                    // <-- GUARDAR IMÁGENES AQUÍ -->
+                    $this->guardarImagenesRegistro($model->idregistro);
+
+                    LogPlataforma::registrar(ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA, ConstantesGlobales::CREACION, $model->idregistro);
                     return [
                         //'forceReload' => '#crud-datatable-pjax',
                         'title' => "Nuevo Registro Tecnico",
@@ -201,7 +207,7 @@ class Registro_tecnicoController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
-                LogPlataforma::registrar(ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA,ConstantesGlobales::CREACION,$model->idregistro);
+                LogPlataforma::registrar(ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA, ConstantesGlobales::CREACION, $model->idregistro);
                 return $this->redirect(['view', 'id' => $model->idregistro]);
             } else {
                 return $this->render('create', [
@@ -270,7 +276,11 @@ class Registro_tecnicoController extends Controller
                         $registroAsistencia->idtecnico = $idempleado;
                         $registroAsistencia->save();
                     }
-                    LogPlataforma::registrar(ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA,ConstantesGlobales::MODIFICACION,$model->idregistro);
+
+                    // <-- GUARDAR IMÁGENES AQUÍ -->
+                    $this->guardarImagenesRegistro($model->idregistro);
+
+                    LogPlataforma::registrar(ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA, ConstantesGlobales::MODIFICACION, $model->idregistro);
                     return [
                         //'forceReload' => '#crud-datatable-pjax',
                         'title' => "RegistroTecnico #" . $id,
@@ -296,7 +306,7 @@ class Registro_tecnicoController extends Controller
             *   Process for non-ajax request
             */
             if ($model->load($request->post()) && $model->save()) {
-                LogPlataforma::registrar(ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA,ConstantesGlobales::MODIFICACION,$model->idregistro);
+                LogPlataforma::registrar(ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA, ConstantesGlobales::MODIFICACION, $model->idregistro);
                 return $this->redirect(['view', 'id' => $model->idregistro]);
             } else {
                 return $this->render('update', [
@@ -317,7 +327,7 @@ class Registro_tecnicoController extends Controller
     {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
-        LogPlataforma::registrar(ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA,ConstantesGlobales::ELIMINACION,$id);
+        LogPlataforma::registrar(ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA, ConstantesGlobales::ELIMINACION, $id);
         if ($request->isAjax) {
             /*
             *   Process for ajax request
@@ -403,7 +413,7 @@ class Registro_tecnicoController extends Controller
 
                 if ($model->save()) {
                     $transaction->commit();
-                    LogPlataforma::registrar(ConstantesGlobales::DATOS,ConstantesGlobales::CREACION,$model->id_configuracion,"Asistente de Registro Tecnico");
+                    LogPlataforma::registrar(ConstantesGlobales::DATOS, ConstantesGlobales::CREACION, $model->id_configuracion, "Asistente de Registro Tecnico");
                     return [
                         'title' => 'Nuevo ' . $model_tipo->descripcion,
                         'content' => '<span class="text-success">Asistente Creado Correctamente</span>',
@@ -454,7 +464,7 @@ class Registro_tecnicoController extends Controller
 
                 if ($model->save()) {
                     $transaction->commit();
-                    LogPlataforma::registrar(ConstantesGlobales::DATOS,ConstantesGlobales::MODIFICACION,$model->id_configuracion,"Asistente de Registro Tecnico");
+                    LogPlataforma::registrar(ConstantesGlobales::DATOS, ConstantesGlobales::MODIFICACION, $model->id_configuracion, "Asistente de Registro Tecnico");
                     return [
                         'title' => 'Actualizar ' . $model_tipo->descripcion,
                         'content' => '<span class="text-success">Asistente Actualizado Correctamente</span>',
@@ -481,7 +491,7 @@ class Registro_tecnicoController extends Controller
         $model->activo = 1;
         $model->save();
 
-       LogPlataforma::registrar(ConstantesGlobales::DATOS,ConstantesGlobales::ACTIVAR,$model->id_configuracion,"Tipo de Registro Tecnico");
+        LogPlataforma::registrar(ConstantesGlobales::DATOS, ConstantesGlobales::ACTIVAR, $model->id_configuracion, "Tipo de Registro Tecnico");
 
         Yii::$app->response->format = Response::FORMAT_JSON;
         return [
@@ -501,7 +511,7 @@ class Registro_tecnicoController extends Controller
         $model = Configuracion::findOne($id);
         $model->activo = 0;
         $model->save();
-        LogPlataforma::registrar(ConstantesGlobales::DATOS,ConstantesGlobales::DESACTIVAR,$model->id_configuracion,"Tipo de Registro Tecnico");
+        LogPlataforma::registrar(ConstantesGlobales::DATOS, ConstantesGlobales::DESACTIVAR, $model->id_configuracion, "Tipo de Registro Tecnico");
         Yii::$app->response->format = Response::FORMAT_JSON;
         return [
             'title' => 'Desactivar',
@@ -547,6 +557,113 @@ class Registro_tecnicoController extends Controller
         return [
             'disparar' => ($libres > 0 && $pendientes > 0)
         ];
+    }
+
+    /**
+     * Guarda las imágenes recibidas por POST (en formato base64 / canvas o UploadedFile)
+     * asociadas a un Registro Técnico específico.
+     *
+     * @param int $idregistro ID del registro técnico recién guardado o en edición.
+     */
+    protected function guardarImagenesRegistro($idregistro)
+    {
+        // 1. Verificar si vienen imágenes codificadas en base64 desde el Canvas JS
+        $imagenesBase64 = Yii::$app->request->post('imagenes_base64', []);
+
+        if (empty($imagenesBase64)) {
+            return;
+        }
+
+        // 2. Definir la ruta de destino dentro de la carpeta web/img/registros_tecnicos
+        $directorioDestino = Yii::getAlias('@webroot/img/registros_tecnicos');
+
+        // Si la carpeta no existe, la crea con permisos de lectura/escritura
+        if (!file_exists($directorioDestino)) {
+            mkdir($directorioDestino, 0777, true);
+        }
+
+        // 3. Consultar la cantidad actual de fotos guardadas para este registro para mantener la numeración
+        $countExistentes = Imagenes::find()
+            ->where([
+                'idmodulo' => ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA,
+                'idindice' => RegistroTecnico::INDICE_IMAGEN_GENERAL,
+            ])
+            ->andWhere(['like', 'archivo', 'registro_' . $idregistro . '_'])
+            ->count();
+
+        $secuencia = (int)$countExistentes + 1;
+
+        // 4. Procesar cada imagen en Base64
+        foreach ($imagenesBase64 as $b64String) {
+            if (empty($b64String)) {
+                continue;
+            }
+
+            // Separar la cabecera Data-URL del contenido base64 puro
+            if (strpos($b64String, ',') !== false) {
+                list($header, $data) = explode(',', $b64String);
+            } else {
+                $data = $b64String;
+            }
+
+            $decodedData = base64_decode($data);
+            if ($decodedData === false) {
+                continue;
+            }
+
+            // Construir el nombre del archivo: registro_{ID}_{NUMERO_CON_PAD_3}
+            $numFormateado = str_pad($secuencia, 3, '0', STR_PAD_LEFT);
+            $nombreArchivo = 'registro_' . $idregistro . '_' . $numFormateado . '.jpg';
+            $rutaCompleta  = $directorioDestino . '/' . $nombreArchivo;
+
+            // Guardar el archivo físico en el servidor
+            if (file_put_contents($rutaCompleta, $decodedData) !== false) {
+                $imagenModel = new Imagenes();
+                $imagenModel->idmodulo = ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA;
+                $imagenModel->idindice = RegistroTecnico::INDICE_IMAGEN_GENERAL;
+                $imagenModel->idregistro = $idregistro; // <-- Usamos idregistro
+                $imagenModel->archivo = $nombreArchivo;
+                $imagenModel->save();
+
+                $secuencia++;
+            }
+        }
+    }
+
+    /**
+     * Acción AJAX para eliminar una imagen individual de un registro técnico.
+     *
+     * @param int $id ID de la fila en la tabla 'imagenes'
+     * @return array Respuesta JSON indicando éxito o error
+     */
+    public function actionDeleteFoto($id)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $foto = Imagenes::findOne($id);
+        if (!$foto) {
+            return ['success' => false, 'message' => 'La imagen no existe.'];
+        }
+
+        // Eliminar el archivo del disco si existe
+        if (file_exists($foto->getPath())) {
+            @unlink($foto->getPath());
+        }
+
+        // Registrar acción en Log de Plataforma
+        LogPlataforma::registrar(
+            ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA,
+            ConstantesGlobales::ELIMINACION,
+            $foto->idimagen,
+            "Eliminación de imagen: " . $foto->archivo
+        );
+
+        // Eliminar el registro en la base de datos
+        if ($foto->delete()) {
+            return ['success' => true, 'message' => 'Imagen eliminada correctamente.'];
+        }
+
+        return ['success' => false, 'message' => 'No se pudo eliminar el registro de la imagen.'];
     }
 }
 function ArmarDateParaMySql($Fecha)

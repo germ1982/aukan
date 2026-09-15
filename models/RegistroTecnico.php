@@ -21,6 +21,10 @@ class RegistroTecnico extends \yii\db\ActiveRecord
     const ESTADO_PENDIENTE = 0;
     const ESTADO_ASISTENCIA = 1;
     const ESTADO_FINALIZADO = 2;
+
+    // Constante para el índice de imágenes globales del registro
+    const INDICE_IMAGEN_GENERAL = 0;
+    
     public $fdesde;
     public $fhasta;
     public $asistentes_informaticos;
