@@ -7,7 +7,7 @@ use app\models\InformaticaControlInsumosEventos;
 $gridColumns = require(__DIR__ . '/_columns.php');
 
 $boton_asistentes = Html::a(
-    '<i class="fa fa-users"></i> Asistentes Técnicos',
+    '<i class="fa fa-users"></i> Asistentes',
     ['index_asistentes'],
     ['title' => 'Asistentes', 'class' => 'btn btn-primary boton_menu neon']
 );
@@ -77,6 +77,12 @@ $boton_indicadores_react = Html::a(
     ['title' => 'Asistentes', 'class' => 'btn btn-primary boton_menu neon','target' => '_blank']
 );
 
+$boton_incidencias = Html::a(
+    'Incidencias',
+    ['registro_tecnico_incidencia/index'],
+    ['title' => 'Incidencias', 'class' => 'btn btn-primary boton_menu neon']
+);
+
 // 1. Evaluación de estados en la base de datos
 $hayPrestamo = InformaticaControlInsumosEventos::find()
     ->where(['estado' => InformaticaControlInsumosEventos::ESTADO_EN_PRESTAMO])
@@ -111,7 +117,7 @@ $boton_alerta_insumos_prestamos = Html::button(
     ]
 );
 
-$customButtonsA = "$boton_asistentes . $boton_tipos_registro . $boton_ultimo_decreto . $boton_diccionario.$boton_alerta_insumos_prestamos $boton_indicadores_react ";
+$customButtonsA = "$boton_asistentes . $boton_tipos_registro . $boton_incidencias .$boton_ultimo_decreto .$boton_alerta_insumos_prestamos $boton_indicadores_react ";
 
 $customButtonsB = '';
 

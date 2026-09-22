@@ -144,8 +144,13 @@ class Registro_tecnicoController extends Controller
                         'model' => $model,
                     ]),
                     'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"])
-
+                        Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => "submit"]) .
+                        Html::button('Guardar i', [
+                            'id' => 'btnGuardar_incidencia',
+                            'class' => 'btn btn-primary',
+                            'type' => 'button', // ya no importa, no se usa para nada
+                            'onclick' => '$("#es_incidencia_flag").val("1"); $("#btnGuardar").trigger("click");'
+                        ])
                 ];
             } else if ($model->load($request->post()) && $model->validate()) {
                 $model->idtipo_registro = Yii::$app->request->post('idtipo_registro');
@@ -182,6 +187,20 @@ class Registro_tecnicoController extends Controller
                     $this->guardarImagenesRegistro($model->idregistro);
 
                     LogPlataforma::registrar(ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA, ConstantesGlobales::CREACION, $model->idregistro);
+
+
+
+                    // Le preguntás directo al modelo
+                    if ($model->es_incidencia == 1) {
+                        return [
+                            'title' => "Generar Incidencia para Registro #" . $model->idregistro,
+                            'content' => $this->renderAjax('@app/views/registro_tecnico_incidencia/create', [
+                                'model' => new \app\models\RegistroTecnicoIncidencia(['idregistro' => $model->idregistro,'iddispositivo'=>$model->iddispositivo,'idingresante'=>$model->idsolicitante]),
+                            ]),
+                            'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                                Html::button('Guardar Incidencia', ['class' => 'btn btn-primary', 'type' => "submit"])
+                        ];
+                    }
                     return [
                         //'forceReload' => '#crud-datatable-pjax',
                         'title' => "Nuevo Registro Tecnico",
