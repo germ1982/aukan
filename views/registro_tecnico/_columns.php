@@ -41,7 +41,7 @@ $columna_2 = '30%';
 $columna_3 = '15%';
 $columna_4 = '3%';
 $columna_5 = '12%';
-$columna_6 = '13%';
+$columna_6 = '10%';
 $columna_7 = '8%';
 $columna_8 = '5%';
 return [
@@ -155,17 +155,17 @@ return [
 
             $html = '<div style="display:flex; gap:4px; flex-wrap:wrap;">';
 
-                $src = $iniciante['foto']
-                    ? \yii\helpers\Url::base(true) . '/img/empleados-fotos/' . $iniciante['foto']
-                    : \yii\helpers\Url::base(true) . '/img/empleados-fotos/default.jpg';
-                // Creamos la URL hacia la vista del empleado
-                $urlView = \yii\helpers\Url::to(['empleado/view', 'id' => $iniciante['idempleado']]);
-                //$html .= '<img src="' . $src . '" title="' . $a['nombre'] . '" style="width:28px; height:28px; border-radius:50%; object-fit:cover; border:2px solid #ddd;">';
-                //$html .= '<img src="' . $src . '" title="' . $a['nombre'] . '" class="imagen-avatar-grilla" style="width:20px; height:20px; border-radius:50%; object-fit:cover; ">';
-                $html .= '<a href="' . $urlView . '" role="modal-remote" title="' . $iniciante['nombre'] . '">';
-                $html .= '<img src="' . $src . '" class="imagen-avatar-grilla" style="width:22px; height:22px; border-radius:50%; object-fit:cover; border: 1px solid #ccc; cursor:pointer;">';
-                $html .= '</a>';
-          
+            $src = $iniciante['foto']
+                ? \yii\helpers\Url::base(true) . '/img/empleados-fotos/' . $iniciante['foto']
+                : \yii\helpers\Url::base(true) . '/img/empleados-fotos/default.jpg';
+            // Creamos la URL hacia la vista del empleado
+            $urlView = \yii\helpers\Url::to(['empleado/view', 'id' => $iniciante['idempleado']]);
+            //$html .= '<img src="' . $src . '" title="' . $a['nombre'] . '" style="width:28px; height:28px; border-radius:50%; object-fit:cover; border:2px solid #ddd;">';
+            //$html .= '<img src="' . $src . '" title="' . $a['nombre'] . '" class="imagen-avatar-grilla" style="width:20px; height:20px; border-radius:50%; object-fit:cover; ">';
+            $html .= '<a href="' . $urlView . '" role="modal-remote" title="' . $iniciante['nombre'] . '">';
+            $html .= '<img src="' . $src . '" class="imagen-avatar-grilla" style="width:22px; height:22px; border-radius:50%; object-fit:cover; border: 1px solid #ccc; cursor:pointer;">';
+            $html .= '</a>';
+
             $html .= '</div>';
             return $html;
         },
@@ -252,11 +252,52 @@ return [
     ],
 
     [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'filtro_incidencia',
+        'label' => 'Incidencia',
+        'width' => '130px',
+        'format' => 'raw',
+        'value' => function ($model) {
+            // Buscamos la incidencia vinculada al registro
+            $incidencia = \app\models\RegistroTecnicoIncidencia::find()
+                ->where(['idregistro' => $model->idregistro])
+                ->one();
+
+            if ($incidencia) {
+                return 'Sí';
+            }
+            return 'No';
+        },
+        'contentOptions' => function ($model) {
+            // Evaluamos la incidencia y aplicamos el color de fondo a la celda según su idestado
+            $incidencia = \app\models\RegistroTecnicoIncidencia::find()
+                ->where(['idregistro' => $model->idregistro])
+                ->one();
+
+            if ($incidencia) {
+                switch ((int)$incidencia->idestado) {
+                    case 1: // Recepcionado
+                        return ['style' => 'background-color: #ffc107; color: #000; font-weight: bold; text-align: center;']; // Anaranjado / Ámbar
+                    case 2: // En Reparación
+                        return ['style' => 'background-color: #fff3cd; color: #856404; font-weight: bold; text-align: center;']; // Amarillo
+                    case 3: // Listo
+                        return ['style' => 'background-color: #d4edda; color: #155724; font-weight: bold; text-align: center;']; // Verde
+                }
+            }
+            return ['style' => 'text-align: center;'];
+        },
+        'filter' => \yii\helpers\Html::activeCheckboxList($searchModel, 'filtro_incidencia', [
+            'registros' => 'Registros',
+            'incidencias' => 'Incidencias',
+        ], ['style' => 'font-size:10px;']),
+    ],
+
+    [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
         'vAlign' => 'middle',
         'width' => $columna_8,
-        'template' => '{view} {update} ',
+        'template' => '{view} {update} {incidencia}',
         'urlCreator' => function ($action, $model, $key, $index) {
             return Url::to([$action, 'id' => $key]);
         },
@@ -271,6 +312,38 @@ return [
             'data-toggle' => 'tooltip',
             'data-confirm-title' => 'Are you sure?',
             'data-confirm-message' => 'Are you sure want to delete this item'
+        ],
+        'buttons' => [
+            'incidencia' => function ($url, $model, $key) {
+                // Buscamos si el registro ya tiene una incidencia creada
+                $incidencia = \app\models\RegistroTecnicoIncidencia::find()
+                    ->where(['idregistro' => $model->idregistro])
+                    ->one();
+
+                if ($incidencia) {
+                    // Si EXISTE -> Botón para VER la incidencia
+                    return \yii\helpers\Html::a(
+                        '<span class="glyphicon glyphicon-inbox" style="color: #007bff;"></span>',
+                        Url::to(['registro_tecnico_incidencia/view', 'id' => $incidencia->idincidencia]),
+                        [
+                            'role' => 'modal-remote',
+                            'title' => 'Ver Incidencia',
+                            'data-toggle' => 'tooltip',
+                        ]
+                    );
+                } else {
+                    // Si NO EXISTE -> Botón para CREAR la incidencia (pasando idregistro)
+                    return \yii\helpers\Html::a(
+                        '<span class="glyphicon glyphicon-plus-sign" style="color: #28a745;"></span>',
+                        Url::to(['registro_tecnico_incidencia/create', 'idregistro' => $model->idregistro]),
+                        [
+                            'role' => 'modal-remote',
+                            'title' => 'Agregar Incidencia',
+                            'data-toggle' => 'tooltip',
+                        ]
+                    );
+                }
+            },
         ],
     ],
 

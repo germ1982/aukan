@@ -1,0 +1,42 @@
+/* Reducción general de fuente y ajustes de tabla */
+.table-movimientos {
+    font-size: 11px;
+    margin: 0 !important;
+    background: #fff;
+}
+
+.table-movimientos th {
+    font-size: 11px;
+    font-weight: 600;
+    color: #555;
+    background-color: #f8f9fa;
+    vertical-align: middle !important;
+    padding: 6px 4px !important;
+}
+
+.table-movimientos td {
+    vertical-align: middle !important;
+    padding: 6px 4px !important;
+}
+
+/* Botones de acción limpios (estilo icono) */
+.btn-accion-grilla {
+    background: transparent;
+    border: none;
+    padding: 2px 5px;
+    color: #777;
+    font-size: 12px;
+    transition: color 0.2s ease-in-out;
+}
+
+.btn-accion-grilla:hover {
+    background: transparent;
+}
+
+.btn-accion-grilla.btn-editar:hover {
+    color: #269abc; /* Azul / Cyan */
+}
+
+.btn-accion-grilla.btn-eliminar:hover {
+    color: #d9534f; /* Rojo */
+}

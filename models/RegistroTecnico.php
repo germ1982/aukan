@@ -30,6 +30,7 @@ class RegistroTecnico extends \yii\db\ActiveRecord
     public $asistentes_informaticos;
     public $solicitante;
     public $usuario_carga;
+    public $es_incidencia = 0;
     public static function tableName()
     {
         return 'registro_tecnico';
@@ -42,7 +43,7 @@ class RegistroTecnico extends \yii\db\ActiveRecord
     {
         return [
             [['fecha_solicitud', 'idsolicitante'], 'required'],
-            [['fecha_solicitud','hora_solicitud', 'fecha_solucion', 'hora_solucion', 'asistentes_informaticos', 'solicitante'], 'safe'],
+            [['fecha_solicitud','hora_solicitud', 'fecha_solucion', 'hora_solucion', 'asistentes_informaticos', 'solicitante','es_incidencia'], 'safe'],
             [['idsolicitante', 'iddispositivo', 'idtipo_registro', 'estado','usuario_carga'], 'integer'],
             [['problema', 'solucion'], 'string'],
         ];

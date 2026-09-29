@@ -1,0 +1,87 @@
+.abm_movimiento_custom{
+    border: 1px solid #337ab7;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    padding: 25px;
+    padding-top: 15px;
+}
+
+/* Header con subrayado fino en lugar de fondo de color */
+.abm_movimiento_header_custom {
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+}
+
+.abm_movimiento_header_custom h5 {
+    margin: 0;
+    color: #444444;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Reducción sutil del tamaño de letra en inputs, selects y labels dentro del subformulario */
+.abm_movimiento_body_custom label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #555555;
+    margin-bottom: 3px;
+}
+
+.abm_movimiento_body_custom .form-control,
+.abm_movimiento_body_custom select,
+.abm_movimiento_body_custom textarea,
+.abm_movimiento_body_custom input[type="text"],
+.abm_movimiento_body_custom input[type="date"],
+.abm_movimiento_body_custom input[type="time"] {
+    font-size: 12px;
+    height: 30px;
+    padding: 4px 8px;
+    border-color: #cccccc;
+    border-radius: 3px;
+    box-shadow: none;
+}
+
+/* Ajuste específico para áreas de texto */
+.abm_movimiento_body_custom textarea.form-control {
+    height: auto;
+}
+
+/* Reducción para Checkboxes y Radios dentro del subformulario */
+.abm_movimiento_body_custom .checkbox label,
+.abm_movimiento_body_custom .radio label {
+    font-size: 11px;
+    color: #444444;
+}
+
+
+.select2-container--krajee .select2-selection {
+
+
+    font-size: 10px!important;
+
+}
+
+/* 1. Opciones de la lista desplegable */
+.select2-container--krajee .select2-results__option {
+    font-size: 10px !important;
+}
+
+/* 2. Campo de búsqueda dentro del desplegable */
+.select2-container--krajee .select2-search--dropdown .select2-search__field {
+    font-size: 10px !important;
+}
+
+/* 3. Centrado vertical del texto seleccionado y los íconos (X y flecha) */
+.select2-container--krajee .select2-selection--single {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.select2-container--krajee .select2-selection--single .select2-selection__rendered {
+    line-height: normal !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}

@@ -49,7 +49,10 @@ if (!$model->isNewRecord) {
 
 <div class="registro-tecnico-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['id' => 'registro-form']); ?>
+
+    <!-- // Campo hidden para marcar si se guarda como incidencia -->
+    <?= $form->field($model, 'es_incidencia')->hiddenInput(['id' => 'es_incidencia_flag'])->label(false) ?>
 
     <div class="row">
         <div class="col-md-6">
@@ -289,6 +292,8 @@ $('#input_iddispositivo').on('change', function() {
         bloqueandoCambio = false;
     });
 });
+
+
 
 JS;
 $this->registerJs($script);

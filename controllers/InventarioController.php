@@ -422,4 +422,34 @@ class InventarioController extends Controller
         $this->layout = false;
         return $this->render('view_indicadores_menu');
     }
+
+    /**
+     * Devuelve los ítems de inventario asignados a un dispositivo/sector en formato JSON
+     * @param integer $id ID del dispositivo/sector
+     * @return array
+     */
+    public function actionGet_inventario_por_dispositivo_sector($id)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $sql = "SELECT 
+                    i.idinventario,
+                    CONCAT(
+                        ct.descripcion, ' ',
+                        cm.descripcion, ' ',
+                        COALESCE(a.modelo, ''), ' ',
+                        COALESCE(cum.descripcion, ''), ' ',
+                        COALESCE(a.descripcion, ''),
+                        IF(i.observacion IS NOT NULL AND i.observacion != '', CONCAT(' (', i.observacion, ')'), '')
+                    ) AS descripcion
+                FROM inventario i
+                JOIN articulo a ON a.idarticulo = i.idarticulo
+                LEFT JOIN configuracion ct ON ct.id_configuracion = a.idtipo
+                LEFT JOIN configuracion cm ON cm.id_configuracion = a.idmarca
+                LEFT JOIN configuracion cum ON cum.id_configuracion = a.id_unidad_medida
+                WHERE i.iddispositivo = :iddispositivo AND i.activo = 1
+                ORDER BY ct.descripcion, cm.descripcion, a.modelo";
+
+        return Yii::$app->db->createCommand($sql, [':iddispositivo' => $id])->queryAll();
+    }
 }

@@ -377,4 +377,40 @@ class ConstantesGlobales
     const COMPONENTE_CPU_RAM = 1;
     const COMPONENTE_CPU_DISCO = 2;
     const COMPONENTE_CPU_VIDEO = 3;
+
+
+
+// ==========================================
+    // CONSTANTES DE ESTADOS DE INCIDENCIAS
+    // ==========================================
+    const ESTADO_INCIDENCIA_RECEPCIONADO = 1;
+    const ESTADO_INCIDENCIA_REPARACION   = 2;
+    const ESTADO_INCIDENCIA_LISTO        = 3;
+    const ESTADO_INCIDENCIA_ENTREGADO    = 4;
+
+    // ==========================================
+    // MAPA MULTIDIMENSIONAL DE ESTADOS DE INCIDENCIAS
+    // ==========================================
+    const ESTADOS_INCIDENCIAS = [
+        self::ESTADO_INCIDENCIA_RECEPCIONADO => [
+            'id' => self::ESTADO_INCIDENCIA_RECEPCIONADO,
+            'nombre' => 'Recepcionado',
+            'movimiento' => 'Recepción',
+        ],
+        self::ESTADO_INCIDENCIA_REPARACION => [
+            'id' => self::ESTADO_INCIDENCIA_REPARACION,
+            'nombre' => 'En Reparación',
+            'movimiento' => 'Reparación',
+        ],
+        self::ESTADO_INCIDENCIA_LISTO => [
+            'id' => self::ESTADO_INCIDENCIA_LISTO,
+            'nombre' => 'Listo para Entregar',
+            'movimiento' => 'Finalizacion',
+        ],
+        self::ESTADO_INCIDENCIA_ENTREGADO => [
+            'id' => self::ESTADO_INCIDENCIA_ENTREGADO,
+            'nombre' => 'Entregado',
+            'movimiento' => 'Entrega',
+        ],
+    ];
 }
