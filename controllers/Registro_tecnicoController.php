@@ -192,14 +192,14 @@ class Registro_tecnicoController extends Controller
 
                     // Le preguntás directo al modelo
                     if ($model->es_incidencia == 1) {
-                        return [
-                            'title' => "Generar Incidencia para Registro #" . $model->idregistro,
-                            'content' => $this->renderAjax('@app/views/registro_tecnico_incidencia/create', [
-                                'model' => new \app\models\RegistroTecnicoIncidencia(['idregistro' => $model->idregistro,'iddispositivo'=>$model->iddispositivo,'idingresante'=>$model->idsolicitante]),
-                            ]),
-                            'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                                Html::button('Guardar Incidencia', ['class' => 'btn btn-primary', 'type' => "submit"])
-                        ];
+                        // Instanciamos el controlador de incidencias para reutilizar su método create centralizado
+                        $incidenciaController = new \app\controllers\Registro_tecnico_incidenciaController(
+                            'registro_tecnico_incidencia',
+                            $this->module
+                        );
+
+                        // Invocamos actionCreate pasando únicamente el ID del registro creado
+                        return $incidenciaController->actionCreate($model->idregistro);
                     }
                     return [
                         //'forceReload' => '#crud-datatable-pjax',

@@ -14,10 +14,8 @@ use yii\widgets\DetailView;
             'idregistro',
             'idinventario',
             'idingresante',
-            'idrecepciona',
             'iddispositivo',
             'idestado',
-            'iddespacha',
             'idretira',
         ],
     ]) ?>

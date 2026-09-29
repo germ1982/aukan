@@ -2,6 +2,9 @@
 
 namespace app\controllers;
 
+use app\models\ConstantesGlobales;
+use app\models\LogPlataforma;
+use app\models\RegistroTecnico;
 use Yii;
 use app\models\RegistroTecnicoIncidencia;
 use app\models\RegistroTecnicoIncidenciaMovimiento;
@@ -75,8 +78,10 @@ class Registro_tecnico_incidenciaController extends Controller
     }
 
     /**
-     * Creates a new RegistroTecnicoIncidencia model.
-     * For ajax request will return json response
+     * Crea una incidencia con sus movimientos y la deja ligada a un Registro Técnico.
+     *
+     * - Si viene $idregistro (derivada desde el módulo de registros), hereda persona y sector del registro.
+     * - Si no viene (alta desde su propio módulo), al guardar se genera un Registro Técnico para ella.
      *
      * @param int|null $idregistro
      * @return mixed
@@ -84,231 +89,337 @@ class Registro_tecnico_incidenciaController extends Controller
     public function actionCreate($idregistro = null)
     {
         $request = Yii::$app->request;
-        $model = new RegistroTecnicoIncidencia();
-        $registroTecnico = null;
 
-        // Cargar el registro técnico de origen si viene el ID por parámetro
-        if ($idregistro !== null) {
-            $model->idregistro = $idregistro;
-            $registroTecnico = \app\models\RegistroTecnico::findOne($idregistro);
+        if (!$request->isAjax) {
+            return $this->redirect(['index']);
+        }
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $model = new RegistroTecnicoIncidencia();
+        $registroTecnico = $idregistro !== null ? RegistroTecnico::findOne($idregistro) : null;
+
+        // Datos heredados del registro de origen (se pueden pisar con lo que venga en el POST, salvo idregistro)
+        if ($registroTecnico !== null) {
+            $model->idregistro    = $registroTecnico->idregistro;
             $model->iddispositivo = $registroTecnico->iddispositivo;
-            $model->idingresante = $registroTecnico->idsolicitante;
+            $model->idingresante  = $registroTecnico->idsolicitante;
         }
 
-        if ($request->isAjax) {
-            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        // GET, o POST sin datos de incidencia (ej: derivado desde el create de Registro Técnico) => mostrar formulario
+        if ($request->isGet || !$model->load($request->post())) {
+            return $this->respuestaFormulario($model, $registroTecnico);
+        }
 
-            if ($request->isGet) {
-                return [
-                    'title' => "Crear Incidencia",
-                    'content' => $this->renderAjax('create', [
-                        'model' => $model,
-                        'registroTecnico' => $registroTecnico, // <--- Aquí
-                    ]),
-                    'footer' => \yii\helpers\Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal']) .
-                        \yii\helpers\Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => 'submit'])
-                ];
-            } else if ($model->load($request->post())) {
-                $transaction = Yii::$app->db->beginTransaction();
+        // idregistro nunca se toma del POST
+        $model->idregistro = $registroTecnico !== null ? $registroTecnico->idregistro : null;
 
-                try {
-                    // 1. Guardar modelo principal de la incidencia
-                    if (!$model->save()) {
-                        throw new \Exception('Error al guardar la incidencia.');
-                    }
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            // 1. Movimientos serializados por JS en el input hidden
+            $movimientos = json_decode((string) $request->post('movimientosArrayInput', ''), true);
+            if (!is_array($movimientos) || empty($movimientos)) {
+                throw new \Exception('No se recibió ningún movimiento en el input hidden.');
+            }
+            $movimientos = array_values($movimientos);
 
-                    // 2. Recuperar array de movimientos deserializado desde el input hidden
-                    $movimientosJson = $request->post('movimientosArrayInput', '[]');
-                    $movimientos = json_decode($movimientosJson, true) ?? [];
+            // 2. Guardar la incidencia con el estado que surge de sus movimientos
+            $model->idestado = $this->calcularEstadoIncidencia($movimientos);
+            if (!$model->save()) {
+                throw new \Exception('Error en Incidencia: ' . json_encode($model->getErrors(), JSON_UNESCAPED_UNICODE));
+            }
 
-                    foreach ($movimientos as $movData) {
-                        $mov = new RegistroTecnicoIncidenciaMovimiento();
-                        $mov->idincidencia = $model->idincidencia;
-                        $mov->fecha = date('Y-m-d', strtotime(str_replace('/', '-', $movData['fecha'])));
-                        $mov->hora = $movData['hora'];
-                        $mov->idmovimiento_nombre = $movData['idmovimiento_nombre'];
-                        $mov->descripcion = $movData['descripcion'];
+            // 3. Guardar movimientos y sus asistentes
+            foreach ($movimientos as $movData) {
+                $mov = new RegistroTecnicoIncidenciaMovimiento();
+                $mov->idincidencia        = $model->idincidencia;
+                $mov->fecha               = $this->fechaParaMySql($movData['fecha'] ?? null);
+                $mov->hora                = $movData['hora'] ?? date('H:i:s');
+                $mov->idmovimiento_nombre = $movData['idmovimiento_nombre'] ?? null;
+                $mov->descripcion         = $movData['descripcion'] ?? '';
 
-                        if (!$mov->save()) {
-                            throw new \Exception('Error al guardar un movimiento de la incidencia.');
-                        }
-
-                        // 3. Insertar las asistencias intervinientes mediante DAO directo
-                        if (!empty($movData['asistentes']) && is_array($movData['asistentes'])) {
-                            foreach ($movData['asistentes'] as $idTecnico) {
-                                Yii::$app->db->createCommand()->insert('registro_tecnico_incidencia_movimiento_asistencia', [
-                                    'idmovimiento' => $mov->idmovimiento,
-                                    'idtecnico' => $idTecnico,
-                                ])->execute();
-                            }
-                        }
-                    }
-
-                    $transaction->commit();
-
-                    return [
-                        'forceReload' => '#crud-datatable-pjax',
-                        'title' => "Crear Incidencia",
-                        'content' => '<span class="text-success">Incidencia registrada correctamente</span>',
-                        'footer' => \yii\helpers\Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal'])
-                    ];
-                } catch (\Exception $e) {
-                    $transaction->rollBack();
-                    return [
-                        'title' => "Crear Incidencia",
-                        'content' => '<span class="text-danger">' . $e->getMessage() . '</span>',
-                        'footer' => \yii\helpers\Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal'])
-                    ];
+                if (!$mov->save()) {
+                    throw new \Exception('Error en Movimiento: ' . json_encode($mov->getErrors(), JSON_UNESCAPED_UNICODE));
                 }
-            } else {
-                return [
-                    'title' => "Crear Incidencia",
-                    'content' => $this->renderAjax('create', [
-                        'model' => $model,
-                        'registroTecnico' => $registroTecnico, // <--- Aquí
-                    ]),
-                    'footer' => \yii\helpers\Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal']) .
-                        \yii\helpers\Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => 'submit'])
-                ];
+
+                $this->guardarAsistentes(
+                    'registro_tecnico_incidencia_movimiento_asistencia',
+                    'idmovimiento',
+                    $mov->idmovimiento,
+                    $movData['asistentes'] ?? []
+                );
             }
-        } else {
-            /*
-            * Process for non-ajax request
-            */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->idincidencia]);
-            } else {
-                return $this->render('create', [
-                    'model' => $model,
-                    'registroTecnico' => $registroTecnico, // <--- Y aquí
-                ]);
-            }
+
+            // 4. Crear/actualizar el Registro Técnico y dejar la incidencia ligada a él
+            $this->sincronizarRegistro($model, $movimientos);
+
+            $transaction->commit();
+
+            return [
+                //'forceReload' => '#crud-datatable-pjax',
+                'title' => "Crear Incidencia",
+                'content' => '<span class="text-success">Incidencia registrada correctamente</span>',
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal'])
+            ];
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+            return [
+                'title' => "Crear Incidencia",
+                'content' => '<span class="text-danger">' . Html::encode($e->getMessage()) . '</span>',
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal'])
+            ];
         }
     }
 
-
     /**
-     * Creates a new RegistroTecnicoIncidencia model.
-     * For ajax request will return json object
-     * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
+     * Respuesta JSON con el formulario de alta. Los botones del footer arrancan ocultos:
+     * el JS del form los muestra cuando corresponde (no mientras se edita el movimiento inicial).
      */
-    public function actionCreate_old($idregistro = null)
+    protected function respuestaFormulario($model, $registroTecnico)
     {
-        $request = Yii::$app->request;
-        $model = new RegistroTecnicoIncidencia();
+        return [
+            'title' => "Crear Incidencia",
+            'content' => $this->renderAjax('create', [
+                'model' => $model,
+                'registroTecnico' => $registroTecnico,
+            ]),
+            'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal', 'style' => 'display: none;']) .
+                Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => 'submit', 'style' => 'display: none;'])
+        ];
+    }
 
-        // Si viene el idregistro desde la URL (o desde el botón de la grilla), se lo asignamos
-        if ($idregistro !== null) {
-            $model->idregistro = $idregistro;
+    /**
+     * Estado global de la incidencia: "Entregado" si algún movimiento lo es; si no, el del último movimiento.
+     */
+    protected function calcularEstadoIncidencia(array $movimientos)
+    {
+        foreach ($movimientos as $mov) {
+            if ((int) ($mov['idmovimiento_nombre'] ?? 0) === ConstantesGlobales::ESTADO_INCIDENCIA_ENTREGADO) {
+                return ConstantesGlobales::ESTADO_INCIDENCIA_ENTREGADO;
+            }
         }
 
-        if ($request->isAjax) {
-            /*
-            *   Process for ajax request
-            */
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            if ($request->isGet) {
-                return [
-                    'title' => "Crear Nueva Incidencia",
-                    'content' => $this->renderAjax('create', [
-                        'model' => $model,
-                    ]),
-                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+        $ultimo = end($movimientos);
+        return (int) ($ultimo['idmovimiento_nombre'] ?? ConstantesGlobales::ESTADO_INCIDENCIA_RECEPCIONADO);
+    }
 
-                ];
-            } else if ($model->load($request->post()) && $model->save()) {
-                return [
-                    //'forceReload'=>'#crud-datatable-pjax',
-                    'title' => "Crear Nueva Incidencia",
-                    'content' => '<span class="text-success">Incidencia creada con éxito.</span>',
-                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::a('Crear Mas', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+    /**
+     * Acepta d/m/Y o Y-m-d y devuelve Y-m-d (hoy si viene vacío).
+     */
+    protected function fechaParaMySql($fecha)
+    {
+        if (empty($fecha)) {
+            return date('Y-m-d');
+        }
+        return date('Y-m-d', strtotime(str_replace('/', '-', $fecha)));
+    }
 
-                ];
-            } else {
-                return [
-                    'title' => "Crear Nueva Incidencia",
-                    'content' => $this->renderAjax('create', [
-                        'model' => $model,
-                    ]),
-                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+    /**
+     * Inserta en una tabla puente (idXXX, idtecnico) los técnicos indicados.
+     */
+    protected function guardarAsistentes($tabla, $campoClave, $id, $tecnicos)
+    {
+        if (empty($tecnicos) || !is_array($tecnicos)) {
+            return;
+        }
 
-                ];
+        $filas = [];
+        foreach ($tecnicos as $idTecnico) {
+            $filas[] = [$id, (int) $idTecnico];
+        }
+        Yii::$app->db->createCommand()->batchInsert($tabla, [$campoClave, 'idtecnico'], $filas)->execute();
+    }
+
+    /**
+     * Deja la incidencia ligada a un Registro Técnico:
+     * - Si ya tenía (derivada desde registros) lo reutiliza.
+     * - Si no, genera uno nuevo con persona/sector de la incidencia y los asistentes del movimiento inicial.
+     * Si hay un movimiento "Entregado", finaliza el registro.
+     *
+     * @throws \Exception si falla el guardado del registro
+     */
+    protected function sincronizarRegistro($model, array $movimientos)
+    {
+        $movimientoEntrega = null;
+        foreach ($movimientos as $mov) {
+            if ((int) ($mov['idmovimiento_nombre'] ?? 0) === ConstantesGlobales::ESTADO_INCIDENCIA_ENTREGADO) {
+                $movimientoEntrega = $mov;
+                break;
             }
+        }
+
+        $asistentesIniciales = $movimientos[0]['asistentes'] ?? [];
+
+        if ($model->idregistro !== null) {
+            $registro = RegistroTecnico::findOne($model->idregistro);
         } else {
-            /*
-            *   Process for non-ajax request
-            */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->idincidencia]);
-            } else {
-                return $this->render('create', [
-                    'model' => $model,
-                ]);
+            $registro = new RegistroTecnico();
+            $registro->fecha_solicitud = date('Y-m-d');
+            $registro->hora_solicitud  = date('H:i:s');
+            $registro->idsolicitante   = $model->idingresante;
+            $registro->iddispositivo   = $model->iddispositivo;
+            $registro->problema        = 'Registro generado automáticamente desde Incidencia N° ' . $model->idincidencia;
+            $registro->usuario_carga   = Yii::$app->user->id ?? null;
+            $registro->estado          = !empty($asistentesIniciales)
+                ? RegistroTecnico::ESTADO_ASISTENCIA
+                : RegistroTecnico::ESTADO_PENDIENTE;
+        }
+
+        $esNuevoRegistro = $registro->isNewRecord;
+
+        if ($movimientoEntrega !== null) {
+            $descEntrega = !empty($movimientoEntrega['descripcion']) ? ' - ' . $movimientoEntrega['descripcion'] : '';
+
+            $registro->estado         = RegistroTecnico::ESTADO_FINALIZADO;
+            $registro->fecha_solucion = $this->fechaParaMySql($movimientoEntrega['fecha'] ?? null);
+            $registro->hora_solucion  = date('H:i:s', strtotime($movimientoEntrega['hora'] ?? 'now'));
+            $registro->solucion       = 'Equipo entregado desde Incidencia N° ' . $model->idincidencia . $descEntrega;
+        }
+
+        if (!$registro->save()) {
+            throw new \Exception('Error al sincronizar el Registro Técnico: ' . json_encode($registro->getErrors(), JSON_UNESCAPED_UNICODE));
+        }
+
+        if ($esNuevoRegistro) {
+            $this->guardarAsistentes('registro_tecnico_asistencia', 'idregistro', $registro->idregistro, $asistentesIniciales);
+            LogPlataforma::registrar(ConstantesGlobales::REGISTRO_TECNICO_INFORMATICA, ConstantesGlobales::CREACION, $registro->idregistro);
+
+            $model->idregistro = $registro->idregistro;
+            // AHORA (Forza un UPDATE directo sobre la columna idregistro sin tocar la clave primaria):
+            if ($model->updateAttributes(['idregistro' => $registro->idregistro]) === false) {
+                throw new \Exception('Error al vincular la Incidencia con el Registro Técnico.');
             }
         }
     }
 
+
     /**
-     * Updates an existing RegistroTecnicoIncidencia model.
-     * For ajax request will return json object
-     * and for non-ajax request if update is successful, the browser will be redirected to the 'view' page.
+     * Actualiza una incidencia existente re-sincronizando sus movimientos, asistentes y registro técnico asociado.
+     * Cierra el modal automáticamente tras guardar exitosamente.
+     *
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException si no se encuentra el modelo
      */
     public function actionUpdate($id)
     {
         $request = Yii::$app->request;
+
+        if (!$request->isAjax) {
+            return $this->redirect(['index']);
+        }
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
         $model = $this->findModel($id);
 
-        if ($request->isAjax) {
-            /*
-            *   Process for ajax request
-            */
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            if ($request->isGet) {
-                return [
-                    'title' => "Update RegistroTecnicoIncidencia #" . $id,
-                    'content' => $this->renderAjax('update', [
-                        'model' => $model,
-                    ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
-                ];
-            } else if ($model->load($request->post()) && $model->save()) {
-                return [
-                    'forceReload' => '#crud-datatable-pjax',
-                    'title' => "RegistroTecnicoIncidencia #" . $id,
-                    'content' => $this->renderAjax('view', [
-                        'model' => $model,
-                    ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
-                ];
-            } else {
-                return [
-                    'title' => "Update RegistroTecnicoIncidencia #" . $id,
-                    'content' => $this->renderAjax('update', [
-                        'model' => $model,
-                    ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
-                ];
-            }
-        } else {
-            /*
-            *   Process for non-ajax request
-            */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->idincidencia]);
-            } else {
-                return $this->render('update', [
+        // GET o render inicial ante fallo en la carga de datos POST del modelo principal
+        if ($request->isGet || !$model->load($request->post())) {
+            return [
+                'title' => "Actualizar Incidencia #" . $id,
+                'content' => $this->renderAjax('update', [
                     'model' => $model,
-                ]);
+                ]),
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal']) .
+                    Html::button('Guardar', ['id' => 'btnGuardar', 'class' => 'btn btn-primary', 'type' => 'submit'])
+            ];
+        }
+
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            // 1. Decodificar los movimientos enviados desde el input hidden
+            $movimientos = json_decode((string) $request->post('movimientosArrayInput', ''), true);
+            if (!is_array($movimientos) || empty($movimientos)) {
+                throw new \Exception('La incidencia debe contener al menos un movimiento.');
             }
+            $movimientos = array_values($movimientos);
+
+            // 2. Recalcular estado global y guardar cambios en la incidencia existente
+            $model->idestado = $this->calcularEstadoIncidencia($movimientos);
+            if (!$model->save()) {
+                throw new \Exception('Error al actualizar la Incidencia: ' . json_encode($model->getErrors(), JSON_UNESCAPED_UNICODE));
+            }
+
+            // 3. Sincronización diferencial de movimientos (Baja, Modificación y Alta)
+            $idsMovimientosEnviados = array_filter(array_column($movimientos, 'idmovimiento'));
+
+            // a) Baja: Eliminar movimientos que el usuario removió de la grilla en la UI
+            $queryEliminar = RegistroTecnicoIncidenciaMovimiento::find()
+                ->where(['idincidencia' => $model->idincidencia]);
+            if (!empty($idsMovimientosEnviados)) {
+                $queryEliminar->andWhere(['not in', 'idmovimiento', $idsMovimientosEnviados]);
+            }
+            $movimientosAEliminar = $queryEliminar->all();
+
+            foreach ($movimientosAEliminar as $movViejo) {
+                // Limpiar tabla puente de asistentes del movimiento borrado
+                Yii::$app->db->createCommand()
+                    ->delete('registro_tecnico_incidencia_movimiento_asistencia', ['idmovimiento' => $movViejo->idmovimiento])
+                    ->execute();
+                $movViejo->delete();
+            }
+
+            // b) Alta y Modificación de movimientos
+            foreach ($movimientos as $movData) {
+                if (!empty($movData['idmovimiento'])) {
+                    $mov = RegistroTecnicoIncidenciaMovimiento::findOne($movData['idmovimiento']);
+                    if (!$mov) {
+                        $mov = new RegistroTecnicoIncidenciaMovimiento();
+                        $mov->idincidencia = $model->idincidencia;
+                    }
+                } else {
+                    $mov = new RegistroTecnicoIncidenciaMovimiento();
+                    $mov->idincidencia = $model->idincidencia;
+                }
+
+                $mov->fecha               = $this->fechaParaMySql($movData['fecha'] ?? null);
+                $mov->hora                = $movData['hora'] ?? date('H:i:s');
+                $mov->idmovimiento_nombre = $movData['idmovimiento_nombre'] ?? null;
+                $mov->descripcion         = $movData['descripcion'] ?? '';
+
+                if (!$mov->save()) {
+                    throw new \Exception('Error en Movimiento: ' . json_encode($mov->getErrors(), JSON_UNESCAPED_UNICODE));
+                }
+
+                // Resetear y re-insertar asistentes en la tabla puente
+                Yii::$app->db->createCommand()
+                    ->delete('registro_tecnico_incidencia_movimiento_asistencia', ['idmovimiento' => $mov->idmovimiento])
+                    ->execute();
+
+                $this->guardarAsistentes(
+                    'registro_tecnico_incidencia_movimiento_asistencia',
+                    'idmovimiento',
+                    $mov->idmovimiento,
+                    $movData['asistentes'] ?? []
+                );
+            }
+
+            // 4. Sincronizar estado y datos del Registro Técnico vinculado
+            $this->sincronizarRegistro($model, $movimientos);
+
+            $transaction->commit();
+
+            // RESPUESTA DE ÉXITO: Cierre automático de modal para evitar ventanas colgadas
+            /* return [
+                'forceClose' => true,
+                //'forceReload' => '#crud-datatable-pjax',
+            ]; */
+
+                        return [
+                //'forceReload' => '#crud-datatable-pjax',
+                'title' => "Crear Incidencia",
+                'content' => '<span class="text-success">Incidencia registrada correctamente</span>',
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal'])
+            ];
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+
+            // RESPUESTA DE ERROR: Mantiene la ventana abierta para dar feedback visual
+            return [
+                'title' => "Actualizar Incidencia #" . $id,
+                'content' => '<span class="text-danger">' . Html::encode($e->getMessage()) . '</span>',
+                'footer' => Html::button('Cerrar', ['id' => 'btnCerrar', 'class' => 'btn btn-default pull-left', 'data-dismiss' => 'modal'])
+            ];
         }
     }
 
@@ -399,4 +510,43 @@ class Registro_tecnico_incidenciaController extends Controller
             'movimientos' => $movimientos,
         ]);
     }
+
+    /**
+     * Devuelve los ítems de inventario asignados a un dispositivo/sector con datos extendidos para incidencias.
+     * @param integer $id ID del dispositivo/sector
+     * @return array
+     */
+    public function actionGet_inventario_por_dispositivo_sector($id)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $sql = "SELECT 
+                    i.idinventario,
+                    CONCAT(
+                        
+                        COALESCE(ct.descripcion, ''), ' ',
+                        COALESCE(cm.descripcion, ''), ' ',
+                        COALESCE(a.modelo, ''), ' ',
+                        COALESCE(a.descripcion, ''),
+                        ' -- Matricula: ', COALESCE(i.matricula, 'S/N'),
+                        IF(e.idempleado IS NOT NULL, CONCAT(' -- Referente: ', p.apellido, ' ', p.nombre, ' -- '), ''),
+                        IF(ip.ip IS NOT NULL AND ip.ip != '', CONCAT(' [IP: ', ip.ip, ']'), ''),
+                        IF(i.observacion IS NOT NULL AND i.observacion != '', CONCAT(' - ', i.observacion), '')
+                    ) AS descripcion
+                FROM inventario i
+                INNER JOIN articulo a ON a.idarticulo = i.idarticulo
+                LEFT JOIN configuracion ct ON ct.id_configuracion = a.idtipo
+                LEFT JOIN configuracion cm ON cm.id_configuracion = a.idmarca
+                LEFT JOIN empleado e ON e.idempleado = i.idempleado
+                LEFT JOIN personas p ON p.idpersona = e.idpersona
+                LEFT JOIN inventario_dispositivo_red ir ON ir.idinventario = i.idinventario
+                LEFT JOIN informatica_ip ip ON ip.iddispositivo_red = ir.iddispositivo_red
+                WHERE i.iddispositivo = :iddispositivo 
+                AND i.activo = 1
+                ORDER BY ct.descripcion, cm.descripcion, a.modelo;";
+
+        return Yii::$app->db->createCommand($sql, [':iddispositivo' => $id])->queryAll();
+    }
+
+    
 }

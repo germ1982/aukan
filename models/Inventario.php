@@ -145,6 +145,26 @@ class Inventario extends \yii\db\ActiveRecord
         return Articulo::findBySql($sql)->asArray()->all();
     }
 
+        public static function get_item_inventario($id)
+    {
+        $sql = "SELECT 
+                a.idarticulo,
+
+                CONCAT(ct.descripcion,' ',
+                    cm.descripcion,' ',
+                    a.modelo,' ',
+                    cum.descripcion,' ',
+                    a.descripcion
+                ) AS descripcion
+            FROM inventario i
+            JOIN articulo a ON a.idarticulo = i.idarticulo
+            JOIN configuracion ct ON ct.id_configuracion = a.idtipo
+            JOIN configuracion cm ON cm.id_configuracion = a.idmarca
+            JOIN configuracion cum ON cum.id_configuracion = a.id_unidad_medida
+            where i.idinventario = $id and i.activo = 1";
+        return Articulo::findBySql($sql)->one();
+    }
+
     // En app\models\Inventario.php
 
     public static function getArticulosCpuIds()

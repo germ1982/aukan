@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /**
  * @var yii\web\View $this
  * @var array $tecnicos_asistencia
- * @var bool $esPrimerMovimiento
+ * @var bool $esAlta true si es el alta de una incidencia nueva
  */
 
 // Cargar tipos de movimientos desde ConstantesGlobales
@@ -68,9 +68,23 @@ $tipos_movimiento = ConstantesGlobales::ESTADOS_INCIDENCIAS;
 
 <div class="row" style="margin-top: 15px;">
     <div class="col-md-12 text-right">
-        <button type="button" class="btn btn-default" onclick="ocultar_abm_movimiento()">Cancelar</button>
-        <button type="button" class="btn btn-success" onclick="agregarMovimiento()">
+        <button type="button" class="btn btn-default" onclick="cancelar_movimiento()">Cancelar</button>
+
+        <!-- Añade a la grilla (permite cargar más movimientos antes de guardar) -->
+        <button type="button" id="btn_agregar_mov" class="btn btn-success" onclick="agregarMovimiento()">
             <i class="glyphicon glyphicon-plus"></i> Añadir a la Lista
+        </button>
+
+        <?php if ($esAlta): ?>
+            <!-- Alta: añade el movimiento inicial y guarda la incidencia de una -->
+            <button type="button" id="btn_guardar_incidencia" class="btn btn-primary" onclick="agregarMovimiento(true)">
+                <i class="glyphicon glyphicon-floppy-disk"></i> Guardar Incidencia
+            </button>
+        <?php endif; ?>
+
+        <!-- Edición de un movimiento ya cargado en la lista -->
+        <button type="button" id="btn_actualizar_mov" class="btn btn-primary" onclick="agregarMovimiento()" style="display:none;">
+            <i class="glyphicon glyphicon-ok"></i> Guardar Cambios
         </button>
     </div>
 </div>

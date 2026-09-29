@@ -11,10 +11,8 @@ use Yii;
  * @property int|null $idregistro
  * @property int|null $idinventario
  * @property int $idingresante
- * @property int $idrecepciona
  * @property int $iddispositivo
  * @property int $idestado
- * @property int|null $iddespacha
  * @property int|null $idretira
  *
  * @property RegistroTecnico $idregistro0
@@ -25,6 +23,9 @@ class RegistroTecnicoIncidencia extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+
+    public $fecha_ingreso;
+    public $asistencia;
     public static function tableName()
     {
         return 'registro_tecnico_incidencia';
@@ -36,8 +37,9 @@ class RegistroTecnicoIncidencia extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['idregistro', 'idinventario', 'idingresante', 'idrecepciona', 'iddispositivo', 'idestado', 'iddespacha', 'idretira'], 'integer'],
-            [['idingresante', 'idrecepciona', 'iddispositivo', 'idestado'], 'required'],
+            [['idregistro', 'idinventario', 'idingresante','iddispositivo', 'idestado', 'idretira'], 'integer'],
+            [['idingresante', 'iddispositivo', 'idestado'], 'required'],
+            [['fecha_ingreso','asistencia'], 'safe'],
             [['idregistro'], 'exist', 'skipOnError' => true, 'targetClass' => RegistroTecnico::className(), 'targetAttribute' => ['idregistro' => 'idregistro']],
         ];
     }
@@ -52,10 +54,8 @@ class RegistroTecnicoIncidencia extends \yii\db\ActiveRecord
             'idregistro' => 'Idregistro',
             'idinventario' => 'Idinventario',
             'idingresante' => 'Idingresante',
-            'idrecepciona' => 'Idrecepciona',
             'iddispositivo' => 'Iddispositivo',
             'idestado' => 'Idestado',
-            'iddespacha' => 'Iddespacha',
             'idretira' => 'Idretira',
         ];
     }
