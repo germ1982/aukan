@@ -380,7 +380,7 @@ class ConstantesGlobales
 
 
 
-// ==========================================
+    // ==========================================
     // CONSTANTES DE ESTADOS DE INCIDENCIAS
     // ==========================================
     const ESTADO_INCIDENCIA_RECEPCIONADO = 1;
@@ -391,26 +391,39 @@ class ConstantesGlobales
     // ==========================================
     // MAPA MULTIDIMENSIONAL DE ESTADOS DE INCIDENCIAS
     // ==========================================
+
+    // Tonalidades pasteles (Fondo / Texto)
+    // Naranja (Recepcionado):   #FFE0B2 / #E65100
+    // Amarillo (En Reparación): #FFF9C4 / #F57F17
+    // Verde (Listo/Entregado):  #C8E6C9 / #1B5E20
     const ESTADOS_INCIDENCIAS = [
         self::ESTADO_INCIDENCIA_RECEPCIONADO => [
             'id' => self::ESTADO_INCIDENCIA_RECEPCIONADO,
             'nombre' => 'Recepcionado',
             'movimiento' => 'Recepción',
+            'color' => '#ffb2b2',
+            'color_texto' => '#E65100',
         ],
         self::ESTADO_INCIDENCIA_REPARACION => [
             'id' => self::ESTADO_INCIDENCIA_REPARACION,
             'nombre' => 'En Reparación',
             'movimiento' => 'Reparación',
+            'color' => '#ffeb3e',
+            'color_texto' => '#F57F17',
         ],
         self::ESTADO_INCIDENCIA_LISTO => [
             'id' => self::ESTADO_INCIDENCIA_LISTO,
-            'nombre' => 'Listo para Entregar',
+            'nombre' => 'Equipo Listo',
             'movimiento' => 'Finalizacion',
+            'color' => '#C8E6C9',
+            'color_texto' => '#1B5E20',
         ],
         self::ESTADO_INCIDENCIA_ENTREGADO => [
             'id' => self::ESTADO_INCIDENCIA_ENTREGADO,
             'nombre' => 'Entregado',
             'movimiento' => 'Entrega',
+            'color' => '#8dd5ff',
+            'color_texto' => '#dcf8ff',
         ],
     ];
 }
