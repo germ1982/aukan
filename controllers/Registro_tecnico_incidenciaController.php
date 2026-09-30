@@ -14,6 +14,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
+use kartik\mpdf\Pdf;
 
 /**
  * Registro_tecnico_incidenciaController implements the CRUD actions for RegistroTecnicoIncidencia model.
@@ -67,8 +68,8 @@ class Registro_tecnico_incidenciaController extends Controller
                 'content' => $this->renderAjax('view', [
                     'model' => $this->findModel($id),
                 ]),
-                'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                    Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::a('Editar', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
             ];
         } else {
             return $this->render('view', [
@@ -405,7 +406,7 @@ class Registro_tecnico_incidenciaController extends Controller
                 //'forceReload' => '#crud-datatable-pjax',
             ]; */
 
-                        return [
+            return [
                 //'forceReload' => '#crud-datatable-pjax',
                 'title' => "Crear Incidencia",
                 'content' => '<span class="text-success">Incidencia registrada correctamente</span>',
@@ -548,5 +549,52 @@ class Registro_tecnico_incidenciaController extends Controller
         return Yii::$app->db->createCommand($sql, [':iddispositivo' => $id])->queryAll();
     }
 
-    
+
+/**
+ * Genera el reporte PDF de la incidencia.
+ * @param integer $id
+ * @return mixed
+ */
+public function actionPdf($id)
+{
+    $content = $this->renderPartial('incidencia_pdf', [
+        'model' => $this->findModel($id),
+    ]);
+
+    $cssEspecial = '
+        body { font-family: sans-serif; font-size: 11px; color: #333; }
+        .table-layout { width: 100%; border-collapse: separate; border-spacing: 6px; margin-bottom: 5px; }
+        .card-box { border: 1px solid #dcdcdc; background-color: #ffffff; padding: 0; vertical-align: top; }
+        .card-head { padding: 6px 10px; font-weight: bold; font-size: 11px; }
+        .card-body { padding: 10px; font-size: 11px; }
+        
+        .t-blue   { background-color: #B5D4F4; color: #0C447C; }
+        .t-teal   { background-color: #9FE1CB; color: #085041; }
+        .t-amber  { background-color: #FAC775; color: #633806; }
+        .t-green  { background-color: #C0DD97; color: #27500A; }
+        .t-purple { background-color: #CECBF6; color: #26215C; }
+        .t-gray   { background-color: #E0E0E0; color: #424242; }
+
+        .badge-estado { padding: 3px 8px; border-radius: 10px; font-weight: bold; font-size: 10px; display: inline-block; }
+        .table-mov { width: 100%; border-collapse: collapse; margin-top: 5px; }
+        .table-mov th { background-color: #f2f2f2; color: #444; border: 1px solid #ccc; padding: 6px; font-size: 10px; }
+        .table-mov td { border: 1px solid #ccc; padding: 6px; font-size: 10px; vertical-align: middle; }
+    ';
+
+    $pdf = new Pdf([
+        'mode' => Pdf::MODE_UTF8,
+        'format' => Pdf::FORMAT_A4,
+        'orientation' => Pdf::ORIENT_PORTRAIT,
+        'destination' => Pdf::DEST_BROWSER,
+        'content' => $content,
+        'cssInline' => $cssEspecial,
+        'options' => ['title' => 'Incidencia #' . str_pad($id, 5, '0', STR_PAD_LEFT)],
+        'methods' => [
+            'SetHeader' => ['Plataforma AUKAN || Reporte de Incidencia'],
+            'SetFooter' => ['|Página {PAGENO} de {nbpg}|'],
+        ]
+    ]);
+
+    return $pdf->render();
+}
 }

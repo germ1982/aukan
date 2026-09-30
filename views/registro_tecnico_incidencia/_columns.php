@@ -211,7 +211,18 @@ return [
         'width' => $columna_7,
         'dropdown' => false,
         'vAlign' => 'middle',
-        'template' => '{update} {view}',
+        'template' => '{view} {update} {pdf}', // Agregamos {pdf} a la plantilla
+        'buttons' => [
+            'pdf' => function ($url, $model, $key) {
+                return Html::a('<i class="fa fa-file-pdf-o"></i>', Url::to(['pdf', 'id' => $key]), [
+                    'title' => 'Exportar PDF',
+                    'data-toggle' => 'tooltip',
+                    'target' => '_blank', // Abre la pestaña limpia del PDF
+                    'data-pjax' => '0',   // Evita que PJAX capture la descarga
+                    'style' => 'color: #d9534f; margin-left: 5px;', // Estilo opcional para destacarlo en rojo
+                ]);
+            },
+        ],
         'urlCreator' => function ($action, $model, $key, $index) {
             return Url::to([$action, 'id' => $key]);
         },
