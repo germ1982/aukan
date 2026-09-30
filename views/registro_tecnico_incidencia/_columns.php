@@ -141,16 +141,30 @@ return [
 
 
     // 5. Estado (Leyendo estrictamente de ConstantesGlobales::ESTADOS_INCIDENCIAS)
-    [
+[
         'attribute' => 'idestado',
         'label' => 'Estado',
+        'format' => 'html',
         'width' => $columna_5,
         'value' => function ($model) {
-            return ConstantesGlobales::ESTADOS_INCIDENCIAS[$model->idestado]['nombre'] ?? '(Sin estado)';
+            $estadoConfig = ConstantesGlobales::ESTADOS_INCIDENCIAS[$model->idestado] ?? null;
+            if (!$estadoConfig) {
+                return '<span class="label label-default">(Sin estado)</span>';
+            }
+
+            $bg = $estadoConfig['color'] ?? '#E0E0E0';
+            $text = $estadoConfig['color_texto'] ?? '#333333';
+            $nombre = Html::encode($estadoConfig['nombre']);
+
+            return "<span class=\"label\" style=\"background-color: {$bg}; color: {$text}; font-size: 11px; padding: 5px 8px; border-radius: 4px; font-weight: 600;\">{$nombre}</span>";
         },
         'filter' => ArrayHelper::map(ConstantesGlobales::ESTADOS_INCIDENCIAS, 'id', 'nombre'),
+        'filterInputOptions' => [
+            'class' => 'form-control',
+            'prompt' => 'Todos', // Doyat ti maipakita no awan ti napili
+        ],
         'headerOptions' => ['style' => 'width: 140px; text-align: center;'],
-        'contentOptions' => ['style' => 'text-align: center;'],
+        'contentOptions' => ['style' => 'text-align: center; vertical-align: middle;'],
     ],
     [
         'class' => '\kartik\grid\DataColumn',
