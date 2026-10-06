@@ -19,7 +19,7 @@
      overflow: hidden; /* Oculta recortes de video o elementos sobrantes */
      border: 2px solid #00bfff; /* Borde cian neón característico de indicadores */
      border-radius: 15px; /* Bordes redondeados */
-     margin: 10px 5px 5px 5px; /* Margen externo */
+     margin: 25px 25px 0px 25px; /* Margen externo */
      box-shadow: 0 4px 20px rgba(0, 191, 255, 0.4); /* Sombra con resplandor neón */
      z-index: 1; /* Nivel de capa base */
 }
