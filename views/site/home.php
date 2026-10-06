@@ -12,6 +12,7 @@ use yii\widgets\ActiveForm;
 use yii\widgets\DetailView;
 use app\models\Empleado;
 use app\models\Persona;
+use app\models\UsuarioPerfilPermiso;
 use yii\web\JqueryAsset;
 
 // Registro de scripts externos
@@ -93,25 +94,47 @@ if (Yii::$app->session->hasFlash('error_modulo')) : ?>
     </div>
 
     <!-- Accesos distribuidos en 5 columnas -->
-    <div class="row" style="padding: 5px 0px 0px 10px; background: linear-gradient(to bottom, #a9a9a929, #ecedf3);">
+    <div class="row" style="padding: 25px 50px 0px 50px; background: linear-gradient(to bottom, #a9a9a929, #ecedf3);">
 
-        <!-- Columna 1 -->
-
-
-        <!-- Columna 2 -->
         <div class="col-5-tarjeta">
             <?php
-            $titulo = "Cumpleaños";
-            $archivo_contenido_tarjeta = "cumpleaños.php";
+            $titulo = "Web Informatica";
+            $archivo_contenido_tarjeta = "web_informatica.php";
             include 'tarjetas/tarjeta_base.php';
             ?>
-            <br>
+        </div>
+        <div class="col-5-tarjeta">
+            <?php
+            $titulo = "Registro Tecnico";
+            $archivo_contenido_tarjeta = "indicadores_tecnicos.php";
+            include 'tarjetas/tarjeta_base.php';
+            ?>
+        </div>
+        <div class="col-5-tarjeta">
             <?php
             $titulo = "Informacion Personal";
             $archivo_contenido_tarjeta = "sitio_en_construccion.php";
             include 'tarjetas/tarjeta_base.php';
             ?>
         </div>
+
+        <div class="col-5-tarjeta">
+            <?php
+            $titulo = "Alertas";
+            $archivo_contenido_tarjeta = "alertas.php";
+            include 'tarjetas/tarjeta_base.php';
+            ?>
+        </div>
+
+        <div class="col-5-tarjeta">
+            <?php
+            $titulo = "Cumpleaños";
+            $archivo_contenido_tarjeta = "cumpleaños.php";
+            include 'tarjetas/tarjeta_base.php';
+            ?>
+        </div>
+
+
 
         <!-- Columna 3 -->
         <div class="col-5-tarjeta">
@@ -120,32 +143,37 @@ if (Yii::$app->session->hasFlash('error_modulo')) : ?>
             $archivo_contenido_tarjeta = "eventos_del_dia.php";
             include 'tarjetas/tarjeta_base.php';
             ?>
-            <br>
+
+        </div>
+
+
+
+
+
+
+
+        <?php
+
+        if (UsuarioPerfilPermiso::permiso_tarjeta("backend.php")) {
+            echo  '<div class="col-5-tarjeta">';
+            $titulo = "Backend";
+            $archivo_contenido_tarjeta = "backend.php";
+
+            // Verificamos si el archivo existe antes de incluirlo para no romper el resto del Home
+            if (file_exists(__DIR__ . '/tarjetas/backend.php')) {
+                include 'tarjetas/tarjeta_base.php';
+            } else {
+                echo '<div style="color: red; padding: 10px;">El archivo backend.php no existe en tarjetas/</div>';
+            }
+            echo '</div>';
+        }
+
+        ?>
+
+        <div class="col-5-tarjeta">
             <?php
             $titulo = "Efemerides";
             $archivo_contenido_tarjeta = "sitio_en_construccion.php";
-            include 'tarjetas/tarjeta_base.php';
-            ?>
-        </div>
-
-        <!-- Columna 4 -->
-        <div class="col-5-tarjeta">
-            <?php
-            include 'tarjetas/tarjeta_futbol.php';
-            ?>
-        </div>
-
-        <!-- Columna 5 -->
-        <div class="col-5-tarjeta">
-            <?php
-            $titulo = "Web Informatica";
-            $archivo_contenido_tarjeta = "web_informatica.php";
-            include 'tarjetas/tarjeta_base.php';
-            ?>
-            <br>
-            <?php
-            $titulo = "Registro Tecnico";
-            $archivo_contenido_tarjeta = "indicadores_tecnicos.php";
             include 'tarjetas/tarjeta_base.php';
             ?>
         </div>

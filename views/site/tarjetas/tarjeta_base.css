@@ -96,11 +96,13 @@
     width: 100%;
 }
 
+
 .col-5-tarjeta {
     flex: 0 0 20%;
     max-width: 20%;
-    padding-left: 7.5px;
-    padding-right: 7.5px;
+    padding-left: 14px;
+    padding-right: 14px;
+    padding-bottom: 25px;
 }
 
 .data-card {

@@ -41,10 +41,15 @@ return [
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'estado',
+                    'value' => function ($model) {
+                  return $model->estado == 1 ? 'Activo' : 'Inactivo';
+            },
+            'filter' => ['0' => 'Inactivo', '1' => ' Activo'],
     ],
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
+        'template' => '{view} {update}',
         'vAlign' => 'middle',
         'urlCreator' => function ($action, $model, $key, $index) {
             return Url::to([$action, 'id' => $key]);
