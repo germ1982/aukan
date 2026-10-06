@@ -18,11 +18,11 @@ use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 use app\models\Configuracion;
 use app\models\ConfiguracionTipo;
-
+use app\models\BackendSearch;
 
 class SiteController extends Controller
 {
-      
+
       public function behaviors()
       {
             return [
@@ -92,10 +92,21 @@ class SiteController extends Controller
        *
        * @return string
        */
+      
+
       public function actionIndex()
       {
-            //echo "<script>console.log('entro al actionIndex');</script>";
-            return $this->render('home');
+            // Cargar el modelo de búsqueda del Backend
+            $searchModelBackend = new BackendSearch();
+            $dataProviderBackend = $searchModelBackend->search(Yii::$app->request->queryParams);
+
+            // Si querés que en la tarjeta se muestren todos los registros
+            $dataProviderBackend->pagination = false;
+
+            return $this->render('home', [
+                  'searchModelBackend' => $searchModelBackend,
+                  'dataProviderBackend' => $dataProviderBackend,
+            ]);
       }
 
       /**
@@ -105,39 +116,39 @@ class SiteController extends Controller
        */
       public function actionLogin()
       {
-          // Establecer un layout específico para la página de login
-          $this->layout = 'loginLayout';
-  
-          // Mensaje de depuración
-          echo "<script>console.log('Entrando en actionLogin');</script>";
-  
-          // Si el usuario ya está autenticado, redirigir a la página principal
-          if (!Yii::$app->user->isGuest) {
-              echo "<script>console.log('El usuario ya está autenticado');</script>";
-              return $this->redirect(["site/index"]);
-          }
-  
-          // Crear una instancia del modelo LoginForm
-          $model = new LoginForm();
-  
-          // Cargar los datos del formulario y validar
-          if ($model->load(Yii::$app->request->post()) && $model->login()) {
-              echo "<script>console.log('Inicio de sesión exitoso');</script>";
-  
-              // Obtener el ID del usuario autenticado
-              $idUsuario = Yii::$app->user->identity->id;
-              echo "<script>console.log('ID de usuario: ' + " . json_encode($idUsuario) . ");</script>";
-  
-              // Redirigir a la página principal
-              return $this->redirect(["site/index"]);
-          } else {
-              echo "<script>console.log('Error en la autenticación o datos del formulario no cargados');</script>";
-  
-              // Renderizar la vista de login con el modelo
-              return $this->render('login', [
-                  'model' => $model,
-              ]);
-          }
+            // Establecer un layout específico para la página de login
+            $this->layout = 'loginLayout';
+
+            // Mensaje de depuración
+            echo "<script>console.log('Entrando en actionLogin');</script>";
+
+            // Si el usuario ya está autenticado, redirigir a la página principal
+            if (!Yii::$app->user->isGuest) {
+                  echo "<script>console.log('El usuario ya está autenticado');</script>";
+                  return $this->redirect(["site/index"]);
+            }
+
+            // Crear una instancia del modelo LoginForm
+            $model = new LoginForm();
+
+            // Cargar los datos del formulario y validar
+            if ($model->load(Yii::$app->request->post()) && $model->login()) {
+                  echo "<script>console.log('Inicio de sesión exitoso');</script>";
+
+                  // Obtener el ID del usuario autenticado
+                  $idUsuario = Yii::$app->user->identity->id;
+                  echo "<script>console.log('ID de usuario: ' + " . json_encode($idUsuario) . ");</script>";
+
+                  // Redirigir a la página principal
+                  return $this->redirect(["site/index"]);
+            } else {
+                  echo "<script>console.log('Error en la autenticación o datos del formulario no cargados');</script>";
+
+                  // Renderizar la vista de login con el modelo
+                  return $this->render('login', [
+                        'model' => $model,
+                  ]);
+            }
       }
 
       public function actionLogout()
@@ -192,20 +203,20 @@ class SiteController extends Controller
       public static function actionGet_input_select($form, $model, $atributo, $id_input, $datos, $iddatos, $descripciondatos, $label = null, $placeholder = null, $onchange = null)
       {
             $label = $label ? $label : $model->getAttributeLabel("$atributo");
-          $options = ['id' => $id_input];
-      
-          if ($placeholder) {
-              $options['prompt'] = $placeholder;
-          }
-          if ($onchange) {
-              $options['onchange'] = $onchange;
-          }
-      
-          return $form->field($model, $atributo)
-              ->dropDownList(ArrayHelper::map($datos, $iddatos, $descripciondatos), $options)
-              ->label($label);
+            $options = ['id' => $id_input];
+
+            if ($placeholder) {
+                  $options['prompt'] = $placeholder;
+            }
+            if ($onchange) {
+                  $options['onchange'] = $onchange;
+            }
+
+            return $form->field($model, $atributo)
+                  ->dropDownList(ArrayHelper::map($datos, $iddatos, $descripciondatos), $options)
+                  ->label($label);
       }
-      
+
 
       public static function actionGet_input_select2($form, $model, $atributo, $id_input, $datos, $iddatos, $descripciondatos, $label = null, $placeholder = null, $where = null, $onchange = null, $readonly = null, $disabled = null, $html = false)
       {
@@ -230,7 +241,7 @@ class SiteController extends Controller
                   'pluginOptions' => [
                         'allowClear' => true,
                         'disabled' => $disabled,
-                        'escapeMarkup' => ( new \yii\web\JsExpression('function(m) { return m; }')),  // No escapar el HTML
+                        'escapeMarkup' => (new \yii\web\JsExpression('function(m) { return m; }')),  // No escapar el HTML
                   ],
             ])
                   ->label($label);
@@ -301,7 +312,7 @@ class SiteController extends Controller
             /* Esta funcion crea control de la hora usando una sola linea desde donde sea invocada,
         se pasan como parametros el form y model que se este usando, el atributo de fecha del modelo para 
         el que se quiere usar, el id del control para usar con javascrip, y opcional el label. */
-        $label = $label ? $label : $model->getAttributeLabel("$atributo");
+            $label = $label ? $label : $model->getAttributeLabel("$atributo");
             return $form->field($model, $atributo)->widget(TimePicker::classname(), [
                   'options' => [
                         'id' => $id_input,
@@ -333,6 +344,4 @@ class SiteController extends Controller
                   'style' => 'padding: 9px 12px;'
             ]);
       }
-
-      
 }
