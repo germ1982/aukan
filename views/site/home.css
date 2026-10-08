@@ -63,7 +63,7 @@
 /* Estilo del texto principal de bienvenida */
 .texto-bienvenida {
      font-family: "Arial Black", "Impact", sans-serif; /* Tipografía gruesa original */
-     font-size: 36px; /* Tamaño destacado */
+     font-size: 34px; /* Tamaño destacado */
      font-weight: 900; /* Máximo grosor */
      text-transform: uppercase; /* Texto en mayúsculas */
      letter-spacing: 1px; /* Espaciado entre letras */

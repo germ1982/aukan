@@ -2,40 +2,44 @@
    ESTILOS BASE PARA TARJETAS (.data-card)
    ========================================================================= */
 .data-card {
-    background: rgba(0, 15, 30, 0.75);
+    background: rgba(0, 15, 30, 0.4);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border: 1px solid #00bfff;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);
-    padding: 15px;
+    padding: 10px 8px !important;
     box-sizing: border-box;
     position: relative;
     
-    /* Altura fija estándar obligatoria */
-    height: 400px;
-    max-height: 400px;
+    /* Altura fija estándar */
+    height: 300px;
+    max-height: 300px;
     
-    /* Manejo de desborde y scroll interno */
-    overflow-y: auto;
-    overflow-x: hidden;
+    /* Flexbox vertical para que el título quede arriba y el contenido ocupe el resto */
+    display: flex;
+    flex-direction: column;
     
-    /* Soporte de scrollbar para Firefox */
-    scrollbar-width: thin;
-    scrollbar-color: #00bfff rgba(0, 15, 30, 0.5);
+    /* Desactivamos el scroll de la tarjeta principal para que el título no suba */
+    overflow: hidden !important; 
     
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     animation: tarjetaEntrada 0.5s ease-out forwards;
     color: #e0f0ff;
 }
 
-/* Excepción para la tarjeta de fútbol u otras que necesiten crecer según contenido */
+.data-card:hover {
+    animation: neonGlow 2.5s infinite alternate;
+}
+
+/* Excepción para tarjetas de altura dinámica */
 .data-card.auto-height {
     height: auto;
     max-height: none;
-    overflow-y: visible;
+    overflow: visible !important;
 }
 
+/* Título de la tarjeta (se mantiene FIJO) */
 .data-card .box-title {
     font-size: 0.9rem;
     font-weight: bold;
@@ -49,9 +53,28 @@
     padding-bottom: 8px;
     border-bottom: 1px solid rgba(0, 191, 255, 0.4);
     white-space: normal;
+    flex-shrink: 0; /* Evita que el título se encoja */
 }
 
-/* Ajuste para imágenes internas en tarjeta estándar */
+/* =========================================================================
+   PANEL DE CONTENIDO INTERNO (AQUÍ APLICA EL SCROLL)
+   ========================================================================= */
+.data-card .panel_contenido {
+    flex: 1; /* Ocupa todo el alto sobrante de la tarjeta */
+    overflow-y: auto; /* Scroll exclusivo para el contenido */
+    overflow-x: hidden !important;
+    
+    /* Soporte de scrollbar para Firefox */
+    scrollbar-width: none;
+    scrollbar-color: #00bfff rgba(0, 15, 30, 0.5);
+}
+
+/* Al hacer hover sobre la tarjeta, activamos el scrollbar delgado en Firefox */
+.data-card:hover .panel_contenido {
+    scrollbar-width: thin;
+}
+
+/* Ajuste para imágenes internas */
 .data-card img {
     max-width: 100%;
     max-height: 280px;
@@ -61,41 +84,62 @@
 }
 
 /* =========================================================================
-   SCROLLBAR NEÓN ULTRADELGADO (Chrome, Edge, Safari, WebKit)
-   Aplica a la tarjeta y a cualquier contenedor interno (como el iframe/div)
+   SCROLLBAR NEÓN EN NAVEGADORES WEBKIT (Chrome, Edge, Safari)
+   Aplica únicamente a los elementos internos con scroll (.panel_contenido)
    ========================================================================= */
-.data-card::-webkit-scrollbar,
-.data-card *::-webkit-scrollbar {
-    width: 5px !important;
-    height: 5px !important;
+
+/* Oculto por defecto */
+.data-card .panel_contenido::-webkit-scrollbar,
+.data-card .panel_contenido *::-webkit-scrollbar {
+    width: 0px !important;
+    height: 0px !important;
 }
 
-.data-card::-webkit-scrollbar-track,
-.data-card *::-webkit-scrollbar-track {
+/* Aparece finito al hacer hover sobre la tarjeta */
+.data-card:hover .panel_contenido::-webkit-scrollbar,
+.data-card:hover .panel_contenido *::-webkit-scrollbar {
+    width: 2px !important;
+    height: 2px !important;
+}
+
+/* Track / Canaleta */
+.data-card .panel_contenido::-webkit-scrollbar-track,
+.data-card .panel_contenido *::-webkit-scrollbar-track {
     background: rgba(0, 10, 25, 0.6) !important;
     border-radius: 10px !important;
 }
 
-.data-card::-webkit-scrollbar-thumb,
-.data-card *::-webkit-scrollbar-thumb {
+/* Thumb / Pista desplazable */
+.data-card .panel_contenido::-webkit-scrollbar-thumb,
+.data-card .panel_contenido *::-webkit-scrollbar-thumb {
     background: #00bfff !important;
     border-radius: 10px !important;
     box-shadow: 0 0 10px #00bfff !important;
 }
 
-.data-card::-webkit-scrollbar-thumb:hover,
-.data-card *::-webkit-scrollbar-thumb:hover {
+.data-card .panel_contenido::-webkit-scrollbar-thumb:hover,
+.data-card .panel_contenido *::-webkit-scrollbar-thumb:hover {
     background: #00ffcc !important;
     box-shadow: 0 0 12px #00ffcc !important;
 }
 
-.contenedor-tarjetas {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr); /* Divide en 5 columnas de igual tamaño */
-    gap: 15px;                            /* Espacio entre tarjetas */
-    width: 100%;
+/* Keyframes de resplandor neón */
+@keyframes neonGlow {
+    from {
+        filter: drop-shadow(0 0 5px lime) drop-shadow(0 0 20px lime);
+    }
+    to {
+        filter: drop-shadow(0 0 20px greenyellow) drop-shadow(0 0 60px greenyellow);
+    }
 }
 
+/* Grilla y utilidades */
+.contenedor-tarjetas {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    width: 100%;
+}
 
 .col-5-tarjeta {
     flex: 0 0 20%;
@@ -105,16 +149,29 @@
     padding-bottom: 25px;
 }
 
-.data-card {
-    /* Desactiva el scroll horizontal */
-    overflow-x: hidden !important; 
-    
-    /* Reduce el padding lateral para ganar espacio interno */
-    padding: 10px 8px !important; 
-}
-
-/* Fuerza a que cualquier elemento interno no supere el ancho de la tarjeta */
+/* Fuerza límites de ancho en elementos internos */
 .data-card * {
     max-width: 100% !important;
     box-sizing: border-box !important;
+}
+
+.text_titulo {
+    font-size: 1rem;
+    color: #00ffcc;
+    text-shadow: 0 0 6px rgba(0, 255, 204, 0.5);
+    line-height: 1.2;
+/*     text-align: center; */
+/*     margin-bottom: 38px!important; */
+/* padding-bottom: 38px!important; */
+}
+
+
+
+.text_descripcion{
+    font-size: 0.9rem;
+    color: #e0f0ff;
+    text-shadow: 0 0 4px rgba(0, 255, 204, 0.5);
+    line-height: 1.4;
+    text-align: justify;
+    /* margin-top: 10px; */
 }
