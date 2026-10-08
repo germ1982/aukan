@@ -478,6 +478,34 @@ class EmpleadoController extends Controller
             'esEmpleado' => false
         ];
     }
+
+    /**
+     * Muestra la ficha estilo Cyberpunk del empleado para el modal de cumpleaños.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionCumpleanosEmpleado($id)
+    {
+        $request = Yii::$app->request;
+        if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return [
+                'title' => "Ficha de Cumpleañero",
+                'content' => $this->renderAjax('cumpleanos_empleado', [
+                    'model' => $this->findModel($id),
+                ]),
+                'footer' => Html::button('Cerrar', [
+                    'class' => 'btn btn-default pull-left',
+                    'data-dismiss' => 'modal',
+                    'style' => 'background: transparent; color: #9ca3af; border-color: rgba(255,255,255,0.2);'
+                ])
+            ];
+        }
+
+        return $this->render('cumpleanos_empleado', [
+            'model' => $this->findModel($id),
+        ]);
+    }
 }
 
 
