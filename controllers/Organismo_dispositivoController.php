@@ -75,6 +75,25 @@ class Organismo_dispositivoController extends Controller
         }
     }
 
+        public function actionView_only($id)
+    {   
+        $request = Yii::$app->request;
+        if($request->isAjax){
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return [
+                    'title'=> "Dispositivo ".$id,
+                    'content'=>$this->renderAjax('view', [
+                        'model' => $this->findModel($id),
+                    ]),
+                    'footer'=> Html::button('Cerrar',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"])
+                ];    
+        }else{
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+        }
+    }
+
     /**
      * Creates a new OrganismoDispositivo model.
      * For ajax request will return json object

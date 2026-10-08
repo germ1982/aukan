@@ -491,6 +491,11 @@ $empleados = Empleado::get_por_dispositivo_con_foto($model->iddispositivo);
         border: none;
         background-color: #020813;
     }
+
+    #ajaxCrudModal .modal-dialog {
+    width: 80% !important;
+    max-width: 1000px !important;
+}
 </style>
 
 
