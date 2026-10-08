@@ -60,6 +60,8 @@ class ConstantesGlobales
     const DECRETO_ORGANISMO                 = 37;
     const LEGAJOS_RUNNEU                    = 38;
     const CONTROL_INSUMO_EVENTO             = 40;
+    const BACKEND                           = 41;
+
 
     // ==========================================
     // MAPA MULTIDIMENSIONAL DE MÓDULOS

@@ -178,7 +178,7 @@ class BackendController extends Controller
 
                 if ($guardado && $model->save()) {
                     $transaction->commit();
-                    LogPlataforma::registrar(ConstantesGlobales::VEHICULOS, ConstantesGlobales::MODIFICACION, $model->idbackend);
+                    LogPlataforma::registrar(ConstantesGlobales::BACKEND, ConstantesGlobales::MODIFICACION, $model->idbackend);
                     return [
                         'title' => "Editar Backend",
                         'content' => '<span class="text-success">Backend Editado Correctamente</span>',
