@@ -154,7 +154,7 @@ if (Yii::$app->session->hasFlash('error_modulo')) : ?>
 
         <?php
 
-        if (UsuarioPerfilPermiso::permiso_tarjeta("backend.php")) {
+        if (UsuarioPerfilPermiso::permiso_tarjeta("backend.php") || UsuarioPerfilPermiso::permiso_es_admin()) {
             echo  '<div class="col-5-tarjeta">';
             $titulo = "Backend";
             $archivo_contenido_tarjeta = "backend.php";

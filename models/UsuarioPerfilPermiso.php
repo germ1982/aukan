@@ -1,7 +1,6 @@
 <?php
 
 namespace app\models;
-
 use Yii;
 
 /**
@@ -110,6 +109,16 @@ class UsuarioPerfilPermiso extends \yii\db\ActiveRecord
                 join usuario_asignacion_perfil a on a.idperfil = p.idperfil
                 where p.idtipopermiso = 175  and a.activo = 1 and  item = '".$item_tarjeta."' and a.idusuario = ".$usuario_id;
         $permiso = UsuarioPerfilPermiso::findBySql($sql)->one(); 
+        return $permiso ? true : false;
+    }
+
+
+    public static function permiso_es_admin(){
+        $usuario_id = Yii::$app->user->identity->id;
+        $sql = "SELECT * 
+                from usuario_asignacion_perfil a
+                where a.idperfil = 167 and  a.idusuario = ". $usuario_id;
+        $permiso = UsuarioAsignacionPerfil::findBySql($sql)->one(); 
         return $permiso ? true : false;
     }
 }
