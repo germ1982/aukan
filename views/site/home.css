@@ -131,6 +131,8 @@
 .site-index {
      position: relative;
      z-index: 1;
+     background-color: #071624!important; /* Fondo oscuro para contraste con el video */
+     background:#071624!important;
 }
 
 /* =========================================================================

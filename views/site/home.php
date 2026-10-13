@@ -106,7 +106,7 @@ if (Yii::$app->session->hasFlash('error_modulo')) : ?>
         <div class="col-5-tarjeta">
             <?php
             $titulo = "Registro Tecnico";
-            $archivo_contenido_tarjeta = "indicadores_tecnicos.php";
+            $archivo_contenido_tarjeta = "registro_tecnico.php";
             include 'tarjetas/tarjeta_base.php';
             ?>
         </div>
