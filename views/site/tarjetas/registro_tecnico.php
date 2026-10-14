@@ -91,7 +91,7 @@ $tecnicosEnOperacion = Yii::$app->db->createCommand("
         margin-top: -5px;
     }
 
-    /* Franja de peligro NERV */
+    /* Franja de peligro NERV con animación de movimiento */
     .eva-hazard-stripes {
         height: 5px;
         background: repeating-linear-gradient(-45deg,
@@ -99,8 +99,15 @@ $tecnicosEnOperacion = Yii::$app->db->createCommand("
                 #ffb03b 8px,
                 #000 8px,
                 #000 16px);
+        background-size: 200% 100%;
         border: 1px solid #ffb03b;
         margin: 6px 0;
+        animation: evaStripesMove 4s linear infinite;
+    }
+
+    @keyframes evaStripesMove {
+        0% { background-position: 0 0; }
+        100% { background-position: 50px 0; }
     }
 
     /* Fila contenedora principal para cada bloque (Registros / Incidencias) */
@@ -116,7 +123,7 @@ $tecnicosEnOperacion = Yii::$app->db->createCommand("
         display: flex;
         flex-direction: column;
         justify-content: center;
-        min-width: 90px;
+        min-width: 95px;
     }
 
     .eva-title {
@@ -132,7 +139,7 @@ $tecnicosEnOperacion = Yii::$app->db->createCommand("
     .eva-condition-box {
         display: flex;
         align-items: center;
-        gap: 4px;
+        gap: 6px;
     }
 
     .eva-condition-label {
@@ -145,37 +152,40 @@ $tecnicosEnOperacion = Yii::$app->db->createCommand("
     .eva-alert-badge-red {
         background: #ff2a2a;
         color: #000;
-        font-size: 5px;
+        font-size: 7px;
         font-weight: 900;
-        padding: 1px 4px;
+        padding: 1px 5px;
         border-radius: 2px;
         letter-spacing: 0.5px;
         text-transform: uppercase;
         animation: evaBlink 1.5s infinite;
+        line-height: 1.2;
     }
 
     .eva-alert-badge-green {
         background: #48ff00;
         color: #000;
-        font-size: 5px;
+        font-size: 7px;
         font-weight: 900;
-        padding: 1px 4px;
+        padding: 1px 5px;
         border-radius: 2px;
         letter-spacing: 0.5px;
         text-transform: uppercase;
         animation: evaBlink 1.5s infinite;
+        line-height: 1.2;
     }
 
     .eva-alert-badge-yellow {
         background: #eeff00;
         color: #000;
-        font-size: 5px;
+        font-size: 7px;
         font-weight: 900;
-        padding: 1px 4px;
+        padding: 1px 5px;
         border-radius: 2px;
         letter-spacing: 0.5px;
         text-transform: uppercase;
         animation: evaBlink 1.5s infinite;
+        line-height: 1.2;
     }
 
     /* Lado Derecho: Cajas de métricas */
@@ -256,7 +266,7 @@ $tecnicosEnOperacion = Yii::$app->db->createCommand("
         gap: 6px;
         justify-content: flex-start;
         align-items: center;
-        padding: 2px 0;
+        padding: 2px 0 4px 0;
         overflow: visible;
     }
 
@@ -307,15 +317,8 @@ $tecnicosEnOperacion = Yii::$app->db->createCommand("
     }
 
     @keyframes evaBlink {
-
-        0%,
-        100% {
-            opacity: 1;
-        }
-
-        50% {
-            opacity: 0.3;
-        }
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
     }
 
     /* Estilo Cyberpunk para los links de título */
