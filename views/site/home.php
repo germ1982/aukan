@@ -113,10 +113,11 @@ if (Yii::$app->session->hasFlash('error_modulo')) : ?>
         <div class="col-5-tarjeta">
             <?php
             $titulo = "Informacion Personal";
-            $archivo_contenido_tarjeta = "sitio_en_construccion.php";
+            $archivo_contenido_tarjeta = "personal_card.php";
             include 'tarjetas/tarjeta_base.php';
             ?>
         </div>
+
 
         <div class="col-5-tarjeta">
             <?php
