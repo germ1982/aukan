@@ -136,7 +136,7 @@ function formatearFechaCumple($fecha)
                         [
                             'class' => 'cumple-link',
                             'role' => 'modal-remote',
-                            'title' => 'Ver Ficha Cyberpunk',
+                            'title' => 'Ver Ficha',
                             'data-toggle' => 'tooltip',
                         ]
                     ) ?>

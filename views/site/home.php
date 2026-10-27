@@ -174,7 +174,7 @@ if (Yii::$app->session->hasFlash('error_modulo')) : ?>
         <div class="col-5-tarjeta">
             <?php
             $titulo = "Efemerides";
-            $archivo_contenido_tarjeta = "sitio_en_construccion.php";
+            $archivo_contenido_tarjeta = "efemerides.php";
             include 'tarjetas/tarjeta_base.php';
             ?>
         </div>
