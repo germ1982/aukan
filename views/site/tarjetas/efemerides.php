@@ -294,6 +294,10 @@ function formatearFechaEfemeride($fecha, $esMovil)
                     <div class="eva-modal-content-custom">
                         <div class="eva-hazard-stripes" style="margin-top: 0;"></div>
 
+                        <div class="efem-fecha-badge" style="font-size: 1.1rem;">
+                            <?= formatearFechaEfemeride($efem['fecha'], $efem['es_movil']) ?>
+                        </div>
+
                         <div class="eva-modal-header">
                             <span class="eva-modal-title"><?= Html::encode($efem['titulo']) ?></span>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #ff3333; text-shadow: none; opacity: 0.8;">
@@ -301,12 +305,9 @@ function formatearFechaEfemeride($fecha, $esMovil)
                             </button>
                         </div>
 
-                        <div class="eva-hazard-stripes"></div>
+
 
                         <div style="padding: 10px 0;">
-                            <p style="font-size: 0.9rem; color: #e0f0ff; line-height: 1.4; text-align: justify; margin-bottom: 15px;">
-                                <?= nl2br(Html::encode($efem['descripcion'])) ?>
-                            </p>
 
                             <?php if (!empty($fotosEfemeride)): ?>
                                 <div id="carouselModal-<?= $efem['idefemeride'] ?>" class="carousel slide" data-ride="carousel">
@@ -327,6 +328,11 @@ function formatearFechaEfemeride($fecha, $esMovil)
                                     <?php endif; ?>
                                 </div>
                             <?php endif; ?>
+
+                            <p style="font-size: 1.3rem; color: #e0f0ff; line-height: 1.4; text-align: center; margin-top: 15px;">
+                                <?= nl2br(Html::encode($efem['descripcion'])) ?>
+                            </p>
+
                         </div>
 
                         <div class="eva-hazard-stripes"></div>
