@@ -224,8 +224,8 @@ function formatearFechaEfemeride($fecha, $esMovil)
 
     /* Estilos del modal estilo NERV / Táctico */
     .eva-modal-dialog {
-        max-width: 600px;
-        margin: 50px auto;
+        max-width: 650px;
+        margin: 40px auto;
     }
 
     .eva-modal-content-custom {
@@ -254,6 +254,39 @@ function formatearFechaEfemeride($fecha, $esMovil)
         letter-spacing: 1px;
         text-shadow: 0 0 8px rgba(42, 235, 255, 0.6);
     }
+
+    /* Estilos de la galería de 3 columnas dentro del modal */
+    .efem-galeria-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 15px;
+        justify-content: center;
+    }
+
+    .efem-galeria-item {
+        width: calc(33.333% - 7px);
+        box-sizing: border-box;
+        border: 1px solid rgba(0, 191, 255, 0.4);
+        border-radius: 4px;
+        overflow: hidden;
+        background: rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .efem-galeria-item:hover {
+        border-color: #00ffcc;
+        box-shadow: 0 0 8px rgba(0, 255, 204, 0.5);
+        transform: translateY(-2px);
+    }
+
+    .efem-galeria-item img {
+        width: 100%;
+        height: 110px;
+        object-fit: cover;
+        display: block;
+    }
 </style>
 
 <?php if ($totalEfemerides > 0): ?>
@@ -277,14 +310,18 @@ function formatearFechaEfemeride($fecha, $esMovil)
                 </div>
 
                 <div class="efem-controls">
-                    <button type="button" class="efem-btn-nav" onclick="cambiarEfemeride(-1)" title="Anterior">◀</button>
+                    <?php if ($totalEfemerides > 1): ?>
+                        <button type="button" class="efem-btn-nav" onclick="cambiarEfemeride(-1)" title="Anterior">◀</button>
+                    <?php endif; ?>
 
-                    <!-- Botón que activa el modal local sin pasar por controlador -->
+                    <!-- Botón Ver Más (ocupa todo el espacio si no hay botones de navegación) -->
                     <button type="button" class="efem-btn-vermas" data-toggle="modal" data-target="#modal-efem-<?= $efem['idefemeride'] ?>">
                         Ver Más
                     </button>
 
-                    <button type="button" class="efem-btn-nav" onclick="cambiarEfemeride(1)" title="Siguiente">▶</button>
+                    <?php if ($totalEfemerides > 1): ?>
+                        <button type="button" class="efem-btn-nav" onclick="cambiarEfemeride(1)" title="Siguiente">▶</button>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -305,33 +342,27 @@ function formatearFechaEfemeride($fecha, $esMovil)
                             </button>
                         </div>
 
-
-
                         <div style="padding: 10px 0;">
 
-                            <?php if (!empty($fotosEfemeride)): ?>
-                                <div id="carouselModal-<?= $efem['idefemeride'] ?>" class="carousel slide" data-ride="carousel">
-                                    <div class="carousel-inner" role="listbox">
-                                        <?php foreach ($fotosEfemeride as $fIndex => $foto): ?>
-                                            <div class="item <?= $fIndex === 0 ? 'active' : '' ?>">
-                                                <img src="<?= Url::base(true) . '/img/efemerides/' . $foto['foto'] ?>" class="img-responsive center-block" style="max-height: 300px; object-fit: contain; width: 100%;">
-                                            </div>
-                                        <?php endforeach; ?>
-                                    </div>
-                                    <?php if (count($fotosEfemeride) > 1): ?>
-                                        <a class="left carousel-control" href="#carouselModal-<?= $efem['idefemeride'] ?>" role="button" data-slide="prev">
-                                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                                        </a>
-                                        <a class="right carousel-control" href="#carouselModal-<?= $efem['idefemeride'] ?>" role="button" data-slide="next">
-                                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                                        </a>
-                                    <?php endif; ?>
-                                </div>
-                            <?php endif; ?>
-
-                            <p style="font-size: 1.3rem; color: #e0f0ff; line-height: 1.4; text-align: center; margin-top: 15px;">
+                            <!-- DESCRIPCIÓN -->
+                            <p style="font-size: 1.1rem; color: #e0f0ff; line-height: 1.4; text-align: left; margin-bottom: 15px;">
                                 <?= nl2br(Html::encode($efem['descripcion'])) ?>
                             </p>
+
+                            <!-- GALERÍA DE FOTOS EN 3 COLUMNAS -->
+                            <?php if (!empty($fotosEfemeride)): ?>
+                                <div style="font-size: 10px; color: #2aebff; text-transform: uppercase; margin-bottom: 5px; font-weight: bold;">Galería fotográfica:</div>
+                                <div class="efem-galeria-grid">
+                                    <?php foreach ($fotosEfemeride as $foto): ?>
+                                        <div class="efem-galeria-item">
+                                            <img src="<?= Url::base(true) . '/img/efemerides/' . $foto['foto'] ?>" 
+                                                 class="efem-img-thumbnail-click" 
+                                                 data-img-url="<?= Url::base(true) . '/img/efemerides/' . $foto['foto'] ?>"
+                                                 alt="Foto galería">
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
 
                         </div>
 
@@ -385,8 +416,36 @@ function formatearFechaEfemeride($fecha, $esMovil)
 <?php endif; ?>
 
 <?php
-$js = "$('.modal-efem').on('show.bs.modal', function () {
+$js = "
+// Asegurar que los modales múltiples se acoplen correctamente al body
+$('.modal-efem').on('show.bs.modal', function () {
     $(this).appendTo('body');
-});";
+});
+
+// Inyectar el lightbox directamente en el body si no existe para evitar conflictos de z-index
+if ($('#efem-lightbox-overlay').length === 0) {
+    $('body').append(`
+        <div id=\"efem-lightbox-overlay\" style=\"display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:999999; text-align:center; padding-top:5vh;\">
+            <span id=\"efem-lightbox-close\" style=\"position:absolute; top:20px; right:35px; color:#ff3333; font-size:40px; font-weight:bold; cursor:pointer; z-index:1000000;\">&times;</span>
+            <img id=\"efem-lightbox-img\" src=\"\" style=\"max-width:90%; max-height:85vh; border-radius:4px; box-shadow:0 5px 25px rgba(0,0,0,0.8); border:1px solid #ffb03b;\">
+        </div>
+    `);
+}
+
+// Abrir la foto en grande al hacer clic en la miniatura de la galería
+$(document).on('click', '.efem-img-thumbnail-click', function(e) {
+    e.stopPropagation();
+    var url = $(this).attr('data-img-url');
+    $('#efem-lightbox-img').attr('src', url);
+    $('#efem-lightbox-overlay').fadeIn(200);
+});
+
+// Cerrar el lightbox al hacer clic en la cruz o en el fondo oscuro
+$(document).on('click', '#efem-lightbox-close, #efem-lightbox-overlay', function(e) {
+    if(e.target.id === 'efem-lightbox-overlay' || e.target.id === 'efem-lightbox-close') {
+        $('#efem-lightbox-overlay').fadeOut(200);
+    }
+});
+";
 $this->registerJs($js);
 ?>
